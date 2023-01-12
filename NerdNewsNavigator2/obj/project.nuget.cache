@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HJeLk+hHeApwJ5tvvVAnGVSu+C7KTUJfuopWPR/FVlrxqnkUvah5EO5Gy/ZzS1gdQAxN4K8Xq6VTRpW6vECrVg==",
+  "dgSpecHash": "P48FhjMc3hlFAiAI5bty4A4iD24sSlqhABnrMOCmNxd/TFD4WIdSpoA5VZORUqh/3lAuXDzkXic3UM/e3QVLqQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
+  "projectFilePath": "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\james\\.nuget\\packages\\codehollow.feedreader\\1.2.4\\codehollow.feedreader.1.2.4.nupkg.sha512",
     "C:\\Users\\james\\.nuget\\packages\\communitytoolkit.mvvm\\8.1.0-preview3\\communitytoolkit.mvvm.8.1.0-preview3.nupkg.sha512",

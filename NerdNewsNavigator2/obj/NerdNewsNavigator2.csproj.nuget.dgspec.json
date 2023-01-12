@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj": {}
+    "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj": {
+    "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
+        "projectUniqueName": "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
         "projectName": "NerdNewsNavigator2",
-        "projectPath": "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
+        "projectPath": "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\NerdNewsNavigator2.csproj",
         "packagesPath": "C:\\Users\\james\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\james\\source\\repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\obj\\",
+        "outputPath": "C:\\Users\\james\\Source\\Repos\\NerdNewsNavigator2\\NerdNewsNavigator2\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
