@@ -1,0 +1,1 @@
+C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\NerdNewsNavigator2.csproj;x64
