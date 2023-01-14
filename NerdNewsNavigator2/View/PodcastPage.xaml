@@ -5,23 +5,32 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.PodcastPage"
              x:DataType="viewmodel:PodcastViewModel"
-             Title="PodcastPage">
-    <CollectionView  ItemsSource="{Binding Podcasts}">
+             Title=""
+             BackgroundColor="White">
+    <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <HorizontalStackLayout Padding="10" Spacing="10">
-                    <Image Grid.RowSpan="2"
+                <Frame HeightRequest="175" WidthRequest="375">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
+                                        CommandParameter="{Binding Url}"/>
+                    </Frame.GestureRecognizers>
+
+                    <HorizontalStackLayout Padding="10" Spacing="10">
+                        <Image Grid.RowSpan="2"
                         Aspect="AspectFill"
                         HeightRequest="100"
                         WidthRequest="100"
                         Source="{Binding Image}">
-                    </Image>
-                    <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center">
-                        <Label Text="{Binding Title}" FontSize="14"/>
-                        <Label Text="{Binding Description}" FontSize="10" LineBreakMode="WordWrap" MaximumWidthRequest="225"></Label>
+                        </Image>
+                        <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center">
+                            <Label Text="{Binding Title}" FontSize="14" MaximumWidthRequest="300" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Description}" FontSize="10" LineBreakMode="WordWrap" MaximumWidthRequest="200" MaximumHeightRequest="400"></Label>
                     </VerticalStackLayout>
-
+                    
                 </HorizontalStackLayout>
+                </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
