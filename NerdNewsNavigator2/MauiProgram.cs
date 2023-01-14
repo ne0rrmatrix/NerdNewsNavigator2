@@ -3,6 +3,7 @@ using NerdNewsNavigator2.Model;
 using NerdNewsNavigator2.View;
 using NerdNewsNavigator2.ViewModel;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.MediaElement;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -14,7 +15,7 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-        }).UseMauiCommunityToolkit();
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

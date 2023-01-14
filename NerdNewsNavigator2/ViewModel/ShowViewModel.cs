@@ -14,9 +14,8 @@ public partial class ShowViewModel : ObservableObject
     {
         set
         {
-            this.Shows = GetShow(value);
+            this.Shows = ShowViewModel.GetShow(value);
             OnPropertyChanged(nameof(Shows));
-
         }
     }
     public ShowViewModel()
@@ -24,29 +23,31 @@ public partial class ShowViewModel : ObservableObject
 
     }
 
-    private ObservableCollection<Show> GetShow(string url)
+    private static ObservableCollection<Show> GetShow(string url)
     {
         ObservableCollection<Show> result = new();
-      
-
         try
         {
             var feed = FeedReader.ReadAsync(url);
             foreach (var item in feed.Result.Items)
             {
-                Show show = new();
-                show.Title = item.Title;
-                show.Description = item.Description;
-                show.Image = item.GetItunesItem().Image.Href;
-                show.Url = item.Id;
+                Show show = new()
+                {
+                    Title = item.Title,
+                    Description = item.Description,
+                    Image = item.GetItunesItem().Image.Href,
+                    Url = item.Id
+                };
                 result.Add(show);
             }
             return result;
         }
         catch
         {
-            Show show = new();
-            show.Title = string.Empty;
+            Show show = new()
+            {
+                Title = string.Empty
+            };
             result.Add(show);
             return result;
         }
