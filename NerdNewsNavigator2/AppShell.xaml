@@ -5,10 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
     Shell.FlyoutBehavior="Disabled">
-
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False">
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
     <ShellContent
+         Shell.NavBarIsVisible="False"
         Title="Home"
         ContentTemplate="{DataTemplate local:PodcastPage}"
         Route="MainPage" />
-
 </Shell>

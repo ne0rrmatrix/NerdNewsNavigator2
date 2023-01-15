@@ -9,20 +9,10 @@ namespace NerdNewsNavigator2.Model
 {
     public class Show
     {
-        public ItunesImage image { get; set; }
-        public string title { get; set; }
-        public string description { get; set; }
-        public string url { get; set; }
-        public int id { get; set; }
-
-        public Show(string Title, string Description, string URL, int Id, ItunesImage Image)
-        {
-            title = Title;
-            description = Description;
-            url = URL;
-            id = Id;
-            image = Image;
-        }
-
+        public string Image { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Url { get; set; }
+        public int Id { get; set; }
     }
 }

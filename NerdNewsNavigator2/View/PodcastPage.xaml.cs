@@ -4,9 +4,9 @@ namespace NerdNewsNavigator2.View;
 
 public partial class PodcastPage : ContentPage
 {
-    public PodcastPage()
+    public PodcastPage(PodcastViewModel viewmodel)
     {
         InitializeComponent();
-        this.BindingContext = new PodcastViewModel();
+        BindingContext = viewmodel;
     }
 }
