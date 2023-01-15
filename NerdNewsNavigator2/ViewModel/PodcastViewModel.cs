@@ -48,9 +48,8 @@ public partial class PodcastViewModel : ObservableObject
     }
    
     [RelayCommand]
-    async Task Tap(string s)
+    async Task Tap(string param)
     {
-        string param = s;
         await Shell.Current.GoToAsync($"{nameof(ShowPage)}?param={param}");
     }
 }

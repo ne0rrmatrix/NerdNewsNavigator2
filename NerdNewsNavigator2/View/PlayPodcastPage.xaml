@@ -4,9 +4,14 @@
               xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.PlayPodcastPage"
              x:DataType="viewmodel:PlayPodcastViewModel"
-             xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaElement;assembly=CommunityToolkit.Maui.MediaElement"
+             xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaView;assembly=CommunityToolkit.Maui.MediaView"
              Title="">
-    <VerticalStackLayout>
-        <media:MediaElement WidthRequest="420" HeightRequest="240"  ShowsPlaybackControls="True" AutoPlay="True" Source="{Binding Url}"></media:MediaElement>
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="True">
+
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
+    <VerticalStackLayout Padding="3">
+        <media:MediaView  HeightRequest="240" WidthRequest="320" MaximumHeightRequest="640" MaximumWidthRequest="480" ShouldAutoPlay="True" ShouldKeepScreenOn="True"  Source="{Binding Url}"></media:MediaView>
     </VerticalStackLayout>
 </ContentPage>

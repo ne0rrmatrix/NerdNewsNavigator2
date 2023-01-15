@@ -7,14 +7,18 @@
              x:DataType="viewmodel:PodcastViewModel"
              Title=""
              BackgroundColor="White">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="False">
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
     <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Frame HeightRequest="175" WidthRequest="375">
+                <Frame  WidthRequest="375" Padding="3" BackgroundColor="White">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer 
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
-                                        CommandParameter="{Binding Url}"/>
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
+                            CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
                     <HorizontalStackLayout Padding="10" Spacing="10">
                         <Image Grid.RowSpan="2"
@@ -23,9 +27,10 @@
                         WidthRequest="100"
                         Source="{Binding Image}">
                         </Image>
-                        <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center">
-                            <Label Text="{Binding Title}" FontSize="14" MaximumWidthRequest="300" LineBreakMode="WordWrap"/>
-                            <Label Text="{Binding Description}" FontSize="10" LineBreakMode="WordWrap" MaximumWidthRequest="200" MaximumHeightRequest="400"></Label>
+                        <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center" >
+                            
+                            <Label Text="{Binding Title}" TextColor="Black" FontSize="14" MaximumWidthRequest="300" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Description}" FontSize="10" TextColor="Black" LineBreakMode="WordWrap" MaximumWidthRequest="200" MaximumHeightRequest="400"></Label>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
