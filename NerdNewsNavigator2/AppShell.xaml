@@ -7,7 +7,6 @@
     Shell.FlyoutBehavior="Disabled">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False">
-
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <ShellContent
@@ -15,5 +14,4 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:PodcastPage}"
         Route="MainPage" />
-
 </Shell>

@@ -13,7 +13,5 @@ public partial class PlayPodcastViewModel: ObservableObject
     
     [ObservableProperty]
     public string url;
-
-   
 }
 
