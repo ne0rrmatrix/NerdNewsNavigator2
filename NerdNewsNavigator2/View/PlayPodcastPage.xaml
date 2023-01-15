@@ -7,6 +7,6 @@
              xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaElement;assembly=CommunityToolkit.Maui.MediaElement"
              Title="">
     <VerticalStackLayout>
-        <media:MediaElement ShowsPlaybackControls="True" AutoPlay="True" Source="{Binding Url}"></media:MediaElement>
+        <media:MediaElement WidthRequest="420" HeightRequest="240"  ShowsPlaybackControls="True" AutoPlay="True" Source="{Binding Url}"></media:MediaElement>
     </VerticalStackLayout>
 </ContentPage>
