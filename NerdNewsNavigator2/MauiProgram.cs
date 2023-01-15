@@ -2,7 +2,6 @@
 using NerdNewsNavigator2.ViewModel;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.MediaView;
-using Microsoft.Extensions.Logging;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram

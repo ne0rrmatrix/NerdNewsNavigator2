@@ -1,8 +1,4 @@
-﻿
-
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using NerdNewsNavigator2.View;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace NerdNewsNavigator2.ViewModel;
 

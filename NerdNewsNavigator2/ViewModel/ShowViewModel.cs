@@ -5,7 +5,6 @@ using NerdNewsNavigator2.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NerdNewsNavigator2.View;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
 
 namespace NerdNewsNavigator2.ViewModel;
 
@@ -55,6 +54,7 @@ public partial class ShowViewModel : ObservableObject
             return result;
         }
     }
+
     [RelayCommand]
     async Task Tap(string Url)
     {

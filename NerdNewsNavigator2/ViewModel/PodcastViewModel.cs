@@ -11,9 +11,7 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class PodcastViewModel : ObservableObject
 {
     #region Properties
-  
     public ObservableCollection<Podcast> Podcasts { get;  } = new();
-   
     #endregion
     public PodcastViewModel()
     {
