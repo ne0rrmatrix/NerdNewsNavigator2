@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using NerdNewsNavigator2.Model;
-using NerdNewsNavigator2.View;
+﻿using NerdNewsNavigator2.View;
 using NerdNewsNavigator2.ViewModel;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.MediaElement;
+using Microsoft.Extensions.Logging;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -16,13 +15,17 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
-#if DEBUG
+  #if DEBUG
         builder.Logging.AddDebug();
 #endif
         builder.Services.AddSingleton<PodcastPage>();
         builder.Services.AddSingleton<PodcastViewModel>();
+
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
+
+        builder.Services.AddTransient<PlayPodcastPage>();
+        builder.Services.AddTransient<PlayPodcastViewModel>();
         return builder.Build();
     }
 }

@@ -5,22 +5,27 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.ShowPage"
              x:DataType="viewmodel:ShowViewModel"
-             xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaElement;assembly=CommunityToolkit.Maui.MediaElement"
-
              Title="">
     <CollectionView  ItemsSource="{Binding Shows}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <StackLayout  VerticalOptions="Start" Spacing="10" Padding="10">
-                    <Label   Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="12"  LineBreakMode="WordWrap"/>
-                    <Image Aspect="AspectFill" Source="{Binding Image}">
-                    </Image>
-                    <Label Text="{Binding Description}" 
+                <Frame WidthRequest="375">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}"
+                                        CommandParameter="{Binding Url}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout  VerticalOptions="Start" Spacing="10" Padding="10">
+                        <Label   Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="12"  LineBreakMode="WordWrap"/>
+                        <Image Aspect="AspectFill" Source="{Binding Image}">
+                        </Image>
+                        <Label Text="{Binding Description}" 
                            FontSize="10" 
                            LineBreakMode="WordWrap"  
                            TextType="Html">
-                    </Label>
-                </StackLayout>
+                        </Label>
+                    </StackLayout>
+                </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

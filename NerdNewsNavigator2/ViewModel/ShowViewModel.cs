@@ -3,6 +3,8 @@ using CodeHollow.FeedReader;
 using System.Collections.ObjectModel;
 using NerdNewsNavigator2.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
+using NerdNewsNavigator2.View;
+using CommunityToolkit.Mvvm.Input;
 
 namespace NerdNewsNavigator2.ViewModel;
 
@@ -46,10 +48,16 @@ public partial class ShowViewModel : ObservableObject
         {
             Show show = new()
             {
-                Title = string.Empty
+                Title = string.Empty,
             };
             result.Add(show);
             return result;
         }
+    }
+
+    [RelayCommand]
+    async Task Tap(string Url)
+    {
+        await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");
     }
 }

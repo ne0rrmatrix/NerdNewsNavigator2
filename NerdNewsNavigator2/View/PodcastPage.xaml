@@ -16,7 +16,6 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
                                         CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
-
                     <HorizontalStackLayout Padding="10" Spacing="10">
                         <Image Grid.RowSpan="2"
                         Aspect="AspectFill"
@@ -27,9 +26,8 @@
                         <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center">
                             <Label Text="{Binding Title}" FontSize="14" MaximumWidthRequest="300" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding Description}" FontSize="10" LineBreakMode="WordWrap" MaximumWidthRequest="200" MaximumHeightRequest="400"></Label>
-                    </VerticalStackLayout>
-                    
-                </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
