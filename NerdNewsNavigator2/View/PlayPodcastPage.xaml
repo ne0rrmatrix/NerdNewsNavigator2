@@ -7,9 +7,15 @@
              xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaView;assembly=CommunityToolkit.Maui.MediaView"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="True"></BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <VerticalStackLayout Padding="3">
-        <media:MediaView  HeightRequest="240" WidthRequest="320" ShouldAutoPlay="True" ShouldKeepScreenOn="True"  Source="{Binding Url}"></media:MediaView>
+        <Frame>
+            <Frame.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Left"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" CommandParameter="{Binding Url}"/>
+            </Frame.GestureRecognizers>
+            <media:MediaView  HeightRequest="240" WidthRequest="320" ShouldAutoPlay="True" ShouldKeepScreenOn="True"  Source="{Binding Url}"></media:MediaView>
+        </Frame>
     </VerticalStackLayout>
 </ContentPage>

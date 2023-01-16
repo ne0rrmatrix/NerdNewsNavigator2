@@ -54,6 +54,12 @@ public partial class ShowViewModel : ObservableObject
             return result;
         }
     }
+    [RelayCommand]
+    async Task SwipeGesture_Left_Podcast(string Url)
+    {
+                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}?Url={Url}");
+           
+    }
 
     [RelayCommand]
     async Task Tap(string Url)
