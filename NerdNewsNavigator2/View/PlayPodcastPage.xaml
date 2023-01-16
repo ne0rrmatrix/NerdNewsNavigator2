@@ -4,31 +4,27 @@
               xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.PlayPodcastPage"
              x:DataType="viewmodel:PlayPodcastViewModel"
-             xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaView;assembly=CommunityToolkit.Maui.MediaView"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    NavigationPage.HasNavigationBar="False" NavigationPage.HasBackButton="False"
+             Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <VerticalStackLayout Padding="5">
-        <Frame Padding="10" 
-               VerticalOptions="Center"
-               HorizontalOptions="Center"
-               MaximumHeightRequest="{OnPlatform Android=790,iOS=100, WinUI=800}">
-            <Frame.GestureRecognizers>
-                <SwipeGestureRecognizer 
+    <Grid BackgroundColor="DarkSlateGrey">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer 
                     Direction="Left"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" 
                     CommandParameter="{Binding Url}"/>
-            </Frame.GestureRecognizers>
-            <media:MediaView  
-                VerticalOptions="Center"
-               HorizontalOptions="Center"
-                MaximumHeightRequest="{OnPlatform iOS=100, WinUI=600}" 
-                ShouldAutoPlay="True" 
-                ShouldKeepScreenOn="True"  
-                Source="{Binding Url}">
-            </media:MediaView>
-        </Frame>
-    </VerticalStackLayout>
+        </Grid.GestureRecognizers>
+        <StackLayout Grid.Row="0" Grid.Column="0" Spacing="5" Orientation="Horizontal" Padding="8">
+        </StackLayout>
+        <WebView Grid.Row="1" Grid.Column="0" Source="{Binding Url}" x:Name="WebView"/>
+    </Grid>
 </ContentPage>
