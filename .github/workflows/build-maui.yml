@@ -9,8 +9,8 @@ on:
       - '.github/workflows/build-maui.yml' 
 
 env:
-  PROJECT_PATH: "src/NerdNewsNavigator2/NerdNewsNavigator2.csproj"
-  NUGETCONFIG_PATH: "src/NuGet.Config"
+  PROJECT_PATH: "/NerdNewsNavigator2/NerdNewsNavigator2.csproj"
+  NUGETCONFIG_PATH: "nuget.config"
 
 jobs:
 
