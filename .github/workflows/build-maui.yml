@@ -11,8 +11,6 @@ on:
 env:
   PROJECT_PATH: "src/NerdNewsNavigator2/NerdNewsNavigator2.csproj"
   NUGETCONFIG_PATH: "src/NuGet.Config"
-  TELERIK_USERNAME: ${{ secrets.MyTelerikAccountUsername }} # used by the NuGet.Config file
-  TELERIK_PASSWORD: ${{ secrets.MyTelerikAccountPassword }} # used by the NuGet.Config file
 
 jobs:
 
