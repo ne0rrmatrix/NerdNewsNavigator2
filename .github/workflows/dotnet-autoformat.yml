@@ -1,3 +1,4 @@
+name: Auto Format dotnet code
 on: push
 
 # This action only need a single permission in order to autoformat the code.
