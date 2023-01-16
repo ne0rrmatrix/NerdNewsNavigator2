@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'src/MAUI/**/*'
-      - '.github/workflows/build.yml' 
+      - '.github/workflows/build-maui.yml' 
 
 env:
   PROJECT_PATH: "src/NerdNewsNavigator2/NerdNewsNavigator2.csproj"
