@@ -24,11 +24,21 @@
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                             CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
-                    <StackLayout  VerticalOptions="Start" Spacing="10" Padding="10">
-                        <Label   Text="{Binding Title}" HorizontalTextAlignment="Center" TextColor="Black"  FontSize="12"  LineBreakMode="WordWrap"/>
+                    <StackLayout VerticalOptions="Start" Spacing="10" Padding="10">
+                        <Label Text="{Binding Title}" 
+                               HorizontalTextAlignment="Center" 
+                               TextColor="Black"  
+                               FontSize="12"  
+                               LineBreakMode="WordWrap"/>
                         <Image Aspect="AspectFill" Source="{Binding Image}" HeightRequest="{OnPlatform WinUI=400}">
                         </Image>
-                        <Label Text="{Binding Description}" MaximumHeightRequest="{OnPlatform WinUI=1200}" FontSize="10" LineBreakMode="WordWrap" TextColor="Black" TextType="Html"></Label>
+                        <Label Text="{Binding Description}" 
+                               MaximumHeightRequest="{OnPlatform WinUI=1200}" 
+                               FontSize="10" 
+                               LineBreakMode="WordWrap" 
+                               TextColor="Black" 
+                               TextType="Html">
+                        </Label>
                     </StackLayout>
                 </Frame>
             </DataTemplate>
