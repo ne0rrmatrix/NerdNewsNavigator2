@@ -22,11 +22,6 @@ public partial class ShowViewModel : ObservableObject
             OnPropertyChanged(nameof(Shows));
         }
     }
-    public ShowViewModel()
-    {
-
-    }
-
     private static ObservableCollection<Show> GetShow(string url)
     {
         ObservableCollection<Show> result = new();
