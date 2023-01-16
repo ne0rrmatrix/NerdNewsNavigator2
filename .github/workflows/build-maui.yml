@@ -46,7 +46,7 @@ jobs:
         echo "::set-output name=APP_VERSION::$ver"
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-PullRequests/nuget/v3/index.json
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: pwsh
@@ -86,7 +86,7 @@ jobs:
         echo "::set-output name=APP_VERSION::$ver"
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-PullRequests/nuget/v3/index.json
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: pwsh
@@ -128,7 +128,7 @@ jobs:
         echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-PullRequests/nuget/v3/index.json
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: bash
@@ -171,7 +171,7 @@ jobs:
         echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-PullRequests/nuget/v3/index.json
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: bash
