@@ -52,7 +52,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android --no-restore
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0 --no-restore
 
 
 # ***************************** #
@@ -134,7 +134,7 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net6.0-ios --no-restore
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios --no-restore
 
 
 # ********************************* #
@@ -177,4 +177,4 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net6.0-maccatalyst -c Debug --no-restore
+      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Debug --no-restore
