@@ -14,4 +14,3 @@ jobs:
       uses: rolfbjarne/autoformat@v0.2
       with:
         projects: "NerdNewsNavigator2.sln"
-        onlyFilesModifiedInPullRequest: true
