@@ -25,30 +25,37 @@ public partial class PodcastViewModel : ObservableObject
         ObservableCollection<Podcast> temp = new();
         string jsonString = @"[{""title"":""https://feeds.twit.tv/ww_video_hd.xml""},{""title"":""https://feeds.twit.tv/aaa_video_hd.xml""},{""title"":""https://feeds.twit.tv/floss_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/hom_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/hop_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/howin_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ipad_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/mbw_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/sn_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ttg_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/tnw_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/twiet_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/twig_video_hd.xml""},{""title"":""https://feeds.twit.tv/twit_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/events_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/specials_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/bits_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/throwback_video_large.xml""},{ ""title"":""https://feeds.twit.tv/leo_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ant_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/jason_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/mikah_video_hd.xml""}]";
         var data = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(jsonString);
-
-        foreach (var item in data)
+        try
         {
-            foreach (var (podcast, url) in item)
+            foreach (var item in data)
             {
-                var feed = FeedReader.ReadAsync(url);
-                Podcast podcasts = new()
+                foreach (var (podcast, url) in item)
                 {
-                    Title = feed.Result.Title,
-                    Description = feed.Result.Description,
-                    Image = feed.Result.ImageUrl,
-                    Url = url
-                };
-                temp.Add(podcasts);
-                numberOfPodcasts++;
+                    var feed = FeedReader.ReadAsync(url);
+                    Podcast podcasts = new()
+                    {
+                        Title = feed.Result.Title,
+                        Description = feed.Result.Description,
+                        Image = feed.Result.ImageUrl,
+                        Url = url
+                    };
+                    temp.Add(podcasts);
+                    numberOfPodcasts++;
+                }
             }
+        }
+        catch
+        {
+            Podcast podcats = new()
+            {
+                Title = string.Empty,
+            };
+            temp.Add(podcats);
         }
         return temp;
     }
    
     [RelayCommand]
-    async Task Tap(string param)
-    {
-        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?param={param}");
-    }
+    async Task Tap(string param) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?param={param}");
 }
 
