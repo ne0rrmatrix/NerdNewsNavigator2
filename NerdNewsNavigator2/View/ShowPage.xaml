@@ -7,7 +7,7 @@
              x:DataType="viewmodel:ShowViewModel"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="True">
+        <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <CollectionView  ItemsSource="{Binding Shows}">
@@ -15,6 +15,8 @@
             <DataTemplate x:DataType="model:Show">
                 <Frame WidthRequest="375" BackgroundColor="White" Padding="3">
                     <Frame.GestureRecognizers>
+                        <SwipeGestureRecognizer Direction="Left"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Podcast}" CommandParameter="{Binding Url}"/>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
                     <StackLayout  VerticalOptions="Start" Spacing="10" Padding="10">
