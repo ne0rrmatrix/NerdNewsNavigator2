@@ -1,12 +1,6 @@
 name: Build MAUI Project
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/MAUI/**/*'
-      - '.github/workflows/build-maui.yml' 
+on: push
 
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
