@@ -7,15 +7,28 @@
              xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaView;assembly=CommunityToolkit.Maui.MediaView"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <VerticalStackLayout Padding="3">
-        <Frame>
+    <VerticalStackLayout Padding="5">
+        <Frame Padding="10" 
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               MaximumHeightRequest="{OnPlatform Android=790,iOS=100, WinUI=800}">
             <Frame.GestureRecognizers>
-                <SwipeGestureRecognizer Direction="Left"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" CommandParameter="{Binding Url}"/>
+                <SwipeGestureRecognizer 
+                    Direction="Left"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" 
+                    CommandParameter="{Binding Url}"/>
             </Frame.GestureRecognizers>
-            <media:MediaView  HeightRequest="240" WidthRequest="320" ShouldAutoPlay="True" ShouldKeepScreenOn="True"  Source="{Binding Url}"></media:MediaView>
+            <media:MediaView  
+                VerticalOptions="Center"
+               HorizontalOptions="Center"
+                MaximumHeightRequest="{OnPlatform iOS=100, WinUI=600}" 
+                ShouldAutoPlay="True" 
+                ShouldKeepScreenOn="True"  
+                Source="{Binding Url}">
+            </media:MediaView>
         </Frame>
     </VerticalStackLayout>
 </ContentPage>

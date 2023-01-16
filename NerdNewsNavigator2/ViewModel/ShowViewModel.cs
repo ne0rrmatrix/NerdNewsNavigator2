@@ -11,7 +11,9 @@ namespace NerdNewsNavigator2.ViewModel;
 [QueryProperty("param", "param")]
 public partial class ShowViewModel : ObservableObject
 {
+    #region Properties
     public ObservableCollection<Show> Shows { get; set; } = new();
+    #endregion
     public string param
     {
         set
@@ -55,15 +57,8 @@ public partial class ShowViewModel : ObservableObject
         }
     }
     [RelayCommand]
-    async Task SwipeGesture_Left_Podcast(string Url)
-    {
-                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}?Url={Url}");
-           
-    }
+    async Task SwipeGesture_Left_Podcast(string Url) => await Shell.Current.GoToAsync($"{nameof(PodcastPage)}?Url={Url}");
 
     [RelayCommand]
-    async Task Tap(string Url)
-    {
-        await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");
-    }
+    async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");
 }
