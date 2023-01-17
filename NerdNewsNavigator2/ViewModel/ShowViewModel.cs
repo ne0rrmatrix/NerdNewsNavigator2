@@ -12,13 +12,13 @@ using NerdNewsNavigator2.View;
 
 namespace NerdNewsNavigator2.ViewModel;
 
-[QueryProperty("param", "param")]
+[QueryProperty("Url", "Url")]
 public partial class ShowViewModel : ObservableObject
 {
     #region Properties
     public ObservableCollection<Show> Shows { get; set; } = new();
     #endregion
-    public string param
+    public string Url
     {
         set
         {
