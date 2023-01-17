@@ -1,7 +1,11 @@
-﻿using NerdNewsNavigator2.View;
-using NerdNewsNavigator2.ViewModel;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using NerdNewsNavigator2.View;
+using NerdNewsNavigator2.ViewModel;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -14,7 +18,7 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit();
-  #if DEBUG
+#if DEBUG
         builder.Logging.AddDebug();
 #endif
         builder.Services.AddSingleton<PodcastPage>();

@@ -1,17 +1,21 @@
-﻿using CodeHollow.FeedReader;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CodeHollow.FeedReader;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NerdNewsNavigator2.Model;
 using NerdNewsNavigator2.View;
-using System.Collections.ObjectModel;
-using System.Text.Json;
 
 namespace NerdNewsNavigator2.ViewModel;
 
 public partial class PodcastViewModel : ObservableObject
 {
     #region Properties
-    public ObservableCollection<Podcast> Podcasts { get;  } = new();
+    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
     public PodcastViewModel()
     {
@@ -54,7 +58,7 @@ public partial class PodcastViewModel : ObservableObject
         }
         return temp;
     }
-   
+
     [RelayCommand]
     async Task Tap(string param) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?param={param}");
 }

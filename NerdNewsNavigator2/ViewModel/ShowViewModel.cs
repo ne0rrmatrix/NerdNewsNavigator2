@@ -1,10 +1,14 @@
-﻿using CodeHollow.FeedReader.Feeds.Itunes;
-using CodeHollow.FeedReader;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Collections.ObjectModel;
-using NerdNewsNavigator2.Model;
+using CodeHollow.FeedReader;
+using CodeHollow.FeedReader.Feeds.Itunes;
 using CommunityToolkit.Mvvm.ComponentModel;
-using NerdNewsNavigator2.View;
 using CommunityToolkit.Mvvm.Input;
+using NerdNewsNavigator2.Model;
+using NerdNewsNavigator2.View;
 
 namespace NerdNewsNavigator2.ViewModel;
 
