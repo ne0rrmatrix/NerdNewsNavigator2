@@ -29,6 +29,7 @@
                                HorizontalTextAlignment="Center" 
                                TextColor="Black"  
                                FontSize="12"  
+                               FontAttributes="Bold"
                                LineBreakMode="WordWrap"/>
                         <Image Aspect="AspectFill" Source="{Binding Image}" HeightRequest="{OnPlatform WinUI=400}">
                         </Image>
