@@ -13,6 +13,6 @@ public partial class PlayPodcastViewModel: ObservableObject
     #endregion
     
     [RelayCommand]
-    async Task SwipeGesture_Left_Show(string Url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={Url}");
+    async Task SwipeGesture(string Url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={Url}");
 }
 

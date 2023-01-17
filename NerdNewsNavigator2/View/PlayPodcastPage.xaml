@@ -20,7 +20,7 @@
         <Grid.GestureRecognizers>
             <SwipeGestureRecognizer 
                     Direction="Left"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" 
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}" 
                     CommandParameter="{Binding Url}"/>
         </Grid.GestureRecognizers>
         <StackLayout Grid.Row="0" Grid.Column="0" Spacing="5" Orientation="Horizontal" Padding="8">
