@@ -13,7 +13,7 @@ public partial class PlayPodcastViewModel : ObservableObject
 {
     #region Properties
     [ObservableProperty]
-    public string url; //# Observable properties have to be lower case
+    public string _url;
     #endregion
 
     [RelayCommand]

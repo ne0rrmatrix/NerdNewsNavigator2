@@ -18,11 +18,11 @@ public partial class PodcastViewModel : ObservableObject
     #endregion
     public PodcastViewModel()
     {
-        this.Podcasts = PodcastViewModel.GetFeed();
+        this.Podcasts = PodcastViewModel.GetPodcast();
         OnPropertyChanged(nameof(Podcasts));
     }
-
-    private static ObservableCollection<Podcast> GetFeed()
+    #region GetPodcast
+    private static ObservableCollection<Podcast> GetPodcast()
     {
         var numberOfPodcasts = 0;
         ObservableCollection<Podcast> temp = new();
@@ -77,7 +77,7 @@ public partial class PodcastViewModel : ObservableObject
         }
         return temp;
     }
-
+    #endregion
     [RelayCommand]
     async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={Url}");
 }

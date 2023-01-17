@@ -18,6 +18,7 @@ public partial class ShowViewModel : ObservableObject
     #region Properties
     public ObservableCollection<Show> Shows { get; set; } = new();
     #endregion
+
     public string Url
     {
         set
@@ -26,6 +27,7 @@ public partial class ShowViewModel : ObservableObject
             OnPropertyChanged(nameof(Shows));
         }
     }
+    #region GetShow
     private static ObservableCollection<Show> GetShow(string url)
     {
         ObservableCollection<Show> result = new();
@@ -55,6 +57,7 @@ public partial class ShowViewModel : ObservableObject
             return result;
         }
     }
+    #endregion
     [RelayCommand]
     async Task SwipedGesture(string Url) => await Shell.Current.GoToAsync($"{nameof(PodcastPage)}?Url={Url}");
 
