@@ -10,16 +10,21 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
+    <StackLayout
+         BackgroundColor="White" 
+                       Padding="10">
+        <StackLayout.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Right" 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}"/>
+        </StackLayout.GestureRecognizers>
+    
     <CollectionView  ItemsSource="{Binding Shows}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame WidthRequest="{OnPlatform Android=375, iOS=375, WinUI=800}" 
-                       BackgroundColor="White" 
-                       Padding="10">
+                      >
                     <Frame.GestureRecognizers>
-                        <SwipeGestureRecognizer Direction="Left" 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}" 
-                            CommandParameter="{Binding Url}"/>
+                        
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                             CommandParameter="{Binding Url}"/>
@@ -44,5 +49,6 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
-    </CollectionView>
+        </CollectionView>
+    </StackLayout>
 </ContentPage>

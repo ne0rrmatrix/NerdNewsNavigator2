@@ -12,18 +12,19 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <Grid BackgroundColor="Black">
+    <Grid BackgroundColor="White" Padding="10">
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer 
+                    Direction="Right"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PlayPodcastViewModel}}, Path=SwipedGestureCommand}"/>
+        </Grid.GestureRecognizers>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.GestureRecognizers>
-            <SwipeGestureRecognizer 
-                    Direction="Left"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}" 
-                    CommandParameter="{Binding Url}"/>
-        </Grid.GestureRecognizers>
+        
         <StackLayout Grid.Row="0" Grid.Column="0" Spacing="5" Orientation="Horizontal" Padding="8">
+            
         </StackLayout>
         <WebView Grid.Row="1" Grid.Column="0" Source="{Binding Url}" x:Name="WebView"/>
     </Grid>
