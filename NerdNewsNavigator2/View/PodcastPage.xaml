@@ -18,7 +18,7 @@
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
-                    <HorizontalStackLayout Padding="10" BackgroundColor="White">
+                    <HorizontalStackLayout Padding="10">
                         <Image Grid.RowSpan="2" 
                                        Aspect="AspectFill" 
                                        HeightRequest="{OnPlatform Android=100,iOS=100,WinUI=375}" 
