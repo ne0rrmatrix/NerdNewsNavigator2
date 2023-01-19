@@ -5,28 +5,20 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.ShowPage"
              x:DataType="viewmodel:ShowViewModel"
+             Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <StackLayout
-         BackgroundColor="White" 
-                       Padding="10">
-        <StackLayout.GestureRecognizers>
-            <SwipeGestureRecognizer Direction="Right" 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}"/>
-        </StackLayout.GestureRecognizers>
-    
-    <CollectionView  ItemsSource="{Binding Shows}">
-        <CollectionView.GestureRecognizers>
-            <SwipeGestureRecognizer Direction="Right" 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}" />
-        </CollectionView.GestureRecognizers>
+    <CollectionView  ItemsSource="{Binding Shows}" SelectionMode="None" BackgroundColor="White">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame WidthRequest="{OnPlatform Android=375, iOS=375, WinUI=800}">
                     <Frame.GestureRecognizers>
+                        <SwipeGestureRecognizer 
+                Direction="Right" 
+                Swiped="SwipedGesture"/>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                             CommandParameter="{Binding Url}"/>
@@ -41,7 +33,7 @@
                         <Image Aspect="AspectFill" Source="{Binding Image}" HeightRequest="{OnPlatform WinUI=400}">
                         </Image>
                         <Label Text="{Binding Description}" 
-                               MaximumHeightRequest="{OnPlatform WinUI=1200}" 
+                               MaximumHeightRequest="{OnPlatform WinUI=800}" 
                                FontSize="10" 
                                LineBreakMode="WordWrap" 
                                TextColor="Black" 
@@ -51,6 +43,5 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
-        </CollectionView>
-    </StackLayout>
+    </CollectionView>
 </ContentPage>

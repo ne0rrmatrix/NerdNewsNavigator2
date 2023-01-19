@@ -13,4 +13,13 @@ public partial class PlayPodcastPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
+    private void SwipedGesture(object sender, SwipedEventArgs e)
+    {
+        switch (e.Direction)
+        {
+            case SwipeDirection.Right:
+                Shell.Current.GoToAsync("..");
+                break;
+        }
+    }
 }

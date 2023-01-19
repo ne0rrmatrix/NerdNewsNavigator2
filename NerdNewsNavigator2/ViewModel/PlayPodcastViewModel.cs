@@ -15,8 +15,9 @@ public partial class PlayPodcastViewModel : ObservableObject
     [ObservableProperty]
     public string _url;
     #endregion
+    public PlayPodcastViewModel()
+    {
 
-    [RelayCommand]
-    static async Task SwipedGesture() => await Shell.Current.GoToAsync("..");
+    }
 }
 

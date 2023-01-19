@@ -114,6 +114,9 @@
 	</ItemGroup>
 
 	<!-- Windows -->
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+  </ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
 		<Compile Remove="**\*.Windows.cs" />
 		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
@@ -143,8 +146,9 @@
 	
 	<ItemGroup>
 		<PackageReference Include="CodeHollow.FeedReader" Version="1.2.4" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="3.1.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="3.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-preview3713" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="1.0.0-preview3713" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaPlayer" Version="1.0.0-build-667.86042" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0-preview3" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	</ItemGroup>

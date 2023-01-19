@@ -58,8 +58,6 @@ public partial class ShowViewModel : ObservableObject
         }
     }
     #endregion
-    [RelayCommand]
-    static async Task SwipedGesture() => await Shell.Current.GoToAsync("..");
 
     [RelayCommand]
     async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");

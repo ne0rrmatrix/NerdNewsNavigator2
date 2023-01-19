@@ -2,29 +2,26 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
               xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="NerdNewsNavigator2.View.PlayPodcastPage"
               x:DataType="viewmodel:PlayPodcastViewModel"
-             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-    NavigationPage.HasNavigationBar="False" NavigationPage.HasBackButton="False"
              Shell.NavBarIsVisible="False"
              Title="">
-    <Shell.BackButtonBehavior>
+   <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <Grid Padding="10">
+    <Grid>
         <Grid.GestureRecognizers>
             <SwipeGestureRecognizer
-                    Direction="Right"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PlayPodcastViewModel}}, Path=SwipedGestureCommand}"/>
+                  Direction="Right" 
+                Swiped="SwipedGesture" />
         </Grid.GestureRecognizers>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-       
-        <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-        </StackLayout>
-        <WebView Grid.Row="1" Grid.Column="0" Source="{Binding Url}" x:Name="WebView"/>
+        <toolkit:MediaPlayer
+            ShouldAutoPlay="True"
+            ShouldKeepScreenOn="True"
+            ShouldShowPlaybackControls="True"
+            Source="{Binding Url}">
+        </toolkit:MediaPlayer>
     </Grid>
 </ContentPage>
