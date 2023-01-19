@@ -10,6 +10,14 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
+    <StackLayout
+         BackgroundColor="White" 
+                       Padding="10">
+        <StackLayout.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Right" 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGestureCommand}"/>
+        </StackLayout.GestureRecognizers>
+    
     <CollectionView  ItemsSource="{Binding Shows}">
         <CollectionView.GestureRecognizers>
             <SwipeGestureRecognizer Direction="Right" 
@@ -43,5 +51,6 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
-    </CollectionView>
+        </CollectionView>
+    </StackLayout>
 </ContentPage>
