@@ -27,6 +27,10 @@ public partial class ShowViewModel : ObservableObject
             OnPropertyChanged(nameof(Shows));
         }
     }
+    public ShowViewModel()
+    {
+
+    }
     #region GetShow
     private static ObservableCollection<Show> GetShow(string url)
     {

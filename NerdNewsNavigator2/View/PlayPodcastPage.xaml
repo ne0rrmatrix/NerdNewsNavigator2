@@ -11,17 +11,18 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <Grid>
-        <Grid.GestureRecognizers>
+    <FlexLayout>
+        <FlexLayout.GestureRecognizers>
             <SwipeGestureRecognizer
                   Direction="Right" 
                 Swiped="SwipedGesture" />
-        </Grid.GestureRecognizers>
+        </FlexLayout.GestureRecognizers>
         <toolkit:MediaPlayer
+            IsVisible="True"
             ShouldAutoPlay="True"
             ShouldKeepScreenOn="True"
             ShouldShowPlaybackControls="True"
             Source="{Binding Url}">
         </toolkit:MediaPlayer>
-    </Grid>
+    </FlexLayout>
 </ContentPage>
