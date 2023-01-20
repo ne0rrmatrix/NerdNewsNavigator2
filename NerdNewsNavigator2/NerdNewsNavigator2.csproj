@@ -107,8 +107,8 @@
 	
 	<ItemGroup>
 		<PackageReference Include="CodeHollow.FeedReader" Version="1.2.4" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="3.1.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="3.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="3.2.0-build-910.86098" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="3.2.0-build-910.86098" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaPlayer" Version="1.0.0-build-667.86069" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />

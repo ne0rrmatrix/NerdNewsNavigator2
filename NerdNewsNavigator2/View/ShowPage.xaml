@@ -8,43 +8,45 @@
              Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=False}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="CenterAndExpand" SelectionMode="None" BackgroundColor="White">
+    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" HorizontalOptions="CenterAndExpand" BackgroundColor="White">
+                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
                     <Frame.GestureRecognizers>
                         <SwipeGestureRecognizer 
-                Direction="Right" 
-                Swiped="SwipedGesture"/>
+                        Direction="Right" 
+                        Swiped="SwipedGesture"/>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                             CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="CenterAndExpand" BackgroundColor="White">
+                    <StackLayout BackgroundColor="White">
                         <Label 
                             Text="{Binding Title}" 
-                            HorizontalOptions="Center" 
+                            HorizontalOptions="CenterAndExpand" 
+                            VerticalOptions="CenterAndExpand"
                             TextColor="Black"  
-                            FontSize="14"  
+                            FontSize="18"  
                             FontAttributes="Bold"
                             LineBreakMode="WordWrap"/>
                         <Image 
                             Aspect="AspectFit" 
-                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=700}" 
-                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=700}" 
+                            Margin="5"
+                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
                             Source="{Binding Image}">
                         </Image>
                         <Label Text="{Binding Description}" 
-                            HorizontalOptions="StartAndExpand" 
-                            FontSize="12" 
+                            HorizontalOptions="Start"
+                            FontSize="14" 
                             LineBreakMode="WordWrap" 
                             TextColor="Black" 
                             TextType="Html">
                         </Label>
-                    </VerticalStackLayout>
+                    </StackLayout>
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
