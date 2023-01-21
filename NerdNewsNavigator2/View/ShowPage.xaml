@@ -5,30 +5,47 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
              x:Class="NerdNewsNavigator2.View.ShowPage"
              x:DataType="viewmodel:ShowViewModel"
+             Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=False}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Shows}">
+    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Frame WidthRequest="{OnPlatform Android=375, iOS=375, WinUI=800}" 
-                       BackgroundColor="White" 
-                       Padding="10">
+                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
                     <Frame.GestureRecognizers>
-                        <SwipeGestureRecognizer Direction="Left" 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Podcast}" 
-                            CommandParameter="{Binding Url}"/>
+                        <SwipeGestureRecognizer 
+                        Direction="Right" 
+                        Swiped="SwipedGesture"/>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                             CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
-                    <StackLayout  VerticalOptions="Start" Spacing="10" Padding="10">
-                        <Label   Text="{Binding Title}" HorizontalTextAlignment="Center" TextColor="Black"  FontSize="12"  LineBreakMode="WordWrap"/>
-                        <Image Aspect="AspectFill" Source="{Binding Image}" HeightRequest="{OnPlatform WinUI=400}">
+                    <StackLayout BackgroundColor="White">
+                        <Label 
+                            Text="{Binding Title}" 
+                            HorizontalOptions="CenterAndExpand" 
+                            VerticalOptions="CenterAndExpand"
+                            TextColor="Black"  
+                            FontSize="18"  
+                            FontAttributes="Bold"
+                            LineBreakMode="WordWrap"/>
+                        <Image 
+                            Aspect="AspectFit" 
+                            Margin="5"
+                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            Source="{Binding Image}">
                         </Image>
-                        <Label Text="{Binding Description}" MaximumHeightRequest="{OnPlatform WinUI=1200}" FontSize="10" LineBreakMode="WordWrap" TextColor="Black" TextType="Html"></Label>
+                        <Label Text="{Binding Description}" 
+                            HorizontalOptions="Start"
+                            FontSize="14" 
+                            LineBreakMode="WordWrap" 
+                            TextColor="Black" 
+                            TextType="Html">
+                        </Label>
                     </StackLayout>
                 </Frame>
             </DataTemplate>
