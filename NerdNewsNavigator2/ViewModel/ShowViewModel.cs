@@ -9,11 +9,6 @@ public partial class ShowViewModel : BaseViewModel
     #region Properties
     readonly TwitService _twitService;
     public ObservableCollection<Show> Shows { get; set; } = new();
-    #endregion
-    public ShowViewModel(TwitService twitService)
-    {
-        _twitService = twitService;
-    }
     public string Url
     {
         set
@@ -21,6 +16,11 @@ public partial class ShowViewModel : BaseViewModel
             _ = GetShows(value);
             OnPropertyChanged(nameof(Shows));
         }
+    }
+    #endregion
+    public ShowViewModel(TwitService twitService)
+    {
+        _twitService = twitService;
     }
     public ShowViewModel()
     {
