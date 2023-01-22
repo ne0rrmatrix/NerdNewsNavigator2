@@ -11,6 +11,17 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
+  <!--  <Grid RowDefinitions="*,Auto">
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer
+                  Direction="Right" 
+                Swiped="SwipedGesture" />
+        </Grid.GestureRecognizers>
+        <WebView x:Name="webview" Source="{Binding Url}">
+        </WebView>
+    </Grid>
+    -->
+    
     <FlexLayout>
         <FlexLayout.GestureRecognizers>
             <SwipeGestureRecognizer
@@ -25,4 +36,5 @@
             Source="{Binding Url}">
         </toolkit:MediaPlayer>
     </FlexLayout>
+    
 </ContentPage>
