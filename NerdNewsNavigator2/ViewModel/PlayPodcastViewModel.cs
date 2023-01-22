@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
@@ -14,4 +12,3 @@ public partial class PlayPodcastViewModel : ObservableObject
     public string _url;
     #endregion
 }
-

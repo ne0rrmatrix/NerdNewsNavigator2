@@ -14,7 +14,7 @@ public partial class PodcastViewModel : BaseViewModel
         this._twitService = twit;
         _ = GetPodcasts();
     }
-    #region Get the Podcast
+    #region Get the Podcast and set the Podcast List
     async Task GetPodcasts()
     {
         if (IsBusy)
@@ -44,7 +44,7 @@ public partial class PodcastViewModel : BaseViewModel
         }
     }
     #endregion
+
     [RelayCommand]
     async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={url}");
 }
-

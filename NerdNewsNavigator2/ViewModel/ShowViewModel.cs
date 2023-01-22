@@ -22,12 +22,7 @@ public partial class ShowViewModel : BaseViewModel
     {
         _twitService = twitService;
     }
-    public ShowViewModel()
-    {
-
-    }
-
-    #region Get the Show
+    #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
         if (IsBusy)
