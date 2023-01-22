@@ -7,34 +7,22 @@
               x:DataType="viewmodel:PlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
              Title="">
-   <Shell.BackButtonBehavior>
+    <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-  <!--  <Grid RowDefinitions="*,Auto">
-        <Grid.GestureRecognizers>
-            <SwipeGestureRecognizer
-                  Direction="Right" 
-                Swiped="SwipedGesture" />
-        </Grid.GestureRecognizers>
-        <WebView x:Name="webview" Source="{Binding Url}">
-        </WebView>
-    </Grid>
-    -->
-    
     <FlexLayout>
-        <FlexLayout.GestureRecognizers>
-            <SwipeGestureRecognizer
-                  Direction="Right" 
-                Swiped="SwipedGesture" />
-        </FlexLayout.GestureRecognizers>
         <toolkit:MediaPlayer
             IsVisible="True"
             ShouldAutoPlay="True"
             ShouldKeepScreenOn="True"
             ShouldShowPlaybackControls="True"
             Source="{Binding Url}">
+            <toolkit:MediaPlayer.GestureRecognizers>
+                <SwipeGestureRecognizer
+                  Direction="Right" 
+                Swiped="SwipedGesture" />
+            </toolkit:MediaPlayer.GestureRecognizers>
         </toolkit:MediaPlayer>
     </FlexLayout>
-    
 </ContentPage>
