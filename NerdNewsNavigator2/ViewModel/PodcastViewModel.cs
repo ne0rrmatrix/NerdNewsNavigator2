@@ -2,83 +2,49 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.ObjectModel;
-using CodeHollow.FeedReader;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using NerdNewsNavigator2.Model;
-using NerdNewsNavigator2.View;
-
 namespace NerdNewsNavigator2.ViewModel;
-
-public partial class PodcastViewModel : ObservableObject
+public partial class PodcastViewModel : BaseViewModel
 {
     #region Properties
+    readonly TwitService _twitService;
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public PodcastViewModel()
+    public PodcastViewModel(TwitService twit)
     {
-        this.Podcasts = PodcastViewModel.GetPodcast();
-        OnPropertyChanged(nameof(Podcasts));
+        this._twitService = twit;
+        _ = GetPodcasts();
     }
-    #region GetPodcast
-    private static ObservableCollection<Podcast> GetPodcast()
+    #region Get the Podcast
+    async Task GetPodcasts()
     {
-        var numberOfPodcasts = 0;
-        ObservableCollection<Podcast> temp = new();
-        List<string> item = new()
-        {
-            "https://feeds.twit.tv/ww_video_hd.xml",
-            "https://feeds.twit.tv/aaa_video_hd.xml",
-            "https://feeds.twit.tv/hom_video_hd.xml",
-            "https://feeds.twit.tv/hop_video_hd.xml",
-            "https://feeds.twit.tv/howin_video_hd.xml",
-            "https://feeds.twit.tv/ipad_video_hd.xml",
-            "https://feeds.twit.tv/mbw_video_hd.xml",
-            "https://feeds.twit.tv/sn_video_hd.xml",
-            "https://feeds.twit.tv/ttg_video_hd.xml",
-            "https://feeds.twit.tv/tnw_video_hd.xml",
-            "https://feeds.twit.tv/twiet_video_hd.xml",
-            "https://feeds.twit.tv/twig_video_hd.xml",
-            "https://feeds.twit.tv/twit_video_hd.xml",
-            "https://feeds.twit.tv/events_video_hd.xml",
-            "https://feeds.twit.tv/specials_video_hd.xml",
-            "https://feeds.twit.tv/bits_video_hd.xml",
-            "https://feeds.twit.tv/throwback_video_large.xml",
-            "https://feeds.twit.tv/leo_video_hd.xml",
-            "https://feeds.twit.tv/ant_video_hd.xml",
-            "https://feeds.twit.tv/jason_video_hd.xml",
-            "https://feeds.twit.tv/mikah_video_hd.xml"
-        };
+        if (IsBusy)
+            return;
 
         try
         {
-            foreach (var url in item)
+            IsBusy = true;
+            var temp = await _twitService.GetPodcasts();
+
+            if (Podcasts.Count != 0)
+                Podcasts.Clear();
+
+            foreach (var podcast in temp)
             {
-                var feed = FeedReader.ReadAsync(url);
-                Podcast podcasts = new()
-                {
-                    Title = feed.Result.Title,
-                    Description = feed.Result.Description,
-                    Image = feed.Result.ImageUrl,
-                    Url = url
-                };
-                temp.Add(podcasts);
-                numberOfPodcasts++;
+                Podcasts.Add(podcast);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            Podcast podcats = new()
-            {
-                Title = string.Empty,
-            };
-            temp.Add(podcats);
+            Debug.WriteLine(ex);
+            await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
         }
-        return temp;
+        finally
+        {
+            IsBusy = false;
+        }
     }
     #endregion
     [RelayCommand]
-    async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={Url}");
+    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={url}");
 }
 

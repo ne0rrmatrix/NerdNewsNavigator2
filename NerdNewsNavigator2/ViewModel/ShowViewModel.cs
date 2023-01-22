@@ -1,68 +1,63 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
-
-using System.Collections.ObjectModel;
-using CodeHollow.FeedReader;
-using CodeHollow.FeedReader.Feeds.Itunes;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using NerdNewsNavigator2.Model;
-using NerdNewsNavigator2.View;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
-public partial class ShowViewModel : ObservableObject
+public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
+    readonly TwitService _twitService;
     public ObservableCollection<Show> Shows { get; set; } = new();
-    #endregion
-
     public string Url
     {
         set
         {
-            this.Shows = ShowViewModel.GetShow(value);
+            _ = GetShows(value);
             OnPropertyChanged(nameof(Shows));
         }
+    }
+    #endregion
+    public ShowViewModel(TwitService twitService)
+    {
+        _twitService = twitService;
     }
     public ShowViewModel()
     {
 
     }
-    #region GetShow
-    private static ObservableCollection<Show> GetShow(string url)
+
+    #region Get the Show
+    async Task GetShows(string url)
     {
-        ObservableCollection<Show> result = new();
+        if (IsBusy)
+            return;
+
         try
         {
-            var feed = FeedReader.ReadAsync(url);
-            foreach (var item in feed.Result.Items)
+            IsBusy = true;
+            var temp = await _twitService.GetShow(url);
+
+            if (Shows.Count != 0)
+                Shows.Clear();
+
+            foreach (var show in temp)
             {
-                Show show = new()
-                {
-                    Title = item.Title,
-                    Description = item.Description,
-                    Image = item.GetItunesItem().Image.Href,
-                    Url = item.Id
-                };
-                result.Add(show);
+                Shows.Add(show);
             }
-            return result;
         }
-        catch
+        catch (Exception ex)
         {
-            Show show = new()
-            {
-                Title = string.Empty,
-            };
-            result.Add(show);
-            return result;
+            Debug.WriteLine(ex);
+            await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
     #endregion
 
     [RelayCommand]
-    async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");
+    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={url}");
 }

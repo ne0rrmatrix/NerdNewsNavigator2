@@ -2,16 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace NerdNewsNavigator2.ViewModel;
-
-[QueryProperty("Url", "Url")]
-public partial class PlayPodcastViewModel : ObservableObject
+public partial class BaseViewModel : ObservableObject
 {
-    #region Properties
     [ObservableProperty]
-    public string _url;
-    #endregion
-}
+    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
+    bool isBusy;
 
+    public bool IsNotBusy => !IsBusy;
+}
