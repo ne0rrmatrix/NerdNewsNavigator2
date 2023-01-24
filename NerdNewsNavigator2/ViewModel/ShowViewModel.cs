@@ -4,7 +4,7 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
-public partial class ShowViewModel : BaseViewModel
+public partial class ShowViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
@@ -25,12 +25,9 @@ public partial class ShowViewModel : BaseViewModel
     #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
-        if (IsBusy)
-            return;
-
+        System.Diagnostics.Debug.WriteLine("url: " + url);
         try
         {
-            IsBusy = true;
             var temp = await TwitService.GetShow(url);
 
             if (Shows.Count != 0)
@@ -45,10 +42,6 @@ public partial class ShowViewModel : BaseViewModel
         {
             Debug.WriteLine(ex);
             await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
-        }
-        finally
-        {
-            IsBusy = false;
         }
     }
     #endregion

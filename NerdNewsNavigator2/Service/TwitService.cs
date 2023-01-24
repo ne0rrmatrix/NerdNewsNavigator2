@@ -46,7 +46,7 @@ public class TwitService
         var counter = 0;
         foreach (var item in twit)
         {
-            feed = feed.GetPodcast(item);
+            feed = feed.GetFeed(item);
             feeds.Add(feed);
             foreach (var show in feed.Podcasts)
             {
@@ -67,7 +67,7 @@ public class TwitService
             feed = feed.GetShow(url);
             foreach (var items in feed.Podcasts)
             {
-                return Task.FromResult(items.Shows);
+                return Task.FromResult(items.GetShows());
             }
         }
         catch

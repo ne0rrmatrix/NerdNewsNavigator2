@@ -16,8 +16,6 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-       
-        
         builder.Services.AddSingleton<PodcastPage>();
         builder.Services.AddSingleton<PodcastViewModel>();
 

@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-public partial class PodcastViewModel : BaseViewModel
+public partial class PodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
@@ -17,27 +17,20 @@ public partial class PodcastViewModel : BaseViewModel
     #region Get the Podcast and set the Podcast List
     async Task GetPodcasts()
     {
-        if (IsBusy)
-            return;
-
         try
-        {
-            IsBusy = true;
+        { 
             var temp = await _twitService.GetPodcasts();
 
             foreach (var podcast in temp)
             {
                 Podcasts.Add(podcast);
+              // System.Diagnostics.Debug.WriteLine(podcast.Url);
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
             await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
-        }
-        finally
-        {
-            IsBusy = false;
         }
     }
     #endregion

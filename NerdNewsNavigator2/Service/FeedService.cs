@@ -9,75 +9,37 @@ public class FeedService
 {
 
     public List<Podcast> Podcasts = new();
-    public FeedService GetPodcast(string item)
-    {
-        int counter = 0;
-        FeedService feed = new();
-        try
-        {
-            #region Get the Feed from the Internet
-            Podcast podcast = new();
-
-            XmlDocument rssDoc = new();
-            rssDoc.Load(item);
-            XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
-            mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-            XmlNodeList rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-            podcast.Title = rssDoc.SelectSingleNode("/rss/channel/title") != null ? rssDoc.SelectSingleNode("/rss/channel/title").InnerText : string.Empty;
-            podcast.Description = rssDoc.SelectSingleNode("/rss/channel/description") != null ? rssDoc.SelectSingleNode("/rss/channel/description").InnerText : string.Empty;
-            podcast.Image = rssDoc.SelectSingleNode("/rss/channel/image/url") != null ? rssDoc.SelectSingleNode("/rss/channel/image/url").InnerText : string.Empty;
-            podcast.Url = item;
-
-            counter += 1;
-            feed.AddPodcast(podcast);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
-        }
-        #endregion
-        return feed;
-    }
-    public FeedService GetShow(string item)
-    {
-        int counter = 0;
-        FeedService feed = new();
-        try
-        {
-            #region Get the Feed from the Internet
-            Podcast podcast = new();
-
-            XmlDocument rssDoc = new();
-            rssDoc.Load(item);
-            XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
-            mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-            XmlNodeList rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-            podcast.Url = item;
-            counter += 1;
-
-            if (rssNodes != null)
-                foreach (XmlNode node in rssNodes)
-                {
-                    Show show = new()
-                    {
-                        Description = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty,
-                        Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                        Url = node.SelectSingleNode("enclosure") != null ? node.SelectSingleNode("enclosure").Attributes["url"].InnerText : string.Empty,
-                        Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                    };
-                    podcast.Add(show);
-                }
-            feed.AddPodcast(podcast);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
-        }
-        #endregion
-        return feed;
-    }
     public FeedService GetFeed(string item)
     {
+      //  System.Diagnostics.Debug.WriteLine(item);
+        int counter = 0;
+        FeedService feed = new();
+        try
+        {
+            foreach (XElement level1Element in XElement.Load(item).Elements("channel"))
+            {
+                Podcast podcast = new Podcast();
+                podcast.Title = level1Element.Element("title").Value;
+                podcast.Description = level1Element.Element("description").Value;
+                podcast.Url = item;
+                foreach (XElement level2Element in level1Element.Elements("image"))
+                {
+                    podcast.Image = level2Element.Element("url")?.Value;
+                }
+                counter += 1;
+              //  System.Diagnostics.Debug.WriteLine("url: " + podcast.Url);
+                feed.Podcasts.Add(podcast);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex.InnerException);
+        }
+        return feed;
+    }
+    public FeedService GetShow(string items)
+    {
+       // System.Diagnostics.Debug.WriteLine("url: " + item);
         int counter = 0;
         FeedService feed = new();
         try
@@ -86,16 +48,12 @@ public class FeedService
             Podcast podcast = new();
 
             XmlDocument rssDoc = new();
-            rssDoc.Load(item);
+            rssDoc.Load(items);
             XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
+            mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
             XmlNodeList rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-            podcast.Link = rssDoc.SelectSingleNode("/rss/channel/link") != null ? rssDoc.SelectSingleNode("/rss/channel/link").InnerText : string.Empty;
-            podcast.Title = rssDoc.SelectSingleNode("/rss/channel/title") != null ? rssDoc.SelectSingleNode("/rss/channel/title").InnerText : string.Empty;
-            podcast.Description = rssDoc.SelectSingleNode("/rss/channel/description") != null ? rssDoc.SelectSingleNode("/rss/channel/description").InnerText : string.Empty;
-            podcast.Image = rssDoc.SelectSingleNode("/rss/channel/image/url") != null ? rssDoc.SelectSingleNode("/rss/channel/image/url").InnerText : string.Empty;
-            podcast.Url = item;
-
+           // podcast.Url = items;
             counter += 1;
 
             if (rssNodes != null)
@@ -103,17 +61,12 @@ public class FeedService
                 {
                     Show show = new()
                     {
-                        CopyRight = node.SelectSingleNode("copyright") != null ? node.SelectSingleNode("copyright").InnerText : string.Empty,
                         Description = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty,
-                        Link = node.SelectSingleNode("link") != null ? node.SelectSingleNode("link").InnerText : string.Empty,
-                        PubDate = node.SelectSingleNode("pubdate") != null ? node.SelectSingleNode("pubdate").InnerText : string.Empty,
                         Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                        Url = node.SelectSingleNode("enclosure") != null ? node.SelectSingleNode("enclosure").Attributes["url"].InnerText : string.Empty,
-
-                        EnclosureType = node.SelectSingleNode("enclosure") != null ? node.SelectSingleNode("enclosure").Attributes["type"].InnerText : string.Empty,
-
+                        Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                         Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
                     };
+                    System.Diagnostics.Debug.WriteLine(show.Url);
                     podcast.Add(show);
                 }
             feed.AddPodcast(podcast);
