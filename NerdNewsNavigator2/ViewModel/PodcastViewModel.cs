@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-public partial class PodcastViewModel : BaseViewModel
+public partial class PodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
@@ -14,19 +14,12 @@ public partial class PodcastViewModel : BaseViewModel
         this._twitService = twit;
         _ = GetPodcasts();
     }
-    #region Get the Podcast
+    #region Get the Podcast and set the Podcast List
     async Task GetPodcasts()
     {
-        if (IsBusy)
-            return;
-
         try
         {
-            IsBusy = true;
             var temp = await _twitService.GetPodcasts();
-
-            if (Podcasts.Count != 0)
-                Podcasts.Clear();
 
             foreach (var podcast in temp)
             {
@@ -38,13 +31,13 @@ public partial class PodcastViewModel : BaseViewModel
             Debug.WriteLine(ex);
             await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
         }
-        finally
-        {
-            IsBusy = false;
-        }
     }
     #endregion
-    [RelayCommand]
-    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={url}");
-}
 
+    [RelayCommand]
+    async Task Tap(string Url)
+    {
+        string encodedUrl = HttpUtility.UrlEncode(Url);
+        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+    }
+}

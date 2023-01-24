@@ -5,9 +5,10 @@
 namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
+    #region Properties
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     bool isBusy;
-
     public bool IsNotBusy => !IsBusy;
+    #endregion
 }
