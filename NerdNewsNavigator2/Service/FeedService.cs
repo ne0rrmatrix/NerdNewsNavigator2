@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Xml;
 
 namespace NerdNewsNavigator2.Service;
 public class FeedService
@@ -11,7 +10,6 @@ public class FeedService
     public List<Podcast> Podcasts = new();
     public FeedService GetFeed(string item)
     {
-      //  System.Diagnostics.Debug.WriteLine(item);
         int counter = 0;
         FeedService feed = new();
         try
@@ -27,7 +25,6 @@ public class FeedService
                     podcast.Image = level2Element.Element("url")?.Value;
                 }
                 counter += 1;
-              //  System.Diagnostics.Debug.WriteLine("url: " + podcast.Url);
                 feed.Podcasts.Add(podcast);
             }
         }
@@ -39,7 +36,6 @@ public class FeedService
     }
     public FeedService GetShow(string items)
     {
-       // System.Diagnostics.Debug.WriteLine("url: " + item);
         int counter = 0;
         FeedService feed = new();
         try
@@ -53,7 +49,6 @@ public class FeedService
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
             mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
             XmlNodeList rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-           // podcast.Url = items;
             counter += 1;
 
             if (rssNodes != null)

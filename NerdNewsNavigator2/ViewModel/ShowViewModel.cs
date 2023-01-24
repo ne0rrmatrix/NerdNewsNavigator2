@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
@@ -13,7 +14,8 @@ public partial class ShowViewModel : ObservableObject
     {
         set
         {
-            _ = GetShows(value);
+            string decodedUrl = HttpUtility.UrlDecode(value);
+            _ = GetShows(decodedUrl);
             OnPropertyChanged(nameof(Shows));
         }
     }
@@ -25,7 +27,6 @@ public partial class ShowViewModel : ObservableObject
     #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
-        System.Diagnostics.Debug.WriteLine("url: " + url);
         try
         {
             var temp = await TwitService.GetShow(url);

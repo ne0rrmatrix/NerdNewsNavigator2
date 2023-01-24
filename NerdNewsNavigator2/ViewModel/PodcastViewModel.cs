@@ -18,13 +18,12 @@ public partial class PodcastViewModel : ObservableObject
     async Task GetPodcasts()
     {
         try
-        { 
+        {
             var temp = await _twitService.GetPodcasts();
 
             foreach (var podcast in temp)
             {
                 Podcasts.Add(podcast);
-              // System.Diagnostics.Debug.WriteLine(podcast.Url);
             }
         }
         catch (Exception ex)
@@ -36,5 +35,9 @@ public partial class PodcastViewModel : ObservableObject
     #endregion
 
     [RelayCommand]
-    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={url}");
+    async Task Tap(string Url)
+    {
+        string encodedUrl = HttpUtility.UrlEncode(Url);
+        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+    }
 }

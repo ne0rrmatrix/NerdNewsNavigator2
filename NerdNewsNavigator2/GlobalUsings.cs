@@ -20,3 +20,5 @@ global using CommunityToolkit.Maui;
 global using CommunityToolkit.Maui.MediaPlayer;
 global using System.ServiceModel.Syndication;
 global using System.Xml.Linq;
+global using System.Xml;
+global using System.Web;
