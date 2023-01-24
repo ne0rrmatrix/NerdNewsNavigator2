@@ -15,9 +15,6 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
-                    <Frame.GestureRecognizers>
-                        
-                    </Frame.GestureRecognizers>
                     <StackLayout BackgroundColor="White">
                         <StackLayout.GestureRecognizers>
                             <SwipeGestureRecognizer 

@@ -25,9 +25,6 @@ public partial class PodcastViewModel : BaseViewModel
             IsBusy = true;
             var temp = await _twitService.GetPodcasts();
 
-            if (Podcasts.Count != 0)
-                Podcasts.Clear();
-
             foreach (var podcast in temp)
             {
                 Podcasts.Add(podcast);

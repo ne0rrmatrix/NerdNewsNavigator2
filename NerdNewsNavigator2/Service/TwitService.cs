@@ -6,18 +6,16 @@ namespace NerdNewsNavigator2.Service;
 public class TwitService
 {
     #region Properties
-    List<Podcast> podcasts { get; } = new();
+    List<Podcast> Podcasts { get; } = new();
     #endregion
-    public async Task<List<Podcast>> GetPodcasts()
+    #region List of podcats
+    public Task<List<Podcast>> GetPodcasts()
     {
-        if (podcasts?.Count > 0)
-            return podcasts;
+        if (Podcasts?.Count > 0)
+            return Task.FromResult(Podcasts);
 
-        podcasts.Clear();
-        var numberOfPodcasts = 0;
         List<Podcast> result = new();
-        #region List of podcats
-        List<string> item = new()
+        List<string> twit = new()
         {
             "https://feeds.twit.tv/ww_video_hd.xml",
             "https://feeds.twit.tv/aaa_video_hd.xml",
@@ -42,53 +40,35 @@ public class TwitService
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
         #endregion
-        #region Get all Podcasts and return them
-        try
+        #region GetPodcasts
+        List<FeedService> feeds = new();
+        FeedService feed = new();
+        var counter = 0;
+        foreach (var item in twit)
         {
-            foreach (var url in item)
+            feed = feed.GetPodcast(item);
+            feeds.Add(feed);
+            foreach (var show in feed.Podcasts)
             {
-                var feed = await FeedReader.ReadAsync(url);
-                Podcast items = new()
-                {
-                    Title = feed.Title,
-                    Description = feed.Description,
-                    Image = feed.ImageUrl,
-                    Url = url
-                };
-                result.Add(items);
-                numberOfPodcasts++;
-            }
-        }
-        catch
-        {
-            Podcast items = new()
-            {
-                Title = string.Empty,
-            };
-            result.Add(items);
-        }
-        return result;
-        #endregion
-    }
-    public async Task<List<Show>> GetShow(string url)
-    {
-        List<Show> result = new();
-        #region Get a Show and return it
-        try
-        {
-            var feed = await FeedReader.ReadAsync(url);
-            foreach (var item in feed.Items)
-            {
-                Show show = new()
-                {
-                    Title = item.Title,
-                    Description = item.Description,
-                    Image = item.GetItunesItem().Image.Href,
-                    Url = item.Id
-                };
                 result.Add(show);
             }
-            return result;
+            counter++;
+        }
+        return Task.FromResult(result);
+        #endregion
+    }
+    #region Get Shows
+    public static Task<List<Show>> GetShow(string url)
+    {
+        var result = new List<Show>();
+        FeedService feed = new();
+        try
+        {
+            feed = feed.GetShow(url);
+            foreach (var items in feed.Podcasts)
+            {
+                return Task.FromResult(items.Shows);
+            }
         }
         catch
         {
@@ -97,9 +77,8 @@ public class TwitService
                 Title = string.Empty,
             };
             result.Add(show);
-            return result;
         }
+        return Task.FromResult(result);
         #endregion
     }
 }
-

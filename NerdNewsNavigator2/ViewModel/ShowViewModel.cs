@@ -31,7 +31,7 @@ public partial class ShowViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            var temp = await _twitService.GetShow(url);
+            var temp = await TwitService.GetShow(url);
 
             if (Shows.Count != 0)
                 Shows.Clear();

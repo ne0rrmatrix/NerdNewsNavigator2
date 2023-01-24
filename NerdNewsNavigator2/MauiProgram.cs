@@ -16,8 +16,8 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddSingleton<TwitService>();
-
+       
+        
         builder.Services.AddSingleton<PodcastPage>();
         builder.Services.AddSingleton<PodcastViewModel>();
 
@@ -26,7 +26,8 @@ public static class MauiProgram
 
         builder.Services.AddTransient<PlayPodcastPage>();
         builder.Services.AddTransient<PlayPodcastViewModel>();
-
+        builder.Services.AddSingleton<TwitService>();
+        builder.Services.AddSingleton<FeedService>();
         return builder.Build();
     }
 }
