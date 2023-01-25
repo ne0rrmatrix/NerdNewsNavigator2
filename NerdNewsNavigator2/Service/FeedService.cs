@@ -2,30 +2,31 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-
 namespace NerdNewsNavigator2.Service;
 public class FeedService
 {
-
-    public List<Podcast> Podcasts = new();
-    public FeedService GetFeed(string item)
+    public List<Podcast> _podcasts = new();
+    #region Get the Podcasts
+    public static FeedService GetFeed(string item)
     {
         int counter = 0;
         FeedService feed = new();
         try
         {
-            foreach (XElement level1Element in XElement.Load(item).Elements("channel"))
+            foreach (var level1Element in XElement.Load(item).Elements("channel"))
             {
-                Podcast podcast = new Podcast();
-                podcast.Title = level1Element.Element("title").Value;
-                podcast.Description = level1Element.Element("description").Value;
-                podcast.Url = item;
-                foreach (XElement level2Element in level1Element.Elements("image"))
+                var podcast = new Podcast
+                {
+                    Title = level1Element.Element("title").Value,
+                    Description = level1Element.Element("description").Value,
+                    Url = item
+                };
+                foreach (var level2Element in level1Element.Elements("image"))
                 {
                     podcast.Image = level2Element.Element("url")?.Value;
                 }
                 counter += 1;
-                feed.Podcasts.Add(podcast);
+                feed._podcasts.Add(podcast);
             }
         }
         catch (Exception ex)
@@ -34,7 +35,9 @@ public class FeedService
         }
         return feed;
     }
-    public FeedService GetShow(string items)
+    #endregion
+    #region Get the Shows
+    public static FeedService GetShow(string items)
     {
         int counter = 0;
         FeedService feed = new();
@@ -48,7 +51,7 @@ public class FeedService
             XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
             mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
-            XmlNodeList rssNodes = rssDoc.SelectNodes("/rss/channel/item");
+            var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
             counter += 1;
 
             if (rssNodes != null)
@@ -61,7 +64,6 @@ public class FeedService
                         Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                         Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
                     };
-                    System.Diagnostics.Debug.WriteLine(show.Url);
                     podcast.Add(show);
                 }
             feed.AddPodcast(podcast);
@@ -73,8 +75,9 @@ public class FeedService
         #endregion
         return feed;
     }
+    #endregion
     public void AddPodcast(Podcast item)
     {
-        Podcasts.Add(item);
+        _podcasts.Add(item);
     }
 }

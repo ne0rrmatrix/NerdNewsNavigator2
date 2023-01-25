@@ -14,7 +14,7 @@ public partial class ShowViewModel : ObservableObject
     {
         set
         {
-            string decodedUrl = HttpUtility.UrlDecode(value);
+            var decodedUrl = HttpUtility.UrlDecode(value);
             _ = GetShows(decodedUrl);
             OnPropertyChanged(nameof(Shows));
         }

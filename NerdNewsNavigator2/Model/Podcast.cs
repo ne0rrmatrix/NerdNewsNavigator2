@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Model
 {
     public class Podcast
     {
-        public List<Show> Shows = new();
+        public List<Show> _shows = new();
         public string Title { get; set; }
         public string Description { get; set; }
         public string Link { get; set; }
@@ -18,11 +18,11 @@ namespace NerdNewsNavigator2.Model
         public string Url { get; set; }
         public void Add(Show item)
         {
-            Shows.Add(item);
+            _shows.Add(item);
         }
         public List<Show> GetShows()
         {
-            return Shows;
+            return _shows;
         }
     }
 }
