@@ -24,6 +24,7 @@ public static class MauiProgram
 
         builder.Services.AddTransient<PlayPodcastPage>();
         builder.Services.AddTransient<PlayPodcastViewModel>();
+
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
         return builder.Build();
