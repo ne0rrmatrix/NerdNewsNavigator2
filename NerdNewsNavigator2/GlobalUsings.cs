@@ -18,3 +18,4 @@ global using NerdNewsNavigator2.Model;
 global using NerdNewsNavigator2.Service;
 global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.ViewModel;
+global using Microsoft.Extensions.Logging;
