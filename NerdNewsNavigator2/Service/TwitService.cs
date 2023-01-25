@@ -6,9 +6,8 @@ namespace NerdNewsNavigator2.Service;
 public class TwitService
 {
     #region Properties
-    List<Podcast> Podcasts { get; } = new();
 
-    readonly List<string> _twit = new()
+    private readonly List<string> _twit = new()
         {
             "https://feeds.twit.tv/ww_video_hd.xml",
             "https://feeds.twit.tv/aaa_video_hd.xml",
@@ -36,50 +35,15 @@ public class TwitService
     #region Get the Podcasts
     public static Task<List<string>> GetListOfPodcasts()
     {
-        TwitService twitService = new TwitService();
+        var twitService = new TwitService();
         return Task.FromResult(twitService._twit);
     }
-    public Task<List<Podcast>> GetPodcasts(string url)
-    {
-        if (Podcasts?.Count > 0)
-        {
-            return Task.FromResult(Podcasts);
-        }
-
-        List<Podcast> result = new();
-        List<FeedService> feeds = new();
-
-        var feed = FeedService.GetFeed(url);
-        feeds.Add(feed);
-        foreach (var show in feed._podcasts)
-        {
-            result.Add(show);
-        }
-
-        return Task.FromResult(result);
-        #endregion
-    }
+    #endregion
     #region Get Shows
     public static Task<List<Show>> GetShow(string url)
     {
         var result = new List<Show>();
-        try
-        {
-            var feed = FeedService.GetShow(url);
-            foreach (var items in feed._podcasts)
-            {
-                return Task.FromResult(items.GetShows());
-            }
-        }
-        catch
-        {
-            Show show = new()
-            {
-                Title = string.Empty,
-            };
-            result.Add(show);
-        }
-        return Task.FromResult(result);
+        return Task.FromResult(FeedService.GetShow(url));
         #endregion
     }
 }
