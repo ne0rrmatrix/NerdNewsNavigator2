@@ -2,31 +2,30 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Security.Cryptography.X509Certificates;
+
 namespace NerdNewsNavigator2.Service;
 public class FeedService
 {
     public List<Podcast> _podcasts = new();
     #region Get the Podcasts
-    public static FeedService GetFeed(string item)
+    public static Podcast GetFeed(string item)
     {
         int counter = 0;
-        FeedService feed = new();
+        Podcast feed = new();
         try
         {
             foreach (var level1Element in XElement.Load(item).Elements("channel"))
             {
-                var podcast = new Podcast
-                {
-                    Title = level1Element.Element("title").Value,
-                    Description = level1Element.Element("description").Value,
-                    Url = item
-                };
+                feed.Title = level1Element.Element("title").Value;
+                feed.Description = level1Element.Element("description").Value;
+                feed.Url = item;
+
                 foreach (var level2Element in level1Element.Elements("image"))
                 {
-                    podcast.Image = level2Element.Element("url")?.Value;
+                    feed.Image = level2Element.Element("url")?.Value;
                 }
                 counter += 1;
-                feed._podcasts.Add(podcast);
             }
         }
         catch (Exception ex)
@@ -36,23 +35,19 @@ public class FeedService
         return feed;
     }
     #endregion
+
     #region Get the Shows
-    public static FeedService GetShow(string items)
+    public static List<Show> GetShow(string items)
     {
-        int counter = 0;
-        FeedService feed = new();
+        List<Show> shows = new();
         try
         {
-            #region Get the Feed from the Internet
-            Podcast podcast = new();
-
             XmlDocument rssDoc = new();
             rssDoc.Load(items);
             XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
             mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-            counter += 1;
 
             if (rssNodes != null)
                 foreach (XmlNode node in rssNodes)
@@ -64,20 +59,13 @@ public class FeedService
                         Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                         Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
                     };
-                    podcast.Add(show);
+                    shows.Add(show);
                 }
-            feed.AddPodcast(podcast);
         }
-        catch (Exception ex)
+        catch
         {
-            throw new Exception(ex.Message, ex.InnerException);
         }
-        #endregion
-        return feed;
+        return shows;
     }
     #endregion
-    public void AddPodcast(Podcast item)
-    {
-        _podcasts.Add(item);
-    }
 }

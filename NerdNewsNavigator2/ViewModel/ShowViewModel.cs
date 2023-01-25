@@ -27,23 +27,11 @@ public partial class ShowViewModel : ObservableObject
     #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
-        try
-        {
-            var temp = await TwitService.GetShow(url);
+        if (Shows.Count != 0)
+            Shows.Clear();
 
-            if (Shows.Count != 0)
-                Shows.Clear();
-
-            foreach (var show in temp)
-            {
-                Shows.Add(show);
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-            await Shell.Current.DisplayAlert("Error!", $"Unable to display Podcasts: {ex.Message}", "Ok");
-        }
+        var temp = await TwitService.GetShow(url);
+        Shows = new ObservableCollection<Show>(temp);
     }
     #endregion
 
