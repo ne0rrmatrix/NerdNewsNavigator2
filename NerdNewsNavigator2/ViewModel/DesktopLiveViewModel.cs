@@ -14,5 +14,8 @@ public partial class DesktopLiveViewModel : ObservableObject, IPlayLivePage
     {
         this._navigation = navigation;
     }
+    public DesktopLiveViewModel(string url)
+    {
 
+    }
 }

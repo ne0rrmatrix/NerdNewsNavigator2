@@ -39,7 +39,14 @@ public partial class DesktopShowViewModel : ObservableObject, IShowPage
     }
     #endregion
 
+
     [RelayCommand]
-    async Task Tap(string url) { System.Diagnostics.Debug.WriteLine("String is: " + url); await _navigation.PushAsync(new DesktopPlayPodcastPage(url)); }
-    //async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(DesktopPlayPodcastPage)}?Url={url}");
+    async Task Tap(string url)
+    {
+        //  System.Diagnostics.Debug.WriteLine("String url: " + url);
+        var encodedUrl = HttpUtility.UrlEncode(url);
+        //  await _navigation.PushAsync(ViewService.ResolvePage<DesktopShowPage>());
+        // await Shell.Current.GoToAsync($"{nameof(DesktopShowPage)}?Url={encodedUrl}");
+        await _navigation.PushAsync(new DesktopPlayPodcastPage(encodedUrl));
+    }
 }

@@ -11,7 +11,7 @@ public partial class DesktopLivePage : ContentPage, IPlayLivePage
     public DesktopLivePage(string url)
     {
         InitializeComponent();
-        this.BindingContext = new DesktopShowViewModel(url);
+        this.BindingContext = new DesktopLiveViewModel(url);
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {

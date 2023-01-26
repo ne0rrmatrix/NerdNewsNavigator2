@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Xml.Linq;
 
 namespace NerdNewsNavigator2.View.Desktop;
 
@@ -10,11 +11,10 @@ public partial class DesktopPlayPodcastPage : ContentPage, IPlayPodcastPage
 {
     public DesktopPlayPodcastPage(string url)
     {
-     //   System.Diagnostics.Debug.WriteLine("String is: " + url);
         InitializeComponent();
+
         this.BindingContext = new DesktopPlayPodcastViewModel(url);
     }
-
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {
         switch (e.Direction)
