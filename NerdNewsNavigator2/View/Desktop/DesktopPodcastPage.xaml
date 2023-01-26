@@ -3,20 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-             x:Class="NerdNewsNavigator2.View.PodcastPage"
-             x:DataType="viewmodel:PodcastViewModel"
-               Shell.NavBarIsVisible="False"
+             x:Class="NerdNewsNavigator2.View.Desktop.DesktopPodcastPage"
+             x:DataType="viewmodel:DesktopPodcastViewModel"
+               Shell.NavBarIsVisible="True"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
+    <Shell.TitleView>
+        <HorizontalStackLayout>
+            <Button Text="Live" Clicked="LivePage" HeightRequest="50" WidthRequest="100" HorizontalOptions="Start">
+            </Button>
+        </HorizontalStackLayout>
+
+    </Shell.TitleView>
+    <CollectionView ItemsSource="{Binding Podcasts}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DesktopPodcastViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Url}"/>
                     </Frame.GestureRecognizers>
                     <HorizontalStackLayout>

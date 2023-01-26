@@ -5,10 +5,11 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
-public partial class ShowViewModel : ObservableObject
+public partial class MobileShowViewModel : ObservableObject, IShowPage
 {
     #region Properties
-    readonly TwitService _twitService;
+    private readonly INavigation _navigation;
+    private readonly TwitService _twitService;
     public ObservableCollection<Show> Shows { get; set; } = new();
     public string Url
     {
@@ -20,9 +21,10 @@ public partial class ShowViewModel : ObservableObject
         }
     }
     #endregion
-    public ShowViewModel(TwitService twitService)
+    public MobileShowViewModel(TwitService twitService, INavigation navigation)
     {
         _twitService = twitService;
+        _navigation = navigation;
     }
     #region Get the Show and Set Show List
     async Task GetShows(string url)
@@ -36,5 +38,5 @@ public partial class ShowViewModel : ObservableObject
     #endregion
 
     [RelayCommand]
-    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={url}");
+    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(MobilePlayPodcastPage)}?Url={url}");
 }

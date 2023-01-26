@@ -3,15 +3,18 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-public partial class PodcastViewModel : ObservableObject
+
+public partial class DesktopPodcastViewModel : ObservableObject, IPodcastPage
 {
     #region Properties
-    readonly TwitService _twitService;
+    private readonly INavigation _navigation;
+
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public PodcastViewModel(TwitService twit)
+
+    public DesktopPodcastViewModel(INavigation navigation)
     {
-        this._twitService = twit;
+        this._navigation = navigation;
         _ = GetPodcasts();
     }
     #region Get the Podcast and set the Podcast List
@@ -29,7 +32,10 @@ public partial class PodcastViewModel : ObservableObject
     [RelayCommand]
     async Task Tap(string url)
     {
+      //  System.Diagnostics.Debug.WriteLine("String url: " + url);
         var encodedUrl = HttpUtility.UrlEncode(url);
-        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+      //  await _navigation.PushAsync(ViewService.ResolvePage<DesktopShowPage>());
+       // await Shell.Current.GoToAsync($"{nameof(DesktopShowPage)}?Url={encodedUrl}");
+        await _navigation.PushAsync(new DesktopShowPage(encodedUrl));
     }
 }

@@ -16,6 +16,10 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using NerdNewsNavigator2.Model;
 global using NerdNewsNavigator2.Service;
-global using NerdNewsNavigator2.View;
+global using NerdNewsNavigator2.View.Desktop;
 global using NerdNewsNavigator2.ViewModel;
 global using Microsoft.Extensions.Logging;
+global using NerdNewsNavigator2.View.Mobile;
+global using NerdNewsNavigator2.IViews;
+
+

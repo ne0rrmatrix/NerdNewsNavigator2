@@ -2,16 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace NerdNewsNavigator2.ViewModel;
 
-public partial class LiveViewModel : ObservableObject
+public partial class DesktopLiveViewModel : ObservableObject, IPlayLivePage
 {
+    readonly INavigation _navigation;
     [ObservableProperty]
     public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
+
+    public DesktopLiveViewModel(INavigation navigation)
+    {
+        this._navigation = navigation;
+    }
+
 }

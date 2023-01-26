@@ -2,13 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View;
-public partial class ShowPage : ContentPage
+namespace NerdNewsNavigator2.View.Mobile;
+public partial class MobilePlayPodcastPage : ContentPage, IPlayPodcastPage
 {
-    public ShowPage(ShowViewModel viewModel)
+    private readonly INavigation _navigation;
+    public MobilePlayPodcastPage(INavigation navigation)
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        _navigation = navigation;
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
      xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
-    xmlns:view="clr-namespace:NerdNewsNavigator2.View"
+    xmlns:viewDesktop="clr-namespace:NerdNewsNavigator2.View.Desktop"
+    xmlns:viewMobile="clr-namespace:NerdNewsNavigator2.View.Mobile"
     Shell.FlyoutBehavior="Disabled">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False">
@@ -13,6 +14,6 @@
     <ShellContent
          Shell.NavBarIsVisible="False"
         Title="Home"
-        ContentTemplate="{DataTemplate view:PodcastPage}"
+        ContentTemplate="{DataTemplate viewDesktop:DesktopPodcastPage}"
         Route="MainPage" />
 </Shell>

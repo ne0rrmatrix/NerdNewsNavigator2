@@ -5,10 +5,15 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
-public partial class PlayPodcastViewModel : ObservableObject
+public partial class MobilePlayPodcastViewModel : ObservableObject, IPlayPodcastPage
 {
     #region Properties
+    private readonly INavigation _navigation;
     [ObservableProperty]
     public string _url;
     #endregion
+    public MobilePlayPodcastViewModel(INavigation navigation)
+    {
+        _navigation = navigation;
+    }
 }

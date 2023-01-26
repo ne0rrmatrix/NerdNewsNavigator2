@@ -3,18 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-             x:Class="NerdNewsNavigator2.View.ShowPage"
-             x:DataType="viewmodel:ShowViewModel"
-             Shell.NavBarIsVisible="False"
+             x:Class="NerdNewsNavigator2.View.Mobile.MobileShowPage"
+             x:DataType="viewmodel:MobileShowViewModel"
+             Shell.NavBarIsVisible="True"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=False}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
+    <Shell.TitleView>
+        <HorizontalStackLayout>
+            <Button Text="Home" Clicked="PodcastPage" HeightRequest="50" WidthRequest="100"></Button>
+            <Button Text="Live" Clicked="LivePage" HeightRequest="50" WidthRequest="100" ></Button>
+        </HorizontalStackLayout>
+    </Shell.TitleView>
+    <CollectionView ItemsSource="{Binding Shows}" HorizontalOptions="Fill" VerticalOptions="Fill" SelectionMode="None" BackgroundColor="White">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
+                <Frame HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="White">
                     <Frame.GestureRecognizers>
                         <SwipeGestureRecognizer 
                                 Direction="Right" 
@@ -23,13 +29,14 @@
                     <StackLayout BackgroundColor="White">
                         <StackLayout.GestureRecognizers>
                             <TapGestureRecognizer 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MobileShowViewModel}}, Path=TapCommand}" 
                                 CommandParameter="{Binding Url}"/>
                         </StackLayout.GestureRecognizers>
                         <Label 
                             Text="{Binding Title}" 
                             HorizontalOptions="CenterAndExpand" 
                             VerticalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
                             TextColor="Black"  
                             FontSize="18"  
                             FontAttributes="Bold"
@@ -37,13 +44,14 @@
                         <Image 
                             Aspect="AspectFit" 
                             Margin="5"
-                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
-                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            MinimumHeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            MinimumWidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
                             Source="{Binding Image}">
                         </Image>
                         <Label Text="{Binding Description}" 
                             HorizontalOptions="Start"
-                            FontSize="14" 
+                            FontSize="16" 
+                               Margin="5"
                             LineBreakMode="WordWrap" 
                             TextColor="Black" 
                             TextType="Html">

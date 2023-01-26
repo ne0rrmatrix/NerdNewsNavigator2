@@ -9,8 +9,13 @@ public partial class AppShell : Shell
     public AppShell()
     {
         InitializeComponent();
-        Routing.RegisterRoute(nameof(ShowPage), typeof(ShowPage));
-        Routing.RegisterRoute(nameof(PlayPodcastPage), typeof(PlayPodcastPage));
-        Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
+        Routing.RegisterRoute(nameof(DesktopShowPage), typeof(DesktopShowPage));
+        Routing.RegisterRoute(nameof(MobileShowPage), typeof(MobileShowPage));
+
+        Routing.RegisterRoute(nameof(DesktopPlayPodcastPage), typeof(DesktopPlayPodcastPage));
+        Routing.RegisterRoute(nameof(MobilePlayPodcastPage), typeof(MobilePlayPodcastPage));
+
+        Routing.RegisterRoute(nameof(DesktopLivePage), typeof(DesktopLivePage));
+        Routing.RegisterRoute(nameof(MobileLivePage), typeof(MobileLivePage));
     }
 }

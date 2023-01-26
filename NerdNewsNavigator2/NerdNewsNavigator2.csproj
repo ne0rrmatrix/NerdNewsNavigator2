@@ -123,6 +123,18 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>Resources.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Mobile\MobileLivePage.xaml.cs">
+	    <DependentUpon>MobileLivePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Mobile\MobileShowPage.xaml.cs">
+	    <DependentUpon>MobileShowPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Mobile\MobilePlayPodcastPage.xaml.cs">
+	    <DependentUpon>MobilePlayPodcastPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Mobile\MobilePodcastPage.xaml.cs">
+	    <DependentUpon>MobilePodcastPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -132,16 +144,28 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
-	  <MauiXaml Update="View\LivePage.xaml">
+	  <MauiXaml Update="View\Desktop\DesktopLivePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\PlayPodcastPage.xaml">
+	  <MauiXaml Update="View\Desktop\DesktopPlayPodcastPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\PodcastPage.xaml">
+	  <MauiXaml Update="View\Desktop\DesktopPodcastPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\ShowPage.xaml">
+	  <MauiXaml Update="View\Desktop\DesktopShowPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Mobile\MobileLivePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Mobile\MobilePlayPodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Mobile\MobilePodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Mobile\MobileShowPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
