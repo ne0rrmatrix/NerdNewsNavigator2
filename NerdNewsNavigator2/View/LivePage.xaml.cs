@@ -3,20 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-public partial class ShowPage : ContentPage
+
+public partial class LivePage : ContentPage
 {
-    public ShowPage(ShowViewModel viewModel)
+    public LivePage(LiveViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
-    }
-    private void LivePage(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(LivePage)}");
-    }
-    private void PodcastPage(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {

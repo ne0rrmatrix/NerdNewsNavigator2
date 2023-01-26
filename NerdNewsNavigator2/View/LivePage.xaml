@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="NerdNewsNavigator2.View.LivePage"
+              x:DataType="viewmodel:LiveViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
+    <Grid IsVisible="True" IsEnabled="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*">
+            </RowDefinition>
+            <RowDefinition Height="Auto">
+            </RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <WebView 
+            Grid.Row="1"
+            VerticalOptions="FillAndExpand"
+            IsVisible="True" IsEnabled="True"
+            HorizontalOptions="FillAndExpand"
+            MinimumHeightRequest="{OnPlatform Android=100,iOS=100,WinUI=800}" 
+            MinimumWidthRequest="{OnPlatform Android=100,iOS=100,WinUI=800}" 
+            Source="{Binding Url}">
+            <WebView.GestureRecognizers>
+                <TapGestureRecognizer 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"/>
+            </WebView.GestureRecognizers>
+        </WebView>
+    </Grid>
+</ContentPage>
