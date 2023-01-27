@@ -27,8 +27,7 @@ public partial class ShowViewModel : ObservableObject
     #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
-        if (Shows.Count != 0)
-            Shows.Clear();
+        Shows.Clear();
 
         var temp = await TwitService.GetShow(url);
         Shows = new ObservableCollection<Show>(temp);

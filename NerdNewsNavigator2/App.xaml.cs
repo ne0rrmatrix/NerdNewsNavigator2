@@ -5,10 +5,6 @@
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
-#if ANDROID
-using View = AndroidX.Core.View;
-#endif
-
 #if WINDOWS
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -54,16 +50,9 @@ public partial class App : Application
 
     private void SetFullScreen(object? sender, EventArgs eventArgs)
     {
-#if ANDROID
-        SetFullScreenAndroid();
-#endif
 #if WINDOWS
         SetFullScreenWindows(sender, eventArgs);
 #endif
-    }
-
-    private void SetFullScreenAndroid()
-    {
     }
 
     private void SetFullScreenWindows(object? sender, EventArgs eventArgs)
