@@ -106,16 +106,17 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="CodeHollow.FeedReader" Version="1.2.4" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="3.1.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="3.1.0" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaView" Version="1.0.0-build-667.85744" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0-preview3" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="4.1.0-build-910.86259" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="4.1.0-build-910.86259" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaPlayer" Version="1.0.0-build-667.86069" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
-	</ItemGroup>
+<!-- Item below for compatibility temporalily -->
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+  </ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Properties\Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>
@@ -131,6 +132,9 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
+	  <MauiXaml Update="View\LivePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\PlayPodcastPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

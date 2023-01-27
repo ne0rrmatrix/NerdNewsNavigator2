@@ -2,33 +2,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
               xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="NerdNewsNavigator2.View.PlayPodcastPage"
-             x:DataType="viewmodel:PlayPodcastViewModel"
-             xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaView;assembly=CommunityToolkit.Maui.MediaView"
+              x:DataType="viewmodel:PlayPodcastViewModel"
+             Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <VerticalStackLayout Padding="5">
-        <Frame Padding="10" 
-               VerticalOptions="Center"
-               HorizontalOptions="Center"
-               MaximumHeightRequest="{OnPlatform Android=790,iOS=100, WinUI=800}">
-            <Frame.GestureRecognizers>
-                <SwipeGestureRecognizer 
-                    Direction="Left"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=SwipedGesture_Left_Show}" 
-                    CommandParameter="{Binding Url}"/>
-            </Frame.GestureRecognizers>
-            <media:MediaView  
-                VerticalOptions="Center"
-               HorizontalOptions="Center"
-                MaximumHeightRequest="{OnPlatform iOS=100, WinUI=600}" 
-                ShouldAutoPlay="True" 
-                ShouldKeepScreenOn="True"  
-                Source="{Binding Url}">
-            </media:MediaView>
-        </Frame>
-    </VerticalStackLayout>
+    <FlexLayout>
+        <toolkit:MediaPlayer
+            IsVisible="True"
+            ShouldAutoPlay="True"
+            ShouldKeepScreenOn="True"
+            ShouldShowPlaybackControls="True"
+            Source="{Binding Url}">
+            <toolkit:MediaPlayer.GestureRecognizers>
+                <SwipeGestureRecognizer
+                  Direction="Right" 
+                Swiped="SwipedGesture" />
+            </toolkit:MediaPlayer.GestureRecognizers>
+        </toolkit:MediaPlayer>
+    </FlexLayout>
 </ContentPage>

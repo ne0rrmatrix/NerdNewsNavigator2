@@ -3,12 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-public partial class PlayPodcastPage : ContentPage
+
+public partial class LivePage : ContentPage
 {
-    public PlayPodcastPage(PlayPodcastViewModel viewmodel)
+    public LivePage(LiveViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = viewmodel;
+        BindingContext = viewModel;
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {

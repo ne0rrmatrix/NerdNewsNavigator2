@@ -1,64 +1,40 @@
-﻿using CodeHollow.FeedReader.Feeds.Itunes;
-using CodeHollow.FeedReader;
-using System.Collections.ObjectModel;
-using NerdNewsNavigator2.Model;
-using CommunityToolkit.Mvvm.ComponentModel;
-using NerdNewsNavigator2.View;
-using CommunityToolkit.Mvvm.Input;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
 
-[QueryProperty("param", "param")]
+[QueryProperty("Url", "Url")]
 public partial class ShowViewModel : ObservableObject
 {
     #region Properties
+    readonly TwitService _twitService;
     public ObservableCollection<Show> Shows { get; set; } = new();
-    #endregion
-    public string param
+    public string Url
     {
         set
         {
-            this.Shows = ShowViewModel.GetShow(value);
+            var decodedUrl = HttpUtility.UrlDecode(value);
+            _ = GetShows(decodedUrl);
             OnPropertyChanged(nameof(Shows));
         }
     }
-    public ShowViewModel()
+    #endregion
+    public ShowViewModel(TwitService twitService)
     {
-
+        _twitService = twitService;
     }
-
-    private static ObservableCollection<Show> GetShow(string url)
+    #region Get the Show and Set Show List
+    async Task GetShows(string url)
     {
-        ObservableCollection<Show> result = new();
-        try
-        {
-            var feed = FeedReader.ReadAsync(url);
-            foreach (var item in feed.Result.Items)
-            {
-                Show show = new()
-                {
-                    Title = item.Title,
-                    Description = item.Description,
-                    Image = item.GetItunesItem().Image.Href,
-                    Url = item.Id
-                };
-                result.Add(show);
-            }
-            return result;
-        }
-        catch
-        {
-            Show show = new()
-            {
-                Title = string.Empty,
-            };
-            result.Add(show);
-            return result;
-        }
+        if (Shows.Count != 0)
+            Shows.Clear();
+
+        var temp = await TwitService.GetShow(url);
+        Shows = new ObservableCollection<Show>(temp);
     }
-    [RelayCommand]
-    async Task SwipeGesture_Left_Podcast(string Url) => await Shell.Current.GoToAsync($"{nameof(PodcastPage)}?Url={Url}");
+    #endregion
 
     [RelayCommand]
-    async Task Tap(string Url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={Url}");
+    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={url}");
 }

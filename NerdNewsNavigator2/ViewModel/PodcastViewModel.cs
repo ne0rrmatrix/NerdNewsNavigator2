@@ -1,61 +1,35 @@
-﻿using CodeHollow.FeedReader;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using NerdNewsNavigator2.Model;
-using NerdNewsNavigator2.View;
-using System.Collections.ObjectModel;
-using System.Text.Json;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-
 public partial class PodcastViewModel : ObservableObject
 {
     #region Properties
-    public ObservableCollection<Podcast> Podcasts { get;  } = new();
+    readonly TwitService _twitService;
+    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public PodcastViewModel()
+    public PodcastViewModel(TwitService twit)
     {
-        this.Podcasts = PodcastViewModel.GetFeed();
-        OnPropertyChanged(nameof(Podcasts));
+        this._twitService = twit;
+        _ = GetPodcasts();
     }
+    #region Get the Podcast and set the Podcast List
+    async Task GetPodcasts()
+    {
+        var podcastList = await TwitService.GetListOfPodcasts();
+        foreach (var item in podcastList)
+        {
+            var temp = await Task.FromResult(FeedService.GetFeed(item));
+            Podcasts.Add(temp);
+        }
+    }
+    #endregion
 
-    private static ObservableCollection<Podcast> GetFeed()
-    {
-        int numberOfPodcasts = 0;
-        ObservableCollection<Podcast> temp = new();
-        string jsonString = @"[{""title"":""https://feeds.twit.tv/ww_video_hd.xml""},{""title"":""https://feeds.twit.tv/aaa_video_hd.xml""},{""title"":""https://feeds.twit.tv/floss_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/hom_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/hop_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/howin_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ipad_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/mbw_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/sn_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ttg_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/tnw_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/twiet_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/twig_video_hd.xml""},{""title"":""https://feeds.twit.tv/twit_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/events_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/specials_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/bits_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/throwback_video_large.xml""},{ ""title"":""https://feeds.twit.tv/leo_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/ant_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/jason_video_hd.xml""},{ ""title"":""https://feeds.twit.tv/mikah_video_hd.xml""}]";
-        var data = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(jsonString);
-        try
-        {
-            foreach (var item in data)
-            {
-                foreach (var (podcast, url) in item)
-                {
-                    var feed = FeedReader.ReadAsync(url);
-                    Podcast podcasts = new()
-                    {
-                        Title = feed.Result.Title,
-                        Description = feed.Result.Description,
-                        Image = feed.Result.ImageUrl,
-                        Url = url
-                    };
-                    temp.Add(podcasts);
-                    numberOfPodcasts++;
-                }
-            }
-        }
-        catch
-        {
-            Podcast podcats = new()
-            {
-                Title = string.Empty,
-            };
-            temp.Add(podcats);
-        }
-        return temp;
-    }
-   
     [RelayCommand]
-    async Task Tap(string param) => await Shell.Current.GoToAsync($"{nameof(ShowPage)}?param={param}");
+    async Task Tap(string url)
+    {
+        var encodedUrl = HttpUtility.UrlEncode(url);
+        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+    }
 }
-

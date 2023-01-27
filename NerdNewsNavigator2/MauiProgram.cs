@@ -1,8 +1,6 @@
-﻿using NerdNewsNavigator2.View;
-using NerdNewsNavigator2.ViewModel;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.MediaView;
-using Microsoft.Extensions.Logging;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -14,8 +12,8 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaView();
-  #if DEBUG
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaPlayer();
+#if DEBUG
         builder.Logging.AddDebug();
 #endif
         builder.Services.AddSingleton<PodcastPage>();
@@ -26,6 +24,12 @@ public static class MauiProgram
 
         builder.Services.AddTransient<PlayPodcastPage>();
         builder.Services.AddTransient<PlayPodcastViewModel>();
+
+        builder.Services.AddTransient<LivePage>();
+        builder.Services.AddTransient<LiveViewModel>();
+
+        builder.Services.AddSingleton<TwitService>();
+        builder.Services.AddSingleton<FeedService>();
         return builder.Build();
     }
 }
