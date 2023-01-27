@@ -11,11 +11,7 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    
-        <WebView 
-           
+    <WebView 
             Source="{Binding Url}">
-           
-        </WebView>
-    
+    </WebView>
 </ContentPage>
