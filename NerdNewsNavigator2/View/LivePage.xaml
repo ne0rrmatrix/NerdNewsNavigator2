@@ -11,28 +11,11 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <Grid IsVisible="True" IsEnabled="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*">
-            </RowDefinition>
-            <RowDefinition Height="Auto">
-            </RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    
         <WebView 
-            Grid.Row="1"
-            VerticalOptions="FillAndExpand"
-            IsVisible="True" IsEnabled="True"
-            HorizontalOptions="FillAndExpand"
-            MinimumHeightRequest="{OnPlatform Android=100,iOS=100,WinUI=800}" 
-            MinimumWidthRequest="{OnPlatform Android=100,iOS=100,WinUI=800}" 
+           
             Source="{Binding Url}">
-            <WebView.GestureRecognizers>
-                <TapGestureRecognizer 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}"/>
-            </WebView.GestureRecognizers>
+           
         </WebView>
-    </Grid>
+    
 </ContentPage>
