@@ -11,7 +11,15 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <WebView 
+    <Grid>
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer
+                  Direction="Right" 
+                Swiped="SwipedGesture" />
+        </Grid.GestureRecognizers>
+        <WebView 
             Source="{Binding Url}">
-    </WebView>
+        </WebView>
+    </Grid>
+   
 </ContentPage>

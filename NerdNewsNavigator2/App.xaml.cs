@@ -15,14 +15,15 @@ using Microsoft.Maui.Controls;
 namespace NerdNewsNavigator2;
 public partial class App : Application
 {
-    private bool FullScreenMode { get; set; }
+    //private bool FullScreenMode { get; set; }
     public App()
     {
-        FullScreenMode = false;
+       // FullScreenMode = false;
         InitializeComponent();
 
         MainPage = new AppShell();
     }
+    /*
     protected override Window CreateWindow(IActivationState? activationState)
     {
         Window window = base.CreateWindow(activationState);
@@ -83,4 +84,5 @@ public partial class App : Application
         }
 #endif
     }
+    */
 }

@@ -20,6 +20,7 @@ public partial class ShowPage : ContentPage
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine("Swiped Right");
         switch (e.Direction)
         {
             case SwipeDirection.Right:

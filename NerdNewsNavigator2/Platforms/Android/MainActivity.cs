@@ -16,6 +16,10 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
         Platform.Init(this, savedInstanceState);
-        this.Window.AddFlags(WindowManagerFlags.Fullscreen);
+     //   this.Window.AddFlags(WindowManagerFlags.Fullscreen);
+        this.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+        this.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)
+            (SystemUiFlags.ImmersiveSticky | SystemUiFlags.HideNavigation | SystemUiFlags.LowProfile |
+            SystemUiFlags.Fullscreen | SystemUiFlags.Immersive);
     }
 }

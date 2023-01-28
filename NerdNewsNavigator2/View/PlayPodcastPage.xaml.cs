@@ -12,6 +12,7 @@ public partial class PlayPodcastPage : ContentPage
     }
     private void SwipedGesture(object sender, SwipedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine("Swipe Right");
         switch (e.Direction)
         {
             case SwipeDirection.Right:
