@@ -12,7 +12,9 @@
     </Shell.BackButtonBehavior>
     <Shell.TitleView>
         <HorizontalStackLayout>
-            <Button Text="Live" Clicked="LivePage" HeightRequest="50" WidthRequest="100" HorizontalOptions="Start">
+            <Button Text="Live" FontSize="Small" Clicked="LivePage"  HorizontalOptions="Start">
+            </Button>
+            <Button Text="Exit" FontSize="Small" Clicked="OnQuit"  HorizontalOptions="End">
             </Button>
         </HorizontalStackLayout>
     </Shell.TitleView>

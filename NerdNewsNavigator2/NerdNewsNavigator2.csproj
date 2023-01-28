@@ -86,13 +86,16 @@
 	</ItemGroup>
 
 	
-	
+  
+  	<!-- App Icon -->
+  <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
+
+  
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+	<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="305,275" Color="#34AAD2" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="305,275" Color="#34AAD2"/>
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -108,7 +111,7 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="4.1.0-build-910.86259" />
 		<PackageReference Include="CommunityToolkit.Maui.Core" Version="4.1.0-build-910.86259" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaPlayer" Version="1.0.0-build-667.86069" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />

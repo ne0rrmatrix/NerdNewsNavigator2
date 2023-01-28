@@ -13,23 +13,21 @@
     </Shell.BackButtonBehavior>
     <Shell.TitleView>
         <HorizontalStackLayout>
-            <Button Text="Home" Clicked="PodcastPage" HeightRequest="50" WidthRequest="100" ></Button>
-            <Button Text="Live" Clicked="LivePage" HeightRequest="50" WidthRequest="100" ></Button>
+            <Button Text="Back" Clicked="GoBack" FontSize="Small"></Button>
+            <Button Text="Live" Clicked="LivePage" FontSize="Small"></Button>
+            <Button Text="Exit" Clicked="OnQuit" FontSize="Small" HorizontalOptions="End"></Button>
         </HorizontalStackLayout>
     </Shell.TitleView>
     <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
-                    <StackLayout BackgroundColor="White">
-                        <StackLayout.GestureRecognizers>
-                            <SwipeGestureRecognizer 
-                                Direction="Right" 
-                                Swiped="SwipedGesture"/>
-                            <TapGestureRecognizer 
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer 
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=TapCommand}" 
                                 CommandParameter="{Binding Url}"/>
-                        </StackLayout.GestureRecognizers>
+                    </Frame.GestureRecognizers>
+                    <StackLayout BackgroundColor="White">
                         <Label 
                             Text="{Binding Title}" 
                             HorizontalOptions="CenterAndExpand" 

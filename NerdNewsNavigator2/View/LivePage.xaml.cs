@@ -11,13 +11,4 @@ public partial class LivePage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-    private void SwipedGesture(object sender, SwipedEventArgs e)
-    {
-        switch (e.Direction)
-        {
-            case SwipeDirection.Right:
-                Shell.Current.GoToAsync("..");
-                break;
-        }
-    }
 }

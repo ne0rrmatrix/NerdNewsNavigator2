@@ -12,17 +12,12 @@
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <FlexLayout>
-        <toolkit:MediaPlayer
+        <toolkit:MediaElement
             IsVisible="True"
             ShouldAutoPlay="True"
             ShouldKeepScreenOn="True"
             ShouldShowPlaybackControls="True"
             Source="{Binding Url}">
-            <toolkit:MediaPlayer.GestureRecognizers>
-                <SwipeGestureRecognizer
-                  Direction="Right" 
-                Swiped="SwipedGesture" />
-            </toolkit:MediaPlayer.GestureRecognizers>
-        </toolkit:MediaPlayer>
+        </toolkit:MediaElement>
     </FlexLayout>
 </ContentPage>
