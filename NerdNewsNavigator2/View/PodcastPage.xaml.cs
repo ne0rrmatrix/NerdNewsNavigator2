@@ -10,6 +10,10 @@ public partial class PodcastPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
+    private void OnQuit(object sender, EventArgs e)
+    {
+        Application.Current.Quit();
+    }
     private void LivePage(object sender, EventArgs e)
     {
         Shell.Current.GoToAsync($"{nameof(LivePage)}");

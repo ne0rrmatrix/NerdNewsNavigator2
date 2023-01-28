@@ -15,10 +15,8 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnCreate(Bundle savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        Platform.Init(this, savedInstanceState);
-     //   this.Window.AddFlags(WindowManagerFlags.Fullscreen);
-        this.Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-        this.Window.DecorView.SystemUiVisibility = (StatusBarVisibility)
+        Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+        Window.DecorView.SystemUiVisibility = (StatusBarVisibility)
             (SystemUiFlags.ImmersiveSticky | SystemUiFlags.HideNavigation | SystemUiFlags.LowProfile |
             SystemUiFlags.Fullscreen | SystemUiFlags.Immersive);
     }

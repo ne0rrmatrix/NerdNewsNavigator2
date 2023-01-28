@@ -12,11 +12,6 @@
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <Grid>
-        <Grid.GestureRecognizers>
-            <SwipeGestureRecognizer
-                  Direction="Right" 
-                Swiped="SwipedGesture" />
-        </Grid.GestureRecognizers>
         <WebView 
             Source="{Binding Url}">
         </WebView>

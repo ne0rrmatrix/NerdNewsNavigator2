@@ -14,18 +14,12 @@ public partial class ShowPage : ContentPage
     {
         Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
-    private void PodcastPage(object sender, EventArgs e)
+    private void GoBack(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+        Shell.Current.GoToAsync($"..");
     }
-    private void SwipedGesture(object sender, SwipedEventArgs e)
+    private void OnQuit(object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Swiped Right");
-        switch (e.Direction)
-        {
-            case SwipeDirection.Right:
-                Shell.Current.GoToAsync("..");
-                break;
-        }
+        Application.Current.Quit();
     }
 }
