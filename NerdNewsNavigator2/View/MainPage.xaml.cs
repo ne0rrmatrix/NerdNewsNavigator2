@@ -3,22 +3,24 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-
 public partial class MainPage : ContentPage
 {
-   
     public MainPage()
     {
         InitializeComponent();
         string _deviceType = GetRoute();
         System.Diagnostics.Debug.WriteLine(GetRoute());
         if (GetRoute() == "Desktop")
-            Shell.Current.GoToAsync(nameof(PodcastPage));
+            Shell.Current.GoToAsync(nameof(DesktopPodcastPage));
+        else if (GetRoute() == "Phone")
+            Shell.Current.GoToAsync(nameof(PhonePodcastPage));
+        else if (GetRoute() == "Tablet")
+            Shell.Current.GoToAsync(nameof(TabletPodcastPage));
     }
     public string GetRoute()
     {
         string device = string.Empty;
-        if(DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
+        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
         if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI))
             device = "Tablet";
         if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)

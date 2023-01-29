@@ -2,18 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.ViewModel;
-public partial class PodcastViewModel : ObservableObject
+namespace NerdNewsNavigator2.ViewModel.Desktop;
+public partial class DesktopPodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public PodcastViewModel(TwitService twit)
+    public DesktopPodcastViewModel(TwitService twit)
     {
-        this._twitService = twit;
+        _twitService = twit;
         _ = GetPodcasts();
     }
+
     #region Get the Podcast and set the Podcast List
     async Task GetPodcasts()
     {
@@ -30,6 +31,6 @@ public partial class PodcastViewModel : ObservableObject
     async Task Tap(string url)
     {
         var encodedUrl = HttpUtility.UrlEncode(url);
-        await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+        await Shell.Current.GoToAsync($"{nameof(DesktopShowPage)}?Url={encodedUrl}");
     }
 }

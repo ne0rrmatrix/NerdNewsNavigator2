@@ -2,13 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View;
+namespace NerdNewsNavigator2.ViewModel.Phone;
 
-public partial class LivePage : ContentPage
+public partial class PhoneLiveViewModel : ObservableObject
 {
-    public LivePage(LiveViewModel viewModel)
-    {
-        InitializeComponent();
-        BindingContext = viewModel;
-    }
+
+    [ObservableProperty]
+    public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
 }

@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.ViewModel;
+namespace NerdNewsNavigator2.ViewModel.Phone;
 
 [QueryProperty("Url", "Url")]
-public partial class ShowViewModel : ObservableObject
+public partial class PhoneShowViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
@@ -20,7 +20,7 @@ public partial class ShowViewModel : ObservableObject
         }
     }
     #endregion
-    public ShowViewModel(TwitService twitService)
+    public PhoneShowViewModel(TwitService twitService)
     {
         _twitService = twitService;
     }
@@ -35,5 +35,5 @@ public partial class ShowViewModel : ObservableObject
     #endregion
 
     [RelayCommand]
-    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(PlayPodcastPage)}?Url={url}");
+    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(PhonePlayPodcastPage)}?Url={url}");
 }

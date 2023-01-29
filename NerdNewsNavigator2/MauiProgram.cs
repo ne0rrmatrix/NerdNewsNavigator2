@@ -42,17 +42,42 @@ public static class MauiProgram
 #endif
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
-        builder.Services.AddSingleton<PodcastPage>();
-        builder.Services.AddSingleton<PodcastViewModel>();
 
-        builder.Services.AddTransient<ShowPage>();
-        builder.Services.AddTransient<ShowViewModel>();
+        builder.Services.AddSingleton<PhonePodcastPage>();
+        builder.Services.AddSingleton<PhonePodcastViewModel>();
 
-        builder.Services.AddTransient<PlayPodcastPage>();
-        builder.Services.AddTransient<PlayPodcastViewModel>();
+        builder.Services.AddTransient<PhoneShowPage>();
+        builder.Services.AddTransient<PhoneShowViewModel>();
 
-        builder.Services.AddTransient<LivePage>();
-        builder.Services.AddTransient<LiveViewModel>();
+        builder.Services.AddTransient<PhonePlayPodcastPage>();
+        builder.Services.AddTransient<PhonePlayPodcastViewModel>();
+
+        builder.Services.AddTransient<PhoneLivePage>();
+        builder.Services.AddTransient<PhoneLiveViewModel>();
+
+        builder.Services.AddSingleton<DesktopPodcastPage>();
+        builder.Services.AddSingleton<DesktopPodcastViewModel>();
+
+        builder.Services.AddTransient<DesktopShowPage>();
+        builder.Services.AddTransient<DesktopShowViewModel>();
+
+        builder.Services.AddTransient<DesktopPlayPodcastPage>();
+        builder.Services.AddTransient<DesktopPlayPodcastViewModel>();
+
+        builder.Services.AddTransient<DesktopLivePage>();
+        builder.Services.AddTransient<DesktopLiveViewModel>();
+
+        builder.Services.AddSingleton<TabletPodcastPage>();
+        builder.Services.AddSingleton<TabletPodcastViewModel>();
+
+        builder.Services.AddTransient<TabletShowPage>();
+        builder.Services.AddTransient<TabletShowViewModel>();
+
+        builder.Services.AddTransient<TabletPlayPodcastPage>();
+        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
+
+        builder.Services.AddTransient<TabletLivePage>();
+        builder.Services.AddTransient<TabletLiveViewModel>();
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();

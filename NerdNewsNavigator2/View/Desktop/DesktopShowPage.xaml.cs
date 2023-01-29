@@ -2,21 +2,26 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View;
-public partial class ShowPage : ContentPage
+namespace NerdNewsNavigator2.View.Desktop;
+public partial class DesktopShowPage : ContentPage
 {
-    public ShowPage(ShowViewModel viewModel)
+    public DesktopShowPage(DesktopShowViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
     }
+    protected override bool OnBackButtonPressed()
+    {
+        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
+        return true;
+    }
     private void LivePage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(LivePage)}");
+        Shell.Current.GoToAsync($"{nameof(DesktopLivePage)}");
     }
     private void GoBack(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"..");
+        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
     }
     private void OnQuit(object sender, EventArgs e)
     {

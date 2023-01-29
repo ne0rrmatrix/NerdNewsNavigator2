@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.ViewModel;
+namespace NerdNewsNavigator2.ViewModel.Tablet;
 
 [QueryProperty("Url", "Url")]
-public partial class PlayPodcastViewModel : ObservableObject
+public partial class TabletPlayPodcastViewModel : ObservableObject
 {
     #region Properties
     [ObservableProperty]

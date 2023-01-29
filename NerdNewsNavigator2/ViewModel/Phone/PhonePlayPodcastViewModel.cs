@@ -2,10 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.ViewModel;
+namespace NerdNewsNavigator2.ViewModel.Phone;
 
-public partial class LiveViewModel : ObservableObject
+[QueryProperty("Url", "Url")]
+public partial class PhonePlayPodcastViewModel : ObservableObject
 {
+    #region Properties
     [ObservableProperty]
-    public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
+    public string _url;
+    #endregion
 }
