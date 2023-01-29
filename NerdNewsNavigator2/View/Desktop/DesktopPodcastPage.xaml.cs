@@ -16,6 +16,6 @@ public partial class DesktopPodcastPage : ContentPage
     }
     private void LivePage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(LivePage)}");
+        Shell.Current.GoToAsync($"{nameof(DesktopLivePage)}");
     }
 }

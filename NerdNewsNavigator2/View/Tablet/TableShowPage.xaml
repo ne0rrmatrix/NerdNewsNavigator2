@@ -19,39 +19,45 @@
         </HorizontalStackLayout>
     </Shell.TitleView>
     <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="4"/>
+        </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
-                    <Frame.GestureRecognizers>
+                <Grid>
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" 
                                 CommandParameter="{Binding Url}"/>
-                    </Frame.GestureRecognizers>
-                    <StackLayout BackgroundColor="White">
-                        <Label 
-                            Text="{Binding Title}" 
-                            HorizontalOptions="CenterAndExpand" 
-                            VerticalOptions="CenterAndExpand"
-                            TextColor="Black"  
-                            FontSize="18"  
-                            FontAttributes="Bold"
-                            LineBreakMode="WordWrap"/>
-                        <Image 
-                            Aspect="AspectFit" 
-                            Margin="5"
-                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
-                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
-                            Source="{Binding Image}">
-                        </Image>
-                        <Label Text="{Binding Description}" 
-                            HorizontalOptions="Start"
-                            FontSize="14" 
-                            LineBreakMode="WordWrap" 
-                            TextColor="Black" 
-                            TextType="Html">
-                        </Label>
-                    </StackLayout>
-                </Frame>
+                    </Grid.GestureRecognizers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="300"/>
+                        <RowDefinition Height="375"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0" Margin="5"
+                        Text="{Binding Title}" 
+                        TextColor="Black" 
+                        FontSize="32" 
+                        LineBreakMode="WordWrap"/>
+                    <Image Grid.Row="1" Margin="5"
+                    Aspect="AspectFit" 
+                    MaximumHeightRequest="300" 
+                    MaximumWidthRequest="300" 
+                    Source="{Binding Image}">
+                    </Image>
+                    <Label Grid.Row="2" Margin="5"
+                           Text="{Binding Description}" 
+                           FontSize="14" 
+                           TextColor="Black" 
+                            TextType="Html"
+                           LineBreakMode="WordWrap"/>
+                </Grid>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
