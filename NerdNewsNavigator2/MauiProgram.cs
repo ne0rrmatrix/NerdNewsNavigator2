@@ -3,9 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 #if WINDOWS
-                        using Microsoft.UI;
-                       using Microsoft.UI.Windowing;
-                        using Windows.Graphics;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Windows.Graphics;
 #endif
 
 namespace NerdNewsNavigator2;

@@ -18,37 +18,44 @@
             </Button>
         </HorizontalStackLayout>
     </Shell.TitleView>
-    <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
+    <CollectionView  ItemsSource="{Binding Podcasts}" BackgroundColor="White" SelectionMode="None">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="4"/>
+        </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Frame WidthRequest="800" BackgroundColor="White">
-                    <Frame.GestureRecognizers>
+                <Grid>
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Url}"/>
-                    </Frame.GestureRecognizers>
-                    <HorizontalStackLayout>
-                        <Image Grid.RowSpan="2" 
-                                       Aspect="AspectFit" 
-                                       HeightRequest="375" 
-                                       WidthRequest="375" 
-                                       Source="{Binding Image}">
-                        </Image>
-                        <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center" >
-                            <Label Text="{Binding Title}" 
-                                        TextColor="Black" 
-                                        FontSize="14" 
-                                        MaximumWidthRequest="375" 
-                                        LineBreakMode="WordWrap"/>
-                            <Label Text="{Binding Description}" 
-                                        FontSize="10" 
-                                        TextColor="Black" 
-                                        LineBreakMode="WordWrap" 
-                                        MaximumWidthRequest="375" 
-                                        MaximumHeightRequest="800"></Label>
-                        </VerticalStackLayout>
-                    </HorizontalStackLayout>
-                </Frame>
+                    </Grid.GestureRecognizers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="300"/>
+                        <RowDefinition Height="375"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Label  Grid.Row="0" Margin="5"
+                        Text="{Binding Title}" 
+                        TextColor="Black" 
+                        FontSize="32" 
+                        LineBreakMode="WordWrap"/>
+                    <Image Grid.Row="1" Margin="5"
+                    Aspect="AspectFit" 
+                    MaximumHeightRequest="300" 
+                    MaximumWidthRequest="300" 
+                    Source="{Binding Image}">
+                    </Image>
+                    <Label Grid.Row="2" Margin="5"
+                           Text="{Binding Description}" 
+                           FontSize="14" 
+                           TextColor="Black" 
+                           LineBreakMode="WordWrap"/>
+                </Grid>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
