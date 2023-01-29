@@ -45,47 +45,6 @@
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
-	<!-- Android -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
-		<Compile Remove="**\**\*.Android.cs" />
-		<None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\Android\**\*.cs" />
-		<None Include="**\Android\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Both iOS and Mac Catalyst -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true AND $(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
-		<Compile Remove="**\**\*.MaciOS.cs" />
-		<None Include="**\**\*.MaciOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\MaciOS\**\*.cs" />
-		<None Include="**\MaciOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- iOS -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true">
-		<Compile Remove="**\**\*.iOS.cs" />
-		<None Include="**\**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\iOS\**\*.cs" />
-		<None Include="**\iOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Mac Catalyst -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
-		<Compile Remove="**\**\*.MacCatalyst.cs" />
-		<None Include="**\**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\MacCatalyst\**\*.cs" />
-		<None Include="**\MacCatalyst\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Windows -->
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
-		<Compile Remove="**\*.Windows.cs" />
-		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\Windows\**\*.cs" />
-		<None Include="**\Windows\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	
   
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
@@ -95,7 +54,7 @@
 	<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="305,275" Color="#34AAD2" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="305,275" Color="#34AAD2"/>
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="305,275" Color="#34AAD2" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -136,6 +95,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <MauiXaml Update="View\LivePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\PlayPodcastPage.xaml">

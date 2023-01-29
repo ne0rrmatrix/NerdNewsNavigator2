@@ -15,74 +15,9 @@ using Microsoft.Maui.Controls;
 namespace NerdNewsNavigator2;
 public partial class App : Application
 {
-    //private bool FullScreenMode { get; set; }
     public App()
     {
-       // FullScreenMode = false;
         InitializeComponent();
-
         MainPage = new AppShell();
     }
-    /*
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        Window window = base.CreateWindow(activationState);
-
-        window.Created += (s, e) =>
-        {
-            FullScreenMode = true; //NOTE: Change this to fetch the value true/false according to your app logic.
-            SetFullScreen(s, e);
-        };
-
-        window.Resumed += (s, e) =>
-        {
-            //When resumed, the nav & status bar reappeared for android.
-            //Fixing it by calling SetFullScreen again on resume,
-            //If fullscreen had been set.
-            //Not sure if it is needed for windows. Haven't tested yet.
-            if (FullScreenMode)
-            {
-                SetFullScreen(s, e);
-            }
-        };
-
-        return window;
-    }
-
-    private void SetFullScreen(object? sender, EventArgs eventArgs)
-    {
-#if WINDOWS
-        SetFullScreenWindows(sender, eventArgs);
-#endif
-    }
-
-    private void SetFullScreenWindows(object? sender, EventArgs eventArgs)
-    {
-#if WINDOWS
-        if(sender is not null)
-        {
-            var currentWindow = sender.As<Window>();
-            var uiWindow = currentWindow.Handler.PlatformView.As<MauiWinUIWindow>();
-            var handle = WinRT.Interop.WindowNative.GetWindowHandle(uiWindow);
-            var id = Win32Interop.GetWindowIdFromWindow(handle);
-            var appWindow = AppWindow.GetFromWindowId(id);
-            switch (appWindow.Presenter)
-            {
-                case OverlappedPresenter overlappedPresenter:
-                    //uiWindow.ExtendsContentIntoTitleBar = true;
-                    if(FullScreenMode) {
-                        overlappedPresenter.SetBorderAndTitleBar(false, false);
-                        overlappedPresenter.Maximize();
-                    }
-                    else
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(true, true);
-                        overlappedPresenter.Restore();
-                    }
-                    break;
-            }                
-        }
-#endif
-    }
-    */
 }

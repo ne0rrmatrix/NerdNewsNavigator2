@@ -13,6 +13,6 @@
     <ShellContent
          Shell.NavBarIsVisible="False"
         Title="Home"
-        ContentTemplate="{DataTemplate view:PodcastPage}"
+        ContentTemplate="{DataTemplate view:MainPage}"
         Route="MainPage" />
 </Shell>
