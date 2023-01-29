@@ -24,21 +24,12 @@
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Grid>
+                <Grid RowDefinitions="100,300,375" ColumnDefinitions="300,300">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Url}"/>
                     </Grid.GestureRecognizers>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="300"/>
-                        <RowDefinition Height="375"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300"/>
-                        <ColumnDefinition Width="300"/>
-                    </Grid.ColumnDefinitions>
                     <Label  Grid.Row="0" Margin="5"
                         Text="{Binding Title}" 
                         TextColor="Black" 
