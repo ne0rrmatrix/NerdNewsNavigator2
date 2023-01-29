@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel.Tablet"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="NerdNewsNavigator2.View.PlayPodcastPage"
-              x:DataType="viewmodel:PlayPodcastViewModel"
+             x:Class="NerdNewsNavigator2.View.Tablet.TabletPlayPodcastPage"
+              x:DataType="viewmodel:TabletPlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <FlexLayout>

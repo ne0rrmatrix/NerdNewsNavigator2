@@ -45,47 +45,6 @@
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
-	<!-- Android -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
-		<Compile Remove="**\**\*.Android.cs" />
-		<None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\Android\**\*.cs" />
-		<None Include="**\Android\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Both iOS and Mac Catalyst -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true AND $(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
-		<Compile Remove="**\**\*.MaciOS.cs" />
-		<None Include="**\**\*.MaciOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\MaciOS\**\*.cs" />
-		<None Include="**\MaciOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- iOS -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true">
-		<Compile Remove="**\**\*.iOS.cs" />
-		<None Include="**\**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\iOS\**\*.cs" />
-		<None Include="**\iOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Mac Catalyst -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
-		<Compile Remove="**\**\*.MacCatalyst.cs" />
-		<None Include="**\**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\MacCatalyst\**\*.cs" />
-		<None Include="**\MacCatalyst\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	<!-- Windows -->
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
-		<Compile Remove="**\*.Windows.cs" />
-		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="**\Windows\**\*.cs" />
-		<None Include="**\Windows\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-	</ItemGroup>
-
-	
   
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
@@ -95,7 +54,7 @@
 	<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="305,275" Color="#34AAD2" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="305,275" Color="#34AAD2"/>
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="305,275" Color="#34AAD2" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -126,6 +85,30 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>Resources.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Desktop\DesktopPodcastPage.xaml.cs">
+	    <DependentUpon>DesktopPodcastPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Desktop\DesktopLivePage.xaml.cs">
+	    <DependentUpon>DesktopLivePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Desktop\DesktopShowPage.xaml.cs">
+	    <DependentUpon>DesktopShowPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Desktop\DesktopPlayPodcastPage.xaml.cs">
+	    <DependentUpon>DesktopPlayPodcastPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Phone\PhonePlayPodcasPage.xaml.cs">
+	    <DependentUpon>PhonePlayPodcasPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Phone\PhoneShowPage.xaml.cs">
+	    <DependentUpon>PhoneShowPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Tablet\TabletLivePage.xaml.cs">
+	    <DependentUpon>TabletLivePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Tablet\TabletPlayPodcastPage.xaml.cs">
+	    <DependentUpon>TabletPlayPodcastPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -135,17 +118,47 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
-	  <MauiXaml Update="View\LivePage.xaml">
+	  <MauiXaml Update="View\Desktop\DesktopLivePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\PlayPodcastPage.xaml">
+	  <MauiXaml Update="View\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\PodcastPage.xaml">
+	  <MauiXaml Update="View\Phone\PhoneLivePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\ShowPage.xaml">
+	  <MauiXaml Update="View\Phone\PhonePlayPodcasPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\Phone\PhonePodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Phone\PhoneShowPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Desktop\DesktopPlayPodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Desktop\DesktopPodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Desktop\DesktopShowPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Tablet\TabletLivePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Tablet\TableShowPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Tablet\TabletPlayPodcastPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Tablet\TabletPodcasPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Properties\PublishProfiles\" />
 	</ItemGroup>
 </Project>

@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View;
-public partial class PodcastPage : ContentPage
+namespace NerdNewsNavigator2.View.Desktop;
+public partial class DesktopPodcastPage : ContentPage
 {
-    public PodcastPage(PodcastViewModel viewmodel)
+    public DesktopPodcastPage(DesktopPodcastViewModel viewmodel)
     {
         InitializeComponent();
         BindingContext = viewmodel;
@@ -16,6 +16,6 @@ public partial class PodcastPage : ContentPage
     }
     private void LivePage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(LivePage)}");
+        Shell.Current.GoToAsync($"{nameof(DesktopLivePage)}");
     }
 }
