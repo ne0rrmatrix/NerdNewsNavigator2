@@ -70,8 +70,7 @@ public partial class AppShell : Shell
         else if (GetRoute() == "Phone")
             Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
         else if (GetRoute() == "Tablet")
-            Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}");
-        else Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
+            Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
     public string GetRoute()
     {
