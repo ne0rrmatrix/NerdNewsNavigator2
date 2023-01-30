@@ -15,16 +15,4 @@ public partial class DesktopShowPage : ContentPage
         Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
         return true;
     }
-    private void LivePage(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(DesktopLivePage)}");
-    }
-    private void GoBack(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
-    }
-    private void OnQuit(object sender, EventArgs e)
-    {
-        Application.Current.Quit();
-    }
 }

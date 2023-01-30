@@ -40,8 +40,8 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddTransient<FirstPage>();
+        builder.Services.AddTransient<FirstVieModel>();
 
         builder.Services.AddSingleton<PhonePodcastPage>();
         builder.Services.AddSingleton<PhonePodcastViewModel>();
@@ -49,8 +49,8 @@ public static class MauiProgram
         builder.Services.AddTransient<PhoneShowPage>();
         builder.Services.AddTransient<PhoneShowViewModel>();
 
-        builder.Services.AddTransient<PhonePlayPodcastPage>();
-        builder.Services.AddTransient<PhonePlayPodcastViewModel>();
+        builder.Services.AddSingleton<PhonePlayPodcastPage>();
+        builder.Services.AddSingleton<PhonePlayPodcastViewModel>();
 
         builder.Services.AddTransient<PhoneLivePage>();
         builder.Services.AddTransient<PhoneLiveViewModel>();
@@ -78,6 +78,9 @@ public static class MauiProgram
 
         builder.Services.AddTransient<TabletLivePage>();
         builder.Services.AddTransient<TabletLiveViewModel>();
+
+        builder.Services.AddTransient<LivePage>();
+        builder.Services.AddTransient<LiveViewModel>();
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();

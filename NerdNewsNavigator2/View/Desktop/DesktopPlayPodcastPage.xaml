@@ -8,7 +8,7 @@
              Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform Android=False,iOS=False, WinUI=True}">
+        <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <FlexLayout>
