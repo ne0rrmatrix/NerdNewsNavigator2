@@ -5,6 +5,7 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel.Desktop"
              x:Class="NerdNewsNavigator2.View.Desktop.DesktopPodcastPage"
              x:DataType="viewmodel:DesktopPodcastViewModel"
+             BackgroundColor="White"
                Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
@@ -16,7 +17,7 @@
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Grid RowDefinitions="100,300,375" ColumnDefinitions="300,300">
+                <Grid RowDefinitions="100,300,300" ColumnDefinitions="300,300" Margin="5" Padding="70">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DesktopPodcastViewModel}}, Path=TapCommand}"

@@ -8,12 +8,16 @@ public partial class TabletPodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
+    [ObservableProperty]
+    private string _orientation;
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
     public TabletPodcastViewModel(TwitService twit)
     {
         this._twitService = twit;
         _ = GetPodcasts();
+        this._orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(_orientation));
     }
 
     #region Get the Podcast and set the Podcast List
@@ -27,6 +31,14 @@ public partial class TabletPodcastViewModel : ObservableObject
         }
     }
     #endregion
+    public string OnDeviceOrientationChange()
+    {
+        string Orientation = string.Empty;
+        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { Orientation = "4"; }
+        else Orientation = "3";
+        System.Diagnostics.Debug.WriteLine("Screen orientation: " + Orientation);
+        return Orientation;
+    }
 
     [RelayCommand]
     async Task Tap(string url)

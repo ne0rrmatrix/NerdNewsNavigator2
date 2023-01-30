@@ -13,7 +13,7 @@
     <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
+                <Frame WidthRequest="375" BackgroundColor="White">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PhonePodcastViewModel}}, Path=TapCommand}"
@@ -22,22 +22,22 @@
                     <HorizontalStackLayout>
                         <Image Grid.RowSpan="2" 
                                        Aspect="AspectFit" 
-                                       HeightRequest="{OnPlatform Android=100,iOS=100,WinUI=375}" 
-                                       WidthRequest="{OnPlatform Android=100,iOS=100,WinUI=375}" 
+                                       HeightRequest="100" 
+                                       WidthRequest="100" 
                                        Source="{Binding Image}">
                         </Image>
                         <VerticalStackLayout Padding="10" Spacing="4" VerticalOptions="Center" >
                             <Label Text="{Binding Title}" 
                                         TextColor="Black" 
-                                        FontSize="14" 
-                                        MaximumWidthRequest="{OnPlatform Android=375,iOS=100,WinUI=375}" 
+                                        FontSize="12" 
+                                        MaximumWidthRequest="375" 
                                         LineBreakMode="WordWrap"/>
                             <Label Text="{Binding Description}" 
                                         FontSize="10" 
                                         TextColor="Black" 
                                         LineBreakMode="WordWrap" 
-                                        MaximumWidthRequest="{OnPlatform Android=225,iOS=100,WinUI=375}" 
-                                        MaximumHeightRequest="{OnPlatform WinUI=800}"></Label>
+                                        MaximumWidthRequest="225">
+                            </Label>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>

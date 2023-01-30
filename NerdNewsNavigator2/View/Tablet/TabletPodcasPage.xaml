@@ -10,13 +10,13 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Podcasts}" BackgroundColor="White" SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}"  BackgroundColor="White" SelectionMode="None">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="4"/>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Grid RowDefinitions="100,300,375" ColumnDefinitions="300,300">
+                <Grid RowDefinitions="100,300,300" ColumnDefinitions="300,300" Margin="70">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"
@@ -35,7 +35,7 @@
                     </Image>
                     <Label Grid.Row="2" Margin="5"
                            Text="{Binding Description}" 
-                           FontSize="14" 
+                           FontSize="24" 
                            TextColor="Black" 
                            LineBreakMode="WordWrap"/>
                 </Grid>

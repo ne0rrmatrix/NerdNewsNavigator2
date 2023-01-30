@@ -76,9 +76,9 @@ public partial class AppShell : Shell
     {
         string device = string.Empty;
         if (DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
-        if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI))
+        else if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI))
             device = "Tablet";
-        if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
             device = "Phone";
 
         return device;

@@ -9,6 +9,8 @@ public partial class TabletShowViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
+    [ObservableProperty]
+    private string _orientation;
     public ObservableCollection<Show> Shows { get; set; } = new();
     public string Url
     {
@@ -23,6 +25,16 @@ public partial class TabletShowViewModel : ObservableObject
     public TabletShowViewModel(TwitService twitService)
     {
         _twitService = twitService;
+        this._orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(_orientation));
+    }
+    public string OnDeviceOrientationChange()
+    {
+        string Orientation = string.Empty;
+        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { Orientation = "4"; }
+        else Orientation = "3";
+        System.Diagnostics.Debug.WriteLine("Screen orientation: " + Orientation);
+        return Orientation;
     }
     #region Get the Show and Set Show List
     async Task GetShows(string url)

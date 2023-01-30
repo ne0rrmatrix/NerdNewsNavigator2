@@ -6,6 +6,7 @@
              x:Class="NerdNewsNavigator2.View.Tablet.TabletPlayPodcastPage"
               x:DataType="viewmodel:TabletPlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
+             BackgroundColor="Black"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False">

@@ -26,9 +26,9 @@ public partial class FirstPage : ContentPage
     {
         string device = string.Empty;
         if (DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
-        if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI) && (DeviceInfo.Idiom != DeviceIdiom.Phone))
+        else if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI) && (DeviceInfo.Idiom != DeviceIdiom.Phone))
             device = "Tablet";
-        if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
             device = "Phone";
 
         return device;
