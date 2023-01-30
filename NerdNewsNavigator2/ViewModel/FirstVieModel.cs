@@ -6,4 +6,5 @@ namespace NerdNewsNavigator2.ViewModel;
 
 public partial class FirstVieModel : ObservableObject
 {
+
 }

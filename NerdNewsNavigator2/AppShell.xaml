@@ -25,10 +25,10 @@
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>
+    <ShellContent ContentTemplate="{DataTemplate local:FirstPage}" Route="FirstPage"/>
     
-    <FlyoutItem Title="Home" Icon="house.png">
-        <ShellContent Title="Home" ContentTemplate="{DataTemplate local:FirstPage}" Route="FirstPage"/>
-    </FlyoutItem>
+    <MenuItem Text="Home" IconImageSource="house.png"  Clicked="GotoFirstPage">
+    </MenuItem>
 
     <FlyoutItem Title="Live" Icon="live_broadcasting.png">
         <ShellContent Title="Live" ContentTemplate="{DataTemplate local:LivePage}" Route="LivePage"/>

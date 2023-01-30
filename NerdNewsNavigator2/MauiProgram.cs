@@ -40,8 +40,8 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddSingleton<FirstPage>();
-        builder.Services.AddSingleton<FirstVieModel>();
+        builder.Services.AddTransient<FirstPage>();
+        builder.Services.AddTransient<FirstVieModel>();
 
         builder.Services.AddSingleton<PhonePodcastPage>();
         builder.Services.AddSingleton<PhonePodcastViewModel>();
