@@ -20,7 +20,7 @@ public partial class FirstPage : ContentPage
         else if (GetRoute() == "Phone")
             Shell.Current.GoToAsync($"{nameof(PhonePlayPodcastPage)}");
         else if (GetRoute() == "Tablet")
-            Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}");
+            Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
         else Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
     }
     public string GetRoute()
