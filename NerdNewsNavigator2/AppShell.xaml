@@ -3,16 +3,36 @@
     x:Class="NerdNewsNavigator2.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
-    xmlns:view="clr-namespace:NerdNewsNavigator2.View"
-    Shell.FlyoutBehavior="Disabled">
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False">
-        </BackButtonBehavior>
-    </Shell.BackButtonBehavior>
-    <ShellContent
-         Shell.NavBarIsVisible="False"
-        Title="Home"
-        ContentTemplate="{DataTemplate view:MainPage}"
-        Route="MainPage" />
+     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
+    FlyoutHeaderBehavior="CollapseOnScroll"
+     Shell.NavBarIsVisible="False"
+    FlyoutBackgroundColor="LightGray">
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="50,*" Padding="10">
+                <Image Source="{Binding Icon}" BackgroundColor="LightGray"/>
+                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+    
+    <Shell.MenuItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="50,*" Padding="10">
+                <Image Source="{Binding Icon}" BackgroundColor="LightGray"/>
+                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.MenuItemTemplate>
+    
+    <FlyoutItem Title="Home" Icon="house.png">
+        <ShellContent Title="Home" ContentTemplate="{DataTemplate local:FirstPage}" Route="FirstPage"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Live" Icon="live_broadcasting.png">
+        <ShellContent Title="Live" ContentTemplate="{DataTemplate local:LivePage}" Route="LivePage"/>
+    </FlyoutItem>
+    <MenuItem Text="Exit" IconImageSource="logout.png" Clicked="Quit"/>
+
 </Shell>

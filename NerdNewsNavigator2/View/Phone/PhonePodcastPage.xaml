@@ -5,19 +5,11 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel.Phone"
              x:Class="NerdNewsNavigator2.View.Phone.PhonePodcastPage"
              x:DataType="viewmodel:PhonePodcastViewModel"
-               Shell.NavBarIsVisible="True"
+               Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <Shell.TitleView>
-        <HorizontalStackLayout>
-            <Button Text="Live" FontSize="Small" Clicked="LivePage"  HorizontalOptions="Start">
-            </Button>
-            <Button Text="Exit" FontSize="Small" Clicked="OnQuit"  HorizontalOptions="End">
-            </Button>
-        </HorizontalStackLayout>
-    </Shell.TitleView>
     <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">

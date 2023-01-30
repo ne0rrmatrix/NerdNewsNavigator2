@@ -2,14 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View.Phone;
+namespace NerdNewsNavigator2.View;
 
-public partial class PhonePodcastPage : ContentPage
+public partial class LivePage : ContentPage
 {
-    public PhonePodcastPage(PhonePodcastViewModel viewModel)
+    public LivePage(LiveViewModel liveViewModel)
     {
-        InitializeComponent();
-        BindingContext = viewModel;
+    InitializeComponent();
+        BindingContext = liveViewModel;
     }
     protected override bool OnBackButtonPressed()
     {

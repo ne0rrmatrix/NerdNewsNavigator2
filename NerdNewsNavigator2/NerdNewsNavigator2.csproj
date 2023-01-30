@@ -97,6 +97,9 @@
 	  <Compile Update="View\Desktop\DesktopPlayPodcastPage.xaml.cs">
 	    <DependentUpon>DesktopPlayPodcastPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\FirstPage.xaml.cs">
+	    <DependentUpon>FirstPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\Phone\PhonePlayPodcasPage.xaml.cs">
 	    <DependentUpon>PhonePlayPodcasPage.xaml</DependentUpon>
 	  </Compile>
@@ -121,7 +124,10 @@
 	  <MauiXaml Update="View\Desktop\DesktopLivePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\MainPage.xaml">
+	  <MauiXaml Update="View\LivePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\FirstPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Phone\PhoneLivePage.xaml">

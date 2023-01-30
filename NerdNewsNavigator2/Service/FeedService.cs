@@ -8,10 +8,15 @@ namespace NerdNewsNavigator2.Service;
 public class FeedService
 {
     public List<Podcast> _podcasts = new();
+    public FeedService()
+    {
+        this._podcasts.Clear();
+    }
     #region Get the Podcasts
     public static Podcast GetFeed(string item)
     {
         int counter = 0;
+        
         Podcast feed = new();
         try
         {

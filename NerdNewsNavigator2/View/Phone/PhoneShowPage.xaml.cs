@@ -16,16 +16,4 @@ public partial class PhoneShowPage : ContentPage
         Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
         return true;
     }
-    private void LivePage(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(PhoneLivePage)}");
-    }
-    private void GoBack(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
-    }
-    private void OnQuit(object sender, EventArgs e)
-    {
-        Application.Current.Quit();
-    }
 }
