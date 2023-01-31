@@ -34,8 +34,8 @@ public partial class TabletPodcastViewModel : ObservableObject
     public string OnDeviceOrientationChange()
     {
         string Orientation = string.Empty;
-        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { Orientation = "4"; }
-        else Orientation = "3";
+        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { Orientation = "3"; }
+        else Orientation = "4";
         System.Diagnostics.Debug.WriteLine("Screen orientation: " + Orientation);
         return Orientation;
     }

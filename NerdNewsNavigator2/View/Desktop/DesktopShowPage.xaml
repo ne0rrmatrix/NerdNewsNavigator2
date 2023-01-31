@@ -17,30 +17,31 @@
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Grid RowDefinitions="100,300,375" ColumnDefinitions="300,300" Margin="5" Padding="70">
+                <Grid RowDefinitions="60,400,600" Margin="5"  ColumnDefinitions="400">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DesktopShowViewModel}}, Path=TapCommand}" 
                                 CommandParameter="{Binding Url}"/>
                     </Grid.GestureRecognizers>
                     <Label
-                        Grid.Row="0" Margin="5"
+                        Grid.Row="0"
                         Text="{Binding Title}" 
                         TextColor="Black" 
-                        FontSize="32" 
+                        FontSize="14" 
+                        FontAttributes="Bold"
                         LineBreakMode="WordWrap"/>
                     <Image Grid.Row="1" Margin="5"
                     Aspect="AspectFit" 
-                    MaximumHeightRequest="300" 
-                    MaximumWidthRequest="300" 
+                    MaximumWidthRequest="400" 
                     Source="{Binding Image}">
                     </Image>
-                    <Label Grid.Row="2" Margin="5"
-                           Text="{Binding Description}" 
-                           FontSize="14" 
-                           TextColor="Black" 
-                            TextType="Html"
-                           LineBreakMode="WordWrap"/>
+                    <Label 
+                        Grid.Row="2"
+                        Text="{Binding Description}" 
+                        FontSize="10" 
+                        TextColor="Black" 
+                        TextType="Html"
+                        LineBreakMode="WordWrap"/>
                 </Grid>
             </DataTemplate>
         </CollectionView.ItemTemplate>

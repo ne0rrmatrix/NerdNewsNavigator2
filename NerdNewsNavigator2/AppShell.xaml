@@ -13,7 +13,7 @@
         <DataTemplate>
             <Grid ColumnDefinitions="50,*" Margin="5">
                 <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" FontSize="18" TextColor="Black" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
@@ -22,7 +22,7 @@
         <DataTemplate>
             <Grid ColumnDefinitions="50,*" Margin="5">
                 <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" FontSize="18" TextColor="Black" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>

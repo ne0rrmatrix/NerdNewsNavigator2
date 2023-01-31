@@ -11,33 +11,34 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
+    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" Margin="5" BackgroundColor="White">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
+            <GridItemsLayout Orientation="Vertical" Span="3"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Grid RowDefinitions="100,300,900" ColumnDefinitions="300,300" Margin="70">
+                <Grid RowDefinitions="75,400,*" Margin="5" ColumnDefinitions="400">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer 
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" 
                                 CommandParameter="{Binding Url}"/>
                     </Grid.GestureRecognizers>
                     <Label
-                        Grid.Row="0" Margin="5"
+                        Grid.Row="0"
                         Text="{Binding Title}" 
                         TextColor="Black" 
-                        FontSize="32" 
+                        FontSize="16" 
+                        FontAttributes="Bold"
                         LineBreakMode="WordWrap"/>
                     <Image Grid.Row="1" Margin="5"
                     Aspect="AspectFit" 
-                    MaximumHeightRequest="300" 
-                    MaximumWidthRequest="300" 
+                    MaximumHeightRequest="400" 
+                    MaximumWidthRequest="400" 
                     Source="{Binding Image}">
                     </Image>
-                    <Label Grid.Row="2" Margin="5"
+                    <Label Grid.Row="2"
                            Text="{Binding Description}" 
-                           FontSize="24" 
+                           FontSize="12" 
                            TextColor="Black" 
                             TextType="Html"
                            LineBreakMode="WordWrap"/>
