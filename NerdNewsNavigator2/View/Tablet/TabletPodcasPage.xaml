@@ -12,7 +12,7 @@
     </Shell.BackButtonBehavior>
     <CollectionView ItemsSource="{Binding Podcasts}" Margin="5" BackgroundColor="White" SelectionMode="None">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="3"/>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">

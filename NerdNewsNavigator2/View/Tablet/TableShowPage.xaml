@@ -13,7 +13,7 @@
     </Shell.BackButtonBehavior>
     <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" Margin="5" BackgroundColor="White">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="3"/>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">

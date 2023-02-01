@@ -2,22 +2,26 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+
 namespace NerdNewsNavigator2.ViewModel.Tablet;
 
 public partial class TabletPodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
-    [ObservableProperty]
-    private string _orientation;
+    private DisplayInfo MyMainDisplay { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+
+    [ObservableProperty]
+    int _orientation;
     #endregion
     public TabletPodcastViewModel(TwitService twit)
     {
         this._twitService = twit;
         _ = GetPodcasts();
+        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(_orientation));
+        OnPropertyChanged(nameof(Orientation));
     }
 
     #region Get the Podcast and set the Podcast List
@@ -31,13 +35,17 @@ public partial class TabletPodcastViewModel : ObservableObject
         }
     }
     #endregion
-    public string OnDeviceOrientationChange()
+    private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
-        string Orientation = string.Empty;
-        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { Orientation = "3"; }
-        else Orientation = "4";
-        System.Diagnostics.Debug.WriteLine("Screen orientation: " + Orientation);
-        return Orientation;
+        MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
+        OnPropertyChanged(nameof(MyMainDisplay));
+        Orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
+    }
+    public static int OnDeviceOrientationChange()
+    {
+        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { return 2; }
+        else return 3;
     }
 
     [RelayCommand]
