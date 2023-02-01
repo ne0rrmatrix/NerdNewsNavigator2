@@ -6,22 +6,23 @@
      xmlns:local="clr-namespace:NerdNewsNavigator2.View"
     FlyoutHeaderBehavior="CollapseOnScroll"
      Shell.NavBarIsVisible="False"
+    FlyoutWidth="200"
     FlyoutBackgroundColor="LightGray">
 
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid ColumnDefinitions="50,*" Padding="10">
-                <Image Source="{Binding Icon}" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"/>
+            <Grid ColumnDefinitions="50,*" Margin="5">
+                <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
+                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
     
     <Shell.MenuItemTemplate>
         <DataTemplate>
-            <Grid ColumnDefinitions="50,*" Padding="10">
-                <Image Source="{Binding Icon}" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"/>
+            <Grid ColumnDefinitions="50,*" Margin="5">
+                <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
+                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>

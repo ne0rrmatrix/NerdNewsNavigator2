@@ -21,20 +21,20 @@ public static class MauiProgram
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
 
 #if WINDOWS
- builder.ConfigureLifecycleEvents(events =>  
-        {  
-            events.AddWindows(wndLifeCycleBuilder =>  
-            {  
-                wndLifeCycleBuilder.OnWindowCreated(window =>  
-                {  
-                    window.ExtendsContentIntoTitleBar = false;  
-                    IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);  
-                    WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);  
-                    var _appWindow = AppWindow.GetFromWindowId(myWndId);  
-                    _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);                          
-                });  
-            });  
-        });  
+        builder.ConfigureLifecycleEvents(events =>
+               {
+                   events.AddWindows(wndLifeCycleBuilder =>
+            {
+                wndLifeCycleBuilder.OnWindowCreated(window =>
+                {
+                    window.ExtendsContentIntoTitleBar = false;
+                    IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                    WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+                    var appWindow = AppWindow.GetFromWindowId(myWndId);
+                    appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                });
+            });
+               });
 #endif
 
 #if DEBUG
@@ -84,6 +84,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
+
         return builder.Build();
     }
 }

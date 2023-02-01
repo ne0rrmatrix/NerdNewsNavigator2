@@ -4,8 +4,6 @@
 
 global using System;
 global using System.Collections.Generic;
-global using System.Linq;
-global using System.Text;
 global using System.Threading.Tasks;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using System.Collections.ObjectModel;
@@ -17,7 +15,6 @@ global using NerdNewsNavigator2.View;
 global using Microsoft.Extensions.Logging;
 global using NerdNewsNavigator2.ViewModel;
 global using CommunityToolkit.Maui;
-global using System.ServiceModel.Syndication;
 global using System.Xml.Linq;
 global using System.Xml;
 global using System.Web;

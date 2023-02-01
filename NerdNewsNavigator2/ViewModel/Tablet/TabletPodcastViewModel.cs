@@ -8,12 +8,19 @@ public partial class TabletPodcastViewModel : ObservableObject
 {
     #region Properties
     readonly TwitService _twitService;
+    private DisplayInfo MyMainDisplay { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+
+    [ObservableProperty]
+    int _orientation;
     #endregion
     public TabletPodcastViewModel(TwitService twit)
     {
         this._twitService = twit;
         _ = GetPodcasts();
+        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
+        this._orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
     }
 
     #region Get the Podcast and set the Podcast List
@@ -27,6 +34,20 @@ public partial class TabletPodcastViewModel : ObservableObject
         }
     }
     #endregion
+#nullable enable
+    private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
+    {
+        MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
+        OnPropertyChanged(nameof(MyMainDisplay));
+        Orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
+    }
+#nullable disable
+    public static int OnDeviceOrientationChange()
+    {
+        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { return 2; }
+        else return 3;
+    }
 
     [RelayCommand]
     async Task Tap(string url)

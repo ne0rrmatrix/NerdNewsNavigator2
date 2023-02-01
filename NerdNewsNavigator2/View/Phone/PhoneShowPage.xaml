@@ -11,10 +11,10 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Shows}" HorizontalOptions="Center" SelectionMode="None" BackgroundColor="White">
+    <CollectionView  ItemsSource="{Binding Shows}" BackgroundColor="Wheat" HorizontalOptions="Center" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
-                <Frame WidthRequest="{OnPlatform Android=375,iOS=375,WinUI=800}" BackgroundColor="White">
+                <Frame WidthRequest="375" Margin="5">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer 
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PhoneShowViewModel}}, Path=TapCommand}" 
@@ -32,8 +32,8 @@
                         <Image 
                             Aspect="AspectFit" 
                             Margin="5"
-                            HeightRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
-                            WidthRequest="{OnPlatform Android=375,iOS=100,WinUI=800}" 
+                            HeightRequest="375" 
+                            WidthRequest="375" 
                             Source="{Binding Image}">
                         </Image>
                         <Label Text="{Binding Description}" 
