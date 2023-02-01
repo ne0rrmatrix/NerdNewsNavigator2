@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-
 namespace NerdNewsNavigator2.ViewModel.Tablet;
 
 public partial class TabletPodcastViewModel : ObservableObject
@@ -35,6 +34,7 @@ public partial class TabletPodcastViewModel : ObservableObject
         }
     }
     #endregion
+#nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
         MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
@@ -42,6 +42,7 @@ public partial class TabletPodcastViewModel : ObservableObject
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
+#nullable disable
     public static int OnDeviceOrientationChange()
     {
         if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { return 2; }

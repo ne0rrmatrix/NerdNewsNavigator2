@@ -8,7 +8,11 @@ namespace NerdNewsNavigator2.ViewModel.Tablet;
 public partial class TabletPlayPodcastViewModel : ObservableObject
 {
     #region Properties
+
     [ObservableProperty]
     public string _url;
     #endregion
+    public TabletPlayPodcastViewModel()
+    {
+    }
 }

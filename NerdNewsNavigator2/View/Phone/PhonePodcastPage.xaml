@@ -10,10 +10,10 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Podcasts}" SelectionMode="None">
+    <CollectionView  ItemsSource="{Binding Podcasts}" BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
-                <Frame WidthRequest="375" BackgroundColor="White">
+                <Frame WidthRequest="375">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PhonePodcastViewModel}}, Path=TapCommand}"

@@ -42,7 +42,6 @@ public class TwitService
     #region Get Shows
     public static Task<List<Show>> GetShow(string url)
     {
-        var result = new List<Show>();
         return Task.FromResult(FeedService.GetShow(url));
         #endregion
     }

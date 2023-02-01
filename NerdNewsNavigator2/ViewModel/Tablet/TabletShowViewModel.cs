@@ -14,7 +14,7 @@ public partial class TabletShowViewModel : ObservableObject
 
     [ObservableProperty]
     int _orientation;
-   
+
     public string Url
     {
         set
@@ -32,6 +32,7 @@ public partial class TabletShowViewModel : ObservableObject
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
+#nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
         MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
@@ -39,6 +40,7 @@ public partial class TabletShowViewModel : ObservableObject
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
+#nullable disable
     public static int OnDeviceOrientationChange()
     {
         if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { return 2; }

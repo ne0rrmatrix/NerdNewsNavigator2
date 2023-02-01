@@ -5,13 +5,13 @@
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel.Desktop"
              x:Class="NerdNewsNavigator2.View.Desktop.DesktopPodcastPage"
              x:DataType="viewmodel:DesktopPodcastViewModel"
-             BackgroundColor="White"
+             BackgroundColor="Wheat"
                Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Podcasts}" Margin="5" BackgroundColor="White" SelectionMode="None">
+    <CollectionView  ItemsSource="{Binding Podcasts}" Margin="5" SelectionMode="None">
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="4"/>
         </CollectionView.ItemsLayout>
