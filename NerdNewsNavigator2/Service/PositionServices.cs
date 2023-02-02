@@ -22,11 +22,12 @@ public class PositionServices
     public Task SaveCurrentPosition(Position position)
     {
         position.Title = Preferences.Default.Get("New_Url", "Unknown");
+        System.Diagnostics.Debug.WriteLine("Time: " + position.SavedPosition.TotalSeconds + " Title: " + position.Title);
         foreach (var item in Current)
         {
             if (item.Title == position.Title)
             {
-                Current.Remove(item);
+                App.PositionData.Delete(item);
             }
         }
         if (position.Title != "Unknown")
@@ -36,6 +37,8 @@ public class PositionServices
                 Title = position.Title,
                 SavedPosition = position.SavedPosition
             });
+            Current.Clear();
+            Current = App.PositionData.GetAllPositions();
         }
         return Task.CompletedTask;
     }

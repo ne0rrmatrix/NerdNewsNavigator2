@@ -18,6 +18,7 @@ public partial class DesktopPlayPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewmodel;
+        mediaElement.Pause();
         SetTimer();
     }
 #nullable enable
@@ -27,7 +28,7 @@ public partial class DesktopPlayPodcastPage : ContentPage
         if (mediaElement.CurrentState == MediaElementState.Stopped)
         {
             System.Diagnostics.Debug.WriteLine("Media has Stopped!");
-            System.Diagnostics.Debug.WriteLine("Url is: " + Pos.Title + " Current Position: " + Pos.SavedPosition.TotalSeconds);
+        //    System.Diagnostics.Debug.WriteLine("Url is: " + Pos.Title + " Current Position: " + Pos.SavedPosition.TotalSeconds);
             services.SaveCurrentPosition(Pos);
         }
         if (mediaElement.CurrentState == MediaElementState.Paused)
@@ -71,11 +72,12 @@ public partial class DesktopPlayPodcastPage : ContentPage
     {
         System.Diagnostics.Debug.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
                           e.SignalTime);
-        Timing = true;
         aTimer.Stop();
         aTimer.Dispose();
         Url = Preferences.Default.Get("New_Url", "Unknown");
         GetPosition();
+        CancelEventArgs args = new CancelEventArgs();
+        args.Cancel = true;
         mediaElement.MediaOpened += Slider_DragCompleted;
         OnPropertyChanged(nameof(mediaElement));
         mediaElement.StateChanged += Media_Stopped;
@@ -83,9 +85,7 @@ public partial class DesktopPlayPodcastPage : ContentPage
     }
     public void GetPosition()
     {
-        SetTimer();
         Pos_List = services.GetCurrentPosition();
-
         try
         {
             if (Pos_List != null)

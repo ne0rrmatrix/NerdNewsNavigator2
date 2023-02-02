@@ -28,12 +28,17 @@ public class PositionDataBase
     }
     public void Add(Position position)
     {
+        System.Diagnostics.Debug.WriteLine("Saved " + position.Title);
         _connection = new SQLiteConnection(_dbPath);
         _connection.Insert(position);
     }
     public void Delete(Position position)
     {
-        _connection = new SQLiteConnection(_dbPath);
-        _connection.Delete(position);
+        try
+        {
+            _connection = new SQLiteConnection(_dbPath);
+            _connection.Delete(position);
+        }
+        catch(Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message + "Error deleting data!"); }
     }
 }
