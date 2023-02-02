@@ -7,7 +7,6 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
-
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -84,6 +83,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
+        builder.Services.AddSingleton<Position>();
 
         return builder.Build();
     }
