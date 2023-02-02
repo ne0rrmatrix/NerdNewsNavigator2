@@ -32,3 +32,4 @@ global using System.ComponentModel;
 global using CommunityToolkit.Maui.Core.Primitives;
 global using CommunityToolkit.Maui.Core.Views;
 global using CommunityToolkit.Maui.Views;
+global using SQLite;

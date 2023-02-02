@@ -46,11 +46,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
-	  <EnableLLVM>True</EnableLLVM>
+	  
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-	  <EnableLLVM>True</EnableLLVM>
+	  
 	</PropertyGroup>
 
   
@@ -81,6 +81,8 @@
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.0-build-910.86591" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.4" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 	</ItemGroup>
 <!-- Item below for compatibility temporalily -->
@@ -171,8 +173,5 @@
 	  <MauiXaml Update="View\Tablet\TabletPodcasPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Properties\PublishProfiles\" />
 	</ItemGroup>
 </Project>

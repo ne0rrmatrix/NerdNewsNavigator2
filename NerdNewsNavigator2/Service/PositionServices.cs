@@ -6,18 +6,37 @@ namespace NerdNewsNavigator2.Service;
 
 public class PositionServices
 {
-    public Position Position { get; set; } = new();
+    public List<Position> Current { get; set; } = new();
     public PositionServices()
     {
+        Current = App.PositionData.GetAllPositions();
     }
-
-    public Position GetCurrentPosition()
+    public void DeleteAll()
     {
-        return Position;
+        App.PositionData.DeleteAll();
+    }
+    public List<Position> GetCurrentPosition()
+    {
+        return Current;
     }
     public Task SaveCurrentPosition(Position position)
     {
-        Position = position;
+        position.Title = Preferences.Default.Get("New_Url", "Unknown");
+        foreach (var item in Current)
+        {
+            if (item.Title == position.Title)
+            {
+                Current.Remove(item);
+            }
+        }
+        if (position.Title != "Unknown")
+        {
+            App.PositionData.Add(new Position
+            {
+                Title = position.Title,
+                SavedPosition = position.SavedPosition
+            });
+        }
         return Task.CompletedTask;
     }
 }

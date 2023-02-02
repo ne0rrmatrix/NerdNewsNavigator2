@@ -7,6 +7,8 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
+using NerdNewsNavigator2.Data;
+
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -18,6 +20,8 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
+        
+        
 
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>
@@ -84,7 +88,13 @@ public static class MauiProgram
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
         builder.Services.AddSingleton<Position>();
+        builder.Services.AddSingleton<PositionServices>();
 
+        // Database Dependancy Injection START
+        string dbPath = Path.Combine(FileSystem.AppDataDirectory, "position.db");
+        builder.Services.AddSingleton<PositionDataBase>(s =>
+        ActivatorUtilities.CreateInstance<PositionDataBase>(s, dbPath));
+        // Database Dependancy Injection END
         return builder.Build();
     }
 }
