@@ -56,11 +56,6 @@ jobs:
       shell: pwsh
       run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
     
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        path: .\**\*android*\*.
-
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
 # ***************************** #
@@ -101,10 +96,6 @@ jobs:
       run: |
         dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
     
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        path: NerdNewsNavigator2/bin/Release/net7.0-windows*/**/*.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -148,10 +139,6 @@ jobs:
       shell: bash
       run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
     
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        path: NerdNewsNavigator2//bin/Release/net7.0-ios/iossimulator-x64/**/*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -195,23 +182,4 @@ jobs:
       shell: bash
       run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
     
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        path: NerdNewsNavigator2/bin/Release/net6.0-maccatalyst/maccatalyst-x64/publish/*.pkg
         
-# ********************************* #
-# >>>>>>> Build Release <<<<<<< #
-# ********************************* #
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          title: "Development Build"
-          draft: true
-          prerelease: true
