@@ -54,7 +54,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
+      run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
@@ -104,7 +104,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: .\**\**\**\*.msix
+        path: NerdNewsNavigator2/bin/Release/net7.0-windows*/**/*.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -146,12 +146,12 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore /p:buildForSimulator=False /p:packageApp=True /p:ArchiveOnBuild=False
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
     
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v2.3.1
       with:
-        path: .\**\**\**\*.app*
+        path: NerdNewsNavigator2//bin/Release/net7.0-ios/iossimulator-x64/**/*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -193,12 +193,13 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore
+      run: dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v
       with:
-        path: .\**\**\**\*.app*
+        path: NerdNewsNavigator2/bin/Release/net6.0-maccatalyst/maccatalyst-x64/publish/*.pkg
+        
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
