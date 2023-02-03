@@ -59,7 +59,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/*.apk
+        path: ./**/*signed.apk
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -70,11 +70,9 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-          title: "Development Build"
-          draft: true
           prerelease: true
           files: |
-            *.apk
+            *signed.apk
               
 
 # ***************************** #
@@ -120,7 +118,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/*.msix
+        path: ./**/NerdNews*.msix
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -131,11 +129,10 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-          title: "Development Build"
           draft: true
           prerelease: true
           files: |
-            *.msix
+            NerdNews*.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -182,7 +179,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/*.app
+        path: ./**/NerdNews*.app
           
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -194,11 +191,10 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-          title: "Development Build"
           draft: true
           prerelease: true
           files: |
-            *.app
+            NerdNews*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -245,7 +241,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/*.app
+        path: ./**/NerdNews*.app
         
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -257,8 +253,7 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-          title: "Development Build"
           draft: true
           prerelease: true
           files: |
-            *.pkg
+            NerdNews*.pkg
