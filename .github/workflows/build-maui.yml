@@ -193,7 +193,7 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
+      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v
