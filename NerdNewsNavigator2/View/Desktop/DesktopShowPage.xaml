@@ -32,8 +32,12 @@
                         LineBreakMode="WordWrap"/>
                     <Image Grid.Row="1" Margin="5"
                     Aspect="AspectFit" 
-                    MaximumWidthRequest="400" 
-                    Source="{Binding Image}">
+                    MaximumWidthRequest="400">
+                        <Image.Source>
+                            <UriImageSource Uri="{Binding Image}"
+                                            CacheValidity="40"
+                                            CachingEnabled="True"/>
+                        </Image.Source>
                     </Image>
                     <Label 
                         Grid.Row="2"

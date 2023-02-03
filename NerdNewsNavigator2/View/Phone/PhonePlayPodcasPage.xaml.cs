@@ -18,11 +18,13 @@ public partial class PhonePlayPodcastPage : ContentPage
 
         Start();
     }
+#nullable enable
     void ContentPage_Unloaded(object? sender, EventArgs e)
     {
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
     }
+#nullable disable
     public Task SetTimer()
     {
         s_aTimer = new System.Timers.Timer(2000);
