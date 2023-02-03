@@ -57,9 +57,9 @@ jobs:
       run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
-        path: NerdNewsNavigator2/bin/Release/net7.0-android*/**/*signed*.msix
+        path: ./**/*.apk
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -74,7 +74,7 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *signed*.apk
+            *.apk
               
 
 # ***************************** #
@@ -118,9 +118,9 @@ jobs:
         dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
     
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
-        path: NerdNewsNavigator2/bin/Release/net7.0-windows*/**/*net7.0*.msix
+        path: ./**/*.msix
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -135,7 +135,7 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *net7.0-windows*.msix
+            *.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -180,9 +180,9 @@ jobs:
       run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=False /p:packageApp=True /p:ArchiveOnBuild=False
     
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
-        path: NerdNewsNavigator2/bin/Release/net7.0-ios*/**/*net7.0-ios*.app
+        path: ./**/*.app
           
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -198,7 +198,7 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *net7.0-ios*.app
+            *.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -243,9 +243,9 @@ jobs:
       run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
     
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
-        path: NerdNewsNavigator2/bin/Release/*maccatalyst*/**/*mac*.app
+        path: ./**/*.app
         
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -261,4 +261,4 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *mac*.pkg
+            *.pkg
