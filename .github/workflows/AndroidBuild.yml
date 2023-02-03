@@ -1,10 +1,7 @@
 name: Build MAUI Android Project
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
   
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
@@ -67,9 +64,6 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          release_name: "Android Development Pre-Release <0.0.1>"
-          prerelease: true
-          title: "Android Development Build"
+          prerelease: false
           files: |
-           ./**/*Signed.apk
+            ./**/*Signed.apk
