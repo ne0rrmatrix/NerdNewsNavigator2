@@ -55,7 +55,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/*signed.apk
+        path: ./**/*Signed.apk
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -70,7 +70,7 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            *.apk
+            ./**/*Signed.apk
               
 
 # ***************************** #
@@ -131,7 +131,8 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            *.msix
+            ./**/NerdNews*.msix
+            ./**/NerdNews*.cer
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -173,12 +174,12 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=False /p:packageApp=True /p:ArchiveOnBuild=False
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:packageApp=True
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/NerdNews*.app
+        path: ./**/NerdNews*.*
           
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -194,7 +195,7 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-           *.app
+           ./**/*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -257,4 +258,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-           *.pkg
+           ./**/*.pkg
