@@ -2,13 +2,13 @@ name: Build MAUI Project
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
