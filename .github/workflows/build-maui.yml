@@ -47,7 +47,7 @@ jobs:
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
-
+ 
     - name: Restore NuGet packages
       shell: pwsh
       run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
@@ -55,13 +55,11 @@ jobs:
     - name: Build Maui Android project
       shell: pwsh
       run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
-    
+
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        files: |
-          *signed*.apk
-
+        path: NerdNewsNavigator2/bin/Release/net7.0-android*/**/*signed*.msix
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -77,6 +75,7 @@ jobs:
           prerelease: true
           files: |
             *signed*.apk
+              
 
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -121,8 +120,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        files: |
-          *net7.0-windows*.msix
+        path: NerdNewsNavigator2/bin/Release/net7.0-windows*/**/*net7.0*.msix
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
@@ -184,8 +182,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        files: |
-          *net7.0-ios*.app
+        path: NerdNewsNavigator2/bin/Release/net7.0-ios*/**/*net7.0-ios*.app
           
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -248,8 +245,7 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        files: | 
-          *net7.0-mac*.pkg
+        path: NerdNewsNavigator2/bin/Release/*maccatalyst*/**/*mac*.app
         
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -265,4 +261,4 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *net7.0-mac*.pkg
+            *mac*.pkg
