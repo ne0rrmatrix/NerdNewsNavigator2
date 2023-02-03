@@ -44,7 +44,6 @@ public partial class AppShell : Shell
     {
         string _deviceType = GetRoute();
 
-        System.Diagnostics.Debug.WriteLine("the Next page is: " + GetRoute());
         if (GetRoute() == "Desktop")
             Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
         else if (GetRoute() == "Phone")

@@ -30,7 +30,7 @@ public partial class TabletShowViewModel : ObservableObject
         _twitService = twitService;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
+        // OnPropertyChanged(nameof(Orientation));
     }
 #nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)

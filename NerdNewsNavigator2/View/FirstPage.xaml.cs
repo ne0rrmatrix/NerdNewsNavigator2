@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
 namespace NerdNewsNavigator2.View;
 public partial class FirstPage : ContentPage
 {
@@ -14,7 +12,6 @@ public partial class FirstPage : ContentPage
 
         string _deviceType = GetRoute();
 
-        System.Diagnostics.Debug.WriteLine("the Next page is: " + GetRoute());
         if (_deviceType == "Desktop")
             Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
         else if (_deviceType == "Phone")

@@ -6,10 +6,37 @@ namespace NerdNewsNavigator2.View.Phone;
 
 public partial class PhonePlayPodcastPage : ContentPage
 {
+    private static System.Timers.Timer s_aTimer;
+    readonly PlaybackService _playbackService;
     public PhonePlayPodcastPage(PhonePlayPodcastViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
+
+        PlaybackService playbackservice = new(mediaElement);
+        _playbackService = playbackservice;
+
+        Start();
+    }
+    void ContentPage_Unloaded(object? sender, EventArgs e)
+    {
+        // Stop and cleanup MediaElement when we navigate away
+        mediaElement.Handler?.DisconnectHandler();
+    }
+    public Task SetTimer()
+    {
+        s_aTimer = new System.Timers.Timer(2000);
+        s_aTimer.Elapsed += _playbackService.OnTimedEvent;
+        s_aTimer.Enabled = true;
+        return Task.CompletedTask;
+    }
+    private void Start()
+    {
+        mediaElement.Pause();
+        _playbackService.SetTimer();
+        OnPropertyChanged(nameof(mediaElement));
+        mediaElement.StateChanged += _playbackService.Media_Stopped;
+        mediaElement.PositionChanged += _playbackService.OnPositionChanged;
     }
     protected override bool OnBackButtonPressed()
     {

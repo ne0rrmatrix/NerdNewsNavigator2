@@ -5,14 +5,37 @@
 namespace NerdNewsNavigator2.View.Desktop;
 public partial class DesktopPlayPodcastPage : ContentPage
 {
+    private static System.Timers.Timer s_aTimer;
+
+    readonly PlaybackService _playbackService;
     public DesktopPlayPodcastPage(DesktopPlayPodcastViewModel viewmodel)
     {
         InitializeComponent();
         BindingContext = viewmodel;
+
+        PlaybackService playbackservice = new(mediaElement);
+        _playbackService = playbackservice;
+
+        Start();
     }
-    protected override bool OnBackButtonPressed()
+    void ContentPage_Unloaded(object? sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
-        return true;
+        // Stop and cleanup MediaElement when we navigate away
+        mediaElement.Handler?.DisconnectHandler();
+    }
+    public Task SetTimer()
+    {
+        s_aTimer = new System.Timers.Timer(2000);
+        s_aTimer.Elapsed += _playbackService.OnTimedEvent;
+        s_aTimer.Enabled = true;
+        return Task.CompletedTask;
+    }
+    private void Start()
+    {
+        mediaElement.Pause();
+        _playbackService.SetTimer();
+        OnPropertyChanged(nameof(mediaElement));
+        mediaElement.StateChanged += _playbackService.Media_Stopped;
+        mediaElement.PositionChanged += _playbackService.OnPositionChanged;
     }
 }

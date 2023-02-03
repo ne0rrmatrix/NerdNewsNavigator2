@@ -7,12 +7,8 @@ namespace NerdNewsNavigator2.ViewModel.Tablet;
 public partial class TabletLiveViewModel : ObservableObject
 {
     [ObservableProperty]
-    private int _mediaIndex;
-    public TabletLiveViewModel(ILogger<TabletLivePage> logger)
+    public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
+    public TabletLiveViewModel()
     {
     }
-
-    [ObservableProperty]
-    public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
-
 }

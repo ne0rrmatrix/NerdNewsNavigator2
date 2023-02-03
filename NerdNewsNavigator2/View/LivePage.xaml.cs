@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-
 public partial class LivePage : ContentPage
 {
     public LivePage(LiveViewModel liveViewModel)

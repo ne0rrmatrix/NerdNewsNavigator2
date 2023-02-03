@@ -7,18 +7,18 @@
               x:DataType="viewmodel:TabletPlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Black"
-             Title="">
+             Title=""
+             Unloaded="ContentPage_Unloaded">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <FlexLayout>
+    <Grid>
         <toolkit:MediaElement
-            IsVisible="True"
-            ShouldAutoPlay="True"
-            ShouldKeepScreenOn="True"
-            ShouldShowPlaybackControls="True"
-            Source="{Binding Url}">
-        </toolkit:MediaElement>
-    </FlexLayout>
+               x:Name="mediaElement"
+                ShouldAutoPlay="True"
+                ShouldShowPlaybackControls="True"
+                Source="{Binding Url}"
+               />
+    </Grid>
 </ContentPage>

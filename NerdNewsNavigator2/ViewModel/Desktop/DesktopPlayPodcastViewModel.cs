@@ -8,7 +8,21 @@ namespace NerdNewsNavigator2.ViewModel.Desktop;
 public partial class DesktopPlayPodcastViewModel : ObservableObject
 {
     #region Properties
-    [ObservableProperty]
-    public string _url;
+
+   // [ObservableProperty]
+    string url;
+    public string Url
+    {
+        get => url;
+        set
+        {
+            SetProperty(ref url, value);
+            Preferences.Default.Set("New_Url", value);
+           // System.Diagnostics.Debug.WriteLine("Desktop Viewmodel has Current Url: " + value);
+        }
+    }
     #endregion
+    public DesktopPlayPodcastViewModel()
+    {
+    }
 }

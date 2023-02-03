@@ -7,6 +7,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
+using NerdNewsNavigator2.Data;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -19,6 +20,8 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
+        
+        
 
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>
@@ -49,8 +52,8 @@ public static class MauiProgram
         builder.Services.AddTransient<PhoneShowPage>();
         builder.Services.AddTransient<PhoneShowViewModel>();
 
-        builder.Services.AddSingleton<PhonePlayPodcastPage>();
-        builder.Services.AddSingleton<PhonePlayPodcastViewModel>();
+        builder.Services.AddTransient<PhonePlayPodcastPage>();
+        builder.Services.AddTransient<PhonePlayPodcastViewModel>();
 
         builder.Services.AddTransient<PhoneLivePage>();
         builder.Services.AddTransient<PhoneLiveViewModel>();
@@ -84,6 +87,12 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
+        builder.Services.AddSingleton<Position>();
+
+        builder.Services.AddSingleton<PlaybackService>();
+        builder.Services.AddSingleton<PositionServices>();
+
+        builder.Services.AddSingleton<PositionDataBase>();
 
         return builder.Build();
     }
