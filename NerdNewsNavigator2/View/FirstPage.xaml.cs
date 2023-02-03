@@ -10,18 +10,18 @@ public partial class FirstPage : ContentPage
         InitializeComponent();
         BindingContext = vieModel;
 
-        string _deviceType = GetRoute();
+        var deviceType = FirstPage.GetRoute();
 
-        if (_deviceType == "Desktop")
+        if (deviceType == "Desktop")
             Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
-        else if (_deviceType == "Phone")
+        else if (deviceType == "Phone")
             Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
-        else if (_deviceType == "Tablet")
+        else if (deviceType == "Tablet")
             Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
-    public string GetRoute()
+    public static string GetRoute()
     {
-        string device = string.Empty;
+        var device = string.Empty;
         if (DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
         else if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI))
             device = "Tablet";

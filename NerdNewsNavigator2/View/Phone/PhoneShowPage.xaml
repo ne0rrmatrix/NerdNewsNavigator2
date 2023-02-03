@@ -33,8 +33,12 @@
                             Aspect="AspectFit" 
                             Margin="5"
                             HeightRequest="375" 
-                            WidthRequest="375" 
-                            Source="{Binding Image}">
+                            WidthRequest="375">
+                            <Image.Source>
+                            <UriImageSource Uri="{Binding Image}"
+                                            CacheValidity="40"
+                                            CachingEnabled="True"/>
+                            </Image.Source>
                         </Image>
                         <Label Text="{Binding Description}" 
                             HorizontalOptions="Start"
