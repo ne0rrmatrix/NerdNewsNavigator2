@@ -3,10 +3,6 @@ name: Build MAUI Project
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.gitignore'
-      - '**/*.gitattributes'
   pull_request:
     branches: [ main ]
   
@@ -65,14 +61,16 @@ jobs:
 # ********************************* #
 
     - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      run: |
+        echo "done!"
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
+          title: "Development Build"
           files: |
-            *signed.apk
+            *.apk
               
 
 # ***************************** #
@@ -124,15 +122,16 @@ jobs:
 # ********************************* #
 
     - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      run: |
+        echo "done!"
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-          draft: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
+          title: "Development Build"
           files: |
-            NerdNews*.msix
+            *.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -186,15 +185,16 @@ jobs:
 # ********************************* #
 
     - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      run: |
+        echo "done!"
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-          draft: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
+          title: "Development Build"
           files: |
-            NerdNews*.app
+           *.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -241,19 +241,20 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: ./**/NerdNews*.app
+        path: ./**/NerdNews*.pkg
         
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
 
     - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      run: |
+        echo "done!"
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-          draft: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
+          title: "Development Build"
           files: |
-            NerdNews*.pkg
+           *.pkg
