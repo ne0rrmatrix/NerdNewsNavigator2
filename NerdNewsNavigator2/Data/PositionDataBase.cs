@@ -6,39 +6,49 @@ namespace NerdNewsNavigator2.Data;
 
 public class PositionDataBase
 {
-    readonly string _dbPath;
-    private SQLiteConnection _connection;
-    public PositionDataBase(string dbPath)
+    private SQLiteAsyncConnection _connection;
+    public PositionDataBase()
     {
-        _dbPath = dbPath;
     }
-    public void Init()
+    public async Task Init()
     {
-        _connection = new SQLiteConnection(_dbPath);
-        _connection.CreateTable<Position>();
+        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
+        _connection = new SQLiteAsyncConnection(databasePath);
+        await _connection.CreateTableAsync<Position>();
     }
-    public void DeleteAll()
-    {
-        _connection.DeleteAll<Position>();
-    }
-    public List<Position> GetAllPositions()
-    {
-        Init();
-        return _connection.Table<Position>().ToList();
-    }
-    public void Add(Position position)
-    {
-        System.Diagnostics.Debug.WriteLine("Saved " + position.Title);
-        _connection = new SQLiteConnection(_dbPath);
-        _connection.Insert(position);
-    }
-    public void Delete(Position position)
+    public async Task DeleteAll()
     {
         try
         {
-            _connection = new SQLiteConnection(_dbPath);
-            _connection.Delete(position);
+            await _connection.DeleteAllAsync<Position>();
         }
-        catch(Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message + "Error deleting data!"); }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("Cannot delete data!. " + ex.Message);
+        }
+    }
+    public async Task<List<Position>> GetAllPositions()
+    {
+        await Init();
+        var test = await _connection.Table<Position>().ToListAsync();
+        return test;
+    }
+    public async Task Add(Position position)
+    {
+        try
+        {
+            await _connection.InsertAsync(position);
+        }
+        catch
+        {
+        }
+    }
+    public async Task Delete(Position position)
+    {
+        try
+        {
+            await _connection.DeleteAsync(position);
+        }
+        catch { }
     }
 }

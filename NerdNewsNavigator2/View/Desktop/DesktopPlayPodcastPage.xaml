@@ -6,7 +6,8 @@
              x:Class="NerdNewsNavigator2.View.Desktop.DesktopPlayPodcastPage"
               x:DataType="viewmodel:DesktopPlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
-             Title="">
+             Title=""
+             Unloaded="ContentPage_Unloaded">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>

@@ -52,8 +52,8 @@ public static class MauiProgram
         builder.Services.AddTransient<PhoneShowPage>();
         builder.Services.AddTransient<PhoneShowViewModel>();
 
-        builder.Services.AddSingleton<PhonePlayPodcastPage>();
-        builder.Services.AddSingleton<PhonePlayPodcastViewModel>();
+        builder.Services.AddTransient<PhonePlayPodcastPage>();
+        builder.Services.AddTransient<PhonePlayPodcastViewModel>();
 
         builder.Services.AddTransient<PhoneLivePage>();
         builder.Services.AddTransient<PhoneLiveViewModel>();
@@ -88,13 +88,12 @@ public static class MauiProgram
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
         builder.Services.AddSingleton<Position>();
+
+        builder.Services.AddSingleton<PlaybackService>();
         builder.Services.AddSingleton<PositionServices>();
 
-        // Database Dependancy Injection START
-        string dbPath = Path.Combine(FileSystem.AppDataDirectory, "position.db");
-        builder.Services.AddSingleton<PositionDataBase>(s =>
-        ActivatorUtilities.CreateInstance<PositionDataBase>(s, dbPath));
-        // Database Dependancy Injection END
+        builder.Services.AddSingleton<PositionDataBase>();
+
         return builder.Build();
     }
 }

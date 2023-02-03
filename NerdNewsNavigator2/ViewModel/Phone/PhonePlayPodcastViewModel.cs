@@ -8,7 +8,17 @@ namespace NerdNewsNavigator2.ViewModel.Phone;
 public partial class PhonePlayPodcastViewModel : ObservableObject
 {
     #region Properties
-    [ObservableProperty]
-    public string _url;
+
+    string url;
+    public string Url
+    {
+        get => url;
+        set
+        {
+            SetProperty(ref url, value);
+            Preferences.Default.Set("New_Url", value);
+            // System.Diagnostics.Debug.WriteLine("Desktop Viewmodel has Current Url: " + value);
+        }
+    }
     #endregion
 }

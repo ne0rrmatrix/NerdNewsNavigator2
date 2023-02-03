@@ -3,43 +3,44 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-
 public class PositionServices
 {
     public List<Position> Current { get; set; } = new();
     public PositionServices()
     {
-        Current = App.PositionData.GetAllPositions();
+        _ = Data();
     }
-    public void DeleteAll()
+    public async Task Data()
     {
-        App.PositionData.DeleteAll();
+        Current = await App.PositionData.GetAllPositions();
+    }
+    public async Task DeleteAll()
+    {
+        await App.PositionData.DeleteAll();
     }
     public List<Position> GetCurrentPosition()
     {
         return Current;
     }
-    public Task SaveCurrentPosition(Position position)
+    public async Task<bool> SaveCurrentPosition(Position position)
     {
-        position.Title = Preferences.Default.Get("New_Url", "Unknown");
-        System.Diagnostics.Debug.WriteLine("Time: " + position.SavedPosition.TotalSeconds + " Title: " + position.Title);
-        foreach (var item in Current)
+        if (position.Title != string.Empty)
         {
-            if (item.Title == position.Title)
+            foreach (var item in Current)
             {
-                App.PositionData.Delete(item);
+                if (item.Title == position.Title)
+                {
+                    await App.PositionData.Delete(item);
+                }
             }
-        }
-        if (position.Title != "Unknown")
-        {
-            App.PositionData.Add(new Position
+            await App.PositionData.Add(new Position
             {
                 Title = position.Title,
                 SavedPosition = position.SavedPosition
             });
             Current.Clear();
-            Current = App.PositionData.GetAllPositions();
+            Current = await App.PositionData.GetAllPositions();
         }
-        return Task.CompletedTask;
+        return true;
     }
 }

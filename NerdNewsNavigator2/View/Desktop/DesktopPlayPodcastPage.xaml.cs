@@ -2,106 +2,40 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.IO;
-using System.Timers;
-
 namespace NerdNewsNavigator2.View.Desktop;
 public partial class DesktopPlayPodcastPage : ContentPage
 {
-    private static System.Timers.Timer aTimer;
-    private bool Timing { get; set; }
-    public List<Position> Pos_List { get; set; } = new();
-    public Position Pos { get; set; } = new();
-    PositionServices services { get; set; } = new();
-    string Url;
+    private static System.Timers.Timer s_aTimer;
+
+    readonly PlaybackService _playbackService;
     public DesktopPlayPodcastPage(DesktopPlayPodcastViewModel viewmodel)
     {
         InitializeComponent();
         BindingContext = viewmodel;
+
+        PlaybackService playbackservice = new(mediaElement);
+        _playbackService = playbackservice;
+
+        Start();
+    }
+    void ContentPage_Unloaded(object? sender, EventArgs e)
+    {
+        // Stop and cleanup MediaElement when we navigate away
+        mediaElement.Handler?.DisconnectHandler();
+    }
+    public Task SetTimer()
+    {
+        s_aTimer = new System.Timers.Timer(2000);
+        s_aTimer.Elapsed += _playbackService.OnTimedEvent;
+        s_aTimer.Enabled = true;
+        return Task.CompletedTask;
+    }
+    private void Start()
+    {
         mediaElement.Pause();
-        SetTimer();
-    }
-#nullable enable
-    void Media_Stopped(object sender, MediaStateChangedEventArgs e)
-    {
-        PositionServices services = new();
-        if (mediaElement.CurrentState == MediaElementState.Stopped)
-        {
-            System.Diagnostics.Debug.WriteLine("Media has Stopped!");
-        //    System.Diagnostics.Debug.WriteLine("Url is: " + Pos.Title + " Current Position: " + Pos.SavedPosition.TotalSeconds);
-            services.SaveCurrentPosition(Pos);
-        }
-        if (mediaElement.CurrentState == MediaElementState.Paused)
-        {
-            System.Diagnostics.Debug.WriteLine("Media has Paused!");
-            System.Diagnostics.Debug.WriteLine("Url is: " + Pos.Title + " Current Position: " + Pos.SavedPosition.TotalSeconds);
-            services.SaveCurrentPosition(Pos);
-        }
-    }
-    void Slider_DragCompleted(object? sender, EventArgs e)
-    {
-        if (sender != null)
-        {
-            mediaElement.SeekTo(Pos.SavedPosition);
-        }
-    }
-    void OnPositionChanged(object? sender, EventArgs e)
-    {
-        if (sender != null)
-        {
-            Pos.SavedPosition = mediaElement.Position;
-            System.Diagnostics.Debug.WriteLine("Desktop Page On Position changed is: " + Pos.SavedPosition.TotalSeconds);
-        }
-    }
-#nullable disable
-    protected override bool OnBackButtonPressed()
-    {
-        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
-        return true;
-    }
-    private void SetTimer()
-    {
-        // Create a timer with a two second interval.
-        aTimer = new System.Timers.Timer(3000);
-        // Hook up the Elapsed event for the timer. 
-        aTimer.Elapsed += OnTimedEvent;
-        //  aTimer.AutoReset = true;
-        aTimer.Enabled = true;
-    }
-    private void OnTimedEvent(Object source, ElapsedEventArgs e)
-    {
-        System.Diagnostics.Debug.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
-                          e.SignalTime);
-        aTimer.Stop();
-        aTimer.Dispose();
-        Url = Preferences.Default.Get("New_Url", "Unknown");
-        GetPosition();
-        CancelEventArgs args = new CancelEventArgs();
-        args.Cancel = true;
-        mediaElement.MediaOpened += Slider_DragCompleted;
+        _playbackService.SetTimer();
         OnPropertyChanged(nameof(mediaElement));
-        mediaElement.StateChanged += Media_Stopped;
-        mediaElement.PositionChanged += OnPositionChanged;
+        mediaElement.StateChanged += _playbackService.Media_Stopped;
+        mediaElement.PositionChanged += _playbackService.OnPositionChanged;
     }
-    public void GetPosition()
-    {
-        Pos_List = services.GetCurrentPosition();
-        try
-        {
-            if (Pos_List != null)
-                foreach (var item in Pos_List)
-                {
-                    System.Diagnostics.Debug.WriteLine(item.Title);
-                    if (Url == item.Title)
-                    {
-                        Pos.SavedPosition = item.SavedPosition;
-                        Pos.Title = item.Title;
-                        System.Diagnostics.Debug.WriteLine("Desktop Podcast page Title is: " + Pos.Title + " " + " Position is: " + Pos.SavedPosition.TotalSeconds);
-                        break;
-                    }
-                }
-        }
-        catch { }
-    }
-    //  services.DeleteAll();
 }
