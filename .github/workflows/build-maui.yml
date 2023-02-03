@@ -59,7 +59,24 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        path: .\**\*android*\*.
+        files: |
+          *signed*.apk
+
+# ********************************* #
+# >>>>>>> Build Release <<<<<<< #
+# ********************************* #
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+          title: "Development Build"
+          draft: true
+          prerelease: true
+          files: |
+            *signed*.apk
 
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -104,7 +121,23 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        path: NerdNewsNavigator2/bin/Release/net7.0-windows*/**/*.msix
+        files: |
+          *net7.0-windows*.msix
+# ********************************* #
+# >>>>>>> Build Release <<<<<<< #
+# ********************************* #
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+          title: "Development Build"
+          draft: true
+          prerelease: true
+          files: |
+            *net7.0-windows*.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -146,12 +179,29 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=False /p:packageApp=True /p:ArchiveOnBuild=False
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        path: NerdNewsNavigator2//bin/Release/net7.0-ios/iossimulator-x64/**/*.app
+        files: |
+          *net7.0-ios*.app
+          
+# ********************************* #
+# >>>>>>> Build Release <<<<<<< #
+# ********************************* #
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+          title: "Development Build"
+          draft: true
+          prerelease: true
+          files: |
+            *net7.0-ios*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -198,7 +248,8 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
-        path: NerdNewsNavigator2/bin/Release/net6.0-maccatalyst/maccatalyst-x64/publish/*.pkg
+        files: | 
+          *net7.0-mac*.pkg
         
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
@@ -214,7 +265,4 @@ jobs:
           draft: true
           prerelease: true
           files: |
-            *.msix
-            *.app
-            *.pkg
-            *signed*.apk
+            *net7.0-mac*.pkg
