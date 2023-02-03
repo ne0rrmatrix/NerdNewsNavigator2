@@ -56,22 +56,6 @@ jobs:
       uses: actions/upload-artifact@v3.1.0
       with:
         path: ./**/*Signed.apk
-# ********************************* #
-# >>>>>>> Build Release <<<<<<< #
-# ********************************* #
-
-    - name: Create Release
-      run: |
-        echo "done!"
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            ./**/*Signed.apk
-              
 
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -117,21 +101,6 @@ jobs:
       uses: actions/upload-artifact@v3.1.0
       with:
         path: ./**/NerdNews*.msix
-# ********************************* #
-# >>>>>>> Build Release <<<<<<< #
-# ********************************* #
-
-    - name: Create Release
-      run: |
-        echo "done!"
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            ./**/NerdNews*.msix
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -173,28 +142,13 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:packageApp=True /p:ArchiveOnBuild=true
+      run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore /p:RuntimeIdentifier:ios-arm64  /p:packageApp=True /p:ArchiveOnBuild=true
     
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
         path: ./**/*NerdNews*.app
           
-# ********************************* #
-# >>>>>>> Build Release <<<<<<< #
-# ********************************* #
-
-    - name: Create Release
-      run: |
-        echo "done!"
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-           ./**/NerdNews*.app
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -258,3 +212,6 @@ jobs:
           title: "Development Build"
           files: |
            ./**/NerdNews*.pkg
+           ./**/*Signed.apk
+           ./**/NerdNews*.app
+           ./**/NerdNews*.msix
