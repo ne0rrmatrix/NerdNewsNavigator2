@@ -18,11 +18,17 @@ public partial class DesktopPlayPodcastPage : ContentPage
 
         Start();
     }
+#nullable enable    
     void ContentPage_Unloaded(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
     }
+#nullable disable
     public Task SetTimer()
     {
         s_aTimer = new System.Timers.Timer(2000);

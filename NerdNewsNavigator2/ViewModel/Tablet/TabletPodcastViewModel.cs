@@ -37,6 +37,10 @@ public partial class TabletPodcastViewModel : ObservableObject
 #nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
+        if (sender == null)
+        {
+            return;
+        }
         MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
         OnPropertyChanged(nameof(MyMainDisplay));
         Orientation = OnDeviceOrientationChange();

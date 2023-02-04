@@ -6,8 +6,9 @@
              x:Class="NerdNewsNavigator2.View.Phone.PhonePlayPodcastPage"
               x:DataType="viewmodel:PhonePlayPodcastViewModel"
              Shell.NavBarIsVisible="False"
-             Title=""
-             Unloaded="ContentPage_Unloaded">
+             Title="">
+    <!--  Unloaded="ContentPage_Unloaded"> -->
+    
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False">
         </BackButtonBehavior>
