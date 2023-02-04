@@ -1,17 +1,25 @@
 name: Build MAUI Project
 
-on: push
-
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches: [ main ]
+  
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
   NUGETCONFIG_PATH: "nuget.config"
-
+ 
 jobs:
 
 # ***************************** #
 # >>>>>>> Android build <<<<<<< #
 # ***************************** #
-  maui-android:
+ maui-android:
     runs-on: windows-2022
     steps:
     - name: Checkout
@@ -46,13 +54,12 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0 --no-restore
-
-
+      run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
+    
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
 # ***************************** #
-  maui-windows:
+ maui-windows:
     runs-on: windows-2022
     steps:
     - name: Checkout
@@ -87,11 +94,13 @@ jobs:
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0
+        dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
+    
+        
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
 # ************************* #
-  maui-ios:
+ maui-ios:
     runs-on: macos-12
     steps:
     - name: Checkout
@@ -128,13 +137,13 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios --no-restore /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
-
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
+    
 
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
 # ********************************* #
-  maui-macos:
+ maui-macos:
     runs-on: macos-12
     steps:
     - name: Checkout
@@ -171,4 +180,6 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Debug --no-restore
+      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
+    
+        
