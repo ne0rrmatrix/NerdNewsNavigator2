@@ -36,6 +36,11 @@ public partial class DesktopPlayPodcastPage : ContentPage
         s_aTimer.Enabled = true;
         return Task.CompletedTask;
     }
+    protected override bool OnBackButtonPressed()
+    {
+        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
+        return true;
+    }
     private void Start()
     {
         mediaElement.Pause();
