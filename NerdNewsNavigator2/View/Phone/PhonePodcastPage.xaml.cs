@@ -13,7 +13,7 @@ public partial class PhonePodcastPage : ContentPage
     }
     protected override bool OnBackButtonPressed()
     {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+        Application.Current.Quit();
         return true;
     }
 }

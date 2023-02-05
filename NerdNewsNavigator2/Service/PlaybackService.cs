@@ -16,8 +16,12 @@ namespace NerdNewsNavigator2.Service
             this._mediaElement = mediaElement;
         }
 #nullable enable
-        public async void Media_Stopped(object sender, MediaStateChangedEventArgs e)
+        public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
         {
+            if (sender is null)
+            {
+                return;
+            }
             if ((_mediaElement.CurrentState == MediaElementState.Stopped) && Pos.Title != string.Empty)
             {
                 await Services.SaveCurrentPosition(Pos);
@@ -29,6 +33,10 @@ namespace NerdNewsNavigator2.Service
         }
         public void Slider_DragCompleted(object? sender, EventArgs e)
         {
+            if (sender is null)
+            {
+                return;
+            }
             if (sender != null && Pos.Title != string.Empty && _hasStarted != true)
             {
                 _hasStarted = true;
@@ -42,7 +50,7 @@ namespace NerdNewsNavigator2.Service
                 Pos.SavedPosition = _mediaElement.Position;
             }
         }
-#nullable disable
+
         public Task SetTimer()
         {
             s_aTimer = new System.Timers.Timer(2000);
@@ -50,8 +58,12 @@ namespace NerdNewsNavigator2.Service
             s_aTimer.Enabled = true;
             return Task.CompletedTask;
         }
-        public async void OnTimedEvent(object source, ElapsedEventArgs e)
+        public async void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
+            if (source is null)
+            {
+                return;
+            }
             s_aTimer.Stop();
             s_aTimer.Dispose();
 
@@ -70,6 +82,7 @@ namespace NerdNewsNavigator2.Service
 
             _mediaElement.PositionChanged += Slider_DragCompleted;
         }
+#nullable disable
         public Task<Position> GetPosition()
         {
             var pos_List = Services.GetCurrentPosition();

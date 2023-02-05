@@ -18,17 +18,28 @@ public partial class DesktopPlayPodcastPage : ContentPage
 
         Start();
     }
+#nullable enable    
     void ContentPage_Unloaded(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
     }
+#nullable disable
     public Task SetTimer()
     {
         s_aTimer = new System.Timers.Timer(2000);
         s_aTimer.Elapsed += _playbackService.OnTimedEvent;
         s_aTimer.Enabled = true;
         return Task.CompletedTask;
+    }
+    protected override bool OnBackButtonPressed()
+    {
+        Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
+        return true;
     }
     private void Start()
     {

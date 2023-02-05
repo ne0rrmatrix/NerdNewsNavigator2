@@ -11,7 +11,7 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView  ItemsSource="{Binding Podcasts}" Margin="5" SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}" Margin="5" SelectionMode="None">
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="4"/>
         </CollectionView.ItemsLayout>
@@ -48,4 +48,5 @@
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
+    
 </ContentPage>

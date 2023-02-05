@@ -10,9 +10,10 @@ public partial class DesktopPodcastPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
-    private void OnQuit(object sender, EventArgs e)
+    protected override bool OnBackButtonPressed()
     {
         Application.Current.Quit();
+        return true;
     }
     private void LivePage(object sender, EventArgs e)
     {
