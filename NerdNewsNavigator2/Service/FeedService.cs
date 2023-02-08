@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Security.Cryptography.X509Certificates;
-
 namespace NerdNewsNavigator2.Service;
 public class FeedService
 {
@@ -16,7 +14,6 @@ public class FeedService
     public static Podcast GetFeed(string item)
     {
         int counter = 0;
-        
         Podcast feed = new();
         try
         {
@@ -57,9 +54,11 @@ public class FeedService
             if (rssNodes != null)
                 foreach (XmlNode node in rssNodes)
                 {
+                    string result = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty;
+                    result  = RemoveBADHtmlTags(result);
                     Show show = new()
                     {
-                        Description = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty,
+                        Description = result,
                         Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                         Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                         Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
@@ -73,4 +72,12 @@ public class FeedService
         return shows;
     }
     #endregion
+    public static string RemoveBADHtmlTags(string HTMLCode)
+    {
+       // HTMLCode = Regex.Replace(HTMLCode, "\\starget=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+       // HTMLCode = Regex.Replace(HTMLCode, "\\srel=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        HTMLCode = Regex.Replace(HTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        System.Diagnostics.Debug.WriteLine(HTMLCode);
+        return HTMLCode;
+    }
 }
