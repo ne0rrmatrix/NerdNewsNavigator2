@@ -55,7 +55,7 @@ public class FeedService
                 foreach (XmlNode node in rssNodes)
                 {
                     string result = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty;
-                    result  = RemoveBADHtmlTags(result);
+                    result = RemoveBADHtmlTags(result);
                     Show show = new()
                     {
                         Description = result,
@@ -74,10 +74,11 @@ public class FeedService
     #endregion
     public static string RemoveBADHtmlTags(string HTMLCode)
     {
-       // HTMLCode = Regex.Replace(HTMLCode, "\\starget=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-       // HTMLCode = Regex.Replace(HTMLCode, "\\srel=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        // System.Diagnostics.Debug.WriteLine(HTMLCode.ToString());
+        // HTMLCode = Regex.Replace(HTMLCode, "\\starget=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        // HTMLCode = Regex.Replace(HTMLCode, "\\srel=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         HTMLCode = Regex.Replace(HTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        System.Diagnostics.Debug.WriteLine(HTMLCode);
+        //  System.Diagnostics.Debug.WriteLine(HTMLCode);
         return HTMLCode;
     }
 }
