@@ -81,6 +81,9 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LivePage>();
         builder.Services.AddTransient<LiveViewModel>();
+        
+        builder.Services.AddSingleton<SettingsPage>();
+        builder.Services.AddSingleton<SettingsViewModel>();
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-
 public class FileService
 {
     #region Properties
@@ -42,28 +41,25 @@ public class FileService
         {
             _ = WriteJsonFile(jsonData, _targetFile);
         }
-        JsonDataList = ReadJsonFile(_targetFile).Result;
+        JsonDataList = ReadJsonFile().Result;
     }
     private static async Task WriteJsonFile(string text, string targetFile)
     {
         try
         {
-            Debug.WriteLine("Current file directory is: " + FileSystem.Current.AppDataDirectory);
             using var outputStream = File.OpenWrite(targetFile);
             using var streamWriter = new StreamWriter(outputStream);
             await streamWriter.WriteAsync(text);
             streamWriter.Close();
-            Debug.WriteLine($"{targetFile}, File written to disk!");
         }
         catch
         {
             Debug.WriteLine("Failed to write file!");
         }
     }
-    private static Task<List<JsonData>> ReadJsonFile(string fileName)
+    private Task<List<JsonData>> ReadJsonFile()
     {
-        var targetFileName = Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
-        using var stream = File.OpenRead(targetFileName);
+        using var stream = File.OpenRead(_targetFile);
         var result = JsonSerializer.Deserialize<List<JsonData>>(stream);
         return Task.FromResult(result);
     }
@@ -76,15 +72,30 @@ public class FileService
         }
         return strings;
     }
-    public async void DeleteJson()
+    public List<JsonData> GetData()
     {
-        var jsonData = JsonSerializer.Serialize<List<JsonData>>(_twit);
+        return JsonDataList;
+    }
+    public async void ResetJson()
+    {
         JsonDataList.Clear();
-        if (File.Exists(_targetFile))
-        {
-            File.Delete(_targetFile);
-        }
-        await WriteJsonFile(jsonData, _targetFile);
         JsonDataList = _twit;
+        if (File.Exists(_targetFile)) { File.Delete(_targetFile); }
+        await WriteJsonFile(JsonSerializer.Serialize<List<JsonData>>(_twit), _targetFile);
+    }
+    public async void AddItem(string url)
+    {
+        JsonData jsonData = new() { Url = url, Id = (JsonDataList.Last().Id + 1) };
+        JsonDataList.Add(jsonData);
+        Debug.WriteLine("Adding to JsonFile " + jsonData.Url + " " + jsonData.Id);
+        if (File.Exists(_targetFile)) { File.Delete(_targetFile); }
+        await WriteJsonFile(JsonSerializer.Serialize<List<JsonData>>(JsonDataList), _targetFile);
+    }
+    public async void DeleteItem(int id)
+    {
+        Debug.WriteLine($"Results = {JsonDataList.FindIndex(x => x.Id == id)}");
+        JsonDataList.RemoveAt(JsonDataList.FindIndex(x => x.Id == id));
+        if (File.Exists(_targetFile)) File.Delete(_targetFile);
+        await WriteJsonFile(JsonSerializer.Serialize<List<JsonData>>(JsonDataList), _targetFile);
     }
 }

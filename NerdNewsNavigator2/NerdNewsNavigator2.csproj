@@ -164,6 +164,9 @@
 	  <MauiXaml Update="View\Desktop\DesktopShowPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\Tablet\TabletLivePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

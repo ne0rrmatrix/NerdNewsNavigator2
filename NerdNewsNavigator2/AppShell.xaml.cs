@@ -21,6 +21,10 @@ public partial class AppShell : Shell
 
         Routes.Add(nameof(FirstPage), typeof(FirstPage));
         Routes.Add(nameof(FirstVieModel), typeof(FirstVieModel));
+
+        Routes.Add(nameof(SettingsPage), typeof(SettingsPage));
+        Routes.Add(nameof(SettingsViewModel), typeof(SettingsViewModel));
+
         Routes.Add(nameof(PhonePodcastPage), typeof(PhonePodcastPage));
         Routes.Add(nameof(PhoneShowPage), typeof(PhoneShowPage));
         Routes.Add(nameof(PhonePlayPodcastPage), typeof(PhonePlayPodcastPage));
@@ -30,6 +34,7 @@ public partial class AppShell : Shell
         Routes.Add(nameof(TabletLivePage), typeof(TabletLivePage));
         Routes.Add(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
         Routes.Add(nameof(TabletShowPage), typeof(TabletShowPage));
+
         Routes.Add(nameof(LivePage), typeof(LivePage));
 
         foreach (var item in Routes)

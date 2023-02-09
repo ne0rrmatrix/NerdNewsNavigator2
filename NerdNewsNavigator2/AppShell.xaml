@@ -34,6 +34,9 @@
     <FlyoutItem Title="Live" Icon="live_broadcasting.png">
         <ShellContent Title="Live" ContentTemplate="{DataTemplate local:LivePage}" Route="LivePage"/>
     </FlyoutItem>
+    <FlyoutItem Title="Settings" Icon="settings.png">
+        <ShellContent Title="Settings" ContentTemplate="{DataTemplate local:SettingsPage}" Route="SettingsPage"/>
+    </FlyoutItem>
     <MenuItem Text="Exit" IconImageSource="logout.png" Clicked="Quit"/>
 
 </Shell>
