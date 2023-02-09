@@ -9,7 +9,7 @@ public partial class FirstPage : ContentPage
     {
         InitializeComponent();
         BindingContext = vieModel;
-
+        FileService fileService = new FileService();
         var deviceType = FirstPage.GetRoute();
 
         if (deviceType == "Desktop")

@@ -35,4 +35,4 @@ global using CommunityToolkit.Maui.Views;
 global using SQLite;
 global using System.Timers;
 global using System.Text.RegularExpressions;
-
+global using System.Text.Json;
