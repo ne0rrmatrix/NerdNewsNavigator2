@@ -2,17 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-
-using System.Windows.Markup;
-
 namespace NerdNewsNavigator2.Service;
 
 public class FileService
 {
     #region Properties
-    List<JsonData> JsonDataList { get; set; } = new();
-    private readonly string fileName = "Data.json";
-    private readonly List<JsonData> _twit = new List<JsonData>
+    private List<JsonData> JsonDataList { get; set; } = new();
+    private readonly string _targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "Data.json");
+    private readonly List<JsonData> _twit = new()
     {
         new JsonData  {Id = 0, Url = "https://feeds.twit.tv/ww_video_hd.xml" },
         new JsonData {Id = 1, Url = "https://feeds.twit.tv/aaa_video_hd.xml" },
@@ -41,44 +38,53 @@ public class FileService
     public FileService()
     {
         var jsonData = JsonSerializer.Serialize<List<JsonData>>(_twit);
-        System.Diagnostics.Debug.WriteLine("Json Data loaded!");
-        _ = WriteJsonFile(jsonData, fileName);
-        var data = ReadJsonFile(fileName).Result;
-        foreach (var item in data)
+        if (!File.Exists(_targetFile))
         {
-            System.Diagnostics.Debug.WriteLine(item.Url);
+            _ = WriteJsonFile(jsonData, _targetFile);
         }
-        
+        JsonDataList = ReadJsonFile(_targetFile).Result;
     }
-    public async Task WriteJsonFile(string text, string targetFileName)
+    private static async Task WriteJsonFile(string text, string targetFile)
     {
         try
         {
-            // Write the file content to the app data directory  
-            System.Diagnostics.Debug.WriteLine("Current file directory is: " + FileSystem.Current.AppDataDirectory);
-            string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, targetFileName);
-            if (File.Exists(targetFile))
-            {
-                File.Delete(targetFile);
-            }
-            using FileStream outputStream = System.IO.File.OpenWrite(targetFile);
-            using StreamWriter streamWriter = new StreamWriter(outputStream);
+            Debug.WriteLine("Current file directory is: " + FileSystem.Current.AppDataDirectory);
+            using var outputStream = File.OpenWrite(targetFile);
+            using var streamWriter = new StreamWriter(outputStream);
             await streamWriter.WriteAsync(text);
             streamWriter.Close();
-            System.Diagnostics.Debug.WriteLine($"{targetFile}, File written to disk!");
+            Debug.WriteLine($"{targetFile}, File written to disk!");
         }
         catch
         {
-            System.Diagnostics.Debug.WriteLine("Failed to write file!");
+            Debug.WriteLine("Failed to write file!");
         }
     }
-    public async Task<List<JsonData>> ReadJsonFile(string fileName)
+    private static Task<List<JsonData>> ReadJsonFile(string fileName)
     {
-        string targetFileName = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
-        using FileStream stream = System.IO.File.OpenRead(targetFileName);
-        var data = JsonSerializer.Deserialize<List<JsonData>>(stream);
-        stream.Close();
-        System.Diagnostics.Debug.WriteLine("Read file success!");
-        return data;
+        var targetFileName = Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
+        using var stream = File.OpenRead(targetFileName);
+        var result = JsonSerializer.Deserialize<List<JsonData>>(stream);
+        return Task.FromResult(result);
+    }
+    public List<string> GetJsonData()
+    {
+        List<string> strings = new List<string>();
+        foreach (var jsonData in JsonDataList)
+        {
+            strings.Add(jsonData.Url);
+        }
+        return strings;
+    }
+    public async void DeleteJson()
+    {
+        var jsonData = JsonSerializer.Serialize<List<JsonData>>(_twit);
+        JsonDataList.Clear();
+        if (File.Exists(_targetFile))
+        {
+            File.Delete(_targetFile);
+        }
+        await WriteJsonFile(jsonData, _targetFile);
+        JsonDataList = _twit;
     }
 }
