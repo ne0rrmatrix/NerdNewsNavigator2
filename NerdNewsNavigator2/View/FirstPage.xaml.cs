@@ -9,8 +9,7 @@ public partial class FirstPage : ContentPage
     {
         InitializeComponent();
         BindingContext = vieModel;
-        FileService fileService = new FileService();
-        var deviceType = FirstPage.GetRoute();
+        var deviceType = GetRoute();
 
         if (deviceType == "Desktop")
             Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");

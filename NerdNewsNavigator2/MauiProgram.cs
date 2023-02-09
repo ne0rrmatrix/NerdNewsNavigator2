@@ -90,7 +90,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PositionServices>();
 
         builder.Services.AddSingleton<PositionDataBase>();
-        builder.Services.AddSingleton<JsonData>();
+        builder.Services.AddSingleton<FileService>();
 
         return builder.Build();
     }
