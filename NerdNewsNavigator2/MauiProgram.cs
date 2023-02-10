@@ -55,8 +55,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<PhoneLivePage>();
         builder.Services.AddSingleton<PhoneLiveViewModel>();
 
-        builder.Services.AddSingleton<DesktopPodcastPage>();
-        builder.Services.AddSingleton<DesktopPodcastViewModel>();
+        builder.Services.AddTransient<DesktopPodcastPage>();
+        builder.Services.AddTransient<DesktopPodcastViewModel>();
 
         builder.Services.AddSingleton<DesktopShowPage>();
         builder.Services.AddSingleton<DesktopShowViewModel>();

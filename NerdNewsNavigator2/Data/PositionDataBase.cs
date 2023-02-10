@@ -89,6 +89,6 @@ public class PositionDataBase
         {
             await _PodcastConnection.DeleteAsync(podcast);
         }
-        catch { }
+        catch { Debug.WriteLine("Failed to delete: " + podcast); }
     }
 }

@@ -33,6 +33,25 @@ public partial class PodcastServices
     public List<Podcast> Current { get; set; } = new();
     public PodcastServices()
     {
+        _ = GetUpdatedPodcasts();
+    }
+
+    private async Task GetUpdatedPodcasts()
+    {
+        var temp = await App.PositionData.GetAllPodcasts();
+        foreach (var item in temp)
+        {
+            Current.Add(item);
+        }
+        if (temp.Count == 0)
+        {
+            var items = GetFromUrl().Result;
+            foreach (var item in items)
+            {
+                Current.Add(item);
+                await App.PositionData.AddPodcast(item);
+            }
+        }
     }
     public async Task<List<Podcast>> GetFromUrl()
     {
@@ -41,6 +60,7 @@ public partial class PodcastServices
         {
             var temp = await Task.FromResult(FeedService.GetFeed(item));
             podcasts.Add(temp);
+            Current.Add(temp);
         }
 
         return podcasts;
@@ -50,7 +70,7 @@ public partial class PodcastServices
     {
         await App.PositionData.DeleteAllPodcasts();
         Current.Clear();
-        Current = GetFromUrl().Result;
+        _ = GetFromUrl().Result;
     }
     public static Task<List<Show>> GetShow(string url)
     {
@@ -80,14 +100,15 @@ public partial class PodcastServices
         }
         return true;
     }
-    public async Task<bool> Delete(int id)
+    public async Task<bool> Delete(string url)
     {
         foreach (var item in Current)
         {
-            if (item.Id == id)
+            if (item.Url == url)
             {
+                if(Current.Contains(item)) { Current.Remove(item); }
                 await App.PositionData.DeletePodcast(item);
-                Current.Remove(item);
+                break;
             }
         }
         return true;

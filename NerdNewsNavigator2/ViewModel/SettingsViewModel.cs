@@ -10,24 +10,39 @@ public partial class SettingsViewModel : ObservableObject
     public PodcastServices _podcastServices { get; set; }
     public SettingsViewModel(PodcastServices podcastServices)
     {
-        this._podcastServices = podcastServices;
-        foreach (var item in _podcastServices.Current)
-        {
-            Podcasts.Add(item);
-        }
-        OnPropertyChanged(nameof(Podcast));
+        _podcastServices = podcastServices;
+        _ = GetUpdatedPodcasts();
+      //  OnPropertyChanged(nameof(Podcasts));
     }
-
-    [RelayCommand]
-    public async Task Tap(int id)
+    private async Task GetUpdatedPodcasts()
     {
-        await _podcastServices.Delete(id);
-        var temp = _podcastServices.Current;
-        Podcasts.Clear();
+        var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)
         {
             Podcasts.Add(item);
         }
-        OnPropertyChanged(nameof(Podcast));
+        if (temp.Count == 0)
+        {
+            var items = _podcastServices.GetFromUrl().Result;
+            foreach (var item in items)
+            {
+                Podcasts.Add(item);
+                await App.PositionData.AddPodcast(item);
+            }
+        }
+    }
+
+    [RelayCommand]
+    public async Task Tap(string url)
+    {
+        await _podcastServices.Delete(url);
+        foreach (var item in Podcasts)
+        {
+            if (item.Url == url)
+            {
+                if (Podcasts.Contains(item)) { Podcasts.Remove(item); }
+                break;
+            }
+        }
     }
 }

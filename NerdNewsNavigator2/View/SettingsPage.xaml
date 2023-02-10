@@ -35,7 +35,7 @@
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=TapCommand}"
-                            CommandParameter="{Binding Id}"/>
+                            CommandParameter="{Binding Url}"/>
                             </Button.GestureRecognizers>
                         </Button>
                     </Grid>
