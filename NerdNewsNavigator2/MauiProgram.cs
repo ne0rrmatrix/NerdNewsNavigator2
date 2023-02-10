@@ -43,8 +43,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<FirstPage>();
         builder.Services.AddSingleton<FirstVieModel>();
 
-        builder.Services.AddSingleton<PhonePodcastPage>();
-        builder.Services.AddSingleton<PhonePodcastViewModel>();
+        builder.Services.AddTransient<PhonePodcastPage>();
+        builder.Services.AddTransient<PhonePodcastViewModel>();
 
         builder.Services.AddSingleton<PhoneShowPage>();
         builder.Services.AddSingleton<PhoneShowViewModel>();
@@ -67,8 +67,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<DesktopLivePage>();
         builder.Services.AddSingleton<DesktopLiveViewModel>();
 
-        builder.Services.AddSingleton<TabletPodcastPage>();
-        builder.Services.AddSingleton<TabletPodcastViewModel>();
+        builder.Services.AddTransient<TabletPodcastPage>();
+        builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddSingleton<TabletShowPage>();
         builder.Services.AddSingleton<TabletShowViewModel>();
