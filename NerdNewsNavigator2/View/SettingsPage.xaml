@@ -11,31 +11,35 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView ItemsSource="{Binding Files}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
+    
+    <CollectionView ItemsSource="{Binding Files}"  BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical"/>
+            <GridItemsLayout Orientation="Vertical"  Span="4"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:JsonData">
-                <VerticalStackLayout Margin="10">
-                    <HorizontalStackLayout HorizontalOptions="Start" Margin="10">
-                        <Label  Margin="10"
-                        Text="{Binding Url}" 
+
+
+                <Frame BackgroundColor="Wheat" Margin="55">
+                    <Grid RowDefinitions="45,0" ColumnDefinitions="220,70">
+                    
+                        <Label Grid.Row="0" Margin="2" VerticalOptions="Center" HorizontalOptions="Center"
+                        Text="{Binding Url}"
                         TextColor="Black" 
-                            HorizontalTextAlignment="Center"
-                        FontSize="16" 
+                        FontSize="10" 
                             FontAttributes="Bold"
                         LineBreakMode="WordWrap"/>
-                        <Button Text="Delete" TextColor="White" BackgroundColor="DarkRed">
+
+
+                        <Button Text="Delete" TextColor="White" BackgroundColor="DarkRed" FontAttributes="Bold" WidthRequest="80" HeightRequest="10" Grid.Column="1">
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Id}"/>
                             </Button.GestureRecognizers>
                         </Button>
-                    </HorizontalStackLayout>
-                    
-                </VerticalStackLayout>
+                    </Grid>
+                </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

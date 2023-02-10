@@ -9,5 +9,6 @@ public class Position
     [PrimaryKey, AutoIncrement, Column("Id")]
     public int Id { get; set; }
     public string Title { get; set; }
+    public List<Podcast> Podcasts { get; set; }
     public TimeSpan SavedPosition { get; set; }
 }

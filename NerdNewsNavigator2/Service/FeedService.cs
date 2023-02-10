@@ -11,6 +11,10 @@ public class FeedService
         this._podcasts.Clear();
     }
     #region Get the Podcasts
+    public List<Podcast> getData()
+    {
+        return _podcasts;
+    }
     public static Podcast GetFeed(string item)
     {
         int counter = 0;
@@ -22,6 +26,7 @@ public class FeedService
                 feed.Title = level1Element.Element("title").Value;
                 feed.Description = level1Element.Element("description").Value;
                 feed.Url = item;
+                feed.Id = counter++;
 
                 foreach (var level2Element in level1Element.Elements("image"))
                 {

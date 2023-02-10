@@ -35,7 +35,7 @@
                     MaximumWidthRequest="400">
                         <Image.Source>
                             <UriImageSource Uri="{Binding Image}"
-                                            CacheValidity="40"
+                                            CacheValidity="14"
                                             CachingEnabled="True"/>
                         </Image.Source>
                     </Image>

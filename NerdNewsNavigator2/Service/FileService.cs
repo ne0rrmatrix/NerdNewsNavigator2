@@ -33,7 +33,6 @@ public class FileService
         new JsonData {Id = 20,Url = "https://feeds.twit.tv/mikah_video_hd.xml" },
     };
     #endregion
-
     public FileService()
     {
         var jsonData = JsonSerializer.Serialize<List<JsonData>>(_twit);
@@ -41,6 +40,7 @@ public class FileService
         {
             _ = WriteJsonFile(jsonData, _targetFile);
         }
+        JsonDataList.Clear();
         JsonDataList = ReadJsonFile().Result;
     }
     private static async Task WriteJsonFile(string text, string targetFile)
@@ -87,13 +87,12 @@ public class FileService
     {
         JsonData jsonData = new() { Url = url, Id = (JsonDataList.Last().Id + 1) };
         JsonDataList.Add(jsonData);
-        Debug.WriteLine("Adding to JsonFile " + jsonData.Url + " " + jsonData.Id);
         if (File.Exists(_targetFile)) { File.Delete(_targetFile); }
         await WriteJsonFile(JsonSerializer.Serialize<List<JsonData>>(JsonDataList), _targetFile);
     }
     public async void DeleteItem(int id)
     {
-        Debug.WriteLine($"Results = {JsonDataList.FindIndex(x => x.Id == id)}");
+        if (JsonDataList.FindIndex(x => x.Id == id) == -1) { return; }
         JsonDataList.RemoveAt(JsonDataList.FindIndex(x => x.Id == id));
         if (File.Exists(_targetFile)) File.Delete(_targetFile);
         await WriteJsonFile(JsonSerializer.Serialize<List<JsonData>>(JsonDataList), _targetFile);

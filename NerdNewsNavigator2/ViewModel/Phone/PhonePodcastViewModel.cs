@@ -13,17 +13,24 @@ public partial class PhonePodcastViewModel : ObservableObject
     public PhonePodcastViewModel(TwitService twit)
     {
         this._twitService = twit;
-        _ = GetPodcasts();
+        // _ = GetPodcasts();
+        GetUpdatedPodcasts();
+        OnPropertyChanged(nameof(Podcasts));
     }
     #region Get the Podcast and set the Podcast List
     async Task GetPodcasts()
     {
         var podcastList = await TwitService.GetListOfPodcasts();
+        Podcasts.Clear();
         foreach (var item in podcastList)
         {
-            var temp = await Task.FromResult(FeedService.GetFeed(item));
-            Podcasts.Add(temp);
+            Podcasts.Add(item);
         }
+    }
+    private void GetUpdatedPodcasts()
+    {
+        Podcasts.Clear();
+        var podcastList = _twitService.Podcasts;
     }
     #endregion
 

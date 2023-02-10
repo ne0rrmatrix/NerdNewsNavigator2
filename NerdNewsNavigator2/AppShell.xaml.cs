@@ -65,4 +65,9 @@ public partial class AppShell : Shell
 
         return device;
     }
+
+    private void GotoSettingsPage(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+    }
 }

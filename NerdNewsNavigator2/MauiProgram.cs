@@ -43,8 +43,8 @@ public static class MauiProgram
         builder.Services.AddTransient<FirstPage>();
         builder.Services.AddTransient<FirstVieModel>();
 
-        builder.Services.AddSingleton<PhonePodcastPage>();
-        builder.Services.AddSingleton<PhonePodcastViewModel>();
+        builder.Services.AddTransient<PhonePodcastPage>();
+        builder.Services.AddTransient<PhonePodcastViewModel>();
 
         builder.Services.AddTransient<PhoneShowPage>();
         builder.Services.AddTransient<PhoneShowViewModel>();
@@ -55,8 +55,8 @@ public static class MauiProgram
         builder.Services.AddTransient<PhoneLivePage>();
         builder.Services.AddTransient<PhoneLiveViewModel>();
 
-        builder.Services.AddSingleton<DesktopPodcastPage>();
-        builder.Services.AddSingleton<DesktopPodcastViewModel>();
+        builder.Services.AddTransient<DesktopPodcastPage>();
+        builder.Services.AddTransient<DesktopPodcastViewModel>();
 
         builder.Services.AddTransient<DesktopShowPage>();
         builder.Services.AddTransient<DesktopShowViewModel>();
@@ -67,8 +67,8 @@ public static class MauiProgram
         builder.Services.AddTransient<DesktopLivePage>();
         builder.Services.AddTransient<DesktopLiveViewModel>();
 
-        builder.Services.AddSingleton<TabletPodcastPage>();
-        builder.Services.AddSingleton<TabletPodcastViewModel>();
+        builder.Services.AddTransient<TabletPodcastPage>();
+        builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
@@ -81,20 +81,18 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LivePage>();
         builder.Services.AddTransient<LiveViewModel>();
-        
-        builder.Services.AddSingleton<SettingsPage>();
-        builder.Services.AddSingleton<SettingsViewModel>();
+
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<SettingsViewModel>();
 
         builder.Services.AddSingleton<TwitService>();
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<Position>();
-
+        builder.Services.AddSingleton<FileService>();
         builder.Services.AddSingleton<PlaybackService>();
         builder.Services.AddSingleton<PositionServices>();
 
         builder.Services.AddSingleton<PositionDataBase>();
-        builder.Services.AddSingleton<FileService>();
-
+        
         return builder.Build();
     }
 }

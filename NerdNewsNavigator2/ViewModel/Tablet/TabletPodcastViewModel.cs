@@ -17,7 +17,8 @@ public partial class TabletPodcastViewModel : ObservableObject
     public TabletPodcastViewModel(TwitService twit)
     {
         this._twitService = twit;
-        _ = GetPodcasts();
+        // _ = GetPodcasts();
+        GetUpdatedPodcasts();
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
@@ -27,13 +28,18 @@ public partial class TabletPodcastViewModel : ObservableObject
     async Task GetPodcasts()
     {
         var podcastList = await TwitService.GetListOfPodcasts();
+        Podcasts.Clear();
         foreach (var item in podcastList)
         {
-            var temp = await Task.FromResult(FeedService.GetFeed(item));
-            Podcasts.Add(temp);
+            Podcasts.Add(item);
         }
     }
     #endregion
+    private void GetUpdatedPodcasts()
+    {
+        Podcasts.Clear();
+        var podcastList = _twitService.Podcasts;
+    }
 #nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
