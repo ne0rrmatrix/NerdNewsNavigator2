@@ -7,39 +7,41 @@ namespace NerdNewsNavigator2.ViewModel.Tablet;
 public partial class TabletPodcastViewModel : ObservableObject
 {
     #region Properties
-    readonly TwitService _twitService;
-    private DisplayInfo MyMainDisplay { get; set; } = new();
+    public PodcastServices _podcastServices { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+    private DisplayInfo MyMainDisplay { get; set; } = new();
 
     [ObservableProperty]
     int _orientation;
     #endregion
-    public TabletPodcastViewModel(TwitService twit)
+    public TabletPodcastViewModel(PodcastServices podcastServices)
     {
-        this._twitService = twit;
-        // _ = GetPodcasts();
-        GetUpdatedPodcasts();
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
+        _podcastServices = podcastServices;
+        _ = GetUpdatedPodcasts();
     }
 
     #region Get the Podcast and set the Podcast List
-    async Task GetPodcasts()
+    private async Task GetUpdatedPodcasts()
     {
-        var podcastList = await TwitService.GetListOfPodcasts();
-        Podcasts.Clear();
-        foreach (var item in podcastList)
+        var temp = await App.PositionData.GetAllPodcasts();
+        foreach (var item in temp)
         {
             Podcasts.Add(item);
         }
+        if (temp.Count == 0)
+        {
+            var items = _podcastServices.GetFromUrl().Result;
+            foreach (var item in items)
+            {
+                Podcasts.Add(item);
+                await App.PositionData.AddPodcast(item);
+            }
+        }
     }
     #endregion
-    private void GetUpdatedPodcasts()
-    {
-        Podcasts.Clear();
-        var podcastList = _twitService.Podcasts;
-    }
 #nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {

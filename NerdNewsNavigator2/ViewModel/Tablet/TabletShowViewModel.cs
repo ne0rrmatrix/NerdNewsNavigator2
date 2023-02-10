@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.ViewModel.Tablet;
 public partial class TabletShowViewModel : ObservableObject
 {
     #region Properties
-    readonly TwitService _twitService;
+    readonly PodcastServices _podcastService;
     public ObservableCollection<Show> Shows { get; set; } = new();
     private DisplayInfo MyMainDisplay { get; set; } = new();
 
@@ -20,17 +20,16 @@ public partial class TabletShowViewModel : ObservableObject
         set
         {
             var decodedUrl = HttpUtility.UrlDecode(value);
-            _ = GetShows(decodedUrl);
+            GetShows(decodedUrl);
             OnPropertyChanged(nameof(Shows));
         }
     }
     #endregion
-    public TabletShowViewModel(TwitService twitService)
+    public TabletShowViewModel(PodcastServices podcastService)
     {
-        _twitService = twitService;
+        _podcastService = podcastService;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        // OnPropertyChanged(nameof(Orientation));
     }
 #nullable enable
     private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
@@ -47,11 +46,10 @@ public partial class TabletShowViewModel : ObservableObject
         else return 3;
     }
     #region Get the Show and Set Show List
-    async Task GetShows(string url)
+    void GetShows(string url)
     {
         Shows.Clear();
-
-        var temp = await TwitService.GetShow(url);
+        var temp = Task.FromResult(FeedService.GetShow(url)).Result;
         Shows = new ObservableCollection<Show>(temp);
     }
     #endregion

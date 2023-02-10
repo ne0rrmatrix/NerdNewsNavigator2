@@ -96,8 +96,6 @@ namespace NerdNewsNavigator2.Service
                         result.SavedPosition = item.SavedPosition;
                     }
                 }
-
-            //await Services.DeleteAll();
             return Task.FromResult(result);
         }
     }

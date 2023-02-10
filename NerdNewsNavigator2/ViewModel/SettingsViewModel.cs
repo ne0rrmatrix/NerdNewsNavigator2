@@ -6,32 +6,28 @@ namespace NerdNewsNavigator2.ViewModel;
 
 public partial class SettingsViewModel : ObservableObject
 {
-    public ObservableCollection<JsonData> Files { get; set; } = new();
-    public FileService File { get; set; }
-    public SettingsViewModel(FileService file)
+    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+    public PodcastServices _podcastServices { get; set; }
+    public SettingsViewModel(PodcastServices podcastServices)
     {
-        this.File = file;
-        var list = File.GetData();
-        foreach (var item in list)
+        this._podcastServices = podcastServices;
+        foreach (var item in _podcastServices.Current)
         {
-            Files.Add(item);
+            Podcasts.Add(item);
         }
-        OnPropertyChanged(nameof(Files));
+        OnPropertyChanged(nameof(Podcast));
     }
 
     [RelayCommand]
-    public Task Tap(int id)
+    public async Task Tap(int id)
     {
-        Debug.WriteLine($"Id: {id}");
-        File.DeleteItem(id);
-        Files.Clear();
-        var list = File.GetData();
-
-        foreach (var item in list)
+        await _podcastServices.Delete(id);
+        var temp = _podcastServices.Current;
+        Podcasts.Clear();
+        foreach (var item in temp)
         {
-            Files.Add(item);
+            Podcasts.Add(item);
         }
-        OnPropertyChanged(nameof(Files));
-        return Task.CompletedTask;
+        OnPropertyChanged(nameof(Podcast));
     }
 }

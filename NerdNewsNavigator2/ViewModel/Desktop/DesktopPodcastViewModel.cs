@@ -6,23 +6,32 @@ namespace NerdNewsNavigator2.ViewModel.Desktop;
 public partial class DesktopPodcastViewModel : ObservableObject
 {
     #region Properties
-    public TwitService _twitService { get; set; }
+    public PodcastServices _podcastServices { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public DesktopPodcastViewModel(TwitService twit)
+    public DesktopPodcastViewModel(PodcastServices podcastServices)
     {
-        _twitService = twit;
-        GetUpdatedPodcasts();
+        _podcastServices = podcastServices;
+        _ = GetUpdatedPodcasts();
+        
     }
 
     #region Get the Podcast and set the Podcast List
-    private void GetUpdatedPodcasts()
+    private async Task GetUpdatedPodcasts()
     {
-        Podcasts.Clear();
-        var temp = _twitService.Podcasts;
+        var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)
         {
             Podcasts.Add(item);
+        }
+        if (temp.Count == 0)
+        {
+            var items = _podcastServices.GetFromUrl().Result;
+            foreach (var item in items)
+            {
+                Podcasts.Add(item);
+                await App.PositionData.AddPodcast(item);
+            }
         }
     }
 

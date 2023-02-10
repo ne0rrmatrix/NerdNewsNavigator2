@@ -7,31 +7,34 @@ namespace NerdNewsNavigator2.ViewModel.Phone;
 public partial class PhonePodcastViewModel : ObservableObject
 {
     #region Properties
-    readonly TwitService _twitService;
+    public PodcastServices _podcastServices { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     #endregion
-    public PhonePodcastViewModel(TwitService twit)
+    public PhonePodcastViewModel(PodcastServices podcastServices)
     {
-        this._twitService = twit;
-        // _ = GetPodcasts();
-        GetUpdatedPodcasts();
-        OnPropertyChanged(nameof(Podcasts));
+        _podcastServices = podcastServices;
+        _ = GetUpdatedPodcasts();
     }
+
     #region Get the Podcast and set the Podcast List
-    async Task GetPodcasts()
+    private async Task GetUpdatedPodcasts()
     {
-        var podcastList = await TwitService.GetListOfPodcasts();
-        Podcasts.Clear();
-        foreach (var item in podcastList)
+        var temp = await App.PositionData.GetAllPodcasts();
+        foreach (var item in temp)
         {
             Podcasts.Add(item);
         }
+        if (temp.Count == 0)
+        {
+            var items = _podcastServices.GetFromUrl().Result;
+            foreach (var item in items)
+            {
+                Podcasts.Add(item);
+                await App.PositionData.AddPodcast(item);
+            }
+        }
     }
-    private void GetUpdatedPodcasts()
-    {
-        Podcasts.Clear();
-        var podcastList = _twitService.Podcasts;
-    }
+
     #endregion
 
     [RelayCommand]

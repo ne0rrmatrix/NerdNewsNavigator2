@@ -54,6 +54,11 @@ public partial class AppShell : Shell
         else if (GetRoute() == "Tablet")
             Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
+    private async void Reset(object sender, EventArgs e)
+    {
+        PodcastServices podcastServices = new PodcastServices();
+        await podcastServices.DeleteAll();
+    }
     public string GetRoute()
     {
         string device = string.Empty;
@@ -65,7 +70,10 @@ public partial class AppShell : Shell
 
         return device;
     }
-
+    private void GotoLivePage(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync($"{nameof(LivePage)}");
+    }
     private void GotoSettingsPage(object sender, EventArgs e)
     {
         Shell.Current.GoToAsync($"{nameof(SettingsPage)}");

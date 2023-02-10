@@ -7,6 +7,7 @@ namespace NerdNewsNavigator2.Data;
 public class PositionDataBase
 {
     private SQLiteAsyncConnection _connection;
+    private SQLiteAsyncConnection _PodcastConnection;
     public PositionDataBase()
     {
     }
@@ -16,6 +17,12 @@ public class PositionDataBase
         _connection = new SQLiteAsyncConnection(databasePath);
         await _connection.CreateTableAsync<Position>();
     }
+    public async Task PodcastInit()
+    {
+        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
+        _PodcastConnection = new SQLiteAsyncConnection(databasePath);
+        await _PodcastConnection.CreateTableAsync<Podcast>();
+    }
     public async Task DeleteAll()
     {
         try
@@ -24,7 +31,6 @@ public class PositionDataBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("Cannot delete data!. " + ex.Message);
         }
     }
     public async Task<List<Position>> GetAllPositions()
@@ -32,6 +38,22 @@ public class PositionDataBase
         await Init();
         var test = await _connection.Table<Position>().ToListAsync();
         return test;
+    }
+    public async Task<List<Podcast>> GetAllPodcasts()
+    {
+        await PodcastInit();
+        var temp = await _PodcastConnection.Table<Podcast>().ToListAsync();
+        return temp;
+    }
+    public async Task DeleteAllPodcasts()
+    {
+        try
+        {
+            await _PodcastConnection.DeleteAllAsync<Podcast>();
+        }
+        catch (Exception ex)
+        {
+        }
     }
     public async Task Add(Position position)
     {
@@ -48,6 +70,24 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(position);
+        }
+        catch { }
+    }
+    public async Task AddPodcast(Podcast podcast)
+    {
+        try
+        {
+            await _PodcastConnection.InsertAsync(podcast);
+        }
+        catch
+        {
+        }
+    }
+    public async Task DeletePodcast(Podcast podcast)
+    {
+        try
+        {
+            await _PodcastConnection.DeleteAsync(podcast);
         }
         catch { }
     }

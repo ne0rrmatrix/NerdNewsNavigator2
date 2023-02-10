@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.ViewModel.Desktop;
 public partial class DesktopShowViewModel : ObservableObject
 {
     #region Properties
-    readonly TwitService _twitService;
+    readonly PodcastServices _podcastService;
     public ObservableCollection<Show> Shows { get; set; } = new();
     public string Url
     {
@@ -20,16 +20,16 @@ public partial class DesktopShowViewModel : ObservableObject
         }
     }
     #endregion
-    public DesktopShowViewModel(TwitService twitService)
+    public DesktopShowViewModel(PodcastServices podcastService)
     {
-        _twitService = twitService;
+        _podcastService = podcastService;
     }
     #region Get the Show and Set Show List
     async Task GetShows(string url)
     {
         Shows.Clear();
 
-        var temp = await TwitService.GetShow(url);
+        var temp = await PodcastServices.GetShow(url);
         Shows = new ObservableCollection<Show>(temp);
     }
     #endregion

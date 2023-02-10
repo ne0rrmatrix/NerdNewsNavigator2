@@ -12,7 +12,7 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
     
-    <CollectionView ItemsSource="{Binding Files}"  BackgroundColor="Wheat" SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}"  BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical"  Span="4"/>
         </CollectionView.ItemsLayout>
