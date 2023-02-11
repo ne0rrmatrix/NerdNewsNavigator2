@@ -34,14 +34,14 @@ public partial class TabletPodcastViewModel : ObservableObject
         {
             Podcasts.Add(item);
         }
-        if (temp.Count == 0)
+        if (Podcasts.Count == 0)
         {
             var items = _podcastServices.GetFromUrl().Result;
             foreach (var item in items)
             {
                 Podcasts.Add(item);
             }
-           
+            _ = AddPodcastsToDatabase();
         }
     }
     private async Task AddPodcastsToDatabase()

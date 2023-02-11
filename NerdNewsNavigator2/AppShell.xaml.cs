@@ -23,10 +23,7 @@ public partial class AppShell : Shell
     }
     private async void Reset(object sender, EventArgs e)
     {
-        PodcastServices podcastServices = new PodcastServices();
-        await podcastServices.DeleteAll();
-        await podcastServices.GetUpdatedPodcasts();
-        await podcastServices.AddToDatabase();
+        await App.PositionData.DeleteAllPodcasts();
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
     private async void GotoLivePage(object sender, EventArgs e)

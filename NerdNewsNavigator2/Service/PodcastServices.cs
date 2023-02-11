@@ -44,22 +44,13 @@ public partial class PodcastServices
         {
             Current.Add(item);
         }
-        if (temp.Count == 0)
-        {
-            var items = GetFromUrl().Result;
-            foreach (var item in items)
-            {
-                Current.Add(item);
-               // await App.PositionData.AddPodcast(item);
-            }
-          //  await AddToDatabase();
-        }
     }
     public async Task AddToDatabase()
     {
         foreach (var item in Current)
         {
             await App.PositionData.AddPodcast(item);
+            Current.Add(item);
         }
     }
     public async Task<List<Podcast>> GetFromUrl()
@@ -74,7 +65,6 @@ public partial class PodcastServices
 
         return podcasts;
     }
-   
     public async Task DeleteAll()
     {
         await App.PositionData.DeleteAllPodcasts();
