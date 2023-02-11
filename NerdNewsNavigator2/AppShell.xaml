@@ -27,15 +27,10 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <ShellContent ContentTemplate="{DataTemplate local:TabletPodcastPage}" Route="TabletPodcastPage"/>
-    <MenuItem Text="Home" IconImageSource="house.png"  Clicked="GotoFirstPage">
-    </MenuItem>
-    <FlyoutItem Title="Live" Icon="live_broadcasting.png">
-        <ShellContent Title="Live" Icon="live_broadcasting.png" ContentTemplate="{DataTemplate local:TabletLivePage}" Route="TabletLivePage"/>
-    </FlyoutItem>
-    <FlyoutItem Title="Settings" Icon="settings.png">
-        <ShellContent Title="Settings" Icon="settings.png" ContentTemplate="{DataTemplate local:SettingsPage}" Route="SettingsPage"/>
-    </FlyoutItem>
+    <ShellContent ContentTemplate="{DataTemplate local:TabletPodcastPage}"/>
+    <MenuItem Text="Home" IconImageSource="house.png"  Clicked="GotoFirstPage"/>
+    <MenuItem Text="Live" IconImageSource="live_broadcasting.png" Clicked="GotoLivePage"/>
+    <MenuItem Text="Settings" IconImageSource="settings.png" Clicked="GotoSettingsPage"/>
     <MenuItem Text="Reset" IconImageSource="settings.png" Clicked="Reset"/>
     <MenuItem Text="Exit" IconImageSource="logout.png" Clicked="Quit"/>
 </Shell>

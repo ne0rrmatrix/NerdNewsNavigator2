@@ -17,11 +17,6 @@ public partial class TabletPlayPodcastPage : ContentPage
 
         Start();
     }
-    protected override bool OnBackButtonPressed()
-    {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
-        return true;
-    }
 #nullable enable
     void ContentPage_Unloaded(object? sender, EventArgs e)
     {

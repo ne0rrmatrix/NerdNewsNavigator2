@@ -36,8 +36,9 @@ public partial class PodcastServices
         _ = GetUpdatedPodcasts();
     }
 
-    private async Task GetUpdatedPodcasts()
+    public async Task GetUpdatedPodcasts()
     {
+        Current.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)
         {
@@ -49,8 +50,16 @@ public partial class PodcastServices
             foreach (var item in items)
             {
                 Current.Add(item);
-                await App.PositionData.AddPodcast(item);
+               // await App.PositionData.AddPodcast(item);
             }
+          //  await AddToDatabase();
+        }
+    }
+    public async Task AddToDatabase()
+    {
+        foreach (var item in Current)
+        {
+            await App.PositionData.AddPodcast(item);
         }
     }
     public async Task<List<Podcast>> GetFromUrl()
@@ -102,11 +111,14 @@ public partial class PodcastServices
     }
     public async Task<bool> Delete(string url)
     {
+        Debug.WriteLine("looking for: " + url);
         foreach (var item in Current)
         {
+            Debug.WriteLine($"{item.Url}");
             if (item.Url == url)
             {
-                if(Current.Contains(item)) { Current.Remove(item); }
+                Debug.WriteLine("found podcast!");
+                if (Current.Contains(item)) { Current.Remove(item); }
                 await App.PositionData.DeletePodcast(item);
                 break;
             }

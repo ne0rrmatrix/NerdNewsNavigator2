@@ -6,54 +6,35 @@ namespace NerdNewsNavigator2;
 
 public partial class AppShell : Shell
 {
-    public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
     public AppShell()
     {
         InitializeComponent();
-        RegisterRoutes();
-    }
-    void RegisterRoutes()
-    {
-        Routes.Add(nameof(SettingsPage), typeof(SettingsPage));
-        Routes.Add(nameof(SettingsViewModel), typeof(SettingsViewModel));
-
-        Routes.Add(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
-        Routes.Add(nameof(TabletPodcastViewModel), typeof(TabletPodcastViewModel));
-
-        Routes.Add(nameof(TabletShowPage), typeof(TabletShowPage));
-        Routes.Add(nameof(TabletShowViewModel), typeof(TabletShowViewModel));
-
-        Routes.Add(nameof(TabletPlayPodcastViewModel), typeof(TabletPlayPodcastViewModel));
-        Routes.Add(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
-
-        Routes.Add(nameof(TabletLiveViewModel), typeof(TabletLiveViewModel));
-        Routes.Add(nameof(TabletLivePage), typeof(TabletLivePage));
-
-        Routes.Add(nameof(LivePage), typeof(LivePage));
-        Routes.Add(nameof(LiveViewModel), typeof(LiveViewModel));
-
-        foreach (var item in Routes)
-        {
-            Routing.RegisterRoute(item.Key, item.Value);
-        }
+        Routing.RegisterRoute(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
+        Routing.RegisterRoute(nameof(TabletShowPage), typeof(TabletShowPage));
+        Routing.RegisterRoute(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
+        Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
+        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
     }
     private void Quit(object sender, EventArgs e) => Application.Current.Quit();
 
-    private void GotoFirstPage(object sender, EventArgs e)
+    private async void GotoFirstPage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+        await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
     private async void Reset(object sender, EventArgs e)
     {
         PodcastServices podcastServices = new PodcastServices();
         await podcastServices.DeleteAll();
+        await podcastServices.GetUpdatedPodcasts();
+        await podcastServices.AddToDatabase();
+        await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
-    private void GotoLivePage(object sender, EventArgs e)
+    private async void GotoLivePage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(LivePage)}");
+        await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
-    private void GotoSettingsPage(object sender, EventArgs e)
+    private async void GotoSettingsPage(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
     }
 }

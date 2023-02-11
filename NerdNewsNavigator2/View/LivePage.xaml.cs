@@ -10,9 +10,4 @@ public partial class LivePage : ContentPage
     InitializeComponent();
         BindingContext = liveViewModel;
     }
-    protected override bool OnBackButtonPressed()
-    {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
-        return true;
-    }
 }

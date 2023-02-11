@@ -19,6 +19,8 @@ public partial class TabletPodcastViewModel : ObservableObject
     {
         _podcastServices = podcastServices;
         _ = GetUpdatedPodcasts();
+        OnPropertyChanged(nameof(Podcasts));
+        _ = AddPodcastsToDatabase();
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
@@ -38,8 +40,15 @@ public partial class TabletPodcastViewModel : ObservableObject
             foreach (var item in items)
             {
                 Podcasts.Add(item);
-                await App.PositionData.AddPodcast(item);
             }
+           
+        }
+    }
+    private async Task AddPodcastsToDatabase()
+    {
+        foreach (var item in Podcasts)
+        {
+            await App.PositionData.AddPodcast(item);
         }
     }
     #endregion

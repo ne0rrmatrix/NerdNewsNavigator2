@@ -11,9 +11,4 @@ public partial class TabletShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-    protected override bool OnBackButtonPressed()
-    {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
-        return true;
-    }
 }

@@ -41,17 +41,14 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddSingleton<TabletPodcastPage>();
-        builder.Services.AddSingleton<TabletPodcastViewModel>();
+        builder.Services.AddTransient<TabletPodcastPage>();
+        builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
 
         builder.Services.AddSingleton<TabletPlayPodcastPage>();
         builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
-
-        builder.Services.AddSingleton<TabletLivePage>();
-        builder.Services.AddSingleton<TabletLiveViewModel>();
 
         builder.Services.AddSingleton<LivePage>();
         builder.Services.AddSingleton<LiveViewModel>();
