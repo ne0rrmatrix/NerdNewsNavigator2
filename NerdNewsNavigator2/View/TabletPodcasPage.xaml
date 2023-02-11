@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NerdNewsNavigator2.View.SettingsPage"
-            xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+             xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
              xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-             x:DataType="viewmodel:SettingsViewModel"
+             x:Class="NerdNewsNavigator2.View.TabletPodcastPage"
+             x:DataType="viewmodel:TabletPodcastViewModel"
+             BackgroundColor="Wheat"
                Shell.NavBarIsVisible="False"
              Title="">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView ItemsSource="{Binding Podcasts}"  BackgroundColor="Wheat" SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical"  Span="{Binding Orientation}"/>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame  BackgroundColor="White" Margin="55" WidthRequest="375">
                     <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"
+                            CommandParameter="{Binding Url}"/>
+                        </Grid.GestureRecognizers>
                         <Label Grid.Row="0" VerticalOptions="Center" Padding="5" Margin="10" HorizontalOptions="Start"
                                
                         Text="{Binding Title}"
@@ -39,16 +45,10 @@
                               WidthRequest="320"
                                HeightRequest="240"
                                TextColor="Black"
+                               
                                Text="{Binding Description}"
                                FontSize="10"
                                LineBreakMode="WordWrap"/>
-                        <Button Text="Delete" TextColor="White" FontSize="Micro" Margin="20" BackgroundColor="DarkRed" FontAttributes="Bold" WidthRequest="90" HeightRequest="35"  Grid.Column="1">
-                            <Button.GestureRecognizers>
-                                <TapGestureRecognizer 
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=TapCommand}"
-                            CommandParameter="{Binding Url}"/>
-                            </Button.GestureRecognizers>
-                        </Button>
                     </Grid>
                 </Frame>
             </DataTemplate>

@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.ViewModel.Tablet;
+namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
 public partial class TabletShowViewModel : ObservableObject
@@ -42,8 +42,14 @@ public partial class TabletShowViewModel : ObservableObject
 #nullable disable
     public static int OnDeviceOrientationChange()
     {
-        if (DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait) { return 2; }
-        else return 3;
+        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+            return 3;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
+            return 1;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
+            return 2;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape) { return 3; }
+        else return 1;
     }
     #region Get the Show and Set Show List
     void GetShows(string url)

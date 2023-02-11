@@ -7,5 +7,5 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class LiveViewModel : ObservableObject
 {
     [ObservableProperty]
-    public string _url = "https://www.youtube.com/embed/yQPlcthGEe4?autoplay=1";
+    public string _url = "https://www.youtube.com/embed/F2NreNEmMy4";
 }

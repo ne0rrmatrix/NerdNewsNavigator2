@@ -29,7 +29,7 @@ public class PositionDataBase
         {
             await _connection.DeleteAllAsync<Position>();
         }
-        catch (Exception ex)
+        catch
         {
         }
     }
@@ -51,7 +51,7 @@ public class PositionDataBase
         {
             await _PodcastConnection.DeleteAllAsync<Podcast>();
         }
-        catch (Exception ex)
+        catch
         {
         }
     }
@@ -89,6 +89,6 @@ public class PositionDataBase
         {
             await _PodcastConnection.DeleteAsync(podcast);
         }
-        catch { Debug.WriteLine("Failed to delete: " + podcast); }
+        catch { }
     }
 }

@@ -2,17 +2,47 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Maui.Devices;
+
 namespace NerdNewsNavigator2.ViewModel;
 
 public partial class SettingsViewModel : ObservableObject
 {
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     public PodcastServices _podcastServices { get; set; }
+    private DisplayInfo MyMainDisplay { get; set; } = new();
+
+    [ObservableProperty]
+    int _orientation;
     public SettingsViewModel(PodcastServices podcastServices)
     {
+        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
+        this._orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
         _podcastServices = podcastServices;
         _ = GetUpdatedPodcasts();
-      //  OnPropertyChanged(nameof(Podcasts));
+    }
+
+#nullable enable
+    private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
+    {
+        MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
+        OnPropertyChanged(nameof(MyMainDisplay));
+        Orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
+    }
+
+#nullable disable
+    public static int OnDeviceOrientationChange()
+    {
+        if (DeviceInfo.Current.Idiom == DeviceIdiom.Desktop && DeviceInfo.Current.Idiom != DeviceIdiom.Tablet)
+            return 3;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
+            return 1;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
+            return 2;
+        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape) { return 3; }
+        else return 1;
     }
     private async Task GetUpdatedPodcasts()
     {

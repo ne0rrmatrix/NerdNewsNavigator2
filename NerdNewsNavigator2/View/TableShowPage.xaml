@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+             xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+             x:Class="NerdNewsNavigator2.View.TabletShowPage"
+             x:DataType="viewmodel:TabletShowViewModel"
+             BackgroundColor="Wheat"
+             Shell.NavBarIsVisible="False"
+             Title="">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="False">
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
+    <CollectionView ItemsSource="{Binding Shows}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="model:Show">
+                <Frame  BackgroundColor="White" Margin="60" WidthRequest="350">
+                    <Grid RowDefinitions="Auto,Auto,1200" ColumnDefinitions="375,375,375">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer 
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}"
+                            CommandParameter="{Binding Url}"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Start"
+                               
+                        Text="{Binding Title}"
+                        TextColor="Black" 
+                        FontSize="10" 
+                               WidthRequest="320"
+                            FontAttributes="Bold"
+                        LineBreakMode="WordWrap"/>
+                        <Image Grid.Row="1" Grid.ColumnSpan="2"
+                               HorizontalOptions="Start"
+                               
+                                       Aspect="AspectFit" 
+                                       HeightRequest="320" 
+                                       WidthRequest="320">
+                            <Image.Source>
+                                <UriImageSource Uri="{Binding Image}"
+                                                    CacheValidity="40"
+                                                    CachingEnabled="True"/>
+                            </Image.Source>
+                        </Image>
+                        <Label Grid.Row="2" Grid.ColumnSpan="2"
+                              WidthRequest="320"
+                               TextColor="Black"
+                               Text="{Binding Description}"
+                               TextType="Html"
+                               HorizontalOptions="Start"
+                               FontSize="10"
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

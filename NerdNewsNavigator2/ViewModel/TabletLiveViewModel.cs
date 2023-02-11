@@ -4,7 +4,11 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 
-public partial class FirstVieModel : ObservableObject
+public partial class TabletLiveViewModel : ObservableObject
 {
-
+    [ObservableProperty]
+    public string _url = "https://www.youtube.com/embed/F2NreNEmMy4";
+    public TabletLiveViewModel()
+    {
+    }
 }

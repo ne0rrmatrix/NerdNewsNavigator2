@@ -40,38 +40,12 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddSingleton<FirstPage>();
-        builder.Services.AddSingleton<FirstVieModel>();
 
-        builder.Services.AddTransient<PhonePodcastPage>();
-        builder.Services.AddTransient<PhonePodcastViewModel>();
+        builder.Services.AddSingleton<TabletPodcastPage>();
+        builder.Services.AddSingleton<TabletPodcastViewModel>();
 
-        builder.Services.AddSingleton<PhoneShowPage>();
-        builder.Services.AddSingleton<PhoneShowViewModel>();
-
-        builder.Services.AddSingleton<PhonePlayPodcastPage>();
-        builder.Services.AddSingleton<PhonePlayPodcastViewModel>();
-
-        builder.Services.AddSingleton<PhoneLivePage>();
-        builder.Services.AddSingleton<PhoneLiveViewModel>();
-
-        builder.Services.AddTransient<DesktopPodcastPage>();
-        builder.Services.AddTransient<DesktopPodcastViewModel>();
-
-        builder.Services.AddSingleton<DesktopShowPage>();
-        builder.Services.AddSingleton<DesktopShowViewModel>();
-
-        builder.Services.AddSingleton<DesktopPlayPodcastPage>();
-        builder.Services.AddSingleton<DesktopPlayPodcastViewModel>();
-
-        builder.Services.AddSingleton<DesktopLivePage>();
-        builder.Services.AddSingleton<DesktopLiveViewModel>();
-
-        builder.Services.AddTransient<TabletPodcastPage>();
-        builder.Services.AddTransient<TabletPodcastViewModel>();
-
-        builder.Services.AddSingleton<TabletShowPage>();
-        builder.Services.AddSingleton<TabletShowViewModel>();
+        builder.Services.AddTransient<TabletShowPage>();
+        builder.Services.AddTransient<TabletShowViewModel>();
 
         builder.Services.AddSingleton<TabletPlayPodcastPage>();
         builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
