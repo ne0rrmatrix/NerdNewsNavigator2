@@ -16,7 +16,6 @@ public partial class BaseViewModel : ObservableObject
     public DisplayInfo MyMainDisplay { get; set; } = new();
     public BaseViewModel()
     {
-      //  OnPropertyChanged(nameof(IsBusy));
     }
 
 #nullable enable

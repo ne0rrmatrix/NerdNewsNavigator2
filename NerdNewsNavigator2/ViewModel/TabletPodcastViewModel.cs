@@ -42,11 +42,9 @@ public partial class TabletPodcastViewModel : BaseViewModel
                 }
                 _ = AddPodcastsToDatabase();
             }
-        }
-        finally
-        {
             IsBusy = false;
         }
+        catch { }
     }
     private async Task AddPodcastsToDatabase()
     {

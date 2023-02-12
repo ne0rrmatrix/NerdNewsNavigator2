@@ -19,19 +19,23 @@ public partial class AppShell : Shell
 
     private async void GotoFirstPage(object sender, EventArgs e)
     {
+        FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
     private async void Reset(object sender, EventArgs e)
     {
+        FlyoutIsPresented = false;
         await App.PositionData.DeleteAllPodcasts();
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
     private async void GotoLivePage(object sender, EventArgs e)
     {
+        FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
     private async void GotoSettingsPage(object sender, EventArgs e)
     {
+        FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
     }
 }

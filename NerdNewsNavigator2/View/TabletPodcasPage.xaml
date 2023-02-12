@@ -14,14 +14,16 @@
     <CollectionView ItemsSource="{Binding Podcasts}" Header="{Binding IsBusy}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.HeaderTemplate>
             <DataTemplate>
-                <HorizontalStackLayout>
-                    <Label VerticalOptions="Center" HorizontalOptions="Start"
-                               IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=IsBusy}"
+                <StackLayout>
+                    <Label Padding="20" HorizontalOptions="Center" VerticalOptions="Center"
+                               IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                           HorizontalTextAlignment="Center"
+                           TextColor="Black"
                                Text="Loading..."></Label>
-                    <ActivityIndicator IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=IsBusy}"
+                    <ActivityIndicator IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}" IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
                    Color="Red" />
-                </HorizontalStackLayout>
+                </StackLayout>
             </DataTemplate>
         </CollectionView.HeaderTemplate>
         <CollectionView.ItemsLayout>
