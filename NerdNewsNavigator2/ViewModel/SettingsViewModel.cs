@@ -6,7 +6,7 @@ using Microsoft.Maui.Devices;
 
 namespace NerdNewsNavigator2.ViewModel;
 
-public partial class SettingsViewModel : ObservableObject
+public partial class SettingsViewModel : BaseViewModel
 {
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
     public PodcastServices _podcastServices { get; set; }

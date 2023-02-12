@@ -12,13 +12,26 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
     <CollectionView ItemsSource="{Binding Podcasts}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
+        <CollectionView.HeaderTemplate>
+            <DataTemplate>
+                <HorizontalStackLayout>
+                    <Label VerticalOptions="Center" HorizontalOptions="Start"
+                               IsEnabled="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Text="Loading..."></Label>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                   Color="Red" />
+                </HorizontalStackLayout>
+            </DataTemplate>
+        </CollectionView.HeaderTemplate>
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
+       
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame  BackgroundColor="White" Margin="55" WidthRequest="375">
-                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+                    <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPlayPodcastViewModel}}, Path=IsNotBusy}" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"

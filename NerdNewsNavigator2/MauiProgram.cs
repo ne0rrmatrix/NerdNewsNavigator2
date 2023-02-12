@@ -61,6 +61,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PositionServices>();
         builder.Services.AddSingleton<PodcastServices>();
         builder.Services.AddSingleton<PositionDataBase>();
+        builder.Services.AddSingleton<BaseViewModel>();
 
         return builder.Build();
     }

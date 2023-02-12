@@ -4,8 +4,15 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 
-public partial class LiveViewModel : BaseViewModel
+public partial class BaseViewModel : ObservableObject
 {
+    public BaseViewModel()
+    {
+        OnPropertyChanged(nameof(IsBusy));
+    }
+
     [ObservableProperty]
-    public string _url = "https://www.youtube.com/embed/F2NreNEmMy4";
+    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
+    public bool _isBusy;
+    public bool IsNotBusy => !IsBusy;
 }

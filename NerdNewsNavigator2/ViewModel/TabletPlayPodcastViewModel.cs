@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 [QueryProperty("Url", "Url")]
-public partial class TabletPlayPodcastViewModel : ObservableObject
+public partial class TabletPlayPodcastViewModel : BaseViewModel
 {
     #region Properties
     string url;

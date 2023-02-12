@@ -4,7 +4,7 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 
-public partial class TabletPodcastViewModel : ObservableObject
+public partial class TabletPodcastViewModel : BaseViewModel
 {
     #region Properties
     public PodcastServices _podcastServices { get; set; } = new();
@@ -20,7 +20,7 @@ public partial class TabletPodcastViewModel : ObservableObject
         _podcastServices = podcastServices;
         _ = GetUpdatedPodcasts();
         OnPropertyChanged(nameof(Podcasts));
-        _ = AddPodcastsToDatabase();
+        OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
@@ -29,19 +29,27 @@ public partial class TabletPodcastViewModel : ObservableObject
     #region Get the Podcast and set the Podcast List
     private async Task GetUpdatedPodcasts()
     {
-        var temp = await App.PositionData.GetAllPodcasts();
-        foreach (var item in temp)
+        try
         {
-            Podcasts.Add(item);
-        }
-        if (Podcasts.Count == 0)
-        {
-            var items = _podcastServices.GetFromUrl().Result;
-            foreach (var item in items)
+            IsBusy = true;
+            var temp = await App.PositionData.GetAllPodcasts();
+            foreach (var item in temp)
             {
                 Podcasts.Add(item);
             }
-            _ = AddPodcastsToDatabase();
+            if (Podcasts.Count == 0)
+            {
+                var items = _podcastServices.GetFromUrl().Result;
+                foreach (var item in items)
+                {
+                    Podcasts.Add(item);
+                }
+                _ = AddPodcastsToDatabase();
+            }
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
     private async Task AddPodcastsToDatabase()
