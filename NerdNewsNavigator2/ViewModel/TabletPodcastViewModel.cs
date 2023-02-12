@@ -9,11 +9,7 @@ public partial class TabletPodcastViewModel : BaseViewModel
     #region Properties
     public PodcastServices _podcastServices { get; set; } = new();
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
-    public ObservableCollection<Show> Shows { get; set; } = new();
-    private DisplayInfo MyMainDisplay { get; set; } = new();
 
-    [ObservableProperty]
-    int _orientation;
     #endregion
     public TabletPodcastViewModel(PodcastServices podcastServices)
     {
@@ -61,27 +57,6 @@ public partial class TabletPodcastViewModel : BaseViewModel
     }
     #endregion
 
-#nullable enable
-    private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
-    {
-        MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
-        OnPropertyChanged(nameof(MyMainDisplay));
-        Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
-    }
-
-#nullable disable
-    public static int OnDeviceOrientationChange()
-    {
-        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-            return 3;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
-            return 1;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
-            return 2;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape) { return 3; }
-        else return 1;
-    }
     [RelayCommand]
     async Task Tap(string url)
     {

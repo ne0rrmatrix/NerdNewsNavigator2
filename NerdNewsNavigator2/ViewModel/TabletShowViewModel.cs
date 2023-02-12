@@ -10,10 +10,6 @@ public partial class TabletShowViewModel : BaseViewModel
     #region Properties
     readonly PodcastServices _podcastService;
     public ObservableCollection<Show> Shows { get; set; } = new();
-    private DisplayInfo MyMainDisplay { get; set; } = new();
-
-    [ObservableProperty]
-    int _orientation;
 
     public string Url
     {
@@ -31,26 +27,7 @@ public partial class TabletShowViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
     }
-#nullable enable
-    private void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
-    {
-        MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
-        OnPropertyChanged(nameof(MyMainDisplay));
-        Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
-    }
-#nullable disable
-    public static int OnDeviceOrientationChange()
-    {
-        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-            return 3;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
-            return 1;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
-            return 2;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape) { return 3; }
-        else return 1;
-    }
+
     #region Get the Show and Set Show List
     void GetShows(string url)
     {

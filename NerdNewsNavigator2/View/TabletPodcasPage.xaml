@@ -11,15 +11,15 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView ItemsSource="{Binding Podcasts}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}" Header="{Binding IsBusy}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
         <CollectionView.HeaderTemplate>
             <DataTemplate>
                 <HorizontalStackLayout>
                     <Label VerticalOptions="Center" HorizontalOptions="Start"
-                               IsEnabled="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
+                               IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=IsBusy}"
+                               IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
                                Text="Loading..."></Label>
-                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                    <ActivityIndicator IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=IsBusy}"
                    Color="Red" />
                 </HorizontalStackLayout>
             </DataTemplate>
@@ -31,7 +31,7 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame  BackgroundColor="White" Margin="55" WidthRequest="375">
-                    <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPlayPodcastViewModel}}, Path=IsNotBusy}" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+                    <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}"

@@ -23,7 +23,6 @@ public partial class AppShell : Shell
     }
     private async void Reset(object sender, EventArgs e)
     {
-        IsBusy = true;
         await App.PositionData.DeleteAllPodcasts();
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
