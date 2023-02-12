@@ -19,12 +19,6 @@ global using System.Xml.Linq;
 global using System.Xml;
 global using System.Web;
 global using Microsoft.Maui.LifecycleEvents;
-global using NerdNewsNavigator2.View.Phone;
-global using NerdNewsNavigator2.ViewModel.Phone;
-global using NerdNewsNavigator2.View.Desktop;
-global using NerdNewsNavigator2.ViewModel.Desktop;
-global using NerdNewsNavigator2.View.Tablet;
-global using NerdNewsNavigator2.ViewModel.Tablet;
 global using System.Globalization;
 global using System.Text;
 global using CommunityToolkit.Maui.Converters;
@@ -35,4 +29,4 @@ global using CommunityToolkit.Maui.Views;
 global using SQLite;
 global using System.Timers;
 global using System.Text.RegularExpressions;
-
+global using System.Text.Json;

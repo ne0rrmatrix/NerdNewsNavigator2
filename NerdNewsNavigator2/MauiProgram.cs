@@ -40,56 +40,31 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddTransient<FirstPage>();
-        builder.Services.AddTransient<FirstVieModel>();
 
-        builder.Services.AddSingleton<PhonePodcastPage>();
-        builder.Services.AddSingleton<PhonePodcastViewModel>();
-
-        builder.Services.AddTransient<PhoneShowPage>();
-        builder.Services.AddTransient<PhoneShowViewModel>();
-
-        builder.Services.AddTransient<PhonePlayPodcastPage>();
-        builder.Services.AddTransient<PhonePlayPodcastViewModel>();
-
-        builder.Services.AddTransient<PhoneLivePage>();
-        builder.Services.AddTransient<PhoneLiveViewModel>();
-
-        builder.Services.AddSingleton<DesktopPodcastPage>();
-        builder.Services.AddSingleton<DesktopPodcastViewModel>();
-
-        builder.Services.AddTransient<DesktopShowPage>();
-        builder.Services.AddTransient<DesktopShowViewModel>();
-
-        builder.Services.AddTransient<DesktopPlayPodcastPage>();
-        builder.Services.AddTransient<DesktopPlayPodcastViewModel>();
-
-        builder.Services.AddTransient<DesktopLivePage>();
-        builder.Services.AddTransient<DesktopLiveViewModel>();
-
-        builder.Services.AddSingleton<TabletPodcastPage>();
-        builder.Services.AddSingleton<TabletPodcastViewModel>();
+        builder.Services.AddTransient<TabletPodcastPage>();
+        builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
 
-        builder.Services.AddTransient<TabletPlayPodcastPage>();
-        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
+        builder.Services.AddSingleton<TabletPlayPodcastPage>();
+        builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
 
-        builder.Services.AddTransient<TabletLivePage>();
-        builder.Services.AddTransient<TabletLiveViewModel>();
+        builder.Services.AddSingleton<LivePage>();
+        builder.Services.AddSingleton<LiveViewModel>();
 
-        builder.Services.AddTransient<LivePage>();
-        builder.Services.AddTransient<LiveViewModel>();
+        builder.Services.AddSingleton<SettingsPage>();
+        builder.Services.AddSingleton<SettingsViewModel>();
 
-        builder.Services.AddSingleton<TwitService>();
+        builder.Services.AddTransient<UpdateSettingsPage>();
+        builder.Services.AddTransient<UpdateSettingsViewModel>();
+
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<Position>();
-
         builder.Services.AddSingleton<PlaybackService>();
         builder.Services.AddSingleton<PositionServices>();
-
+        builder.Services.AddSingleton<PodcastServices>();
         builder.Services.AddSingleton<PositionDataBase>();
+        builder.Services.AddSingleton<BaseViewModel>();
 
         return builder.Build();
     }

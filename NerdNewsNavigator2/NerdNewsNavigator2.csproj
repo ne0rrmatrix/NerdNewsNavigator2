@@ -55,6 +55,20 @@
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+	  <ProvisioningType>manual</ProvisioningType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <BuildIpa>False</BuildIpa>
+	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	  <BuildIpa>False</BuildIpa>
+	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	</PropertyGroup>
+
   
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
@@ -92,89 +106,62 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
   </ItemGroup>
   -->
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Desktop\DesktopPodcastPage.xaml.cs">
-	    <DependentUpon>DesktopPodcastPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Desktop\DesktopLivePage.xaml.cs">
-	    <DependentUpon>DesktopLivePage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Desktop\DesktopShowPage.xaml.cs">
-	    <DependentUpon>DesktopShowPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Desktop\DesktopPlayPodcastPage.xaml.cs">
-	    <DependentUpon>DesktopPlayPodcastPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\FirstPage.xaml.cs">
-	    <DependentUpon>FirstPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Phone\PhonePlayPodcasPage.xaml.cs">
-	    <DependentUpon>PhonePlayPodcasPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Phone\PhoneShowPage.xaml.cs">
-	    <DependentUpon>PhoneShowPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Tablet\TabletLivePage.xaml.cs">
-	    <DependentUpon>TabletLivePage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Tablet\TabletPlayPodcastPage.xaml.cs">
-	    <DependentUpon>TabletPlayPodcastPage.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <EmbeddedResource Update="Properties\Resources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	</ItemGroup>
-	<ItemGroup>
-	  <MauiXaml Update="View\Desktop\DesktopLivePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\LivePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\FirstPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Phone\PhoneLivePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Phone\PhonePlayPodcasPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Phone\PhonePodcastPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Phone\PhoneShowPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Desktop\DesktopPlayPodcastPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Desktop\DesktopPodcastPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Desktop\DesktopShowPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Tablet\TabletLivePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Tablet\TableShowPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Tablet\TabletPlayPodcastPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Tablet\TabletPodcasPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="View\LivePage.xaml.cs">
+      <DependentUpon>LivePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="View\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+      <Compile Update="View\TabletPodcastPage.xaml.cs">
+        <DependentUpon>TabletPodcastPage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="View\TabletLivePage.xaml.cs">
+        <DependentUpon>TabletLivePage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="View\TabletShowPage.xaml.cs">
+        <DependentUpon>TabletShowPage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="View\TabletPlayPodcastPage.xaml.cs">
+        <DependentUpon>TabletPlayPodcastPage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="View\UpdateSettingsPage.xaml.cs">
+        <DependentUpon>UpdateSettingsPage.xaml</DependentUpon>
+      </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <MauiXaml Update="View\LivePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\TabletLivePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\TableShowPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\TabletPlayPodcastPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\TabletPodcasPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\UpdateSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
 </Project>

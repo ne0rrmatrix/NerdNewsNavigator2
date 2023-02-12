@@ -2,18 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View.Tablet;
+namespace NerdNewsNavigator2.View;
 
-public partial class TabletLivePage : ContentPage
+public partial class SettingsPage : ContentPage
 {
-    public TabletLivePage(TabletLiveViewModel viewModel)
+    public SettingsPage(SettingsViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
     }
-    protected override bool OnBackButtonPressed()
+
+    private void Button_Clicked(object sender, EventArgs e)
     {
-        Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
-        return true;
+
     }
 }

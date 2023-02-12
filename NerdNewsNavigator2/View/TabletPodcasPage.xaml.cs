@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.View.Tablet;
+namespace NerdNewsNavigator2.View;
 
 public partial class TabletPodcastPage : ContentPage
 {
@@ -10,10 +10,5 @@ public partial class TabletPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-    }
-    protected override bool OnBackButtonPressed()
-    {
-        Application.Current.Quit();
-        return true;
     }
 }

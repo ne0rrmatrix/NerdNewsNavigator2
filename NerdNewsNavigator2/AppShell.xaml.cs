@@ -2,62 +2,42 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.View;
+
 namespace NerdNewsNavigator2;
 
 public partial class AppShell : Shell
 {
-    public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
     public AppShell()
     {
         InitializeComponent();
-        RegisterRoutes();
-    }
-    void RegisterRoutes()
-    {
-        Routes.Add(nameof(DesktopShowPage), typeof(DesktopShowPage));
-        Routes.Add(nameof(DesktopPlayPodcastPage), typeof(DesktopPlayPodcastPage));
-        Routes.Add(nameof(DesktopLivePage), typeof(DesktopLivePage));
-        Routes.Add(nameof(DesktopPodcastPage), typeof(DesktopPodcastPage));
-
-        Routes.Add(nameof(FirstPage), typeof(FirstPage));
-        Routes.Add(nameof(FirstVieModel), typeof(FirstVieModel));
-        Routes.Add(nameof(PhonePodcastPage), typeof(PhonePodcastPage));
-        Routes.Add(nameof(PhoneShowPage), typeof(PhoneShowPage));
-        Routes.Add(nameof(PhonePlayPodcastPage), typeof(PhonePlayPodcastPage));
-        Routes.Add(nameof(PhoneLivePage), typeof(PhoneLivePage));
-
-        Routes.Add(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
-        Routes.Add(nameof(TabletLivePage), typeof(TabletLivePage));
-        Routes.Add(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
-        Routes.Add(nameof(TabletShowPage), typeof(TabletShowPage));
-        Routes.Add(nameof(LivePage), typeof(LivePage));
-
-        foreach (var item in Routes)
-        {
-            Routing.RegisterRoute(item.Key, item.Value);
-        }
+        Routing.RegisterRoute(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
+        Routing.RegisterRoute(nameof(TabletShowPage), typeof(TabletShowPage));
+        Routing.RegisterRoute(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
+        Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
+        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
+        Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
     }
     private void Quit(object sender, EventArgs e) => Application.Current.Quit();
-    private void GotoFirstPage(object sender, EventArgs e)
-    {
-        string _deviceType = GetRoute();
 
-        if (GetRoute() == "Desktop")
-            Shell.Current.GoToAsync($"{nameof(DesktopPodcastPage)}");
-        else if (GetRoute() == "Phone")
-            Shell.Current.GoToAsync($"{nameof(PhonePodcastPage)}");
-        else if (GetRoute() == "Tablet")
-            Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+    private async void GotoFirstPage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
-    public string GetRoute()
+    private async void Reset(object sender, EventArgs e)
     {
-        string device = string.Empty;
-        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI) { device = "Desktop"; }
-        else if ((DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) && (DeviceInfo.Current.Platform != DevicePlatform.WinUI))
-            device = "Tablet";
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
-            device = "Phone";
-
-        return device;
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
+    }
+    private async void GotoLivePage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(LivePage)}");
+    }
+    private async void GotoSettingsPage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
     }
 }

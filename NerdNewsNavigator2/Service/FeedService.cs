@@ -11,6 +11,10 @@ public class FeedService
         this._podcasts.Clear();
     }
     #region Get the Podcasts
+    public List<Podcast> getData()
+    {
+        return _podcasts;
+    }
     public static Podcast GetFeed(string item)
     {
         int counter = 0;
@@ -22,12 +26,13 @@ public class FeedService
                 feed.Title = level1Element.Element("title").Value;
                 feed.Description = level1Element.Element("description").Value;
                 feed.Url = item;
+                feed.Id = counter;
+                counter++;
 
                 foreach (var level2Element in level1Element.Elements("image"))
                 {
                     feed.Image = level2Element.Element("url")?.Value;
                 }
-                counter += 1;
             }
         }
         catch (Exception ex)
@@ -74,11 +79,7 @@ public class FeedService
     #endregion
     public static string RemoveBADHtmlTags(string HTMLCode)
     {
-        // System.Diagnostics.Debug.WriteLine(HTMLCode.ToString());
-        // HTMLCode = Regex.Replace(HTMLCode, "\\starget=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        // HTMLCode = Regex.Replace(HTMLCode, "\\srel=.*?.\"", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         HTMLCode = Regex.Replace(HTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        //  System.Diagnostics.Debug.WriteLine(HTMLCode);
         return HTMLCode;
     }
 }
