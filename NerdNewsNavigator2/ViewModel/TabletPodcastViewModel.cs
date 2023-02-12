@@ -27,6 +27,7 @@ public partial class TabletPodcastViewModel : BaseViewModel
     {
         try
         {
+            Podcasts.Clear();
             IsBusy = true;
             var temp = await App.PositionData.GetAllPodcasts();
             foreach (var item in temp)

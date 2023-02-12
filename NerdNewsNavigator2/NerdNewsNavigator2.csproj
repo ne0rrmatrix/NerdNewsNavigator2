@@ -55,6 +55,20 @@
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+	  <ProvisioningType>manual</ProvisioningType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <BuildIpa>False</BuildIpa>
+	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	  <BuildIpa>False</BuildIpa>
+	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	</PropertyGroup>
+
   
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
@@ -116,6 +130,9 @@
       <Compile Update="View\TabletPlayPodcastPage.xaml.cs">
         <DependentUpon>TabletPlayPodcastPage.xaml</DependentUpon>
       </Compile>
+      <Compile Update="View\UpdateSettingsPage.xaml.cs">
+        <DependentUpon>UpdateSettingsPage.xaml</DependentUpon>
+      </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -141,6 +158,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\TabletPodcasPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="View\UpdateSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

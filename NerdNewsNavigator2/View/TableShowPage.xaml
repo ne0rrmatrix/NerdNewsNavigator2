@@ -19,7 +19,7 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame  BackgroundColor="White" Margin="60" WidthRequest="350">
-                    <Grid RowDefinitions="Auto,Auto,1200" ColumnDefinitions="375,375,375">
+                    <Grid RowDefinitions="Auto,Auto,870" ColumnDefinitions="375,375,375">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}"
