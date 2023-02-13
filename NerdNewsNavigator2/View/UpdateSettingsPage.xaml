@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NerdNewsNavigator2.View.UpdateSettingsPage"
-             xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
-             xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-             x:DataType="viewmodel:UpdateSettingsViewModel"
-             BackgroundColor="Wheat"
-             Title="">
-    
+<ContentPage
+    x:Class="NerdNewsNavigator2.View.UpdateSettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    Title=""
+    x:DataType="viewmodel:UpdateSettingsViewModel"
+    BackgroundColor="Wheat">
+
     <StackLayout>
-        <Label 
-            Padding="20" 
-            HorizontalOptions="Center" 
-            VerticalOptions="Center"
+        <Label
+            Padding="20"
+            FontSize="Large"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
             IsEnabled="True"
             IsVisible="True"
-            HorizontalTextAlignment="Center"
+            Text="Loading..."
             TextColor="Black"
-            FontSize="Large"
-            Text="Loading...">
-        </Label>
-        <ActivityIndicator 
-            IsVisible="True" 
+            VerticalOptions="Center" />
+        <ActivityIndicator
             IsRunning="True"
+            IsVisible="True"
             Color="Red" />
     </StackLayout>
-    
+
 </ContentPage>

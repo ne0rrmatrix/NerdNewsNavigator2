@@ -30,3 +30,4 @@ global using SQLite;
 global using System.Timers;
 global using System.Text.RegularExpressions;
 global using System.Text.Json;
+global using NerdNewsNavigator2.Data;

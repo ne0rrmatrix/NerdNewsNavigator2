@@ -7,7 +7,7 @@ public partial class LivePage : ContentPage
 {
     public LivePage(LiveViewModel liveViewModel)
     {
-    InitializeComponent();
+        InitializeComponent();
         BindingContext = liveViewModel;
     }
 }

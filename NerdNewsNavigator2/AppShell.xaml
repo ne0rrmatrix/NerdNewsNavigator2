@@ -3,71 +3,66 @@
     x:Class="NerdNewsNavigator2.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
+    xmlns:local="clr-namespace:NerdNewsNavigator2.View"
+    FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
-     Shell.NavBarIsVisible="False"
     FlyoutWidth="200"
-    FlyoutBackgroundColor="LightGray">
+    Shell.NavBarIsVisible="False">
 
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid 
-                ColumnDefinitions="50,*" 
-                Margin="5">
-                <Image 
-                    Source="{Binding Icon}" 
-                    WidthRequest="50" 
-                    BackgroundColor="LightGray"/>
-                <Label 
-                    Grid.Column="1" 
-                    Text="{Binding Title}" 
-                    FontSize="16" 
-                    TextColor="Black" 
-                    FontAttributes="Bold"/>
+            <Grid Margin="5" ColumnDefinitions="50,*">
+                <Image
+                    BackgroundColor="LightGray"
+                    Source="{Binding Icon}"
+                    WidthRequest="50" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="{Binding Title}"
+                    TextColor="Black" />
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
 
     <Shell.MenuItemTemplate>
         <DataTemplate>
-            <Grid 
-                ColumnDefinitions="50,*" 
-                Margin="5">
-                <Image 
-                    Source="{Binding Icon}" 
-                    WidthRequest="50" 
-                    BackgroundColor="LightGray"/>
-                <Label 
-                    Grid.Column="1" 
-                    Text="{Binding Title}" 
-                    FontSize="16" 
-                    TextColor="Black" 
-                    FontAttributes="Bold"/>
+            <Grid Margin="5" ColumnDefinitions="50,*">
+                <Image
+                    BackgroundColor="LightGray"
+                    Source="{Binding Icon}"
+                    WidthRequest="50" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="{Binding Title}"
+                    TextColor="Black" />
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <ShellContent 
-        ContentTemplate="{DataTemplate local:TabletPodcastPage}"/>
-    
-    <MenuItem 
-        Text="Home" 
-        IconImageSource="house.png"  
-        Clicked="GotoFirstPage"/>
-    <MenuItem 
-        Text="Live" 
-        IconImageSource="live_broadcasting.png" 
-        Clicked="GotoLivePage"/>
-    <MenuItem 
-        Text="Settings" 
-        IconImageSource="settings.png" 
-        Clicked="GotoSettingsPage"/>
-    <MenuItem 
-        Text="Reset" 
-        IconImageSource="settings.png" 
-        Clicked="Reset"/>
-    <MenuItem 
-        Text="Exit" 
-        IconImageSource="logout.png" 
-        Clicked="Quit"/>
+    <ShellContent ContentTemplate="{DataTemplate local:TabletPodcastPage}" />
+
+    <MenuItem
+        Clicked="GotoFirstPage"
+        IconImageSource="house.png"
+        Text="Home" />
+    <MenuItem
+        Clicked="GotoLivePage"
+        IconImageSource="live_broadcasting.png"
+        Text="Live" />
+    <MenuItem
+        Clicked="GotoSettingsPage"
+        IconImageSource="settings.png"
+        Text="Settings" />
+    <MenuItem
+        Clicked="Reset"
+        IconImageSource="settings.png"
+        Text="Reset" />
+    <MenuItem
+        Clicked="Quit"
+        IconImageSource="logout.png"
+        Text="Exit" />
 </Shell>

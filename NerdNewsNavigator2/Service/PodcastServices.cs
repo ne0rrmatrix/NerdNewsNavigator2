@@ -101,13 +101,10 @@ public partial class PodcastServices
     }
     public async Task<bool> Delete(string url)
     {
-        Debug.WriteLine("looking for: " + url);
         foreach (var item in Current)
         {
-            Debug.WriteLine($"{item.Url}");
             if (item.Url == url)
             {
-                Debug.WriteLine("found podcast!");
                 if (Current.Contains(item)) { Current.Remove(item); }
                 await App.PositionData.DeletePodcast(item);
                 break;
