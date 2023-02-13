@@ -15,6 +15,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
+        Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
     }
     private void Quit(object sender, EventArgs e) => Application.Current.Quit();
 
@@ -33,9 +34,14 @@ public partial class AppShell : Shell
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
-    private async void GotoSettingsPage(object sender, EventArgs e)
+    private async void GotoRemovePage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+    }
+    private async void GotoAddPage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(AddPodcastPage)}");
     }
 }

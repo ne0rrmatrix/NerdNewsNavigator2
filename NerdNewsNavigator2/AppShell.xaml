@@ -54,9 +54,13 @@
         IconImageSource="live_broadcasting.png"
         Text="Live" />
     <MenuItem
-        Clicked="GotoSettingsPage"
+        Clicked="GotoRemovePage"
         IconImageSource="settings.png"
-        Text="Settings" />
+        Text="Remove" />
+    <MenuItem
+        Clicked="GotoAddPage"
+        IconImageSource="settings.png"
+        Text="Add" />
     <MenuItem
         Clicked="Reset"
         IconImageSource="settings.png"

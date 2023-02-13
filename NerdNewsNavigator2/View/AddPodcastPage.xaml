@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NerdNewsNavigator2.View.AddPodcastPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    Title=""
+    x:DataType="viewmodel:AddPodcastViewModel"
+    BackgroundColor="Wheat"
+    Shell.NavBarIsVisible="False">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <Grid
+        ColumnDefinitions="Auto,Auto,Auto"
+        ColumnSpacing="10"
+        HorizontalOptions="Center"
+        RowDefinitions="Auto,Auto,Auto"
+        RowSpacing="20"
+        VerticalOptions="Center">
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10"
+            Padding="5"
+            BackgroundColor="Wheat"
+            FontSize="Large"
+            HorizontalTextAlignment="Center"
+            Text="Default Podcasts"
+            TextColor="Black" />
+        <RadioButton
+            Grid.Row="0"
+            Grid.Column="1"
+            CheckedChanged="RadioButton_Item"
+            Content="Enabled"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            Value="Enabled" />
+        <RadioButton
+            Grid.Row="0"
+            Grid.Column="2"
+            CheckedChanged="RadioButton_Item"
+            Content="Disabled"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            Value="Disabled" />
+        <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            Padding="10"
+            BackgroundColor="Wheat"
+            FontSize="Large"
+            Text="Add Item:"
+            TextColor="Black" />
+        <Entry
+            x:Name="Url"
+            Grid.Row="1"
+            Grid.Column="1"
+            BackgroundColor="White"
+            TextColor="Black"
+            WidthRequest="500" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="2"
+            BackgroundColor="Blue"
+            Clicked="Button_Clicked"
+            FontSize="Large"
+            HorizontalOptions="Center"
+            Text="Add a Podcast"
+            TextColor="White"
+            VerticalOptions="Center" />
+    </Grid>
+
+</ContentPage>

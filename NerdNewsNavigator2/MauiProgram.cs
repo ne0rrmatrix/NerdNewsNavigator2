@@ -41,17 +41,22 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        builder.Services.AddSingleton<BaseViewModel>();
+
         builder.Services.AddTransient<TabletPodcastPage>();
         builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
 
-        builder.Services.AddSingleton<TabletPlayPodcastPage>();
-        builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
+        builder.Services.AddTransient<TabletPlayPodcastPage>();
+        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
 
         builder.Services.AddSingleton<LivePage>();
         builder.Services.AddSingleton<LiveViewModel>();
+
+        builder.Services.AddSingleton<AddPodcastPage>();
+        builder.Services.AddSingleton<AddPodcastViewModel>();
 
         builder.Services.AddSingleton<SettingsPage>();
         builder.Services.AddSingleton<SettingsViewModel>();
@@ -60,11 +65,12 @@ public static class MauiProgram
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<PlaybackService>();
         builder.Services.AddSingleton<PositionServices>();
+        builder.Services.AddSingleton<PlaybackService>();
+
         builder.Services.AddSingleton<PodcastServices>();
+
         builder.Services.AddSingleton<PositionDataBase>();
-        builder.Services.AddSingleton<BaseViewModel>();
 
         return builder.Build();
     }

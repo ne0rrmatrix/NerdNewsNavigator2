@@ -8,12 +8,14 @@ public partial class UpdateSettingsViewModel : BaseViewModel
 {
     public UpdateSettingsViewModel()
     {
-        Updating();
+        DeleteAllPodcasts();
     }
-    private async void Updating()
+    private async void DeleteAllPodcasts()
     {
         try
         {
+            await App.PositionData.GetAllPositions();
+            await App.PositionData.DeleteAll();
             await App.PositionData.DeleteAllPodcasts();
             await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
         }

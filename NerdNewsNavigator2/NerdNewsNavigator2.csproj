@@ -142,6 +142,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <MauiXaml Update="View\AddPodcastPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="View\LivePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
