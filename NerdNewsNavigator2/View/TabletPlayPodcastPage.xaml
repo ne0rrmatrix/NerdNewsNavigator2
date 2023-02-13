@@ -9,10 +9,14 @@
              BackgroundColor="Black"
              Title=""
              Unloaded="ContentPage_Unloaded">
+    
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False">
+        <BackButtonBehavior 
+            IsEnabled="True" 
+            IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
+    
     <Grid>
         <toolkit:MediaElement
                x:Name="mediaElement"
@@ -21,4 +25,5 @@
                 Source="{Binding Url}"
                />
     </Grid>
+    
 </ContentPage>

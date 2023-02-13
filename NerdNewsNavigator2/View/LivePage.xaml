@@ -12,4 +12,5 @@
             Source="{Binding Url}">
         </WebView>
     </Grid>
+    
 </ContentPage>

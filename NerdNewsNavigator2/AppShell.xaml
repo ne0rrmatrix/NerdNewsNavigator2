@@ -11,26 +11,63 @@
 
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid ColumnDefinitions="50,*" Margin="5">
-                <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+            <Grid 
+                ColumnDefinitions="50,*" 
+                Margin="5">
+                <Image 
+                    Source="{Binding Icon}" 
+                    WidthRequest="50" 
+                    BackgroundColor="LightGray"/>
+                <Label 
+                    Grid.Column="1" 
+                    Text="{Binding Title}" 
+                    FontSize="16" 
+                    TextColor="Black" 
+                    FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
 
     <Shell.MenuItemTemplate>
         <DataTemplate>
-            <Grid ColumnDefinitions="50,*" Margin="5">
-                <Image Source="{Binding Icon}" WidthRequest="50" BackgroundColor="LightGray"/>
-                <Label Grid.Column="1" Text="{Binding Title}" FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+            <Grid 
+                ColumnDefinitions="50,*" 
+                Margin="5">
+                <Image 
+                    Source="{Binding Icon}" 
+                    WidthRequest="50" 
+                    BackgroundColor="LightGray"/>
+                <Label 
+                    Grid.Column="1" 
+                    Text="{Binding Title}" 
+                    FontSize="16" 
+                    TextColor="Black" 
+                    FontAttributes="Bold"/>
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <ShellContent ContentTemplate="{DataTemplate local:TabletPodcastPage}"/>
-    <MenuItem Text="Home" IconImageSource="house.png"  Clicked="GotoFirstPage"/>
-    <MenuItem Text="Live" IconImageSource="live_broadcasting.png" Clicked="GotoLivePage"/>
-    <MenuItem Text="Settings" IconImageSource="settings.png" Clicked="GotoSettingsPage"/>
-    <MenuItem Text="Reset" IconImageSource="settings.png" Clicked="Reset"/>
-    <MenuItem Text="Exit" IconImageSource="logout.png" Clicked="Quit"/>
+    <ShellContent 
+        ContentTemplate="{DataTemplate local:TabletPodcastPage}"/>
+    
+    <MenuItem 
+        Text="Home" 
+        IconImageSource="house.png"  
+        Clicked="GotoFirstPage"/>
+    <MenuItem 
+        Text="Live" 
+        IconImageSource="live_broadcasting.png" 
+        Clicked="GotoLivePage"/>
+    <MenuItem 
+        Text="Settings" 
+        IconImageSource="settings.png" 
+        Clicked="GotoSettingsPage"/>
+    <MenuItem 
+        Text="Reset" 
+        IconImageSource="settings.png" 
+        Clicked="Reset"/>
+    <MenuItem 
+        Text="Exit" 
+        IconImageSource="logout.png" 
+        Clicked="Quit"/>
 </Shell>

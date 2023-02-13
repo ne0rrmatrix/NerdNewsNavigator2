@@ -7,15 +7,23 @@
              x:DataType="viewmodel:UpdateSettingsViewModel"
              BackgroundColor="Wheat"
              Title="">
+    
     <StackLayout>
-        <Label Padding="20" HorizontalOptions="Center" VerticalOptions="Center"
-                              IsEnabled="True"
-                               IsVisible="True"
-                           HorizontalTextAlignment="Center"
-                           TextColor="Black"
-                           FontSize="Large"
-                               Text="Loading..."></Label>
-        <ActivityIndicator IsVisible="True" IsRunning="True"
-                   Color="Red" />
+        <Label 
+            Padding="20" 
+            HorizontalOptions="Center" 
+            VerticalOptions="Center"
+            IsEnabled="True"
+            IsVisible="True"
+            HorizontalTextAlignment="Center"
+            TextColor="Black"
+            FontSize="Large"
+            Text="Loading...">
+        </Label>
+        <ActivityIndicator 
+            IsVisible="True" 
+            IsRunning="True"
+            Color="Red" />
     </StackLayout>
+    
 </ContentPage>

@@ -8,54 +8,80 @@
              BackgroundColor="Wheat"
              Shell.NavBarIsVisible="False"
              Title="">
+    
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False">
+        <BackButtonBehavior 
+            IsEnabled="True" 
+            IsVisible="False">
         </BackButtonBehavior>
     </Shell.BackButtonBehavior>
-    <CollectionView ItemsSource="{Binding Shows}" Margin="5" BackgroundColor="Wheat" SelectionMode="None">
+    
+    <CollectionView 
+        ItemsSource="{Binding Shows}" 
+        Margin="5" 
+        BackgroundColor="Wheat" 
+        SelectionMode="None">
+    
         <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}"/>
+            <GridItemsLayout 
+                Orientation="Vertical" 
+                Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
+        
         <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Show">
-                <Frame  BackgroundColor="White" Margin="60" WidthRequest="350">
-                    <Grid RowDefinitions="Auto,Auto,870" ColumnDefinitions="375,375,375">
+            <DataTemplate 
+                x:DataType="model:Show">
+                <Frame  
+                    BackgroundColor="White" 
+                    Margin="60" 
+                    WidthRequest="350">
+                    <Grid 
+                        RowDefinitions="Auto,Auto,870" 
+                        ColumnDefinitions="375,375,375">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}"
                             CommandParameter="{Binding Url}"/>
                         </Grid.GestureRecognizers>
-                        <Label Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Start"
-                               
-                        Text="{Binding Title}"
-                        TextColor="Black" 
-                        FontSize="10" 
-                               WidthRequest="320"
+                        <Label 
+                            Grid.Row="0" 
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Start" 
+                            Text="{Binding Title}" 
+                            TextColor="Black" 
+                            FontSize="10" 
+                            WidthRequest="320"
                             FontAttributes="Bold"
-                        LineBreakMode="WordWrap"/>
-                        <Image Grid.Row="1" Grid.ColumnSpan="2"
-                               HorizontalOptions="Start"
-                               
-                                       Aspect="AspectFit" 
-                                       HeightRequest="320" 
-                                       WidthRequest="320">
+                            LineBreakMode="WordWrap"/>
+                        <Image 
+                            Grid.Row="1" 
+                            Grid.ColumnSpan="2" 
+                            HorizontalOptions="Start" 
+                            Aspect="AspectFit" 
+                            HeightRequest="320" 
+                            WidthRequest="320">
                             <Image.Source>
-                                <UriImageSource Uri="{Binding Image}"
-                                                    CacheValidity="40"
-                                                    CachingEnabled="True"/>
+                                <UriImageSource 
+                                    Uri="{Binding Image}" 
+                                    CacheValidity="40" 
+                                    CachingEnabled="True"/>
                             </Image.Source>
                         </Image>
-                        <Label Grid.Row="2" Grid.ColumnSpan="2"
-                              WidthRequest="320"
-                               TextColor="Black"
-                               Text="{Binding Description}"
-                               TextType="Html"
-                               HorizontalOptions="Start"
-                               FontSize="10"
-                               LineBreakMode="WordWrap"/>
+                        <Label 
+                            Grid.Row="2" 
+                            Grid.ColumnSpan="2" 
+                            WidthRequest="320" 
+                            TextColor="Black" 
+                            Text="{Binding Description}"
+                            TextType="Html"
+                            HorizontalOptions="Start"
+                            FontSize="10"
+                            LineBreakMode="WordWrap"/>
                     </Grid>
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
+        
     </CollectionView>
+    
 </ContentPage>
