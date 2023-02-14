@@ -67,7 +67,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<FeedService>();
         //   builder.Services.AddSingleton<PositionServices>();
         //   builder.Services.AddSingleton<PlaybackService>();
-
         builder.Services.AddSingleton<PodcastServices>();
 
         builder.Services.AddSingleton<PositionDataBase>();
