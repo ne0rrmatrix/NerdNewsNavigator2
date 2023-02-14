@@ -49,8 +49,8 @@ public static class MauiProgram
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
 
-        builder.Services.AddTransient<TabletPlayPodcastPage>();
-        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
+        builder.Services.AddSingleton<TabletPlayPodcastPage>();
+        builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
 
         builder.Services.AddSingleton<LivePage>();
         builder.Services.AddSingleton<LiveViewModel>();
@@ -65,8 +65,8 @@ public static class MauiProgram
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<PositionServices>();
-        builder.Services.AddSingleton<PlaybackService>();
+        //   builder.Services.AddSingleton<PositionServices>();
+        //   builder.Services.AddSingleton<PlaybackService>();
 
         builder.Services.AddSingleton<PodcastServices>();
 
