@@ -5,18 +5,16 @@
 namespace NerdNewsNavigator2.View;
 public partial class TabletPlayPodcastPage : ContentPage
 {
-    //  private static System.Timers.Timer s_aTimer;
-    //  readonly PlaybackService _playbackService;
+    readonly PlaybackService _playbackService;
     public TabletPlayPodcastPage(TabletPlayPodcastViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
 
-        //  PlaybackService playbackservice = new(mediaElement);
-        //   _playbackService = playbackservice;
-
-        // Start();
+        PlaybackService playbackService = new(mediaElement);
+        _playbackService = playbackService;
     }
+
 #nullable enable
     void ContentPage_Unloaded(object? sender, EventArgs e)
     {
@@ -25,27 +23,16 @@ public partial class TabletPlayPodcastPage : ContentPage
             return;
         }
         System.Diagnostics.Debug.WriteLine("Unloading media element");
+
+        mediaElement.MediaOpened -= _playbackService.Slider_DragCompleted;
+        mediaElement.StateChanged -= _playbackService.Media_Stopped;
         // Stop and cleanup MediaElement when we navigate away
+
 #if ANDROID 
 mediaElement.Handler?.DisconnectHandler();
 #endif
+
     }
+
 #nullable disable
-    /*
-    public Task SetTimer()
-    {
-        s_aTimer = new System.Timers.Timer(2000);
-        s_aTimer.Elapsed += _playbackService.OnTimedEvent;
-        s_aTimer.Enabled = true;
-        return Task.CompletedTask;
-    }
-    private void Start()
-    {
-        mediaElement.Pause();
-        _playbackService.SetTimer();
-        OnPropertyChanged(nameof(mediaElement));
-        mediaElement.StateChanged += _playbackService.Media_Stopped;
-        mediaElement.PositionChanged += _playbackService.OnPositionChanged;
-    }
-    */
 }

@@ -3,13 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-
 public partial class BaseViewModel : ObservableObject
 {
     public DisplayInfo MyMainDisplay { get; set; } = new();
     public PodcastServices _podcastServices { get; set; } = new();
-    PositionServices Services { get; set; } = new();
-
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     public bool _isBusy;

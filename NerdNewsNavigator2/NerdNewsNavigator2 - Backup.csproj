@@ -57,8 +57,6 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
 	  <ProvisioningType>automatic</ProvisioningType>
-	  <CodesignKey>Apple Development: Created via API (MX4QCQ2742)</CodesignKey>
-	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
@@ -117,8 +115,8 @@
     <Compile Update="View\LivePage.xaml.cs">
       <DependentUpon>LivePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="View\RemovePage.xaml.cs">
-      <DependentUpon>RemovePage.xaml</DependentUpon>
+    <Compile Update="View\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
       <Compile Update="View\TabletPodcastPage.xaml.cs">
         <DependentUpon>TabletPodcastPage.xaml</DependentUpon>
@@ -150,7 +148,7 @@
     <MauiXaml Update="View\LivePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="View\RemovePage.xaml">
+    <MauiXaml Update="View\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\TabletLivePage.xaml">

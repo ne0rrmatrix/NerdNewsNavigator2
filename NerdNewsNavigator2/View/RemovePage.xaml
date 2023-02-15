@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.SettingsPage"
+    x:Class="NerdNewsNavigator2.View.RemovePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
-    x:DataType="viewmodel:SettingsViewModel"
+    x:DataType="viewmodel:RemoveViewModel"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -74,7 +74,7 @@
                             TextColor="White"
                             WidthRequest="90">
                             <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
                     </Grid>

@@ -54,13 +54,9 @@
         IconImageSource="live_broadcasting.png"
         Text="Live" />
     <MenuItem
-        Clicked="GotoRemovePage"
-        IconImageSource="settings.png"
-        Text="Remove" />
-    <MenuItem
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
-        Text="Add" />
+        Text="Settings" />
     <MenuItem
         Clicked="Reset"
         IconImageSource="settings.png"
@@ -69,4 +65,5 @@
         Clicked="Quit"
         IconImageSource="logout.png"
         Text="Exit" />
+
 </Shell>

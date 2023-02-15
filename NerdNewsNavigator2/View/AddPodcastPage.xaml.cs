@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-
 public partial class AddPodcastPage : ContentPage
 {
     PodcastServices _podcastServices { get; set; } = new();
@@ -24,7 +23,6 @@ public partial class AddPodcastPage : ContentPage
         {
         }
     }
-
     private async void RadioButton_Item(object sender, CheckedChangedEventArgs e)
     {
         RadioButton button = sender as RadioButton;
@@ -63,5 +61,15 @@ public partial class AddPodcastPage : ContentPage
             }
             catch { }
         }
+    }
+
+    private async void Button_Clicked_1(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"{nameof(RemovePage)}");
+    }
+
+    private async void Button_Clicked_2(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
     }
 }

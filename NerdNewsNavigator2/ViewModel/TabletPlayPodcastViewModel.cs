@@ -15,7 +15,9 @@ public partial class TabletPlayPodcastViewModel : ObservableObject
         set
         {
             SetProperty(ref url, value);
+            Preferences.Default.Clear();
             Preferences.Default.Set("New_Url", value);
+            Debug.WriteLine($"New Url is: {value}");
         }
     }
     #endregion

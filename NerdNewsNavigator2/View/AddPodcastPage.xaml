@@ -15,29 +15,29 @@
     </Shell.BackButtonBehavior>
 
     <Grid
-        ColumnDefinitions="Auto,Auto,Auto"
-        ColumnSpacing="10"
-        HorizontalOptions="Center"
-        RowDefinitions="Auto,Auto,Auto"
-        RowSpacing="20"
+        ColumnDefinitions="100,125,125"
+        RowDefinitions="50,50,50,50,75"
         VerticalOptions="Center">
         <Label
             Grid.Row="0"
             Grid.Column="0"
             Margin="10"
-            Padding="5"
             BackgroundColor="Wheat"
-            FontSize="Large"
-            HorizontalTextAlignment="Center"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalTextAlignment="Start"
             Text="Default Podcasts"
-            TextColor="Black" />
+            TextColor="Black"
+            VerticalOptions="Center" />
         <RadioButton
             Grid.Row="0"
             Grid.Column="1"
             CheckedChanged="RadioButton_Item"
             Content="Enabled"
             FontAttributes="Bold"
-            HorizontalOptions="Center"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
             Value="Enabled" />
         <RadioButton
             Grid.Row="0"
@@ -45,31 +45,86 @@
             CheckedChanged="RadioButton_Item"
             Content="Disabled"
             FontAttributes="Bold"
-            HorizontalOptions="Center"
+            FontAutoScalingEnabled="True"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
             Value="Disabled" />
         <Label
             Grid.Row="1"
             Grid.Column="0"
-            Padding="10"
+            Margin="10"
             BackgroundColor="Wheat"
-            FontSize="Large"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalOptions="Start"
             Text="Add Item:"
-            TextColor="Black" />
+            TextColor="Black"
+            VerticalOptions="Center" />
         <Entry
             x:Name="Url"
             Grid.Row="1"
             Grid.Column="1"
             BackgroundColor="White"
+            FontSize="Micro"
+            HeightRequest="30"
+            HorizontalOptions="End"
+            SelectionLength="125"
             TextColor="Black"
-            WidthRequest="500" />
+            VerticalOptions="Center"
+            WidthRequest="100" />
         <Button
             Grid.Row="1"
             Grid.Column="2"
+            Margin="10"
+            Padding="5"
             BackgroundColor="Blue"
             Clicked="Button_Clicked"
-            FontSize="Large"
-            HorizontalOptions="Center"
+            FontSize="Micro"
+            HorizontalOptions="End"
             Text="Add a Podcast"
+            TextColor="White"
+            VerticalOptions="Center" />
+        <Label
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="10"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalOptions="Start"
+            Text="Remove Item"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="2"
+            BackgroundColor="Blue"
+            Clicked="Button_Clicked_1"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            Text="Remove a Podcast"
+            TextColor="White"
+            VerticalOptions="Center" />
+        <Label
+            Grid.Row="4"
+            Grid.Column="0"
+            Margin="10"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalOptions="Start"
+            Text="Reset"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Button
+            Grid.Row="4"
+            Grid.Column="2"
+            BackgroundColor="Blue"
+            Clicked="Button_Clicked_2"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            Text="Reset Podcasts"
             TextColor="White"
             VerticalOptions="Center" />
     </Grid>

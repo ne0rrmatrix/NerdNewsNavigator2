@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
-
-public partial class SettingsPage : ContentPage
+public partial class RemovePage : ContentPage
 {
-    public SettingsPage(SettingsViewModel viewModel)
+    public RemovePage(RemoveViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

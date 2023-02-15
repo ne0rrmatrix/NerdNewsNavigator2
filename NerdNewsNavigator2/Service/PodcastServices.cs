@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-
 public partial class PodcastServices
 {
     private readonly List<string> _twit = new()
@@ -35,7 +34,10 @@ public partial class PodcastServices
     {
         _ = GetUpdatedPodcasts();
     }
-
+    ~PodcastServices()
+    {
+        Current.Clear();
+    }
     public async Task GetUpdatedPodcasts()
     {
         Current.Clear();

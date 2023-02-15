@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Data;
-
 public class PositionDataBase
 {
     private SQLiteAsyncConnection _connection;
@@ -13,12 +12,21 @@ public class PositionDataBase
     }
     public async Task Init()
     {
+        if (_connection is not null)
+        {
+            return;
+        }
         var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
         _connection = new SQLiteAsyncConnection(databasePath);
         await _connection.CreateTableAsync<Position>();
     }
     public async Task PodcastInit()
     {
+        if (_PodcastConnection is not null)
+        {
+            return;
+        }
+
         var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
         _PodcastConnection = new SQLiteAsyncConnection(databasePath);
         await _PodcastConnection.CreateTableAsync<Podcast>();
