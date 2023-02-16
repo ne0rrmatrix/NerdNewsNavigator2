@@ -31,13 +31,11 @@ public class PlaybackService
         {
             Pos.SavedPosition = _mediaElement.Position;
             await Services.SaveCurrentPosition(Pos);
-            Debug.WriteLine($"Plaback service has saved position at: {Pos.SavedPosition.TotalSeconds}");
         }
         if ((_mediaElement.CurrentState == MediaElementState.Paused))
         {
             Pos.SavedPosition = _mediaElement.Position;
             await Services.SaveCurrentPosition(Pos);
-            Debug.WriteLine($"Plaback service has saved position at: {Pos.SavedPosition.TotalSeconds}");
         }
     }
     public async void Slider_DragCompleted(object? sender, EventArgs e)
@@ -49,14 +47,10 @@ public class PlaybackService
 
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.FromSeconds(0.00);
-        Debug.WriteLine($"Playback Service new Url is: {Pos.Title}");
         var result = await GetPosition();
 
-        if (Pos.Title != string.Empty)
-        {
-            Pos.SavedPosition = result.SavedPosition;
-        }
-        Debug.WriteLine($"Slider is going to: {Pos.SavedPosition.TotalSeconds}");
+        Pos.SavedPosition = result.SavedPosition;
+
         _mediaElement.SeekTo(Pos.SavedPosition);
         _mediaElement.StateChanged += Media_Stopped;
     }
@@ -66,13 +60,7 @@ public class PlaybackService
         Position result = new();
         foreach (var item in Services.Current.ToList())
         {
-            Debug.WriteLine($"Playback services got from database: {item.Title} at {item.SavedPosition.TotalSeconds}");
-            if (Pos.Title == item.Title && Pos.Title != string.Empty)
-            {
-                Debug.WriteLine($"Playback Services found saved position at {item.SavedPosition.TotalSeconds}");
-                result.SavedPosition = item.SavedPosition;
-                return Task.FromResult(result);
-            }
+            result.SavedPosition = item.SavedPosition;
         }
         return Task.FromResult(result);
     }

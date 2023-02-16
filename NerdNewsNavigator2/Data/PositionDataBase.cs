@@ -35,7 +35,8 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.DeleteAllAsync<Position>();
+            if (_connection is not null)
+                await _connection.DeleteAllAsync<Position>();
         }
         catch
         {
@@ -57,7 +58,8 @@ public class PositionDataBase
     {
         try
         {
-            await _PodcastConnection.DeleteAllAsync<Podcast>();
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.DeleteAllAsync<Podcast>();
         }
         catch
         {
@@ -67,7 +69,8 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.InsertAsync(position);
+            if (_connection is not null)
+                await _connection.InsertOrReplaceAsync(position);
         }
         catch
         {
@@ -77,15 +80,19 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.DeleteAsync(position);
+            if (_connection is not null)
+                await _connection.DeleteAsync(position);
         }
-        catch { }
+        catch
+        {
+        }
     }
     public async Task AddPodcast(Podcast podcast)
     {
         try
         {
-            await _PodcastConnection.InsertAsync(podcast);
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.InsertAsync(podcast);
         }
         catch
         {
@@ -95,8 +102,8 @@ public class PositionDataBase
     {
         try
         {
-            await _PodcastConnection.DeleteAsync(podcast);
-            Debug.WriteLine($"Podcast: {podcast.Title} deleted!");
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.DeleteAsync(podcast);
         }
         catch { }
     }
