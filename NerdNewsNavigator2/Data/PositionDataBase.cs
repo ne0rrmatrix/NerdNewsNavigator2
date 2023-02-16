@@ -1,9 +1,8 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Data;
-
 public class PositionDataBase
 {
     private SQLiteAsyncConnection _connection;
@@ -13,12 +12,21 @@ public class PositionDataBase
     }
     public async Task Init()
     {
+        if (_connection is not null)
+        {
+            return;
+        }
         var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
         _connection = new SQLiteAsyncConnection(databasePath);
         await _connection.CreateTableAsync<Position>();
     }
     public async Task PodcastInit()
     {
+        if (_PodcastConnection is not null)
+        {
+            return;
+        }
+
         var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
         _PodcastConnection = new SQLiteAsyncConnection(databasePath);
         await _PodcastConnection.CreateTableAsync<Podcast>();
@@ -27,7 +35,8 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.DeleteAllAsync<Position>();
+            if (_connection is not null)
+                await _connection.DeleteAllAsync<Position>();
         }
         catch
         {
@@ -49,7 +58,8 @@ public class PositionDataBase
     {
         try
         {
-            await _PodcastConnection.DeleteAllAsync<Podcast>();
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.DeleteAllAsync<Podcast>();
         }
         catch
         {
@@ -59,7 +69,8 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.InsertAsync(position);
+            if (_connection is not null)
+                await _connection.InsertOrReplaceAsync(position);
         }
         catch
         {
@@ -69,15 +80,19 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.DeleteAsync(position);
+            if (_connection is not null)
+                await _connection.DeleteAsync(position);
         }
-        catch { }
+        catch
+        {
+        }
     }
     public async Task AddPodcast(Podcast podcast)
     {
         try
         {
-            await _PodcastConnection.InsertAsync(podcast);
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.InsertAsync(podcast);
         }
         catch
         {
@@ -87,8 +102,8 @@ public class PositionDataBase
     {
         try
         {
-            await _PodcastConnection.DeleteAsync(podcast);
-            Debug.WriteLine($"Podcast: {podcast.Title} deleted!");
+            if (_PodcastConnection is not null)
+                await _PodcastConnection.DeleteAsync(podcast);
         }
         catch { }
     }

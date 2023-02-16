@@ -1,11 +1,8 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using NerdNewsNavigator2.View;
-
 namespace NerdNewsNavigator2;
-
 public partial class AppShell : Shell
 {
     public AppShell()
@@ -15,8 +12,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(TabletShowPage), typeof(TabletShowPage));
         Routing.RegisterRoute(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
         Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
-        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
+        Routing.RegisterRoute(nameof(RemovePage), typeof(RemovePage));
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
+        Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
     }
     private void Quit(object sender, EventArgs e) => Application.Current.Quit();
 
@@ -35,9 +33,9 @@ public partial class AppShell : Shell
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
-    private async void GotoSettingsPage(object sender, EventArgs e)
+    private async void GotoAddPage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
-        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+        await Shell.Current.GoToAsync($"{nameof(AddPodcastPage)}");
     }
 }

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.TabletShowPage"
+    x:Class="NerdNewsNavigator2.View.RemovePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
-    x:DataType="viewmodel:TabletShowViewModel"
-    BackgroundColor="Wheat"
+    x:DataType="viewmodel:RemoveViewModel"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -15,9 +14,8 @@
     </Shell.BackButtonBehavior>
 
     <CollectionView
-        Margin="5"
         BackgroundColor="Wheat"
-        ItemsSource="{Binding Shows}"
+        ItemsSource="{Binding Podcasts}"
         SelectionMode="None">
 
         <CollectionView.ItemsLayout>
@@ -25,32 +23,29 @@
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Show">
+            <DataTemplate x:DataType="model:Podcast">
                 <Frame
-                    Margin="60"
+                    Margin="55"
                     BackgroundColor="White"
-                    WidthRequest="350">
-                    <Grid ColumnDefinitions="375,375,375" RowDefinitions="Auto,Auto,870">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                        </Grid.GestureRecognizers>
+                    WidthRequest="375">
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
                         <Label
                             Grid.Row="0"
+                            Margin="10"
+                            Padding="5"
                             FontAttributes="Bold"
                             FontSize="10"
                             HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
-                            VerticalOptions="Center"
-                            WidthRequest="320" />
+                            VerticalOptions="Center" />
                         <Image
                             Grid.Row="1"
                             Grid.ColumnSpan="2"
                             Aspect="AspectFit"
-                            HeightRequest="320"
-                            HorizontalOptions="Start"
-                            WidthRequest="320">
+                            HeightRequest="300"
+                            WidthRequest="300">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="40"
@@ -61,13 +56,27 @@
                         <Label
                             Grid.Row="2"
                             Grid.ColumnSpan="2"
+                            Padding="10"
                             FontSize="10"
-                            HorizontalOptions="Start"
+                            HeightRequest="240"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
-                            TextType="Html"
                             WidthRequest="320" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="20"
+                            BackgroundColor="Red"
+                            FontAttributes="Bold"
+                            FontSize="Micro"
+                            HeightRequest="35"
+                            Text="Delete"
+                            TextColor="White"
+                            WidthRequest="90">
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                            </Button.GestureRecognizers>
+                        </Button>
                     </Grid>
                 </Frame>
             </DataTemplate>

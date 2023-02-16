@@ -24,23 +24,21 @@ public class PositionServices
     }
     public async Task<bool> SaveCurrentPosition(Position position)
     {
-        if (position.Title != string.Empty)
+        var temp = App.PositionData.GetAllPositions().Result;
+        foreach (var item in temp)
         {
-            foreach (var item in Current)
+            if (item.Title == position.Title)
             {
-                if (item.Title == position.Title)
-                {
-                    await App.PositionData.Delete(item);
-                }
+                await App.PositionData.Delete(position);
             }
-            await App.PositionData.Add(new Position
-            {
-                Title = position.Title,
-                SavedPosition = position.SavedPosition
-            });
-            Current.Clear();
-            Current = await App.PositionData.GetAllPositions();
         }
+        await App.PositionData.Add(position);
+        if (Current.Contains(position))
+        {
+            Current.Remove(position);
+        }
+        Current.Add(position);
+
         return true;
     }
 }

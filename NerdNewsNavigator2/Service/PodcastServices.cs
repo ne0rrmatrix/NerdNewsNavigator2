@@ -1,9 +1,8 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-
 public partial class PodcastServices
 {
     private readonly List<string> _twit = new()
@@ -30,12 +29,15 @@ public partial class PodcastServices
             "https://feeds.twit.tv/jason_video_hd.xml",
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
-    public List<Podcast> Current { get; set; } = new();
+    private List<Podcast> Current { get; set; } = new();
     public PodcastServices()
     {
         _ = GetUpdatedPodcasts();
     }
-
+    ~PodcastServices()
+    {
+        Current.Clear();
+    }
     public async Task GetUpdatedPodcasts()
     {
         Current.Clear();
@@ -44,6 +46,10 @@ public partial class PodcastServices
         {
             Current.Add(item);
         }
+    }
+    public Task<List<Podcast>> GetAllPodcasts()
+    {
+        return Task.FromResult(Current);
     }
     public async Task AddToDatabase()
     {
@@ -65,6 +71,34 @@ public partial class PodcastServices
 
         return podcasts;
     }
+    public async Task RemoveDefaultPodcasts()
+    {
+        foreach (var item in Current)
+        {
+            if (item.Url.Contains("feeds.twit.tv"))
+            {
+                await App.PositionData.DeletePodcast(item);
+            }
+        }
+        Current.Clear();
+    }
+    public async Task AddDefaultPodcasts()
+    {
+        foreach (var item in Current)
+        {
+            if (item.Url.Contains("feeds.twit.tv"))
+            {
+                await App.PositionData.DeletePodcast(item);
+                Current.Remove(item);
+            }
+        }
+        var items = GetFromUrl().Result;
+        foreach (var item in items)
+        {
+            Current.Add(item);
+            await App.PositionData.AddPodcast(item);
+        }
+    }
     public async Task DeleteAll()
     {
         await App.PositionData.DeleteAllPodcasts();
@@ -79,40 +113,33 @@ public partial class PodcastServices
     {
         foreach (var item in podcasts)
         {
-            await AddPodcast(item);
+            await AddPodcast(item.Url);
         }
         return true;
     }
-    public async Task<bool> AddPodcast(Podcast podcast)
+    public async Task AddPodcast(string url)
     {
-        if (Current.Contains(podcast))
+        var podcast = await Task.FromResult(FeedService.GetFeed(url));
+        await App.PositionData.AddPodcast(new Podcast
         {
-        }
-        else
-        {
-            await App.PositionData.AddPodcast(new Podcast
-            {
-                Url = podcast.Url,
-                Description = podcast.Description,
-                Image = podcast.Image,
-            });
-        }
-        return true;
+            Title = podcast.Title,
+            Url = podcast.Url,
+            Description = podcast.Description,
+            Image = podcast.Image,
+        });
     }
     public async Task<bool> Delete(string url)
     {
-        Debug.WriteLine("looking for: " + url);
-        foreach (var item in Current)
+        foreach (var item in from item in Current
+                             where item.Url == url
+                             select item)
         {
-            Debug.WriteLine($"{item.Url}");
-            if (item.Url == url)
-            {
-                Debug.WriteLine("found podcast!");
-                if (Current.Contains(item)) { Current.Remove(item); }
-                await App.PositionData.DeletePodcast(item);
-                break;
-            }
+            if (Current.Contains(item)) { Current.Remove(item); }
+
+            await App.PositionData.DeletePodcast(item);
+            break;
         }
+
         return true;
     }
 }

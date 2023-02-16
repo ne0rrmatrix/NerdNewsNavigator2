@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -7,7 +7,6 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
-using NerdNewsNavigator2.Data;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -41,30 +40,35 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        builder.Services.AddSingleton<BaseViewModel>();
+
         builder.Services.AddTransient<TabletPodcastPage>();
         builder.Services.AddTransient<TabletPodcastViewModel>();
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
 
-        builder.Services.AddSingleton<TabletPlayPodcastPage>();
-        builder.Services.AddSingleton<TabletPlayPodcastViewModel>();
+        builder.Services.AddTransient<TabletPlayPodcastPage>();
+        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
 
         builder.Services.AddSingleton<LivePage>();
         builder.Services.AddSingleton<LiveViewModel>();
 
-        builder.Services.AddSingleton<SettingsPage>();
-        builder.Services.AddSingleton<SettingsViewModel>();
+        builder.Services.AddSingleton<AddPodcastPage>();
+        builder.Services.AddSingleton<AddPodcastViewModel>();
+
+        builder.Services.AddSingleton<RemovePage>();
+        builder.Services.AddSingleton<RemoveViewModel>();
 
         builder.Services.AddTransient<UpdateSettingsPage>();
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<PlaybackService>();
         builder.Services.AddSingleton<PositionServices>();
+        builder.Services.AddTransient<PlaybackService>();
         builder.Services.AddSingleton<PodcastServices>();
+
         builder.Services.AddSingleton<PositionDataBase>();
-        builder.Services.AddSingleton<BaseViewModel>();
 
         return builder.Build();
     }
