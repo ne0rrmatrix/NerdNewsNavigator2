@@ -6,7 +6,9 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     public DisplayInfo MyMainDisplay { get; set; } = new();
+    public PositionServices Services { get; set; } = new();
     public PodcastServices _podcastServices { get; set; } = new();
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     public bool _isBusy;
@@ -23,6 +25,7 @@ public partial class BaseViewModel : ObservableObject
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
+        IsBusy = true;
         var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)
         {
@@ -37,6 +40,7 @@ public partial class BaseViewModel : ObservableObject
                 await App.PositionData.AddPodcast(item);
             }
         }
+        IsBusy = false;
     }
     public async Task AddPodcastsToDatabase()
     {
@@ -53,7 +57,6 @@ public partial class BaseViewModel : ObservableObject
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
-
 #nullable disable
     public static int OnDeviceOrientationChange()
     {

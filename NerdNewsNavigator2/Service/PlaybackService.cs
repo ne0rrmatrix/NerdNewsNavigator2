@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-public class PlaybackService
+public class PlaybackService : BaseViewModel
 {
     private readonly MediaElement _mediaElement;
     public Position Pos { get; set; } = new();
-    PositionServices Services { get; set; } = new();
 
     public PlaybackService(MediaElement mediaElement)
     {
@@ -18,6 +17,7 @@ public class PlaybackService
     {
         _mediaElement.MediaOpened -= Slider_DragCompleted;
         _mediaElement.StateChanged -= Media_Stopped;
+        _mediaElement.Handler?.DisconnectHandler();
     }
 
 #nullable enable
@@ -49,8 +49,10 @@ public class PlaybackService
         Pos.SavedPosition = TimeSpan.FromSeconds(0.00);
         var result = await GetPosition();
 
-        Pos.SavedPosition = result.SavedPosition;
-
+        if (Pos.Title != string.Empty)
+        {
+            Pos.SavedPosition = result.SavedPosition;
+        }
         _mediaElement.SeekTo(Pos.SavedPosition);
         _mediaElement.StateChanged += Media_Stopped;
     }
@@ -60,7 +62,11 @@ public class PlaybackService
         Position result = new();
         foreach (var item in Services.Current.ToList())
         {
-            result.SavedPosition = item.SavedPosition;
+            if (Pos.Title == item.Title && Pos.Title != string.Empty)
+            {
+                result.SavedPosition = item.SavedPosition;
+                return Task.FromResult(result);
+            }
         }
         return Task.FromResult(result);
     }

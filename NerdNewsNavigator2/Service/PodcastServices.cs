@@ -61,7 +61,7 @@ public partial class PodcastServices
     }
     public async Task<List<Podcast>> GetFromUrl()
     {
-        List<Podcast> podcasts = new List<Podcast>();
+        List<Podcast> podcasts = new();
         foreach (var item in _twit)
         {
             var temp = await Task.FromResult(FeedService.GetFeed(item));

@@ -46,7 +46,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
-	  
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
@@ -96,18 +95,14 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="4.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.Core" Version="4.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.4" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 	</ItemGroup>
-<!-- Item below for compatibility temporalily  
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
-  </ItemGroup>
-  -->
+  
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -143,6 +138,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  
   <ItemGroup>
     <MauiXaml Update="View\AddPodcastPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -169,4 +165,5 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>
+  
 </Project>

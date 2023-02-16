@@ -25,7 +25,6 @@ public partial class AppShell : Shell
     }
     private async void Reset(object sender, EventArgs e)
     {
-        FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
     }
     private async void GotoLivePage(object sender, EventArgs e)
