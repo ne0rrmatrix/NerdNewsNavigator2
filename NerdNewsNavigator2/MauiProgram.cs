@@ -19,6 +19,7 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
+
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>
                {
