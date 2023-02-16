@@ -18,25 +18,24 @@ public class PositionServices
     {
         await App.PositionData.DeleteAll();
     }
-    public List<Position> GetCurrentPosition()
+    public Task<List<Position>> GetAllPositions()
     {
-        return Current;
+        return Task.FromResult(Current);
     }
     public async Task<bool> SaveCurrentPosition(Position position)
     {
-        var temp = App.PositionData.GetAllPositions().Result;
-        foreach (var item in temp)
+        //var temp = App.PositionData.GetAllPositions().Result;
+        foreach (var item in Current.ToList())
         {
+            Debug.WriteLine($"going through list: {item.Title} at: {item.SavedPosition.TotalSeconds}");
             if (item.Title == position.Title)
             {
-                await App.PositionData.Delete(position);
+                Debug.WriteLine($"Found: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+                await App.PositionData.Delete(item);
+                Current.Remove(item);
             }
         }
         await App.PositionData.Add(position);
-        if (Current.Contains(position))
-        {
-            Current.Remove(position);
-        }
         Current.Add(position);
 
         return true;

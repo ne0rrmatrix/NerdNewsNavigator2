@@ -28,7 +28,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.StateChanged -= _playbackService.Media_Stopped;
         // Stop and cleanup MediaElement when we navigate away
 
-#if ANDROID 
+#if ANDROID
 mediaElement.Handler?.DisconnectHandler();
 #endif
 

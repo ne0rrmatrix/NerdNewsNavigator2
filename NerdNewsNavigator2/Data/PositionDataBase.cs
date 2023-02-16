@@ -69,8 +69,7 @@ public class PositionDataBase
     {
         try
         {
-            if (_connection is not null)
-                await _connection.InsertOrReplaceAsync(position);
+            await _connection.InsertOrReplaceAsync(position);
         }
         catch
         {
@@ -80,8 +79,7 @@ public class PositionDataBase
     {
         try
         {
-            if (_connection is not null)
-                await _connection.DeleteAsync(position);
+            await _connection.DeleteAsync(position);
         }
         catch
         {

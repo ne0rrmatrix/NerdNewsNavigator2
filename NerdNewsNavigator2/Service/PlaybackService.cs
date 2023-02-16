@@ -30,11 +30,14 @@ public class PlaybackService
         if ((_mediaElement.CurrentState == MediaElementState.Stopped))
         {
             Pos.SavedPosition = _mediaElement.Position;
+            Debug.WriteLine($"Saving: {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
             await Services.SaveCurrentPosition(Pos);
         }
         if ((_mediaElement.CurrentState == MediaElementState.Paused))
         {
             Pos.SavedPosition = _mediaElement.Position;
+
+            Debug.WriteLine($"Saving: {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
             await Services.SaveCurrentPosition(Pos);
         }
     }
@@ -44,24 +47,32 @@ public class PlaybackService
         {
             return;
         }
-
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.FromSeconds(0.00);
         var result = await GetPosition();
+        // _mediaElement.MediaOpened -= Slider_DragCompleted;
 
         Pos.SavedPosition = result.SavedPosition;
 
         _mediaElement.SeekTo(Pos.SavedPosition);
+        Debug.WriteLine($"Seeking: {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
         _mediaElement.StateChanged += Media_Stopped;
     }
 #nullable disable
     public Task<Position> GetPosition()
     {
         Position result = new();
-        foreach (var item in Services.Current.ToList())
+        foreach (var item in Services.GetAllPositions().Result)
         {
-            result.SavedPosition = item.SavedPosition;
+            Debug.WriteLine($"GetPosition title: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+            if (item.Title == Pos.Title)
+            {
+                Debug.WriteLine($"Found {item.Title} at: {item.SavedPosition.TotalSeconds}");
+                result.SavedPosition = item.SavedPosition;
+                result.Title = item.Title;
+            }
         }
+        Debug.WriteLine($"Returning title: {result.Title} at: {result.SavedPosition.TotalSeconds}");
         return Task.FromResult(result);
     }
 }
