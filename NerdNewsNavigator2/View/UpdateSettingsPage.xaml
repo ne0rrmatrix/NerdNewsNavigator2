@@ -15,14 +15,14 @@
             FontSize="Large"
             HorizontalOptions="Center"
             HorizontalTextAlignment="Center"
-            IsEnabled="True"
-            IsVisible="True"
+            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
             Text="Loading..."
             TextColor="Black"
             VerticalOptions="Center" />
         <ActivityIndicator
-            IsRunning="True"
-            IsVisible="True"
+            IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
             Color="Red" />
     </StackLayout>
 

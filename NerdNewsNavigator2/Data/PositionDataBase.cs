@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -35,8 +35,7 @@ public class PositionDataBase
     {
         try
         {
-            if (_connection is not null)
-                await _connection.DeleteAllAsync<Position>();
+            await _connection.DeleteAllAsync<Position>();
         }
         catch
         {
@@ -58,8 +57,7 @@ public class PositionDataBase
     {
         try
         {
-            if (_PodcastConnection is not null)
-                await _PodcastConnection.DeleteAllAsync<Podcast>();
+            await _PodcastConnection.DeleteAllAsync<Podcast>();
         }
         catch
         {
@@ -69,7 +67,7 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.InsertOrReplaceAsync(position);
+            await _connection.InsertAsync(position);
         }
         catch
         {
@@ -81,16 +79,13 @@ public class PositionDataBase
         {
             await _connection.DeleteAsync(position);
         }
-        catch
-        {
-        }
+        catch { }
     }
     public async Task AddPodcast(Podcast podcast)
     {
         try
         {
-            if (_PodcastConnection is not null)
-                await _PodcastConnection.InsertAsync(podcast);
+            await _PodcastConnection.InsertAsync(podcast);
         }
         catch
         {
@@ -100,8 +95,8 @@ public class PositionDataBase
     {
         try
         {
-            if (_PodcastConnection is not null)
-                await _PodcastConnection.DeleteAsync(podcast);
+            await _PodcastConnection.DeleteAsync(podcast);
+            Debug.WriteLine($"Podcast: {podcast.Title} deleted!");
         }
         catch { }
     }

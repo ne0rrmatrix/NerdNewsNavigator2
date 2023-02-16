@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -61,7 +61,7 @@ public partial class PodcastServices
     }
     public async Task<List<Podcast>> GetFromUrl()
     {
-        List<Podcast> podcasts = new List<Podcast>();
+        List<Podcast> podcasts = new();
         foreach (var item in _twit)
         {
             var temp = await Task.FromResult(FeedService.GetFeed(item));
