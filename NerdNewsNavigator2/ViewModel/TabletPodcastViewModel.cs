@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -7,8 +7,10 @@ public partial class TabletPodcastViewModel : BaseViewModel
 {
     public TabletPodcastViewModel(PodcastServices podcastServices)
     {
-        _podcastServices = podcastServices;
+        PodServices = podcastServices;
+        IsBusy = true;
         _ = GetUpdatedPodcasts();
+        IsBusy = false;
         OnPropertyChanged(nameof(Podcasts));
         OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;

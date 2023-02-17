@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Model;
 [Table("shows")]
 public class Position
 {
-    [PrimaryKey, Column("Id"), Unique]
+    [PrimaryKey, AutoIncrement, Column("Id")]
     public int Id { get; set; }
     public string Title { get; set; }
     public TimeSpan SavedPosition { get; set; }

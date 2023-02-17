@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.View;
 public partial class AddPodcastPage : ContentPage
 {
-    PodcastServices _podcastServices { get; set; } = new();
+    PodcastServices PodServices { get; set; } = new();
     public AddPodcastPage(AddPodcastViewModel viewModel)
     {
         InitializeComponent();
@@ -16,7 +16,7 @@ public partial class AddPodcastPage : ContentPage
     {
         try
         {
-            await _podcastServices.AddPodcast(Url.Text.ToString());
+            await PodServices.AddPodcast(Url.Text.ToString());
             await DisplayAlert("Sucess", "Podcast Added!", "Ok");
         }
         catch
@@ -25,12 +25,12 @@ public partial class AddPodcastPage : ContentPage
     }
     private async void RadioButton_Item(object sender, CheckedChangedEventArgs e)
     {
-        RadioButton button = sender as RadioButton;
+        var button = sender as RadioButton;
         if (button.Content.ToString() == "Enabled")
         {
             try
             {
-                await _podcastServices.AddDefaultPodcasts();
+                await PodServices.AddDefaultPodcasts();
                 await DisplayAlert("Sucess", "Defaults Added!", "Ok");
             }
             catch { }
@@ -39,8 +39,8 @@ public partial class AddPodcastPage : ContentPage
         {
             try
             {
-                bool temp = true;
-                var item = _podcastServices.GetAllPodcasts().Result;
+                var temp = true;
+                var item = PodServices.GetAllPodcasts().Result;
                 foreach (var podcast in item)
                 {
                     if (!podcast.Url.Contains("feeds.twit.tv"))
@@ -50,7 +50,7 @@ public partial class AddPodcastPage : ContentPage
                 }
                 if (!temp)
                 {
-                    await _podcastServices.RemoveDefaultPodcasts();
+                    await PodServices.RemoveDefaultPodcasts();
                     await DisplayAlert("Sucess", "Defaults removed", "Ok");
                 }
                 else if (temp)

@@ -10,14 +10,14 @@ public partial class RemoveViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
-        _podcastServices = podcastServices;
+        PodServices = podcastServices;
         _ = GetUpdatedPodcasts();
     }
 
     [RelayCommand]
     public async Task Tap(string url)
     {
-        await _podcastServices.Delete(url);
+        await PodServices.Delete(url);
         foreach (var item in from item in Podcasts
                              where item.Url == url
                              select item)
