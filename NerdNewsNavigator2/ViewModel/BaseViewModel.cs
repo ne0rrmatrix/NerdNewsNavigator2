@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,8 +6,10 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     public DisplayInfo MyMainDisplay { get; set; } = new();
+
+    public ObservableCollection<Show> Shows { get; set; } = new();
     public PositionServices Services { get; set; } = new();
-    public PodcastServices _podcastServices { get; set; } = new();
+    public PodcastServices PodServices { get; set; } = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
@@ -21,7 +23,12 @@ public partial class BaseViewModel : ObservableObject
     public BaseViewModel()
     {
     }
-
+    public void GetShows(string url)
+    {
+        Shows.Clear();
+        var temp = Task.FromResult(FeedService.GetShow(url)).Result;
+        Shows = new ObservableCollection<Show>(temp);
+    }
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
@@ -33,7 +40,7 @@ public partial class BaseViewModel : ObservableObject
         }
         if (temp.Count == 0)
         {
-            var items = _podcastServices.GetFromUrl().Result;
+            var items = PodServices.GetFromUrl().Result;
             foreach (var item in items)
             {
                 Podcasts.Add(item);

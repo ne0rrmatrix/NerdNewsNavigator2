@@ -9,7 +9,6 @@ public partial class TabletShowViewModel : BaseViewModel
 {
     #region Properties
     readonly PodcastServices _podcastService;
-    public ObservableCollection<Show> Shows { get; set; } = new();
 
     public string Url
     {
@@ -27,15 +26,6 @@ public partial class TabletShowViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
     }
-
-    #region Get the Show and Set Show List
-    void GetShows(string url)
-    {
-        Shows.Clear();
-        var temp = Task.FromResult(FeedService.GetShow(url)).Result;
-        Shows = new ObservableCollection<Show>(temp);
-    }
-    #endregion
 
     [RelayCommand]
     async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={url}");
