@@ -51,6 +51,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
 
     // Taken straight from src/Core/src/Fonts/FontManager.iOS.cs
+#nullable enable
     string? CleanseFontName(string fontName, IFontRegistrar _fontRegistrar)
     {
         // First check Alias
@@ -76,6 +77,6 @@ public class AppDelegate : MauiUIApplicationDelegate
 
         return fontFile.PostScriptName;
     }
-
+#nullable disable
     //iOS Bug Fix END
 }
