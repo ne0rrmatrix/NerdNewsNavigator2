@@ -35,29 +35,29 @@ public partial class AddPodcastPage : ContentPage
             }
             catch { }
         }
-        if (button.Content.ToString() == "Disabled")
+        else if (button.Content.ToString() == "Disabled")
         {
             try
             {
-                var temp = true;
+                var temp = false;
                 var item = PodServices.GetAllPodcasts().Result;
                 foreach (var podcast in item)
                 {
-                    if (!podcast.Url.Contains("feeds.twit.tv"))
+                    if (podcast.Url.Contains("feeds.twit.tv"))
                     {
-                        temp = false;
+                        temp = true;
                     }
                 }
-                if (!temp)
-                {
-                    await PodServices.RemoveDefaultPodcasts();
-                    await DisplayAlert("Sucess", "Defaults removed", "Ok");
-                }
-                else if (temp)
+                if (temp)
                 {
                     await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
                 }
+                else
+                {
+                    await PodServices.RemoveDefaultPodcasts();
+                    await DisplayAlert("Sucess", "Defaults removed", "Ok");
 
+                }
             }
             catch { }
         }
