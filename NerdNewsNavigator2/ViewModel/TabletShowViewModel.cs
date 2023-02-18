@@ -8,8 +8,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class TabletShowViewModel : BaseViewModel
 {
     #region Properties
-    readonly PodcastServices _podcastService;
-
     public string Url
     {
         set
@@ -22,7 +20,7 @@ public partial class TabletShowViewModel : BaseViewModel
     #endregion
     public TabletShowViewModel(PodcastServices podcastService)
     {
-        _podcastService = podcastService;
+        PodServices = podcastService;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
     }

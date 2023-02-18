@@ -8,7 +8,6 @@ public partial class BaseViewModel : ObservableObject
     public DisplayInfo MyMainDisplay { get; set; } = new();
 
     public ObservableCollection<Show> Shows { get; set; } = new();
-    public PositionServices Services { get; set; } = new();
     public PodcastServices PodServices { get; set; } = new();
 
     [ObservableProperty]
@@ -32,6 +31,7 @@ public partial class BaseViewModel : ObservableObject
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
+        OnPropertyChanged(nameof(IsBusy));
         IsBusy = true;
         var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)

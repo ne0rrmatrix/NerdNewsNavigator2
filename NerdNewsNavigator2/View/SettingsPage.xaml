@@ -7,13 +7,17 @@
              x:DataType="viewmodel:SettingsViewModel"
                Shell.NavBarIsVisible="False"
              Title="">
+    
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
+    
     <CollectionView ItemsSource="{Binding Podcasts}"  BackgroundColor="Wheat" SelectionMode="None">
+        
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical"  Span="{Binding Orientation}"/>
         </CollectionView.ItemsLayout>
+        
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame  BackgroundColor="White" Margin="55" WidthRequest="375">
@@ -53,5 +57,6 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
+    
     </CollectionView>
 </ContentPage>

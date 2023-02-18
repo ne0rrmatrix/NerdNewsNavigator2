@@ -3,7 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Model;
-[Table("shows")]
+
+[Table("Positions")]
 public class Position
 {
     [PrimaryKey, AutoIncrement, Column("Id")]
