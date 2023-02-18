@@ -27,10 +27,14 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame
-                    Margin="60"
+                    Margin="{OnPlatform WinUI=90,
+                                        Android=90,
+                                        iOS=90}"
                     BackgroundColor="White"
-                    WidthRequest="350">
-                    <Grid ColumnDefinitions="375,375,375" RowDefinitions="Auto,Auto,870">
+                    WidthRequest="{OnPlatform WinUI=350,
+                                              Android=350,
+                                              iOS=300}">
+                    <Grid ColumnDefinitions="320,Auto,Auto" RowDefinitions="Auto,Auto,870">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
@@ -38,18 +42,16 @@
                             Grid.Row="0"
                             FontAttributes="Bold"
                             FontSize="10"
-                            HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
                             VerticalOptions="Center"
-                            WidthRequest="320" />
+                            WidthRequest="300" />
                         <Image
                             Grid.Row="1"
-                            Grid.ColumnSpan="2"
+                            Margin="20"
                             Aspect="AspectFit"
                             HeightRequest="320"
-                            HorizontalOptions="Start"
                             WidthRequest="320">
                             <Image.Source>
                                 <UriImageSource
@@ -60,14 +62,12 @@
                         </Image>
                         <Label
                             Grid.Row="2"
-                            Grid.ColumnSpan="2"
                             FontSize="10"
-                            HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
                             TextType="Html"
-                            WidthRequest="320" />
+                            WidthRequest="300" />
                     </Grid>
                 </Frame>
             </DataTemplate>
