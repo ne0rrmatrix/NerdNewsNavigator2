@@ -11,12 +11,11 @@ public partial class AddPodcastPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
     private async void Button_Clicked(object sender, EventArgs e)
     {
         try
         {
-            await PodServices.AddPodcast(Url.Text.ToString());
+            await PodcastServices.AddPodcast(Url.Text.ToString());
             await DisplayAlert("Sucess", "Podcast Added!", "Ok");
         }
         catch
@@ -39,16 +38,16 @@ public partial class AddPodcastPage : ContentPage
         {
             try
             {
-                var temp = false;
+                var unique = false;
                 var item = PodServices.GetAllPodcasts().Result;
                 foreach (var podcast in item)
                 {
-                    if (podcast.Url.Contains("feeds.twit.tv"))
+                    if (!podcast.Url.Contains("feeds.twit.tv"))
                     {
-                        temp = true;
+                        unique = true;
                     }
                 }
-                if (temp)
+                if (!unique)
                 {
                     await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
                 }
@@ -62,7 +61,6 @@ public partial class AddPodcastPage : ContentPage
             catch { }
         }
     }
-
     private async void Button_Clicked_1(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(RemovePage)}");

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -68,7 +68,6 @@ public partial class PodcastServices
             podcasts.Add(temp);
             Current.Add(temp);
         }
-
         return podcasts;
     }
     public async Task RemoveDefaultPodcasts()
@@ -102,7 +101,7 @@ public partial class PodcastServices
     {
         return Task.FromResult(FeedService.GetShow(url));
     }
-    public async Task<bool> SaveAll(List<Podcast> podcasts)
+    public static async Task<bool> SaveAll(List<Podcast> podcasts)
     {
         foreach (var item in podcasts)
         {
@@ -110,7 +109,7 @@ public partial class PodcastServices
         }
         return true;
     }
-    public async Task AddPodcast(string url)
+    public static async Task AddPodcast(string url)
     {
         var podcast = await Task.FromResult(FeedService.GetFeed(url));
         await App.PositionData.AddPodcast(new Podcast
@@ -132,7 +131,6 @@ public partial class PodcastServices
             await App.PositionData.DeletePodcast(item);
             break;
         }
-
         return true;
     }
 }
