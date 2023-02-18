@@ -49,33 +49,42 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame
-                    Margin="55"
+                    Margin="{OnPlatform WinUI=65,
+                                        Android=85,
+                                        iOS=40}"
                     BackgroundColor="White"
-                    WidthRequest="375">
-                    <Grid
-                        ColumnDefinitions="Auto,Auto"
-                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
-                        RowDefinitions="Auto,Auto,Auto">
+                    WidthRequest="{OnPlatform WinUI=385,
+                                              Android=320,
+                                              iOS=350}">
+                    <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{OnPlatform WinUI=80, Android=Auto, iOS=80}" />
+                            <RowDefinition Height="{OnPlatform WinUI=350, Android=Auto, iOS=480}" />
+                            <RowDefinition Height="{OnPlatform WinUI=320, Android=320, iOS=220}" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{OnPlatform WinUI=Auto, Android=Auto, iOS=375}" />
+                        </Grid.ColumnDefinitions>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
                         <Label
                             Grid.Row="0"
-                            Margin="10"
-                            Padding="5"
                             FontAttributes="Bold"
                             FontSize="10"
-                            HorizontalOptions="Start"
+                            HorizontalOptions="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
                             VerticalOptions="Center" />
                         <Image
                             Grid.Row="1"
-                            Grid.ColumnSpan="2"
                             Aspect="AspectFit"
-                            HeightRequest="300"
-                            WidthRequest="300">
+                            HorizontalOptions="Center"
+                            WidthRequest="{OnIdiom Phone=275,
+                                                   Tablet=350,
+                                                   Default=350,
+                                                   Desktop=350}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="40"
@@ -85,14 +94,14 @@
                         </Image>
                         <Label
                             Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Padding="10"
                             FontSize="10"
-                            HeightRequest="240"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
-                            WidthRequest="320" />
+                            WidthRequest="{OnIdiom Phone=275,
+                                                   Tablet=340,
+                                                   Default=340,
+                                                   Desktop=340}" />
                     </Grid>
                 </Frame>
             </DataTemplate>
