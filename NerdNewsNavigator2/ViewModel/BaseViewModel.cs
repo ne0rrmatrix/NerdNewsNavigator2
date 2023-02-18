@@ -59,6 +59,10 @@ public partial class BaseViewModel : ObservableObject
 #nullable enable
     public void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         MyMainDisplay = DeviceDisplay.Current.MainDisplayInfo;
         OnPropertyChanged(nameof(MyMainDisplay));
         Orientation = OnDeviceOrientationChange();

@@ -16,6 +16,10 @@ public partial class TabletPlayPodcastPage : ContentPage
 #nullable enable
     public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         if ((mediaElement.CurrentState == MediaElementState.Paused) && mediaElement.Position != Pos.SavedPosition)
         {
             Pos.SavedPosition = mediaElement.Position;
@@ -25,6 +29,10 @@ public partial class TabletPlayPodcastPage : ContentPage
     }
     public async void Seek(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
@@ -52,6 +60,10 @@ public partial class TabletPlayPodcastPage : ContentPage
     }
     private void ContentPage_Unloaded(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
         System.Diagnostics.Debug.WriteLine("Unloading media element");
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.MediaOpened -= Seek;
