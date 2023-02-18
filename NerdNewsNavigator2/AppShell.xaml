@@ -11,7 +11,10 @@
 
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid Margin="5" ColumnDefinitions="50,*">
+            <Grid
+                Margin="5"
+                ColumnDefinitions="50,*"
+                RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"
                     Source="{Binding Icon}"
@@ -28,15 +31,20 @@
 
     <Shell.MenuItemTemplate>
         <DataTemplate>
-            <Grid Margin="5" ColumnDefinitions="50,*">
+            <Grid
+                Margin="5"
+                ColumnDefinitions="50,*"
+                RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"
+                    HeightRequest="50"
                     Source="{Binding Icon}"
                     WidthRequest="50" />
                 <Label
                     Grid.Column="1"
                     FontAttributes="Bold"
                     FontSize="16"
+                    HeightRequest="40"
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>
