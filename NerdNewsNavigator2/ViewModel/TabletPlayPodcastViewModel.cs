@@ -17,7 +17,7 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
             SetProperty(ref url, value);
             Preferences.Default.Clear();
             Preferences.Default.Set("New_Url", value);
-            Debug.WriteLine($"New Url is: {value}");
+            // Debug.WriteLine($"New Url is: {value}");
         }
     }
     #endregion
