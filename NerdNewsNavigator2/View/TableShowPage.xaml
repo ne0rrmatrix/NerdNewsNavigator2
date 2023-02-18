@@ -26,6 +26,7 @@
 
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
+
                 <Frame
                     Margin="{OnPlatform WinUI=90,
                                         Android=90,
@@ -34,6 +35,7 @@
                     WidthRequest="{OnPlatform WinUI=350,
                                               Android=350,
                                               iOS=300}">
+
                     <Grid ColumnDefinitions="320,Auto,Auto" RowDefinitions="Auto,Auto,870">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
@@ -69,7 +71,9 @@
                             TextType="Html"
                             WidthRequest="300" />
                     </Grid>
+
                 </Frame>
+
             </DataTemplate>
         </CollectionView.ItemTemplate>
 
