@@ -84,18 +84,11 @@ public partial class PodcastServices
     }
     public async Task AddDefaultPodcasts()
     {
-        foreach (var item in Current)
-        {
-            if (item.Url.Contains("feeds.twit.tv"))
-            {
-                await App.PositionData.DeletePodcast(item);
-                Current.Remove(item);
-            }
-        }
+        await RemoveDefaultPodcasts();
+
         var items = GetFromUrl().Result;
         foreach (var item in items)
         {
-            Current.Add(item);
             await App.PositionData.AddPodcast(item);
         }
     }

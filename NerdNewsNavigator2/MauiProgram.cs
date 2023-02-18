@@ -65,7 +65,7 @@ public static class MauiProgram
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
         builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddSingleton<PodcastServices>();
+        builder.Services.AddTransient<PodcastServices>();
 
         builder.Services.AddSingleton<PositionDataBase>();
 
