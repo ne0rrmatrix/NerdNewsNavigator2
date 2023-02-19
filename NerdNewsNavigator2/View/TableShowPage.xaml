@@ -35,8 +35,8 @@
                     WidthRequest="{OnPlatform WinUI=370,
                                               Android=370,
                                               iOS=320}">
-
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,870">
+
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
