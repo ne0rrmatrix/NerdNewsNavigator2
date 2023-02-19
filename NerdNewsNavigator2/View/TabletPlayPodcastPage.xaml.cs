@@ -6,17 +6,19 @@ namespace NerdNewsNavigator2.View;
 public partial class TabletPlayPodcastPage : ContentPage
 {
     private Position Pos { get; set; } = new();
+    private bool isPlaying = false;
     public TabletPlayPodcastPage(TabletPlayPodcastViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
         mediaElement.MediaOpened += Seek;
+
     }
 
 #nullable enable
     public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
-        if (sender is null)
+        if (sender is null || isPlaying == false)
         {
             return;
         }
@@ -29,7 +31,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     }
     public async void Seek(object? sender, EventArgs e)
     {
-        if (sender is null)
+        if (sender is null && isPlaying == false)
         {
             return;
         }
@@ -46,6 +48,7 @@ public partial class TabletPlayPodcastPage : ContentPage
             }
         }
         mediaElement.SeekTo(Pos.SavedPosition);
+        isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
         //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
     }

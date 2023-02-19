@@ -48,8 +48,12 @@ public static class MauiProgram
 
         builder.Services.AddTransient<TabletShowPage>();
         builder.Services.AddTransient<TabletShowViewModel>();
-
+#if WINDOWS || ANDROID
         builder.Services.AddSingleton<TabletPlayPodcastPage>();
+#endif
+#if IOS
+        builder.Services.AddTransient<TabletPlayPodcastPage>();
+#endif
         builder.Services.AddTransient<TabletPlayPodcastViewModel>();
 
         builder.Services.AddTransient<LivePage>();

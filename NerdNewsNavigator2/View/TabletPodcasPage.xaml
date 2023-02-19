@@ -49,41 +49,46 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Podcast">
                 <Frame
-                    Margin="{OnPlatform WinUI=65,
-                                        Android=85,
-                                        iOS=40}"
+                    Margin="{OnPlatform WinUI=90,
+                                        Android=90,
+                                        iOS=90}"
+                    Padding="{OnPlatform Default=20,
+                                         iOS=10}"
                     BackgroundColor="White"
-                    WidthRequest="{OnPlatform WinUI=385,
-                                              Android=320,
-                                              iOS=350}">
+                    WidthRequest="{OnPlatform WinUI=370,
+                                              Android=370,
+                                              iOS=340}">
                     <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="{OnPlatform WinUI=80, Android=Auto, iOS=80}" />
-                            <RowDefinition Height="{OnPlatform WinUI=350, Android=Auto, iOS=480}" />
-                            <RowDefinition Height="{OnPlatform WinUI=320, Android=320, iOS=220}" />
-                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{OnPlatform WinUI=Auto, Android=Auto, iOS=375}" />
+                            <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375}" />
+
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto}" />
+                            <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350}" />
+                            <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110}" />
+                        </Grid.RowDefinitions>
+
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPodcastViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
                         <Label
                             Grid.Row="0"
+                            Margin="5"
+                            Padding="10"
                             FontAttributes="Bold"
                             FontSize="10"
-                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
-                            TextColor="Black"
-                            VerticalOptions="Center" />
+                            TextColor="Black" />
                         <Image
                             Grid.Row="1"
+                            Margin="10"
                             Aspect="AspectFit"
                             HorizontalOptions="Center"
-                            WidthRequest="{OnIdiom Phone=275,
-                                                   Tablet=350,
-                                                   Default=350,
+                            WidthRequest="{OnIdiom Phone=350,
+                                                   Tablet=340,
                                                    Desktop=350}">
                             <Image.Source>
                                 <UriImageSource
@@ -94,13 +99,14 @@
                         </Image>
                         <Label
                             Grid.Row="2"
+                            Margin="10"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
-                            WidthRequest="{OnIdiom Phone=275,
-                                                   Tablet=340,
-                                                   Default=340,
+                            WidthRequest="{OnIdiom Phone=290,
+                                                   Tablet=300,
+                                                   Default=290,
                                                    Desktop=340}" />
                     </Grid>
                 </Frame>
