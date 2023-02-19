@@ -59,11 +59,9 @@ public class FeedService
             if (rssNodes != null)
                 foreach (XmlNode node in rssNodes)
                 {
-                    string result = node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty;
-                    result = RemoveBADHtmlTags(result);
                     Show show = new()
                     {
-                        Description = result,
+                        Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
                         Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                         Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                         Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,

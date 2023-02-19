@@ -32,11 +32,11 @@
                                         Android=90,
                                         iOS=90}"
                     BackgroundColor="White"
-                    WidthRequest="{OnPlatform WinUI=350,
-                                              Android=350,
-                                              iOS=300}">
+                    WidthRequest="{OnPlatform WinUI=370,
+                                              Android=370,
+                                              iOS=320}">
+                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,870">
 
-                    <Grid ColumnDefinitions="320,Auto,Auto" RowDefinitions="Auto,Auto,870">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
@@ -47,11 +47,10 @@
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
-                            VerticalOptions="Center"
                             WidthRequest="300" />
                         <Image
                             Grid.Row="1"
-                            Margin="20"
+                            Margin="10"
                             Aspect="AspectFit"
                             HeightRequest="320"
                             WidthRequest="320">
