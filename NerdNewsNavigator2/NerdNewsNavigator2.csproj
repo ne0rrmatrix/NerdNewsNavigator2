@@ -93,9 +93,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-preview3840" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="1.0.0-preview3840" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-preview3840" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="4.1.0-build-910.86591" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="4.1.0-build-910.86591" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.0-build-910.86591" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
