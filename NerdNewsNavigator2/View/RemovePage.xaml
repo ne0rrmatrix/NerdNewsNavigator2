@@ -10,7 +10,7 @@
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
 
     <CollectionView

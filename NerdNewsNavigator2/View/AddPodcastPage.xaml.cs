@@ -13,49 +13,35 @@ public partial class AddPodcastPage : ContentPage
     }
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        try
-        {
-            await PodcastServices.AddPodcast(Url.Text.ToString());
-            await DisplayAlert("Sucess", "Podcast Added!", "Ok");
-        }
-        catch
-        {
-        }
+        await PodcastServices.AddPodcast(Url.Text.ToString());
+        await DisplayAlert("Sucess", "Podcast Added!", "Ok");
     }
     private async void AddDefault(object sender, EventArgs e)
     {
-        try
-        {
-            await PodServices.AddDefaultPodcasts();
-            await DisplayAlert("Sucess", "Defaults Added!", "Ok");
-        }
-        catch { }
+        await PodServices.AddDefaultPodcasts();
+        await DisplayAlert("Sucess", "Defaults Added!", "Ok");
     }
     private async void RemoveDefault(object sender, EventArgs e)
     {
-        try
+        var unique = false;
+        var item = PodServices.GetAllPodcasts().Result;
+        foreach (var podcast in item)
         {
-            var unique = false;
-            var item = PodServices.GetAllPodcasts().Result;
-            foreach (var podcast in item)
+            if (!podcast.Url.Contains("feeds.twit.tv"))
             {
-                if (!podcast.Url.Contains("feeds.twit.tv"))
-                {
-                    unique = true;
-                }
-            }
-            if (!unique)
-            {
-                await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
-            }
-            else
-            {
-                await PodServices.RemoveDefaultPodcasts();
-                await DisplayAlert("Sucess", "Defaults removed", "Ok");
-
+                unique = true;
             }
         }
-        catch { }
+        if (!unique)
+        {
+            await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
+        }
+        else
+        {
+            await PodServices.RemoveDefaultPodcasts();
+            await DisplayAlert("Sucess", "Defaults removed", "Ok");
+
+        }
     }
     private async void RemovePodcasts(object sender, EventArgs e)
     {

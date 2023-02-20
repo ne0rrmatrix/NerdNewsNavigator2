@@ -30,7 +30,6 @@ mediaElement.MediaOpened += Seek;
         {
             Pos.SavedPosition = mediaElement.Position;
             await Save();
-            //Debug.WriteLine($"Paused {Pos.Title} at: {Pos.SavedPosition}");
         }
     }
     public async void Seek(object? sender, EventArgs e)
@@ -44,17 +43,14 @@ mediaElement.MediaOpened += Seek;
         var positionList = await App.PositionData.GetAllPositions();
         foreach (var item in positionList)
         {
-            //Debug.WriteLine($"searching in: {item.Title} at: {item.SavedPosition.TotalSeconds}");
             if (Pos.Title == item.Title)
             {
                 Pos.SavedPosition = item.SavedPosition;
-                //Debug.WriteLine($"Found: {item.Title} at: {item.SavedPosition.TotalSeconds}");
             }
         }
         mediaElement.SeekTo(Pos.SavedPosition);
         isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
-        //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
     }
     public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
     {
@@ -63,11 +59,9 @@ mediaElement.MediaOpened += Seek;
         var positionList = await App.PositionData.GetAllPositions();
         foreach (var item in positionList)
         {
-            //Debug.WriteLine($"searching in: {item.Title} at: {item.SavedPosition.TotalSeconds}");
             if (Pos.Title == item.Title)
             {
                 Pos.SavedPosition = item.SavedPosition;
-                //Debug.WriteLine($"Found: {item.Title} at: {item.SavedPosition.TotalSeconds}");
             }
         }
         if (e.NewState == MediaElementState.Playing)
@@ -76,7 +70,6 @@ mediaElement.MediaOpened += Seek;
         }
         isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
-        //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
     }
 
     private async Task Save()
@@ -93,7 +86,6 @@ mediaElement.MediaOpened += Seek;
         {
             return;
         }
-        System.Diagnostics.Debug.WriteLine("Unloading media element");
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.MediaOpened -= Seek;
         mediaElement.StateChanged -= Media_Stopped;

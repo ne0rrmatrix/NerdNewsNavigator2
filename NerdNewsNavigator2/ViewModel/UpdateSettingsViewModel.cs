@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -14,17 +14,13 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     }
     private async void DeleteAllPodcasts()
     {
-        try
+        while (IsBusy)
         {
-            while (IsBusy)
-            {
-                await App.PositionData.GetAllPositions();
-                await App.PositionData.DeleteAll();
-                await App.PositionData.DeleteAllPodcasts();
-                await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
-                IsBusy = false;
-            }
+            await App.PositionData.GetAllPositions();
+            await App.PositionData.DeleteAll();
+            await App.PositionData.DeleteAllPodcasts();
+            await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+            IsBusy = false;
         }
-        catch { }
     }
 }

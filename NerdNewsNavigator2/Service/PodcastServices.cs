@@ -32,7 +32,6 @@ public partial class PodcastServices
     private List<Podcast> Current { get; set; } = new();
     public PodcastServices()
     {
-        _ = GetUpdatedPodcasts();
     }
     ~PodcastServices()
     {

@@ -31,8 +31,6 @@ public partial class BaseViewModel : ObservableObject
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        OnPropertyChanged(nameof(IsBusy));
-        IsBusy = true;
         var temp = await App.PositionData.GetAllPodcasts();
         foreach (var item in temp)
         {
@@ -47,7 +45,6 @@ public partial class BaseViewModel : ObservableObject
                 await App.PositionData.AddPodcast(item);
             }
         }
-        IsBusy = false;
     }
     public async Task AddPodcastsToDatabase()
     {
