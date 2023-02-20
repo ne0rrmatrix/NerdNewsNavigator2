@@ -11,8 +11,12 @@ public partial class TabletPlayPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-        mediaElement.MediaOpened += Seek;
-
+#if WINDOWS || ANDROID
+mediaElement.MediaOpened += Seek;
+#endif
+#if IOS
+        mediaElement.StateChanged += SeekIOS;
+#endif
     }
 
 #nullable enable
@@ -48,6 +52,28 @@ public partial class TabletPlayPodcastPage : ContentPage
             }
         }
         mediaElement.SeekTo(Pos.SavedPosition);
+        isPlaying = true;
+        mediaElement.StateChanged += Media_Stopped;
+        //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
+    }
+    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
+    {
+        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
+        Pos.SavedPosition = TimeSpan.Zero;
+        var positionList = await App.PositionData.GetAllPositions();
+        foreach (var item in positionList)
+        {
+            //Debug.WriteLine($"searching in: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+            if (Pos.Title == item.Title)
+            {
+                Pos.SavedPosition = item.SavedPosition;
+                //Debug.WriteLine($"Found: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+            }
+        }
+        if (e.NewState == MediaElementState.Playing)
+        {
+            mediaElement.SeekTo(Pos.SavedPosition);
+        }
         isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
         //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
