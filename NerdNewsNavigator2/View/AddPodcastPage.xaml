@@ -16,49 +16,84 @@
 
     <Grid
         HorizontalOptions="Center"
-        RowDefinitions="100,100,50,50,75"
+        RowDefinitions="65,65,65,65,65,65"
         VerticalOptions="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{OnPlatform WinUI=125, Android=75, iOS=75}" />
-            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=125, iOS=125}" />
-            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=125, iOS=125}" />
+            <ColumnDefinition Width="{OnPlatform WinUI=155, Android=50, iOS=75}" />
+            <ColumnDefinition Width="{OnPlatform WinUI=155, Android=125, iOS=125}" />
+            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=175, iOS=125}" />
         </Grid.ColumnDefinitions>
+
         <Label
             Grid.Row="0"
             Grid.Column="0"
-            Margin="10"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
             FontSize="Micro"
-            HorizontalTextAlignment="Start"
-            Text="Default Podcasts"
+            HorizontalOptions="Start"
+            Text="Donate"
             TextColor="Black"
             VerticalOptions="Center" />
-        <RadioButton
-            Grid.Row="0"
-            Grid.Column="1"
-            CheckedChanged="RadioButton_Item"
-            Content="Enabled"
-            FontAttributes="Bold"
-            FontSize="Micro"
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            Value="Enabled" />
-        <RadioButton
+        <Button
             Grid.Row="0"
             Grid.Column="2"
-            CheckedChanged="RadioButton_Item"
-            Content="Disabled"
-            FontAttributes="Bold"
-            FontAutoScalingEnabled="True"
+            BackgroundColor="Blue"
+            Clicked="OpenUrlForDonation"
             FontSize="Micro"
             HorizontalOptions="End"
+            Text="Click Me"
+            TextColor="White"
             VerticalOptions="Center"
-            Value="Disabled" />
+            WidthRequest="150" />
+
         <Label
             Grid.Row="1"
             Grid.Column="0"
-            Margin="10"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalOptions="Start"
+            Text="Reset"
+            TextColor="Black"
+            VerticalOptions="Center"
+            WidthRequest="150" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="2"
+            BackgroundColor="Blue"
+            Clicked="ResetPodcasts"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            Text="Reset Podcasts"
+            TextColor="White"
+            VerticalOptions="Center"
+            WidthRequest="150" />
+
+        <Label
+            Grid.Row="2"
+            Grid.Column="0"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="Micro"
+            HorizontalOptions="Start"
+            Text="Remove Item"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="2"
+            BackgroundColor="Blue"
+            Clicked="RemovePodcasts"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            Text="Remove Podcast"
+            TextColor="White"
+            VerticalOptions="Center"
+            WidthRequest="150" />
+
+        <Label
+            Grid.Row="3"
+            Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
             FontSize="Micro"
@@ -68,7 +103,7 @@
             VerticalOptions="Center" />
         <Entry
             x:Name="Url"
-            Grid.Row="1"
+            Grid.Row="3"
             Grid.Column="1"
             BackgroundColor="White"
             FontSize="Micro"
@@ -79,59 +114,48 @@
             VerticalOptions="Center"
             WidthRequest="100" />
         <Button
-            Grid.Row="1"
+            Grid.Row="3"
             Grid.Column="2"
-            Margin="10"
-            Padding="5"
             BackgroundColor="Blue"
             Clicked="Button_Clicked"
             FontSize="Micro"
             HorizontalOptions="End"
             Text="Add Podcast"
             TextColor="White"
-            VerticalOptions="Center" />
-        <Label
-            Grid.Row="3"
-            Grid.Column="0"
-            Margin="10"
-            BackgroundColor="Wheat"
-            FontAttributes="Bold"
-            FontSize="Micro"
-            HorizontalOptions="Start"
-            Text="Remove Item"
-            TextColor="Black"
-            VerticalOptions="Center" />
-        <Button
-            Grid.Row="3"
-            Grid.Column="2"
-            BackgroundColor="Blue"
-            Clicked="Button_Clicked_1"
-            FontSize="Micro"
-            HorizontalOptions="End"
-            Text="Remove Podcast"
-            TextColor="White"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"
+            WidthRequest="150" />
+
         <Label
             Grid.Row="4"
             Grid.Column="0"
-            Margin="10"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
             FontSize="Micro"
-            HorizontalOptions="Start"
-            Text="Reset"
+            HorizontalTextAlignment="Start"
+            Text="Default Podcasts"
             TextColor="Black"
             VerticalOptions="Center" />
-        <Button
+        <RadioButton
             Grid.Row="4"
-            Grid.Column="2"
-            BackgroundColor="Blue"
-            Clicked="Button_Clicked_2"
+            Grid.Column="1"
+            CheckedChanged="RadioButton_Item"
+            Content="Enabled"
+            FontAttributes="Bold"
             FontSize="Micro"
             HorizontalOptions="End"
-            Text="Reset Podcasts"
-            TextColor="White"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"
+            Value="Enabled" />
+        <RadioButton
+            Grid.Row="4"
+            Grid.Column="2"
+            CheckedChanged="RadioButton_Item"
+            Content="Disabled"
+            FontAttributes="Bold"
+            FontAutoScalingEnabled="True"
+            FontSize="Micro"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            Value="Disabled" />
     </Grid>
 
 </ContentPage>

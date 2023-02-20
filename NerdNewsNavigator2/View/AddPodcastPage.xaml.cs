@@ -61,13 +61,18 @@ public partial class AddPodcastPage : ContentPage
             catch { }
         }
     }
-    private async void Button_Clicked_1(object sender, EventArgs e)
+    private async void RemovePodcasts(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(RemovePage)}");
     }
 
-    private async void Button_Clicked_2(object sender, EventArgs e)
+    private async void ResetPodcasts(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
+    }
+
+    private async void OpenUrlForDonation(object sender, EventArgs e)
+    {
+        await Browser.OpenAsync("https://www.google.com");
     }
 }
