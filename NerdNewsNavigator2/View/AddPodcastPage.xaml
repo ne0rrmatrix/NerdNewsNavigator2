@@ -15,10 +15,14 @@
     </Shell.BackButtonBehavior>
 
     <Grid
-        ColumnDefinitions="125,175,175"
         HorizontalOptions="Center"
         RowDefinitions="100,100,50,50,75"
         VerticalOptions="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{OnPlatform WinUI=125, Android=75, iOS=75}" />
+            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=125, iOS=125}" />
+            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=125, iOS=125}" />
+        </Grid.ColumnDefinitions>
         <Label
             Grid.Row="0"
             Grid.Column="0"

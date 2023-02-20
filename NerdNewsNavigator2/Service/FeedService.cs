@@ -3,21 +3,21 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-public class FeedService
+public partial class FeedService
 {
     public List<Podcast> _podcasts = new();
     public FeedService()
     {
-        this._podcasts.Clear();
+        _podcasts.Clear();
     }
     #region Get the Podcasts
-    public List<Podcast> getData()
+    public List<Podcast> GetData()
     {
         return _podcasts;
     }
     public static Podcast GetFeed(string item)
     {
-        int counter = 0;
+        var counter = 0;
         Podcast feed = new();
         try
         {
@@ -51,7 +51,7 @@ public class FeedService
         {
             XmlDocument rssDoc = new();
             rssDoc.Load(items);
-            XmlNamespaceManager mgr = new XmlNamespaceManager(rssDoc.NameTable);
+            var mgr = new XmlNamespaceManager(rssDoc.NameTable);
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
             mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
@@ -75,9 +75,12 @@ public class FeedService
         return shows;
     }
     #endregion
-    public static string RemoveBADHtmlTags(string HTMLCode)
+    public static string RemoveBADHtmlTags(string hTMLCode)
     {
-        HTMLCode = Regex.Replace(HTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        return HTMLCode;
+        hTMLCode = MyRegex().Replace(hTMLCode, "\"");
+        return hTMLCode;
     }
+
+    [GeneratedRegex("/\\?.*?.\"", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-CA")]
+    private static partial Regex MyRegex();
 }

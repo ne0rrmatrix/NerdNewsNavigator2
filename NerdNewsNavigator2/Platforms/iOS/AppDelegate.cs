@@ -4,6 +4,7 @@
 
 using Foundation;
 using Microsoft.Maui.Handlers;
+using SQLitePCL;
 using UIKit;
 
 namespace NerdNewsNavigator2;
@@ -11,7 +12,13 @@ namespace NerdNewsNavigator2;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
-    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+    // protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+    // Next line is for SqlLite
+    protected override MauiApp CreateMauiApp()
+    {
+        raw.SetProvider(new SQLite3Provider_sqlite3());
+        return MauiProgram.CreateMauiApp();
+    }
 
     // iOS Bug fix START
 
