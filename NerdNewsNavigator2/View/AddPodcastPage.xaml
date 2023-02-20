@@ -19,9 +19,9 @@
         RowDefinitions="65,65,65,65,65,65"
         VerticalOptions="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{OnPlatform WinUI=155, Android=50, iOS=75}" />
-            <ColumnDefinition Width="{OnPlatform WinUI=155, Android=125, iOS=125}" />
-            <ColumnDefinition Width="{OnPlatform WinUI=175, Android=175, iOS=125}" />
+            <ColumnDefinition Width="{OnIdiom Tablet=200, Phone=80}" />
+            <ColumnDefinition Width="{OnIdiom Tablet=250, Phone=175}" />
+            <ColumnDefinition Width="{OnIdiom Tablet=250, Phone=125}" />
         </Grid.ColumnDefinitions>
 
         <Label
@@ -29,7 +29,8 @@
             Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="Start"
             Text="Donate"
             TextColor="Black"
@@ -39,42 +40,50 @@
             Grid.Column="2"
             BackgroundColor="Blue"
             Clicked="OpenUrlForDonation"
-            FontSize="Micro"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
             Text="Click Me"
             TextColor="White"
             VerticalOptions="Center"
-            WidthRequest="150" />
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
 
         <Label
             Grid.Row="1"
             Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="Start"
             Text="Reset"
             TextColor="Black"
             VerticalOptions="Center"
-            WidthRequest="150" />
+            WidthRequest="75" />
         <Button
             Grid.Row="1"
             Grid.Column="2"
-            BackgroundColor="Blue"
+            BackgroundColor="Red"
             Clicked="ResetPodcasts"
-            FontSize="Micro"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
-            Text="Reset Podcasts"
+            Text="Reset"
             TextColor="White"
             VerticalOptions="Center"
-            WidthRequest="150" />
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
 
         <Label
             Grid.Row="2"
             Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="Start"
             Text="Remove Item"
             TextColor="Black"
@@ -82,21 +91,23 @@
         <Button
             Grid.Row="2"
             Grid.Column="2"
-            BackgroundColor="Blue"
             Clicked="RemovePodcasts"
-            FontSize="Micro"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
-            Text="Remove Podcast"
-            TextColor="White"
+            Text="Remove"
             VerticalOptions="Center"
-            WidthRequest="150" />
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
 
         <Label
             Grid.Row="3"
             Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="Start"
             Text="Add Item:"
             TextColor="Black"
@@ -109,53 +120,59 @@
             FontSize="Micro"
             HeightRequest="30"
             HorizontalOptions="End"
-            SelectionLength="125"
+            SelectionLength="1400"
             TextColor="Black"
             VerticalOptions="Center"
-            WidthRequest="100" />
+            WidthRequest="160" />
         <Button
             Grid.Row="3"
             Grid.Column="2"
-            BackgroundColor="Blue"
             Clicked="Button_Clicked"
-            FontSize="Micro"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
-            Text="Add Podcast"
-            TextColor="White"
+            Text="Add"
             VerticalOptions="Center"
-            WidthRequest="150" />
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
 
         <Label
             Grid.Row="4"
             Grid.Column="0"
             BackgroundColor="Wheat"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalTextAlignment="Start"
-            Text="Default Podcasts"
+            Text="Default"
             TextColor="Black"
             VerticalOptions="Center" />
-        <RadioButton
+        <Button
             Grid.Row="4"
             Grid.Column="1"
-            CheckedChanged="RadioButton_Item"
-            Content="Enabled"
+            Clicked="AddDefault"
             FontAttributes="Bold"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
+            Text="Set"
             VerticalOptions="Center"
-            Value="Enabled" />
-        <RadioButton
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
+        <Button
             Grid.Row="4"
             Grid.Column="2"
-            CheckedChanged="RadioButton_Item"
-            Content="Disabled"
+            Clicked="RemoveDefault"
             FontAttributes="Bold"
             FontAutoScalingEnabled="True"
-            FontSize="Micro"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
             HorizontalOptions="End"
+            Text="Remove"
             VerticalOptions="Center"
-            Value="Disabled" />
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
     </Grid>
 
 </ContentPage>
