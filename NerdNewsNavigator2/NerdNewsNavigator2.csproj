@@ -49,7 +49,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
@@ -93,9 +93,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="4.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="4.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-pre1" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="1.0.0-pre1" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-pre1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
