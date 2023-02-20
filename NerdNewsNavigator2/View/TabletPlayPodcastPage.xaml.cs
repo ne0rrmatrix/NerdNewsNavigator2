@@ -71,6 +71,28 @@ mediaElement.MediaOpened += Seek;
         isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
     }
+    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
+    {
+        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
+        Pos.SavedPosition = TimeSpan.Zero;
+        var positionList = await App.PositionData.GetAllPositions();
+        foreach (var item in positionList)
+        {
+            //Debug.WriteLine($"searching in: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+            if (Pos.Title == item.Title)
+            {
+                Pos.SavedPosition = item.SavedPosition;
+                //Debug.WriteLine($"Found: {item.Title} at: {item.SavedPosition.TotalSeconds}");
+            }
+        }
+        if (e.NewState == MediaElementState.Playing)
+        {
+            mediaElement.SeekTo(Pos.SavedPosition);
+        }
+        isPlaying = true;
+        mediaElement.StateChanged += Media_Stopped;
+        //Debug.WriteLine($"Seeking {Pos.Title} at: {Pos.SavedPosition.TotalSeconds}");
+    }
 
     private async Task Save()
     {
