@@ -49,7 +49,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
@@ -167,18 +167,6 @@
     <MauiXaml Update="View\UpdateSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-    <PackageReference Include="Sharpnado.Maui.Nuke">
-      <Version>10.11.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
-    <PackageReference Include="Sharpnado.Maui.Nuke">
-      <Version>10.11.2</Version>
-    </PackageReference>
   </ItemGroup>
   
 </Project>

@@ -8,8 +8,6 @@ using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
 
-using Maui.Nuke;
-
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -20,7 +18,7 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement().UseNuke(showDebugLogs: true);
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
 
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>
