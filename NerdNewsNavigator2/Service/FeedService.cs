@@ -19,25 +19,18 @@ public partial class FeedService
     {
         var counter = 0;
         Podcast feed = new();
-        try
+        foreach (var level1Element in XElement.Load(item).Elements("channel"))
         {
-            foreach (var level1Element in XElement.Load(item).Elements("channel"))
-            {
-                feed.Title = level1Element.Element("title").Value;
-                feed.Description = level1Element.Element("description").Value;
-                feed.Url = item;
-                feed.Id = counter;
-                counter++;
+            feed.Title = level1Element.Element("title").Value;
+            feed.Description = level1Element.Element("description").Value;
+            feed.Url = item;
+            feed.Id = counter;
+            counter++;
 
-                foreach (var level2Element in level1Element.Elements("image"))
-                {
-                    feed.Image = level2Element.Element("url")?.Value;
-                }
+            foreach (var level2Element in level1Element.Elements("image"))
+            {
+                feed.Image = level2Element.Element("url")?.Value;
             }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
         }
         return feed;
     }
@@ -47,31 +40,25 @@ public partial class FeedService
     public static List<Show> GetShow(string items)
     {
         List<Show> shows = new();
-        try
-        {
-            XmlDocument rssDoc = new();
-            rssDoc.Load(items);
-            var mgr = new XmlNamespaceManager(rssDoc.NameTable);
-            mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-            mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
-            var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
+        XmlDocument rssDoc = new();
+        rssDoc.Load(items);
+        var mgr = new XmlNamespaceManager(rssDoc.NameTable);
+        mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
+        mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
+        var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
 
-            if (rssNodes != null)
-                foreach (XmlNode node in rssNodes)
+        if (rssNodes != null)
+            foreach (XmlNode node in rssNodes)
+            {
+                Show show = new()
                 {
-                    Show show = new()
-                    {
-                        Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                        Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                        Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
-                        Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                    };
-                    shows.Add(show);
-                }
-        }
-        catch
-        {
-        }
+                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
+                    Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
+                    Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
+                    Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+                };
+                shows.Add(show);
+            }
         return shows;
     }
     #endregion

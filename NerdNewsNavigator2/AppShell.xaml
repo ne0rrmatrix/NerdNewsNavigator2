@@ -66,10 +66,6 @@
         IconImageSource="settings.png"
         Text="Settings" />
     <MenuItem
-        Clicked="Reset"
-        IconImageSource="settings.png"
-        Text="Reset" />
-    <MenuItem
         Clicked="Quit"
         IconImageSource="logout.png"
         Text="Exit" />

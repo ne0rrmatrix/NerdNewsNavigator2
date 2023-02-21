@@ -9,6 +9,10 @@
     x:DataType="viewmodel:LiveViewModel"
     Shell.NavBarIsVisible="False">
 
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
     <Grid>
         <WebView Source="{Binding Url}" />
     </Grid>

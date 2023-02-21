@@ -13,61 +13,48 @@ public partial class AddPodcastPage : ContentPage
     }
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        try
-        {
-            await PodcastServices.AddPodcast(Url.Text.ToString());
-            await DisplayAlert("Sucess", "Podcast Added!", "Ok");
-        }
-        catch
-        {
-        }
+        await PodcastServices.AddPodcast(Url.Text.ToString());
+        await DisplayAlert("Sucess", "Podcast Added!", "Ok");
     }
-    private async void RadioButton_Item(object sender, CheckedChangedEventArgs e)
+    private async void AddDefault(object sender, EventArgs e)
     {
-        var button = sender as RadioButton;
-        if (button.Content.ToString() == "Enabled")
+        await PodServices.AddDefaultPodcasts();
+        await DisplayAlert("Sucess", "Defaults Added!", "Ok");
+    }
+    private async void RemoveDefault(object sender, EventArgs e)
+    {
+        var unique = false;
+        var item = PodServices.GetAllPodcasts().Result;
+        foreach (var podcast in item)
         {
-            try
+            if (!podcast.Url.Contains("feeds.twit.tv"))
             {
-                await PodServices.AddDefaultPodcasts();
-                await DisplayAlert("Sucess", "Defaults Added!", "Ok");
+                unique = true;
             }
-            catch { }
         }
-        else if (button.Content.ToString() == "Disabled")
+        if (!unique)
         {
-            try
-            {
-                var unique = false;
-                var item = PodServices.GetAllPodcasts().Result;
-                foreach (var podcast in item)
-                {
-                    if (!podcast.Url.Contains("feeds.twit.tv"))
-                    {
-                        unique = true;
-                    }
-                }
-                if (!unique)
-                {
-                    await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
-                }
-                else
-                {
-                    await PodServices.RemoveDefaultPodcasts();
-                    await DisplayAlert("Sucess", "Defaults removed", "Ok");
+            await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
+        }
+        else
+        {
+            await PodServices.RemoveDefaultPodcasts();
+            await DisplayAlert("Sucess", "Defaults removed", "Ok");
 
-                }
-            }
-            catch { }
         }
     }
-    private async void Button_Clicked_1(object sender, EventArgs e)
+    private async void RemovePodcasts(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(RemovePage)}");
     }
 
-    private async void Button_Clicked_2(object sender, EventArgs e)
+    private async void ResetPodcasts(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
+    }
+
+    private async void OpenUrlForDonation(object sender, EventArgs e)
+    {
+        await Browser.OpenAsync("https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD");
     }
 }

@@ -14,35 +14,21 @@ public class PositionDataBase
     }
     public async Task Init()
     {
-        try
-        {
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
-            _connection = new SQLiteAsyncConnection(databasePath);
-            await _connection.CreateTableAsync<Position>();
-        }
-        catch { }
+        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
+        _connection = new SQLiteAsyncConnection(databasePath);
+        await _connection.CreateTableAsync<Position>();
         return;
     }
     public async Task PodcastInit()
     {
-        try
-        {
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
-            _podcastConnection = new SQLiteAsyncConnection(databasePath);
-            await _podcastConnection.CreateTableAsync<Podcast>();
-        }
-        catch { }
+        var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
+        _podcastConnection = new SQLiteAsyncConnection(databasePath);
+        await _podcastConnection.CreateTableAsync<Podcast>();
         return;
     }
     public async Task DeleteAll()
     {
-        try
-        {
-            await _connection.DeleteAllAsync<Position>();
-        }
-        catch
-        {
-        }
+        await _connection.DeleteAllAsync<Position>();
     }
     public async Task<List<Position>> GetAllPositions()
     {
@@ -56,66 +42,34 @@ public class PositionDataBase
     }
     public async Task DeleteAllPodcasts()
     {
-        try
-        {
-            if (_podcastConnection != null)
-                await _podcastConnection.DeleteAllAsync<Podcast>();
-        }
-        catch
-        {
-        }
+        if (_podcastConnection != null)
+            await _podcastConnection.DeleteAllAsync<Podcast>();
     }
     public async Task<bool> Add(Position position)
     {
-        try
-        {
-            var test = await GetAllPositions();
+        var test = await GetAllPositions();
 
-            foreach (var item in test)
+        foreach (var item in test)
+        {
+            if (item.Title == position.Title)
             {
-                if (item.Title == position.Title)
-                {
-                    //Debug.WriteLine($"Database item: {item.Title} at: {item.SavedPosition.TotalSeconds} is being deleted to: {position.SavedPosition.TotalSeconds}");
-                    await _connection.DeleteAsync(item);
-                }
+                await _connection.DeleteAsync(item);
             }
+        }
 
-            await _connection.InsertAsync(position);
-            //Debug.WriteLine($"Adding {position.Title} - {position.SavedPosition.TotalSeconds} to database!");
-        }
-        catch
-        {
-            //Debug.WriteLine("Failed to Insert to database!");
-        }
+        await _connection.InsertAsync(position);
         return true;
     }
     public async Task Delete(Position position)
     {
-        try
-        {
-            await _connection.DeleteAsync(position);
-        }
-        catch
-        {
-            //Debug.WriteLine("Failed to delete from database");
-        }
+        await _connection.DeleteAsync(position);
     }
     public async Task AddPodcast(Podcast podcast)
     {
-        try
-        {
-            await _podcastConnection.InsertAsync(podcast);
-        }
-        catch
-        {
-        }
+        await _podcastConnection.InsertAsync(podcast);
     }
     public async Task DeletePodcast(Podcast podcast)
     {
-        try
-        {
-            await _podcastConnection.DeleteAsync(podcast);
-        }
-        catch { }
+        await _podcastConnection.DeleteAsync(podcast);
     }
 }
