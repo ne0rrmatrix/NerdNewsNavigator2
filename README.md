@@ -1,4 +1,5 @@
-# NerdNewsNavigator2
+<h1 align="center">NerdNewsNavigator2</h1>
+
 A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Twit tv network RSS feeds and watch live as they are broadcasted.
 
 ## Current Features implemented
@@ -23,8 +24,14 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
 
 ## Link to current release
+
 [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
- <br/><br/>
+ <br/><br/> 
+
 ## Help support me work on this project
 
+<div align="center">
+
 [![Donate with PayPal](https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD)
+
+</div>
