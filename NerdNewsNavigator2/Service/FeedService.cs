@@ -46,7 +46,6 @@ public partial class FeedService
         mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
         mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
         var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-
         if (rssNodes != null)
             foreach (XmlNode node in rssNodes)
             {
