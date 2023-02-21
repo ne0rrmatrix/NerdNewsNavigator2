@@ -7,7 +7,12 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
     x:DataType="viewmodel:UpdateSettingsViewModel"
-    BackgroundColor="Wheat">
+    BackgroundColor="Wheat"
+    Shell.NavBarIsVisible="False">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
 
     <StackLayout>
         <Label

@@ -8,10 +8,11 @@
     Title=""
     x:DataType="viewmodel:TabletPlayPodcastViewModel"
     BackgroundColor="Black"
+    Shell.NavBarIsVisible="False"
     Unloaded="ContentPage_Unloaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
     <Grid>
