@@ -19,10 +19,12 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 2. Full screen option on android and windows.
 3. Work on better UI implementation.
 
-### Suggestions/Bugs?
+## Suggestions/Bugs?
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
 
-
+## Link to current release
+[Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
+ <br/><br/>
 ## Help support me work on this project
 
 [![Donate with PayPal](https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD)
