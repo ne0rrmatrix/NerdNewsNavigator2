@@ -17,13 +17,4 @@ public class Podcast
     public string CopyRight { get; set; }
     public string Image { get; set; }
     public string Url { get; set; }
-    public List<Show> _shows = new();
-    public void Add(Show item)
-    {
-        _shows.Add(item);
-    }
-    public List<Show> GetShows()
-    {
-        return _shows;
-    }
 }

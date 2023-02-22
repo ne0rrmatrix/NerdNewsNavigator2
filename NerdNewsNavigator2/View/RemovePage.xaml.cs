@@ -10,9 +10,4 @@ public partial class RemovePage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-
-    }
 }

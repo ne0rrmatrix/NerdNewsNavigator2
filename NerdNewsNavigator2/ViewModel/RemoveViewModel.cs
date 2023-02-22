@@ -5,19 +5,18 @@
 namespace NerdNewsNavigator2.ViewModel;
 public partial class RemoveViewModel : BaseViewModel
 {
-    public RemoveViewModel(PodcastServices podcastServices)
+    public RemoveViewModel()
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
-        PodServices = podcastServices;
         _ = GetUpdatedPodcasts();
     }
 
     [RelayCommand]
     public async Task Tap(string url)
     {
-        await PodServices.Delete(url);
+        await PodcastServices.Delete(url);
         foreach (var item in from item in Podcasts
                              where item.Url == url
                              select item)

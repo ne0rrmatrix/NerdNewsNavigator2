@@ -3,19 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-public partial class FeedService
+public static class FeedService
 {
-    public List<Podcast> _podcasts = new();
-    public FeedService()
-    {
-        _podcasts.Clear();
-    }
     #region Get the Podcasts
-    public List<Podcast> GetData()
-    {
-        return _podcasts;
-    }
-    public static Podcast GetFeed(string item)
+    public static Task<Podcast> GetFeed(string item)
     {
         var counter = 0;
         Podcast feed = new();
@@ -32,12 +23,13 @@ public partial class FeedService
                 feed.Image = level2Element.Element("url")?.Value;
             }
         }
-        return feed;
+
+        return Task.FromResult(feed);
     }
     #endregion
 
     #region Get the Shows
-    public static List<Show> GetShow(string items)
+    public static Task<List<Show>> GetShow(string items)
     {
         List<Show> shows = new();
         XmlDocument rssDoc = new();
@@ -58,15 +50,12 @@ public partial class FeedService
                 };
                 shows.Add(show);
             }
-        return shows;
+        return Task.FromResult(shows);
     }
     #endregion
     public static string RemoveBADHtmlTags(string hTMLCode)
     {
-        hTMLCode = MyRegex().Replace(hTMLCode, "\"");
+        hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         return hTMLCode;
     }
-
-    [GeneratedRegex("/\\?.*?.\"", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-CA")]
-    private static partial Regex MyRegex();
 }

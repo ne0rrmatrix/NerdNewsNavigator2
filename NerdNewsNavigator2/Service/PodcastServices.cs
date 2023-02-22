@@ -3,9 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-public partial class PodcastServices
+public static class PodcastServices
 {
-    private readonly List<string> _twit = new()
+    #region Properties
+    private static readonly List<string> s_twit = new()
         {
             "https://feeds.twit.tv/ww_video_hd.xml",
             "https://feeds.twit.tv/aaa_video_hd.xml",
@@ -29,89 +30,70 @@ public partial class PodcastServices
             "https://feeds.twit.tv/jason_video_hd.xml",
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
-    private List<Podcast> Current { get; set; } = new();
-    public PodcastServices()
+    #endregion
+    public static async Task<List<Podcast>> GetUpdatedPodcasts()
     {
-        _ = GetUpdatedPodcasts();
-    }
-    ~PodcastServices()
-    {
-        Current.Clear();
-    }
-    public async Task GetUpdatedPodcasts()
-    {
-        Current.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        foreach (var item in temp)
-        {
-            Current.Add(item);
-        }
+        return temp;
     }
-    public Task<List<Podcast>> GetAllPodcasts()
+    public static async Task AddToDatabase(List<Podcast> position)
     {
-        return Task.FromResult(Current);
-    }
-    public async Task AddToDatabase()
-    {
-        foreach (var item in Current)
+        foreach (var item in position)
         {
             await App.PositionData.AddPodcast(item);
-            Current.Add(item);
         }
     }
-    public async Task<List<Podcast>> GetFromUrl()
+    public static async Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        foreach (var item in _twit)
+        foreach (var item in s_twit)
         {
-            var temp = await Task.FromResult(FeedService.GetFeed(item));
+            var temp = await FeedService.GetFeed(item);
             podcasts.Add(temp);
-            Current.Add(temp);
         }
         return podcasts;
     }
-    public async Task RemoveDefaultPodcasts()
+    public static async Task RemoveDefaultPodcasts()
     {
-        foreach (var item in Current)
+        var current = await App.PositionData.GetAllPodcasts();
+        Debug.WriteLine("Got current");
+        foreach (var item in current)
         {
             if (item.Url.Contains("feeds.twit.tv"))
             {
                 await App.PositionData.DeletePodcast(item);
             }
         }
-        Current.Clear();
     }
-    public async Task AddDefaultPodcasts()
+    public static async Task AddDefaultPodcasts()
     {
         await RemoveDefaultPodcasts();
 
         var items = GetFromUrl().Result;
         foreach (var item in items)
         {
+            Debug.WriteLine($"Adding Podcast: {item.Title}");
             await App.PositionData.AddPodcast(item);
         }
     }
-    public async Task DeleteAll()
+    public static async Task DeleteAll()
     {
         await App.PositionData.DeleteAllPodcasts();
-        Current.Clear();
-        _ = GetFromUrl().Result;
     }
     public static Task<List<Show>> GetShow(string url)
     {
-        return Task.FromResult(FeedService.GetShow(url));
+        return FeedService.GetShow(url);
     }
-    public static async Task<bool> SaveAll(List<Podcast> podcasts)
+    public static async Task SaveAll(List<Podcast> podcasts)
     {
         foreach (var item in podcasts)
         {
             await AddPodcast(item.Url);
         }
-        return true;
     }
     public static async Task AddPodcast(string url)
     {
-        var podcast = await Task.FromResult(FeedService.GetFeed(url));
+        var podcast = await Task.FromResult(FeedService.GetFeed(url)).Result;
         await App.PositionData.AddPodcast(new Podcast
         {
             Title = podcast.Title,
@@ -120,17 +102,15 @@ public partial class PodcastServices
             Image = podcast.Image,
         });
     }
-    public async Task<bool> Delete(string url)
+    public static async Task Delete(string url)
     {
-        foreach (var item in from item in Current
-                             where item.Url == url
-                             select item)
+        var current = await App.PositionData.GetAllPodcasts();
+        foreach (var item in current)
         {
-            if (Current.Contains(item)) { Current.Remove(item); }
-
-            await App.PositionData.DeletePodcast(item);
-            break;
+            if (item.Url == url)
+            {
+                await App.PositionData.DeletePodcast(item);
+            }
         }
-        return true;
     }
 }

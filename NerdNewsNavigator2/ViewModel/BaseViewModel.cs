@@ -5,27 +5,27 @@
 namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
+    #region Properties
     public DisplayInfo MyMainDisplay { get; set; } = new();
-
     public ObservableCollection<Show> Shows { get; set; } = new();
-    public PodcastServices PodServices { get; set; } = new();
+    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+    [ObservableProperty]
+    public int _orientation;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     public bool _isBusy;
     public bool IsNotBusy => !IsBusy;
 
-    [ObservableProperty]
-    public int _orientation;
-    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
-
+    #endregion
     public BaseViewModel()
     {
     }
-    public void GetShows(string url)
+    #region Podcast data functions
+    public async Task GetShows(string url)
     {
         Shows.Clear();
-        var temp = Task.FromResult(FeedService.GetShow(url)).Result;
+        var temp = await FeedService.GetShow(url);
         Shows = new ObservableCollection<Show>(temp);
     }
     public async Task GetUpdatedPodcasts()
@@ -33,29 +33,27 @@ public partial class BaseViewModel : ObservableObject
         Podcasts.Clear();
         OnPropertyChanged(nameof(IsBusy));
         IsBusy = true;
-        var temp = await App.PositionData.GetAllPodcasts();
+        var temp = await PodcastServices.GetUpdatedPodcasts();
         foreach (var item in temp)
         {
             Podcasts.Add(item);
         }
+
         if (temp.Count == 0)
         {
-            var items = PodServices.GetFromUrl().Result;
+            var items = await PodcastServices.GetFromUrl();
+            await PodcastServices.AddToDatabase(items);
             foreach (var item in items)
             {
                 Podcasts.Add(item);
-                await App.PositionData.AddPodcast(item);
             }
         }
         IsBusy = false;
     }
-    public async Task AddPodcastsToDatabase()
-    {
-        foreach (var item in Podcasts)
-        {
-            await App.PositionData.AddPodcast(item);
-        }
-    }
+
+    #endregion
+
+    #region Display Functions
 #nullable enable
     public void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
@@ -89,4 +87,5 @@ public partial class BaseViewModel : ObservableObject
             return 3;
         else return 1;
     }
+    #endregion
 }
