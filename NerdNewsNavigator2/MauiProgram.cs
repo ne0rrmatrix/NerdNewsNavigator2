@@ -22,22 +22,6 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
 
-#if WINDOWS
-        builder.ConfigureLifecycleEvents(events =>
-               {
-                   events.AddWindows(wndLifeCycleBuilder =>
-            {
-                wndLifeCycleBuilder.OnWindowCreated(window =>
-                {
-                    window.ExtendsContentIntoTitleBar = false;
-                    IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-                    WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-                    var appWindow = AppWindow.GetFromWindowId(myWndId);
-                    appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
-                });
-            });
-               });
-#endif
         builder.Logging
 
 #if DEBUG

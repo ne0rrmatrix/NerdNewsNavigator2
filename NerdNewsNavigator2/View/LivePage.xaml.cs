@@ -5,9 +5,11 @@
 namespace NerdNewsNavigator2.View;
 public partial class LivePage : ContentPage
 {
-    public LivePage(LiveViewModel liveViewModel)
+    private readonly ILogger<LivePage> _logger;
+    public LivePage(LiveViewModel liveViewModel, ILogger<LivePage> logger)
     {
         InitializeComponent();
         BindingContext = liveViewModel;
+        _logger = logger;
     }
 }

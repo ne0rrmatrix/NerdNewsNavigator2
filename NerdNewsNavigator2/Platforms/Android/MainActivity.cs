@@ -16,10 +16,6 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-        Window.DecorView.SystemUiVisibility = (StatusBarVisibility)
-            (SystemUiFlags.ImmersiveSticky | SystemUiFlags.HideNavigation | SystemUiFlags.LowProfile |
-            SystemUiFlags.Fullscreen | SystemUiFlags.Immersive);
     }
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     { System.Diagnostics.Debug.WriteLine(e.ToString()); }

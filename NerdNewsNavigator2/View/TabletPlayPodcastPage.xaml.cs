@@ -15,14 +15,14 @@ public partial class TabletPlayPodcastPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         _logger = logger;
+
 #if WINDOWS || ANDROID
-            mediaElement.MediaOpened += Seek;
+        mediaElement.MediaOpened += Seek;
 #endif
 #if IOS
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
-
 #nullable enable
     public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
