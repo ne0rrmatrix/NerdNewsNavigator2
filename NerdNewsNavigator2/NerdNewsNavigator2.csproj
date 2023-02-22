@@ -42,6 +42,7 @@
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<AppInstallerUri>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\bin\Release\net7.0-windows10.0.19041.0\win10-x64</AppInstallerUri>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<PackageCertificateThumbprint>D2B5C6F044C764C5B848962C6A34A4002E174D64</PackageCertificateThumbprint>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
