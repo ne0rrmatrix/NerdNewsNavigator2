@@ -8,12 +8,12 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 3. Playback tracking on an indivual stream and device
 4. Add or remove both default and custom podcasts from twit.tv
 5. There is a reset button in case you want to go back to defaults
+6. Always on screen now works. It is set on during video playback. It turns off automatically after playback ends. No more dead phone/tablet if you fall asleep listening to podcast.
 
 ## Current known issues
 1. At first launch it appears to freeze for about 15 to 45 seconds while it loads data from the web into datatbase
 2. Requires internet access all the time in order to function in any way
 3. Full screen has to be toggled in Options. You need to restart application for changes to be active.
-4. Android is always keep screen on. Please remember to exit program. This is first on list to be updated to not behave this way.
 
 ## TODO
 1. Implement always on screen only on video playback. Disable otherwise.
