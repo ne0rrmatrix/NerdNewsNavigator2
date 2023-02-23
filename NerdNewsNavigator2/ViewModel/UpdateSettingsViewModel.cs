@@ -3,8 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
+/// <summary>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="UpdateSettingsPage"/>
+/// </summary>
 public partial class UpdateSettingsViewModel : BaseViewModel
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateSettingsViewModel"/> class.
+    /// </summary>
     public UpdateSettingsViewModel()
     {
         Shell.Current.FlyoutIsPresented = false;
@@ -12,6 +18,9 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsBusy));
         DeleteAllPodcasts();
     }
+    /// <summary>
+    /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
+    /// </summary>
     private async void DeleteAllPodcasts()
     {
         try

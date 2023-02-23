@@ -4,7 +4,7 @@
 
 namespace NerdNewsNavigator2.Model;
 /// <summary>
-/// <c>Podcasts</c> <see cref="Class"/> for storing Podcasts in Database.
+/// A class for storing <see cref="Podcast"/> in a Database.
 /// </summary>
 [Table("Podcasts")]
 public class Podcast

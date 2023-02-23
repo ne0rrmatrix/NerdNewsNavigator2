@@ -4,8 +4,14 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 
+/// <summary>
+/// A class that inherits form <see cref="BaseViewModel"/> and manages <see cref="SettingsPage"/>
+/// </summary>
 public partial class SettingsViewModel : BaseViewModel
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
+    /// </summary>
     public SettingsViewModel()
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
@@ -14,6 +20,11 @@ public partial class SettingsViewModel : BaseViewModel
         _ = GetUpdatedPodcasts();
     }
 
+    /// <summary>
+    /// Method Deletes a <see cref="Podcast"/> from <see cref="List{T}"/> <see cref="Podcast"/> in <see cref="BaseViewModel"/>
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
     [RelayCommand]
     public async Task Tap(string url)
     {

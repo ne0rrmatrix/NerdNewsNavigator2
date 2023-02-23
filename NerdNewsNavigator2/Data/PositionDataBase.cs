@@ -3,24 +3,42 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Data;
+
 /// <summary>
-/// Class <c>PositionDatabase</c> Database Management Class
+/// A class for managing the Database.
 /// </summary>
 public class PositionDataBase
 {
+    /// <summary>
+    /// A variable to manage logs.
+    /// </summary>
     private readonly ILogger<PositionDataBase> _logger;
+
+    /// <summary>
+    /// A variable to manage <see cref="SQLiteAsyncConnection"/>
+    /// </summary>
     private SQLiteAsyncConnection _connection;
+
+    /// <summary>
+    /// A variable to manage <see cref="SQLiteAsyncConnection"/>
+    /// </summary>
     private SQLiteAsyncConnection _podcastConnection;
+
+    /// <summary>
+    /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
+    /// </summary>
+    /// <param name="logger">This classes <see cref="ILogger{TCategoryName}"/> instance variable</param>
     public PositionDataBase(ILogger<PositionDataBase> logger)
     {
         _logger = logger;
         _ = Init();
         _ = PodcastInit();
     }
+
     /// <summary>
-    /// Method <c>Init</c> Dabase Initialization for Playback Tracking of Podcasts.
+    /// Method initializes the database using <see cref="_connection"/> to <see cref="SQLiteConnection"/>
     /// </summary>
-    /// <returns><c>bool</c></returns>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> Init()
     {
         try
@@ -41,9 +59,9 @@ public class PositionDataBase
         return true;
     }
     /// <summary>
-    /// Method <c>PodcastInit</c> Database Initialization for Podcast storage.
+    /// Method initializes the database using <see cref="_podcastConnection"/> to <see cref="SQLiteConnection"/>
     /// </summary>
-    /// <returns><c>bool</c></returns>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> PodcastInit()
     {
         try
@@ -64,9 +82,9 @@ public class PositionDataBase
         return true;
     }
     /// <summary>
-    /// Method <c>DeleteAll</c> Deletes all Positions from database.
+    /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
-    /// <returns><c>bool</c></returns>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> DeleteAll()
     {
         try
@@ -82,9 +100,9 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>GetAllPositions</c> Get All positions from database.
+    /// Method retrieves a <see cref="List{T}"/> of <see cref="Position"/> from database.
     /// </summary>
-    /// <returns><c>List</c> of <c>Class</c> <c>Position</c></returns>
+    /// <returns><see cref="List{T}"/> <see cref="Position"/></returns>
     public async Task<List<Position>> GetAllPositions()
     {
         try
@@ -100,9 +118,9 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>GetAllPodcasts</c> Retrieves list of all Podcast from Database.
+    /// Method Retrieves a <see cref="List{T}"/> of <see cref="Podcast"/> from database.
     /// </summary>
-    /// <returns><c>List</c> of <c>Class</c> <c>Podcast</c></returns>
+    /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public async Task<List<Podcast>> GetAllPodcasts()
     {
         try
@@ -118,9 +136,9 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>DeleteAllPodcasts</c> Removes all Podcasts from Database.
+    /// Method deletes all <see cref="Podcast"/> from database.
     /// </summary>
-    /// <returns><c>bool</c></returns>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> DeleteAllPodcasts()
     {
         try
@@ -137,10 +155,10 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>Add</c> Adds <see cref="Position"/> <see cref="object"/> to Database
+    /// Method Adds a <see cref="Position"/> to Database
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns><c>bool</c></returns>
+    /// <param name="position">An instance of <see cref="Position"/></param>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> Add(Position position)
     {
         var test = await GetAllPositions();
@@ -175,10 +193,10 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>Delete</c> Removes <see cref="Position"/> <see cref="object"/> from Database
+    /// Method deletes a <see cref="Position"/> from Database
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns><c>bool</c></returns>
+    /// <param name="position">an instance of <see cref="Position"/></param>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> Delete(Position position)
     {
         try
@@ -194,9 +212,9 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>AddPodcast</c> Adds <see cref="Podcast"/> <see cref="object"/> to Database.
+    /// Method add a <see cref="Podcast"/> to Database.
     /// </summary>
-    /// <param name="podcast"></param> <see cref="Podcast"/>
+    /// <param name="podcast">an instance of <see cref="Position"/></param>
     /// <returns><see cref="bool"/></returns>
     public async Task<bool> AddPodcast(Podcast podcast)
     {
@@ -214,9 +232,9 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method <c>DeletePodcast</c> Deletes <see cref="Podcast"/> <see cref="object"/> from Database
+    /// Method Deletes a <see cref="Podcast"/> from Database
     /// </summary>
-    /// <param name="podcast"></param> <see cref="Podcast"/>
+    /// <param name="podcast">an instance of <see cref="Podcast"/></param>
     /// <returns><see cref="bool"/></returns>
     public async Task<bool> DeletePodcast(Podcast podcast)
     {

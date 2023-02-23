@@ -4,16 +4,18 @@
 
 namespace NerdNewsNavigator2.View;
 
+/// <summary>
+/// A class that manages application settings.
+/// </summary>
 public partial class SettingsPage : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsPage"/> instance.
+    /// </summary>
+    /// <param name="viewModel">This Pages <see cref="ViewModel"/> from <see cref="SettingsViewModel"/></param>
     public SettingsPage(SettingsViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
-    }
-
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-
     }
 }

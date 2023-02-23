@@ -3,8 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
+
 /// <summary>
-/// Class <c>FeedService</c> Get Podcasts from twit.tv
+/// A class that manages getting <see cref="Podcast"/> and <see cref="Show"/> from RSS feeds.
 /// </summary>
 public static class FeedService
 {

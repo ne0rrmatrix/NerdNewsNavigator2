@@ -3,8 +3,15 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
+
+/// <summary>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="RemovePage"/>
+/// </summary>
 public partial class RemoveViewModel : BaseViewModel
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RemoveViewModel"/> instance.
+    /// </summary>
     public RemoveViewModel()
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
@@ -13,6 +20,11 @@ public partial class RemoveViewModel : BaseViewModel
         _ = GetUpdatedPodcasts();
     }
 
+    /// <summary>
+    /// Method Deletes a <see cref="Podcast"/> from <see cref="List{T}"/> <see cref="Podcast"/> in <see cref="BaseViewModel"/>
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
     [RelayCommand]
     public async Task Tap(string url)
     {

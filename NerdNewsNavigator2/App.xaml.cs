@@ -19,12 +19,26 @@ using Microsoft.Maui.Controls;
 using MetroLog.Maui;
 
 namespace NerdNewsNavigator2;
+
+/// <summary>
+/// A class that acts as a manager for <see cref="Application"/>
+/// </summary>
 public partial class App : Application
 {
+    /// <summary>
+    /// Private <see cref="bool"/> which sets Full Screen Mode.
+    /// </summary>
     private static bool FullScreenMode { get; set; }
-    // DataBase Dependancy Injection START
+
+    /// <summary>
+    /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
+    /// </summary>
     public static PositionDataBase PositionData { get; private set; }
-    // DataBase Dependancy Injection END
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="App"/> class.
+    /// </summary>
+    /// <param name="positionDataBase"></param>
     public App(PositionDataBase positionDataBase)
     {
         InitializeComponent();
@@ -38,6 +52,12 @@ public partial class App : Application
         // Database Dependancy Injection END
     }
 #nullable enable
+
+    /// <summary>
+    /// A method to override the default <see cref="Window"/> behavior.
+    /// </summary>
+    /// <param name="activationState"></param>
+    /// <returns></returns>
     protected override Window CreateWindow(IActivationState? activationState)
     {
         Window window = base.CreateWindow(activationState);
@@ -62,6 +82,11 @@ public partial class App : Application
         return window;
     }
 
+    /// <summary>
+    /// Method to set Full Screen status depending on <see cref="FullScreenMode"/> variable.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="eventArgs"></param>
     private static void SetFullScreen(object? sender, EventArgs eventArgs)
     {
         if (sender != null)
@@ -76,7 +101,12 @@ public partial class App : Application
         }
 
     }
+
 #nullable disable
+
+    /// <summary>
+    /// Android Specific Method to set Full Screen mode depending on <see cref="FullScreenMode"/> variable.
+    /// </summary>
     private static void SetFullScreenAndroid()
     {
 #if ANDROID
@@ -102,6 +132,12 @@ public partial class App : Application
 #endif
     }
 #nullable enable
+
+    /// <summary>
+    /// Windows specific Method for setting Full Screen mode depending on <see cref="FullScreenMode"/> variable.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="eventArgs"></param>
     private static void SetFullScreenWindows(object? sender, EventArgs eventArgs)
     {
 #if WINDOWS
