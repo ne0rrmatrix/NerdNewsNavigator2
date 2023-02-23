@@ -9,6 +9,9 @@ namespace NerdNewsNavigator2.Service;
 public static class PodcastServices
 {
     #region Properties
+    /// <summary>
+    /// List <see cref="s_twit"/> is a  Default list of <see cref="Type"/> <see cref="string"/> for Twit podcasts.
+    /// </summary>
     private static readonly List<string> s_twit = new()
         {
             "https://feeds.twit.tv/ww_video_hd.xml",
