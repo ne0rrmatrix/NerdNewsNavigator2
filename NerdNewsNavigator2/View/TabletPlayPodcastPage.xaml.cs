@@ -66,6 +66,12 @@ public partial class TabletPlayPodcastPage : ContentPage
             _logger.LogInformation("Paused: {Position}", mediaElement.Position);
             await Save();
         }
+        if (e.NewState == MediaElementState.Stopped)
+        {
+            _logger.LogInformation("Media has finished playing.");
+            mediaElement.ShouldKeepScreenOn = false;
+            _logger.LogInformation("ShouldKeepScreenOn set to false.");
+        }
     }
 
     /// <summary>
@@ -90,6 +96,8 @@ public partial class TabletPlayPodcastPage : ContentPage
                 _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition.TotalSeconds);
             }
         }
+        mediaElement.ShouldKeepScreenOn = true;
+        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
         mediaElement.SeekTo(Pos.SavedPosition);
         _isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
@@ -118,6 +126,7 @@ public partial class TabletPlayPodcastPage : ContentPage
             mediaElement.SeekTo(Pos.SavedPosition);
         }
         _isPlaying = true;
+        mediaElement.ShouldKeepScreenOn = true;
         mediaElement.StateChanged += Media_Stopped;
     }
 
