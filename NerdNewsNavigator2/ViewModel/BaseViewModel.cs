@@ -5,41 +5,41 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// <c>BaseViewModel</c> is a <see cref="ViewModel"/> that can be Inherited.
+/// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     /// <summary>
-    /// The <see cref="DisplayInfo"/> instance managed by this manager.
+    /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
     public DisplayInfo MyMainDisplay { get; set; } = new();
 
     /// <summary>
-    /// The <see cref="ObservableCollection{T}"/> of <see cref="Show"/> instance managed by this class.
+    /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
 
     /// <summary>
-    /// The <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> instance managed by this class.
+    /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
 
     /// <summary>
-    /// The <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// An <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     [ObservableProperty]
     public int _orientation;
 
     /// <summary>
-    /// the <see cref="bool"/> of <c>_isBusy</c> managed by this class.
+    /// A <see cref="bool"/> instance managed by this class.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     public bool _isBusy;
 
     /// <summary>
-    /// The <see cref="bool"/> of <c>IsNotBusy</c> managed by this class.
+    /// A <see cref="bool"/> instance managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
 
@@ -49,7 +49,7 @@ public partial class BaseViewModel : ObservableObject
     }
 
     /// <summary>
-    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> and returns a <see cref="Show"/>
+    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for <see cref="Show.Url"/> and returns a <see cref="Show"/>
     /// </summary>
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <returns><see cref="Show"/></returns>
@@ -97,7 +97,7 @@ public partial class BaseViewModel : ObservableObject
 #nullable enable
 
     /// <summary>
-    /// <c>DeviceDisplay_MainDisplayInfoChanged</c> is a method that raises OnPropertyChanged for <see cref="Orientation"/>
+    /// <c>DeviceDisplay_MainDisplayInfoChanged</c> is a method that sets <see cref="Orientation"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -118,9 +118,9 @@ public partial class BaseViewModel : ObservableObject
 #nullable disable
 
     /// <summary>
-    /// <c>OnDeviceOrientation</c> is a method that returns a <see cref="int"/> that is used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// <c>OnDeviceOrientation</c> is a method that is used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="int"/></returns>
     public static int OnDeviceOrientationChange()
     {
         if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
