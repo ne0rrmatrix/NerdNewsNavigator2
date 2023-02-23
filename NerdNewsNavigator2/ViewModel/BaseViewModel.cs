@@ -3,31 +3,69 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
+
+/// <summary>
+/// <c>BaseViewModel</c> is a <see cref="ViewModel"/> that can be Inherited.
+/// </summary>
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
+    /// <summary>
+    /// The <see cref="DisplayInfo"/> instance managed by this manager.
+    /// </summary>
     public DisplayInfo MyMainDisplay { get; set; } = new();
+
+    /// <summary>
+    /// The <see cref="ObservableCollection{T}"/> of <see cref="Show"/> instance managed by this class.
+    /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
+
+    /// <summary>
+    /// The <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> instance managed by this class.
+    /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+
+    /// <summary>
+    /// The <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// </summary>
     [ObservableProperty]
     public int _orientation;
 
+    /// <summary>
+    /// the <see cref="bool"/> of <c>_isBusy</c> managed by this class.
+    /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     public bool _isBusy;
+
+    /// <summary>
+    /// The <see cref="bool"/> of <c>IsNotBusy</c> managed by this class.
+    /// </summary>
     public bool IsNotBusy => !IsBusy;
 
     #endregion
     public BaseViewModel()
     {
     }
+
     #region Podcast data functions
+
+    /// <summary>
+    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> and returns a <see cref="Show"/>
+    /// </summary>
+    /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
+    /// <returns><see cref="Show"/></returns>
     public async Task GetShows(string url)
     {
         Shows.Clear();
         var temp = await FeedService.GetShow(url);
         Shows = new ObservableCollection<Show>(temp);
     }
+
+    /// <summary>
+    /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
+    /// </summary>
+    /// <returns></returns>
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
@@ -54,7 +92,14 @@ public partial class BaseViewModel : ObservableObject
     #endregion
 
     #region Display Functions
+
 #nullable enable
+
+    /// <summary>
+    /// <c>DeviceDisplay_MainDisplayInfoChanged</c> is a method that raises OnPropertyChanged for <see cref="Orientation"/>
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
 #if IOS
@@ -68,7 +113,13 @@ public partial class BaseViewModel : ObservableObject
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
+
 #nullable disable
+
+    /// <summary>
+    /// <c>OnDeviceOrientation</c> is a method that returns a <see cref="int"/> that is used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// </summary>
+    /// <returns></returns>
     public static int OnDeviceOrientationChange()
     {
         if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
