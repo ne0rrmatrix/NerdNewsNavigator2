@@ -43,6 +43,8 @@ public static class MauiProgram
             .AddStreamingFileLogger(
                 options =>
                 {
+                    options.MinLevel = LogLevel.Trace;
+                    options.MaxLevel = LogLevel.Critical;
                     options.RetainDays = 2;
                     options.FolderPath = Path.Combine(
                         FileSystem.CacheDirectory,

@@ -20,11 +20,6 @@ public class PositionDataBase
     private SQLiteAsyncConnection _connection;
 
     /// <summary>
-    /// A variable to manage <see cref="SQLiteAsyncConnection"/>
-    /// </summary>
-    private SQLiteAsyncConnection _podcastConnection;
-
-    /// <summary>
     /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
     /// </summary>
     /// <param name="logger">This classes <see cref="ILogger{TCategoryName}"/> instance variable</param>
@@ -32,7 +27,6 @@ public class PositionDataBase
     {
         _logger = logger;
         _ = Init();
-        _ = PodcastInit();
     }
 
     /// <summary>
@@ -47,10 +41,17 @@ public class PositionDataBase
             {
                 return false;
             }
+#if WINDOWS
+            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
+#endif
+#if ANDROID || IOS || MACCATALYST
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
+#endif
+            _logger.LogInformation("Database path is: {Path}", databasePath);
             _connection = new SQLiteAsyncConnection(databasePath);
             await _connection.CreateTableAsync<Position>();
             _logger.LogInformation("Position Init {DatabasePath}", databasePath);
+            await _connection.CreateTableAsync<Podcast>();
         }
         catch (Exception ex)
         {
@@ -58,29 +59,7 @@ public class PositionDataBase
         }
         return true;
     }
-    /// <summary>
-    /// Method initializes the database using <see cref="_podcastConnection"/> to <see cref="SQLiteConnection"/>
-    /// </summary>
-    /// <returns><see cref="bool"/></returns>
-    public async Task<bool> PodcastInit()
-    {
-        try
-        {
-            if (_podcastConnection != null)
-            {
-                return false;
-            }
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyDataPodcast.db");
-            _podcastConnection = new SQLiteAsyncConnection(databasePath);
-            await _podcastConnection.CreateTableAsync<Podcast>();
-            _logger.LogInformation("Podcast Init {DatabasePath}", databasePath);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to start Podcast Database: {Message}", ex.Message);
-        }
-        return true;
-    }
+
     /// <summary>
     /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
@@ -125,7 +104,7 @@ public class PositionDataBase
     {
         try
         {
-            var temp = await _podcastConnection.Table<Podcast>().ToListAsync();
+            var temp = await _connection.Table<Podcast>().ToListAsync();
             _logger.LogInformation("Got all Podcasts from Database.");
             return temp;
         }
@@ -144,7 +123,7 @@ public class PositionDataBase
         try
         {
 
-            await _podcastConnection.DeleteAllAsync<Podcast>();
+            await _connection.DeleteAllAsync<Podcast>();
             _logger.LogInformation("Succesfully Deleted all Podcasts.");
             return true;
         }
@@ -220,8 +199,7 @@ public class PositionDataBase
     {
         try
         {
-            await PodcastInit();
-            await _podcastConnection.InsertAsync(podcast);
+            await _connection.InsertAsync(podcast);
             _logger.LogInformation("Saved to Database Podcast: {Title}", podcast.Title);
             return true;
         }
@@ -240,7 +218,7 @@ public class PositionDataBase
     {
         try
         {
-            await _podcastConnection.DeleteAsync(podcast);
+            await _connection.DeleteAsync(podcast);
             _logger.LogInformation("Deleted Podcast: {Title}", podcast.Title);
             return true;
         }

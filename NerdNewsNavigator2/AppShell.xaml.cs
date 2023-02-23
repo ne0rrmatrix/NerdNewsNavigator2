@@ -22,22 +22,50 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
         Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
     }
+    /// <summary>
+    /// Method quits application
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void Quit(object sender, EventArgs e) => Application.Current.Quit();
 
+    /// <summary>
+    /// Method navigates user to Main Page.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void GotoFirstPage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
     }
+
+    /// <summary>
+    /// Method resets database.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void Reset(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
     }
+
+    /// <summary>
+    /// Method navigates user to Live Video for twit.tv
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void GotoLivePage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
+
+    /// <summary>
+    /// Method navigates user to Page that allows you to add a podcast.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void GotoAddPage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
