@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
+/// <summary>
+/// Class <c>FeedService</c> Get Podcasts from twit.tv
+/// </summary>
 public static class FeedService
 {
     #region Get the Podcasts
+    /// <summary>
+    /// Method <c>GetFeed</c> return Feed from URL.
+    /// </summary>
+    /// <param name="item"></param> The URL of Podcast.
+    /// <returns><see cref="Podcast"/></returns>
     public static Task<Podcast> GetFeed(string item)
     {
         var counter = 0;
@@ -29,6 +37,11 @@ public static class FeedService
     #endregion
 
     #region Get the Shows
+    /// <summary>
+    /// Method <c>GetShow</c> returns list of Shows
+    /// </summary>
+    /// <param name="items"></param> The URL of the Show
+    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
     public static Task<List<Show>> GetShow(string items)
     {
         List<Show> shows = new();
@@ -53,6 +66,11 @@ public static class FeedService
         return Task.FromResult(shows);
     }
     #endregion
+    /// <summary>
+    /// Method <c>hTMLCode</c> Returns html string that will not crash.
+    /// </summary>
+    /// <param name="hTMLCode"></param> String of html.
+    /// <returns><see cref="string"/></returns>
     public static string RemoveBADHtmlTags(string hTMLCode)
     {
         hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);

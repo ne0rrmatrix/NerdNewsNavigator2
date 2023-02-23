@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Data;
+/// <summary>
+/// Class <c>PositionDatabase</c> Database Management Class
+/// </summary>
 public class PositionDataBase
 {
     private readonly ILogger<PositionDataBase> _logger;
@@ -14,6 +17,10 @@ public class PositionDataBase
         _ = Init();
         _ = PodcastInit();
     }
+    /// <summary>
+    /// Method <c>Init</c> Dabase Initialization for Playback Tracking of Podcasts.
+    /// </summary>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> Init()
     {
         try
@@ -33,6 +40,10 @@ public class PositionDataBase
         }
         return true;
     }
+    /// <summary>
+    /// Method <c>PodcastInit</c> Database Initialization for Podcast storage.
+    /// </summary>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> PodcastInit()
     {
         try
@@ -52,6 +63,10 @@ public class PositionDataBase
         }
         return true;
     }
+    /// <summary>
+    /// Method <c>DeleteAll</c> Deletes all Positions from database.
+    /// </summary>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> DeleteAll()
     {
         try
@@ -66,6 +81,10 @@ public class PositionDataBase
             return false;
         }
     }
+    /// <summary>
+    /// Method <c>GetAllPositions</c> Get All positions from database.
+    /// </summary>
+    /// <returns><c>List</c> of <c>Class</c> <c>Position</c></returns>
     public async Task<List<Position>> GetAllPositions()
     {
         try
@@ -80,6 +99,10 @@ public class PositionDataBase
             return null;
         }
     }
+    /// <summary>
+    /// Method <c>GetAllPodcasts</c> Retrieves list of all Podcast from Database.
+    /// </summary>
+    /// <returns><c>List</c> of <c>Class</c> <c>Podcast</c></returns>
     public async Task<List<Podcast>> GetAllPodcasts()
     {
         try
@@ -94,6 +117,10 @@ public class PositionDataBase
             return null;
         }
     }
+    /// <summary>
+    /// Method <c>DeleteAllPodcasts</c> Removes all Podcasts from Database.
+    /// </summary>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> DeleteAllPodcasts()
     {
         try
@@ -109,6 +136,11 @@ public class PositionDataBase
             return false;
         }
     }
+    /// <summary>
+    /// Method <c>Add</c> Adds <see cref="Position"/> <see cref="object"/> to Database
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> Add(Position position)
     {
         var test = await GetAllPositions();
@@ -142,6 +174,11 @@ public class PositionDataBase
             return false;
         }
     }
+    /// <summary>
+    /// Method <c>Delete</c> Removes <see cref="Position"/> <see cref="object"/> from Database
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns><c>bool</c></returns>
     public async Task<bool> Delete(Position position)
     {
         try
@@ -156,6 +193,11 @@ public class PositionDataBase
             return false;
         }
     }
+    /// <summary>
+    /// Method <c>AddPodcast</c> Adds <see cref="Podcast"/> <see cref="object"/> to Database.
+    /// </summary>
+    /// <param name="podcast"></param> <see cref="Podcast"/>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> AddPodcast(Podcast podcast)
     {
         try
@@ -171,6 +213,11 @@ public class PositionDataBase
             return false;
         }
     }
+    /// <summary>
+    /// Method <c>DeletePodcast</c> Deletes <see cref="Podcast"/> <see cref="object"/> from Database
+    /// </summary>
+    /// <param name="podcast"></param> <see cref="Podcast"/>
+    /// <returns><see cref="bool"/></returns>
     public async Task<bool> DeletePodcast(Podcast podcast)
     {
         try

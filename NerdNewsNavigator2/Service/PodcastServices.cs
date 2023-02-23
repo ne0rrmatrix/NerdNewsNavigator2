@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
+/// <summary>
+/// Class <c>PodcastService</c> Has methods for processing Podcasts.
+/// </summary>
 public static class PodcastServices
 {
     #region Properties
@@ -31,11 +34,20 @@ public static class PodcastServices
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
     #endregion
+    /// <summary>
+    /// Method <c>GetUpdatedPodcasts</c> Gets updated Podcasts from Database.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public static async Task<List<Podcast>> GetUpdatedPodcasts()
     {
         var temp = await App.PositionData.GetAllPodcasts();
         return temp;
     }
+    /// <summary>
+    /// Method <c>AddToDatabase</c> Adds Playback position to Database.
+    /// </summary>
+    /// <param name="position"></param> Position Class object.
+    /// <returns>nothing</returns>
     public static async Task AddToDatabase(List<Podcast> position)
     {
         foreach (var item in position)
@@ -43,6 +55,10 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+    /// <summary>
+    /// Method <c>GetFromUrl</c> Retrieves Podcasts from default RSS Feeds.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public static async Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
@@ -53,6 +69,10 @@ public static class PodcastServices
         }
         return podcasts;
     }
+    /// <summary>
+    /// Method <c>RemoveDefaultPodcasts</c> Clears Database of all default Podcasts.
+    /// </summary>
+    /// <returns>nothing</returns>
     public static async Task RemoveDefaultPodcasts()
     {
         var current = await App.PositionData.GetAllPodcasts();
@@ -65,6 +85,10 @@ public static class PodcastServices
             }
         }
     }
+    /// <summary>
+    /// Method <c>AddDefaultPodcasts</c> Adds default Podcasts from RSS feed to Database.
+    /// </summary>
+    /// <returns>nothing</returns>
     public static async Task AddDefaultPodcasts()
     {
         await RemoveDefaultPodcasts();
@@ -76,14 +100,28 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+    /// <summary>
+    /// Method <c>DeleteAll</c> Removes all Podcasts from Database.
+    /// </summary>
+    /// <returns>nothing</returns>
     public static async Task DeleteAll()
     {
         await App.PositionData.DeleteAllPodcasts();
     }
+    /// <summary>
+    /// Method <c>GetShow</c> Returns a Single Show from RSS Feed.
+    /// </summary>
+    /// <param name="url">The <see cref="System.String"/>The URL of Show.</param> 
+    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
     public static Task<List<Show>> GetShow(string url)
     {
         return FeedService.GetShow(url);
     }
+    /// <summary>
+    /// Method <c>SaveAll</c> Saves List of Podcasts.
+    /// </summary>
+    /// <param name="podcasts">the <see cref="List{T}"/>List of Podcasts.</param>
+    /// <returns>nothing</returns>
     public static async Task SaveAll(List<Podcast> podcasts)
     {
         foreach (var item in podcasts)
@@ -91,6 +129,11 @@ public static class PodcastServices
             await AddPodcast(item.Url);
         }
     }
+    /// <summary>
+    /// Method <c>AddPodcast</c> Adds a Podcast to Database.
+    /// </summary>
+    /// <param name="url"></param> URL string of Podcast.
+    /// <returns>nothing</returns>
     public static async Task AddPodcast(string url)
     {
         var podcast = await Task.FromResult(FeedService.GetFeed(url)).Result;
@@ -102,6 +145,11 @@ public static class PodcastServices
             Image = podcast.Image,
         });
     }
+    /// <summary>
+    /// Method <c>Delete</c> Deletes a Podcast from Database.
+    /// </summary>
+    /// <param name="url">The <see cref="System.String"/>URL of Podcast to delete</param>
+    /// <returns>nothing</returns>
     public static async Task Delete(string url)
     {
         var current = await App.PositionData.GetAllPodcasts();

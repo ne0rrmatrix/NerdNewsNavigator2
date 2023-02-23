@@ -37,7 +37,7 @@ public partial class App : Application
         PositionData = positionDataBase;
         // Database Dependancy Injection END
     }
-
+#nullable enable
     protected override Window CreateWindow(IActivationState? activationState)
     {
         Window window = base.CreateWindow(activationState);
@@ -76,7 +76,7 @@ public partial class App : Application
         }
 
     }
-
+#nullable disable
     private static void SetFullScreenAndroid()
     {
 #if ANDROID
@@ -101,7 +101,7 @@ public partial class App : Application
         }
 #endif
     }
-
+#nullable enable
     private static void SetFullScreenWindows(object? sender, EventArgs eventArgs)
     {
 #if WINDOWS
@@ -131,4 +131,5 @@ public partial class App : Application
         }
 #endif
     }
+#nullable disable
 }
