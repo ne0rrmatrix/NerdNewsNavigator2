@@ -96,7 +96,7 @@ public partial class App : Application
             SetFullScreenAndroid();
 #endif
 #if WINDOWS
-        SetFullScreenWindows(sender, eventArgs);
+            SetFullScreenWindows(sender, eventArgs);
 #endif
         }
 
