@@ -33,6 +33,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="logger">This Applications <see cref="ILogger{TCategoryName}"/> instance is managed through this class</param>
     /// <param name="viewModel">This Applications <see cref="TabletPlayPodcastPage"/> instance is managed through this class.</param>
+
     public TabletPlayPodcastPage(ILogger<TabletPlayPodcastPage> logger, TabletPlayPodcastViewModel viewModel)
     {
         InitializeComponent();
@@ -46,7 +47,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
-
 #nullable enable
 
     /// <summary>

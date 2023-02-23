@@ -12,7 +12,7 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 ## Current known issues
 1. At first launch it appears to freeze for about 15 to 45 seconds while it loads data from the web into datatbase
 2. Requires internet access all the time in order to function in any way
-3. Alway full screen, no option for switching from full screen to normal on either windows or android
+3. Full screen has to be toggled in Options. You need to restart application for changes to be active.
 4. Android is always keep screen on. Please remember to exit program. This is first on list to be updated to not behave this way.
 
 ## TODO

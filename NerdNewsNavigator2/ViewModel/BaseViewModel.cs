@@ -55,6 +55,9 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <returns><see cref="Show"/></returns>
+
+    #region Podcast data functions
+
     public async Task GetShows(string url)
     {
         Shows.Clear();
