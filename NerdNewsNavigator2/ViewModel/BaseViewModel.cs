@@ -48,8 +48,6 @@ public partial class BaseViewModel : ObservableObject
     {
     }
 
-    #region Podcast data functions
-
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> and returns a <see cref="Show"/>
     /// </summary>
