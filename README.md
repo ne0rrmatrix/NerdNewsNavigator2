@@ -16,9 +16,17 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 3. Full screen has to be toggled in Options. You need to restart application for changes to be active.
 
 ## TODO
-1. Implement always on screen only on video playback. Disable otherwise.
-2. Full screen option on android and windows.
-3. Work on better UI implementation.
+1. Full screen option on android and windows.
+2. Work on better UI implementation.
+3. Add syncing between devices to track playback. Currently it is by individual device and has no awareness of other devices or platforms.
+4. Fix startup behavior so that it does not appear to freeze on first start. Fix freeze when resetting data.
+5. Release on Google play store.
+6. Release on Apple store
+7. Respond to feedback
+8. Optimize UI from feedback
+9. Add the ability to download podcasts and select options like, download all, download most recent.
+10. Create list of most recent list of episodes from favorite podcasts.
+11. Create list of favorites that users can create.
 
 ## Suggestions/Bugs?
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
