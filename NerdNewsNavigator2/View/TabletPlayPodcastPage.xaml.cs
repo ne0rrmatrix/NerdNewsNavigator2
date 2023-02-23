@@ -1,40 +1,45 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
 public partial class TabletPlayPodcastPage : ContentPage
 {
+    #region Properties
+    private readonly ILogger<TabletPlayPodcastPage> _logger;
     private Position Pos { get; set; } = new();
-    private bool isPlaying = false;
-    public TabletPlayPodcastPage(TabletPlayPodcastViewModel viewModel)
+    private bool _isPlaying = false;
+    #endregion
+    public TabletPlayPodcastPage(ILogger<TabletPlayPodcastPage> logger, TabletPlayPodcastViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
+        _logger = logger;
+
 #if WINDOWS || ANDROID
-mediaElement.MediaOpened += Seek;
+        mediaElement.MediaOpened += Seek;
 #endif
 #if IOS
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
-
 #nullable enable
     public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
-        if (sender is null || isPlaying == false)
+        if (sender is null || _isPlaying == false)
         {
             return;
         }
         if ((mediaElement.CurrentState == MediaElementState.Paused) && mediaElement.Position != Pos.SavedPosition)
         {
             Pos.SavedPosition = mediaElement.Position;
+            _logger.LogInformation("Paused: {Position}", mediaElement.Position);
             await Save();
         }
     }
     public async void Seek(object? sender, EventArgs e)
     {
-        if (sender is null && isPlaying == false)
+        if (sender is null && _isPlaying == false)
         {
             return;
         }
@@ -46,10 +51,11 @@ mediaElement.MediaOpened += Seek;
             if (Pos.Title == item.Title)
             {
                 Pos.SavedPosition = item.SavedPosition;
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition.TotalSeconds);
             }
         }
         mediaElement.SeekTo(Pos.SavedPosition);
-        isPlaying = true;
+        _isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
     }
     public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
@@ -62,13 +68,14 @@ mediaElement.MediaOpened += Seek;
             if (Pos.Title == item.Title)
             {
                 Pos.SavedPosition = item.SavedPosition;
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition.TotalSeconds);
             }
         }
         if (e.NewState == MediaElementState.Playing)
         {
             mediaElement.SeekTo(Pos.SavedPosition);
         }
-        isPlaying = true;
+        _isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
     }
     private async Task Save()
@@ -86,6 +93,7 @@ mediaElement.MediaOpened += Seek;
             return;
         }
         // Stop and cleanup MediaElement when we navigate away
+        _logger.LogInformation("Unloaded Media Element from memory.");
         mediaElement.MediaOpened -= Seek;
         mediaElement.StateChanged -= Media_Stopped;
         mediaElement.Handler?.DisconnectHandler();

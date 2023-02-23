@@ -173,6 +173,43 @@
             VerticalOptions="Center"
             WidthRequest="{OnIdiom Tablet=150,
                                    Default=75}" />
+        <Label
+            Grid.Row="5"
+            Grid.Column="0"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
+            HorizontalOptions="Start"
+            Text="Full Screen"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Button
+            Grid.Row="5"
+            Grid.Column="1"
+            Clicked="Button_Full_Screen_Enable"
+            FontAttributes="Bold"
+            FontAutoScalingEnabled="True"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
+            HorizontalOptions="End"
+            Text="Enable"
+            VerticalOptions="Center"
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
+        <Button
+            Grid.Row="5"
+            Grid.Column="2"
+            Clicked="Button_Full_Screen_Disable"
+            FontAttributes="Bold"
+            FontAutoScalingEnabled="True"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
+            HorizontalOptions="End"
+            Text="Disable"
+            VerticalOptions="Center"
+            WidthRequest="{OnIdiom Tablet=150,
+                                   Default=75}" />
     </Grid>
 
 </ContentPage>

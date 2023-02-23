@@ -13,14 +13,13 @@ public partial class TabletShowViewModel : BaseViewModel
         set
         {
             var decodedUrl = HttpUtility.UrlDecode(value);
-            GetShows(decodedUrl);
+            _ = GetShows(decodedUrl);
             OnPropertyChanged(nameof(Shows));
         }
     }
     #endregion
-    public TabletShowViewModel(PodcastServices podcastService)
+    public TabletShowViewModel()
     {
-        PodServices = podcastService;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
     }

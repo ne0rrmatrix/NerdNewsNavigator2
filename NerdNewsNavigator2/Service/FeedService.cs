@@ -3,19 +3,18 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-public partial class FeedService
+/// <summary>
+/// Class <c>FeedService</c> Get Podcasts from twit.tv
+/// </summary>
+public static class FeedService
 {
-    public List<Podcast> _podcasts = new();
-    public FeedService()
-    {
-        _podcasts.Clear();
-    }
     #region Get the Podcasts
-    public List<Podcast> GetData()
-    {
-        return _podcasts;
-    }
-    public static Podcast GetFeed(string item)
+    /// <summary>
+    /// Method <c>GetFeed</c> return Feed from URL.
+    /// </summary>
+    /// <param name="item"></param> The URL of Podcast.
+    /// <returns><see cref="Podcast"/></returns>
+    public static Task<Podcast> GetFeed(string item)
     {
         var counter = 0;
         Podcast feed = new();
@@ -32,12 +31,18 @@ public partial class FeedService
                 feed.Image = level2Element.Element("url")?.Value;
             }
         }
-        return feed;
+
+        return Task.FromResult(feed);
     }
     #endregion
 
     #region Get the Shows
-    public static List<Show> GetShow(string items)
+    /// <summary>
+    /// Method <c>GetShow</c> returns list of Shows
+    /// </summary>
+    /// <param name="items"></param> The URL of the Show
+    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
+    public static Task<List<Show>> GetShow(string items)
     {
         List<Show> shows = new();
         XmlDocument rssDoc = new();
@@ -58,15 +63,17 @@ public partial class FeedService
                 };
                 shows.Add(show);
             }
-        return shows;
+        return Task.FromResult(shows);
     }
     #endregion
+    /// <summary>
+    /// Method <c>hTMLCode</c> Returns html string that will not crash.
+    /// </summary>
+    /// <param name="hTMLCode"></param> String of html.
+    /// <returns><see cref="string"/></returns>
     public static string RemoveBADHtmlTags(string hTMLCode)
     {
-        hTMLCode = MyRegex().Replace(hTMLCode, "\"");
+        hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         return hTMLCode;
     }
-
-    [GeneratedRegex("/\\?.*?.\"", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-CA")]
-    private static partial Regex MyRegex();
 }

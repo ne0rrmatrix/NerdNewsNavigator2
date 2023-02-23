@@ -5,9 +5,8 @@
 namespace NerdNewsNavigator2.ViewModel;
 public partial class TabletPodcastViewModel : BaseViewModel
 {
-    public TabletPodcastViewModel(PodcastServices podcastServices)
+    public TabletPodcastViewModel()
     {
-        PodServices = podcastServices;
         OnPropertyChanged(nameof(IsBusy));
         _ = GetUpdatedPodcasts();
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;

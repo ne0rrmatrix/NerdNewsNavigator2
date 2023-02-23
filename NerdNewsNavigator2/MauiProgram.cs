@@ -8,6 +8,8 @@ using Microsoft.UI.Windowing;
 using Windows.Graphics;
 #endif
 
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -20,26 +22,39 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
 
-#if WINDOWS
-        builder.ConfigureLifecycleEvents(events =>
-               {
-                   events.AddWindows(wndLifeCycleBuilder =>
-            {
-                wndLifeCycleBuilder.OnWindowCreated(window =>
-                {
-                    window.ExtendsContentIntoTitleBar = false;
-                    IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-                    WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-                    var appWindow = AppWindow.GetFromWindowId(myWndId);
-                    appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
-                });
-            });
-               });
-#endif
+        builder.Logging
 
 #if DEBUG
-        builder.Logging.AddDebug();
+           .AddTraceLogger(
+                options =>
+                {
+                    options.MinLevel = LogLevel.Trace;
+                    options.MaxLevel = LogLevel.Critical;
+                }) // Will write to the Debug Output
 #endif
+            .AddInMemoryLogger(
+                options =>
+                {
+                    options.MaxLines = 1024;
+                    options.MinLevel = LogLevel.Debug;
+                    options.MaxLevel = LogLevel.Critical;
+                })
+#if RELEASE
+            .AddStreamingFileLogger(
+                options =>
+                {
+                    options.RetainDays = 2;
+                    options.FolderPath = Path.Combine(
+                        FileSystem.CacheDirectory,
+                        "MetroLogs");
+                })
+#endif
+            .AddConsoleLogger(
+                options =>
+                {
+                    options.MinLevel = LogLevel.Information;
+                    options.MaxLevel = LogLevel.Critical;
+                }); // Will write to the Console Output (logcat for android)
 
         builder.Services.AddSingleton<BaseViewModel>();
 
@@ -68,10 +83,9 @@ public static class MauiProgram
         builder.Services.AddTransient<UpdateSettingsPage>();
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
-        builder.Services.AddSingleton<FeedService>();
-        builder.Services.AddTransient<PodcastServices>();
-
         builder.Services.AddSingleton<PositionDataBase>();
+
+        builder.Services.AddSingleton(LogOperatorRetriever.Instance);
 
         return builder.Build();
     }
