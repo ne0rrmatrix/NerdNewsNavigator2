@@ -4,7 +4,7 @@
 
 namespace NerdNewsNavigator2.Model;
 /// <summary>
-/// <c>Position</c> <see cref="Class"/> for Storing Playback Position in Database
+/// a Class for Storing <see cref="Position"/> in Database
 /// </summary>
 [Table("Positions")]
 public class Position

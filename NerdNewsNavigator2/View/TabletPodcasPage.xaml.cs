@@ -3,8 +3,16 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.View;
+
+/// <summary>
+/// A class that displays a <see cref="List{T}"/> of <see cref="Podcast"/> from twit.tv network.
+/// </summary>
 public partial class TabletPodcastPage : ContentPage
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TabletPodcastPage"/> class.
+    /// </summary>
+    /// <param name="viewModel">This pages <see cref="ViewModel"/> from <see cref="TabletPodcastViewModel"/></param>
     public TabletPodcastPage(TabletPodcastViewModel viewModel)
     {
         InitializeComponent();

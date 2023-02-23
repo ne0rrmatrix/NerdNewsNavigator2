@@ -3,8 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
+/// <summary>
+/// A class that manages displaying <see cref="Podcast"/> from twit.tv network.
+/// </summary>
 public partial class TabletPodcastViewModel : BaseViewModel
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TabletPodcastViewModel"/> class.
+    /// </summary>
     public TabletPodcastViewModel()
     {
         OnPropertyChanged(nameof(IsBusy));
@@ -14,6 +20,11 @@ public partial class TabletPodcastViewModel : BaseViewModel
         OnPropertyChanged(nameof(Orientation));
     }
 
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="TabletShowPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
     [RelayCommand]
     async Task Tap(string url)
     {

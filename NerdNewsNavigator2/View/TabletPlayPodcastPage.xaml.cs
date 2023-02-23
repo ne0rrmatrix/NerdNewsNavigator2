@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
-/// A clas that Displays a Video from twit.tv.
+/// A class that Displays a Video from twit.tv.
 /// </summary>
 /// 
 public partial class TabletPlayPodcastPage : ContentPage

@@ -3,15 +3,16 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
+
 /// <summary>
-/// Class <c>PodcastService</c> Has methods for processing Podcasts.
+/// A Class for managing Podcasts.
 /// </summary>
 public static class PodcastServices
 {
     #region Properties
-    
+
     /// <summary>
-    /// List <see cref="s_twit"/> is a  Default list of <see cref="Type"/> <see cref="string"/> for Twit podcasts.
+    /// Default URL <see cref="List{T}"/> <see cref="string"/> for Twit podcasts.
     /// </summary>
 
     private static readonly List<string> s_twit = new()
@@ -40,7 +41,7 @@ public static class PodcastServices
         };
     #endregion
     /// <summary>
-    /// Method <c>GetUpdatedPodcasts</c> Gets updated Podcasts from Database.
+    /// Method Gets updated <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public static async Task<List<Podcast>> GetUpdatedPodcasts()
@@ -49,7 +50,7 @@ public static class PodcastServices
         return temp;
     }
     /// <summary>
-    /// Method <c>AddToDatabase</c> Adds Playback position to Database.
+    /// Method Adds Playback <see cref="Position"/> to Database.
     /// </summary>
     /// <param name="position"></param> Position Class object.
     /// <returns>nothing</returns>
@@ -61,7 +62,7 @@ public static class PodcastServices
         }
     }
     /// <summary>
-    /// Method <c>GetFromUrl</c> Retrieves Podcasts from default RSS Feeds.
+    /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public static async Task<List<Podcast>> GetFromUrl()
@@ -75,7 +76,7 @@ public static class PodcastServices
         return podcasts;
     }
     /// <summary>
-    /// Method <c>RemoveDefaultPodcasts</c> Clears Database of all default Podcasts.
+    /// Method resets <see cref="List{T}"/> <see cref="Podcast"/> to default list.
     /// </summary>
     /// <returns>nothing</returns>
     public static async Task RemoveDefaultPodcasts()
@@ -91,7 +92,7 @@ public static class PodcastServices
         }
     }
     /// <summary>
-    /// Method <c>AddDefaultPodcasts</c> Adds default Podcasts from RSS feed to Database.
+    /// Method Adds default <see cref="List{T}"/> <see cref="Podcast"/> from RSS feed to Database.
     /// </summary>
     /// <returns>nothing</returns>
     public static async Task AddDefaultPodcasts()
@@ -106,7 +107,7 @@ public static class PodcastServices
         }
     }
     /// <summary>
-    /// Method <c>DeleteAll</c> Removes all Podcasts from Database.
+    /// Method Removes <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
     /// <returns>nothing</returns>
     public static async Task DeleteAll()
@@ -114,7 +115,7 @@ public static class PodcastServices
         await App.PositionData.DeleteAllPodcasts();
     }
     /// <summary>
-    /// Method <c>GetShow</c> Returns a Single Show from RSS Feed.
+    /// Method Returns a <see cref="Show"/> from RSS Feed.
     /// </summary>
     /// <param name="url">The <see cref="System.String"/>The URL of Show.</param> 
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
@@ -123,7 +124,7 @@ public static class PodcastServices
         return FeedService.GetShow(url);
     }
     /// <summary>
-    /// Method <c>SaveAll</c> Saves List of Podcasts.
+    /// Method Saves <see cref="List{T}"/> of <see cref="Podcast"/> to database.
     /// </summary>
     /// <param name="podcasts">the <see cref="List{T}"/>List of Podcasts.</param>
     /// <returns>nothing</returns>
@@ -135,9 +136,9 @@ public static class PodcastServices
         }
     }
     /// <summary>
-    /// Method <c>AddPodcast</c> Adds a Podcast to Database.
+    /// Method Adds a <see cref="Podcast"/> to Database.
     /// </summary>
-    /// <param name="url"></param> URL string of Podcast.
+    /// <param name="url"><see cref="string"/> Url of <see cref="Podcast"/></param>
     /// <returns>nothing</returns>
     public static async Task AddPodcast(string url)
     {
@@ -151,9 +152,9 @@ public static class PodcastServices
         });
     }
     /// <summary>
-    /// Method <c>Delete</c> Deletes a Podcast from Database.
+    /// Method Deletes a <see cref="Podcast"/> from Database.
     /// </summary>
-    /// <param name="url">The <see cref="System.String"/>URL of Podcast to delete</param>
+    /// <param name="url"><see cref="System.String"/> URL of <see cref="Podcast"/> to delete</param>
     /// <returns>nothing</returns>
     public static async Task Delete(string url)
     {
