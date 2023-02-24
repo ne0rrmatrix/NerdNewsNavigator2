@@ -10,6 +10,7 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 5. There is a reset button in case you want to go back to defaults
 6. Always on screen now works. It is set on during video playback. It turns off automatically after playback ends. No more dead phone/tablet if you fall asleep listening to podcast.
 7. Startup behavior fixed! It now does not appear to freeze up when running for the first time, or during reset of app.
+8. List of most recent show from each podcast now has a dedicated page.
 
 ## Current known issues
 2. Requires internet access all the time in order to function in any way
