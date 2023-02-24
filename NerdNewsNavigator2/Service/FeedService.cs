@@ -10,6 +10,7 @@ namespace NerdNewsNavigator2.Service;
 public static class FeedService
 {
     #region Get the Podcasts
+
     /// <summary>
     /// Method <c>GetFeed</c> return Feed from URL.
     /// </summary>
@@ -38,6 +39,7 @@ public static class FeedService
     #endregion
 
     #region Get the Shows
+
     /// <summary>
     /// 
     /// </summary>
@@ -59,6 +61,7 @@ public static class FeedService
                 Show show = new()
                 {
                     Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
+                    PubDate = node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty,
                     Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                     Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                     Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
@@ -72,6 +75,7 @@ public static class FeedService
         return Task.FromResult(shows);
     }
     #endregion
+
     /// <summary>
     /// Method <c>hTMLCode</c> Returns html string that will not crash.
     /// </summary>

@@ -40,6 +40,7 @@ public static class PodcastServices
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
     #endregion
+
     /// <summary>
     /// Method Gets updated <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
@@ -49,6 +50,7 @@ public static class PodcastServices
         var temp = await App.PositionData.GetAllPodcasts();
         return temp;
     }
+
     /// <summary>
     /// Method Adds Playback <see cref="Position"/> to Database.
     /// </summary>
@@ -61,6 +63,50 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+
+    /// <summary>
+    /// Get file name from Url <see cref="string"/>
+    /// </summary>
+    /// <param name="url">A URL <see cref="string"/></param>
+    /// <returns>Filename <see cref="string"/> with file extension</returns>
+    public static string GetFileName(string url)
+    {
+        var result = new Uri(url).LocalPath;
+        return System.IO.Path.GetFileName(result);
+
+    }
+
+    /// <summary>
+    /// Download a file to local filesystem from a URL
+    /// </summary>
+    /// <param name="url"><see cref="string"/> Url to download file. </param>
+    /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
+    public static async Task<bool> DownloadFile(string url)
+    {
+        string filename = GetFileName(url);
+        try
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+                using (Stream readFrom = await response.Content.ReadAsStreamAsync())
+                {
+                    string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
+                    using (Stream writeTo = File.Open(tempFile, FileMode.Create))
+                    {
+                        await readFrom.CopyToAsync(writeTo);
+                    }
+                }
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
+    }
+
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
@@ -75,6 +121,7 @@ public static class PodcastServices
         }
         return podcasts;
     }
+
     /// <summary>
     /// Method resets <see cref="List{T}"/> <see cref="Podcast"/> to default list.
     /// </summary>
@@ -91,6 +138,7 @@ public static class PodcastServices
             }
         }
     }
+
     /// <summary>
     /// Method Adds default <see cref="List{T}"/> <see cref="Podcast"/> from RSS feed to Database.
     /// </summary>
@@ -106,6 +154,7 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+
     /// <summary>
     /// Method Removes <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
@@ -114,6 +163,7 @@ public static class PodcastServices
     {
         await App.PositionData.DeleteAllPodcasts();
     }
+
     /// <summary>
     /// Method Returns a <see cref="Show"/> from RSS Feed.
     /// </summary>
@@ -124,6 +174,7 @@ public static class PodcastServices
     {
         return FeedService.GetShows(url, getFirstOnly);
     }
+
     /// <summary>
     /// Method Saves <see cref="List{T}"/> of <see cref="Podcast"/> to database.
     /// </summary>
@@ -136,6 +187,7 @@ public static class PodcastServices
             await AddPodcast(item.Url);
         }
     }
+
     /// <summary>
     /// Method Adds a <see cref="Podcast"/> to Database.
     /// </summary>
@@ -152,6 +204,7 @@ public static class PodcastServices
             Image = podcast.Image,
         });
     }
+
     /// <summary>
     /// Method Deletes a <see cref="Podcast"/> from Database.
     /// </summary>
