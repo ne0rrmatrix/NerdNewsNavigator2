@@ -20,7 +20,7 @@ public partial class TabletShowViewModel : BaseViewModel
         set
         {
             var decodedUrl = HttpUtility.UrlDecode(value);
-            _ = GetShows(decodedUrl);
+            _ = GetShows(decodedUrl, false);
             OnPropertyChanged(nameof(Shows));
         }
     }

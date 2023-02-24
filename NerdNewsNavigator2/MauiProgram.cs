@@ -85,6 +85,9 @@ public static class MauiProgram
         builder.Services.AddTransient<UpdateSettingsPage>();
         builder.Services.AddTransient<UpdateSettingsViewModel>();
 
+        builder.Services.AddTransient<MostRecentShowsPage>();
+        builder.Services.AddTransient<MostRecentShowsViewModel>();
+
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);

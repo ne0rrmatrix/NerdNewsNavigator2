@@ -14,7 +14,6 @@ public partial class TabletPodcastViewModel : BaseViewModel
     public TabletPodcastViewModel()
     {
         OnPropertyChanged(nameof(IsBusy));
-        _ = GetUpdatedPodcasts();
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));

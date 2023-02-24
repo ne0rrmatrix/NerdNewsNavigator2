@@ -21,6 +21,11 @@ public partial class BaseViewModel : ObservableObject
     public ObservableCollection<Show> Shows { get; set; } = new();
 
     /// <summary>
+    /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
+    /// </summary>
+    public ObservableCollection<Show> MostRecentShows { get; set; } = new();
+
+    /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
@@ -46,20 +51,21 @@ public partial class BaseViewModel : ObservableObject
     #endregion
     public BaseViewModel()
     {
+        ThreadPool.QueueUserWorkItem(GetMostRecent);
     }
+
+    #region Podcast data functions
 
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for <see cref="Show.Url"/> and returns a <see cref="Show"/>
     /// </summary>
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
+    /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
     /// <returns><see cref="Show"/></returns>
-
-    #region Podcast data functions
-
-    public async Task GetShows(string url)
+    public async Task GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        var temp = await FeedService.GetShow(url);
+        var temp = await FeedService.GetShows(url, getFirstOnly);
         Shows = new ObservableCollection<Show>(temp);
     }
 
@@ -73,12 +79,7 @@ public partial class BaseViewModel : ObservableObject
         OnPropertyChanged(nameof(IsBusy));
         IsBusy = true;
         var temp = await PodcastServices.GetUpdatedPodcasts();
-        foreach (var item in temp)
-        {
-            Podcasts.Add(item);
-        }
-
-        if (temp.Count == 0)
+        if (temp is null || temp.Count == 0)
         {
             var items = await PodcastServices.GetFromUrl();
             await PodcastServices.AddToDatabase(items);
@@ -86,8 +87,32 @@ public partial class BaseViewModel : ObservableObject
             {
                 Podcasts.Add(item);
             }
+            IsBusy = false;
         }
-        IsBusy = false;
+        else
+        {
+            foreach (var item in temp)
+            {
+                Podcasts.Add(item);
+            }
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>
+    /// Method gets most recent episode from each podcast on twit.tv
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    /// <returns></returns>
+    public async void GetMostRecent(Object stateinfo)
+    {
+        Shows.Clear();
+        await GetUpdatedPodcasts();
+        foreach (var show in Podcasts.ToList())
+        {
+            var item = await FeedService.GetShows(show.Url, true);
+            MostRecentShows.Add(item.First());
+        }
     }
 
     #endregion

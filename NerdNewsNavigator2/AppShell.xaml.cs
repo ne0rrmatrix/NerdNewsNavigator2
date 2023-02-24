@@ -21,6 +21,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(RemovePage), typeof(RemovePage));
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
         Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
+        Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
     }
     /// <summary>
     /// Method quits application
@@ -38,6 +39,17 @@ public partial class AppShell : Shell
     {
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+    }
+
+    /// <summary>
+    /// Method navigates user to Main Page.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void GotoMostRecentShowPage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(MostRecentShowsPage)}");
     }
 
     /// <summary>
