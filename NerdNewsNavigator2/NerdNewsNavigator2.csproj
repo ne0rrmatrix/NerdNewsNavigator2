@@ -151,6 +151,9 @@
     <MauiXaml Update="View\LivePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="View\MostRecentShowsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="View\RemovePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

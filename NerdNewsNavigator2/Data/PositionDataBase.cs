@@ -78,6 +78,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     /// <summary>
     /// Method retrieves a <see cref="List{T}"/> of <see cref="Position"/> from database.
     /// </summary>
@@ -96,6 +97,7 @@ public class PositionDataBase
             return null;
         }
     }
+
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Podcast"/> from database.
     /// </summary>
@@ -114,6 +116,7 @@ public class PositionDataBase
             return null;
         }
     }
+
     /// <summary>
     /// Method deletes all <see cref="Podcast"/> from database.
     /// </summary>
@@ -133,6 +136,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     /// <summary>
     /// Method Adds a <see cref="Position"/> to Database
     /// </summary>
@@ -171,6 +175,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     /// <summary>
     /// Method deletes a <see cref="Position"/> from Database
     /// </summary>
@@ -190,6 +195,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     /// <summary>
     /// Method add a <see cref="Podcast"/> to Database.
     /// </summary>
@@ -209,6 +215,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     /// <summary>
     /// Method Deletes a <see cref="Podcast"/> from Database
     /// </summary>

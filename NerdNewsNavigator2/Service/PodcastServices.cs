@@ -117,11 +117,12 @@ public static class PodcastServices
     /// <summary>
     /// Method Returns a <see cref="Show"/> from RSS Feed.
     /// </summary>
-    /// <param name="url">The <see cref="System.String"/>The URL of Show.</param> 
+    /// <param name="url">The <see cref="System.String"/> URL of the Show.</param> 
+    /// <param name="getFirstOnly">The <see cref="bool"/> Get First value only.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public static Task<List<Show>> GetShow(string url)
+    public static Task<List<Show>> GetShow(string url, bool getFirstOnly)
     {
-        return FeedService.GetShow(url);
+        return FeedService.GetShows(url, getFirstOnly);
     }
     /// <summary>
     /// Method Saves <see cref="List{T}"/> of <see cref="Podcast"/> to database.

@@ -13,7 +13,7 @@ public static class FeedService
     /// <summary>
     /// Method <c>GetFeed</c> return Feed from URL.
     /// </summary>
-    /// <param name="item"></param> The URL of Podcast.
+    /// <param name="item">The URL of <see cref="Podcast"/></param> 
     /// <returns><see cref="Podcast"/></returns>
     public static Task<Podcast> GetFeed(string item)
     {
@@ -39,11 +39,12 @@ public static class FeedService
 
     #region Get the Shows
     /// <summary>
-    /// Method <c>GetShow</c> returns list of Shows
+    /// 
     /// </summary>
-    /// <param name="items"></param> The URL of the Show
+    /// <param name="items">The Url of the <see cref="Show"/></param>
+    /// <param name="getFirstOnly"><see cref="bool"/> Get only first item.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public static Task<List<Show>> GetShow(string items)
+    public static Task<List<Show>> GetShows(string items, bool getFirstOnly)
     {
         List<Show> shows = new();
         XmlDocument rssDoc = new();
@@ -63,6 +64,10 @@ public static class FeedService
                     Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
                 };
                 shows.Add(show);
+                if (getFirstOnly)
+                {
+                    return Task.FromResult(shows);
+                }
             }
         return Task.FromResult(shows);
     }
