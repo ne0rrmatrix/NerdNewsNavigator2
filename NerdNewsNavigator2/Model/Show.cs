@@ -31,8 +31,8 @@ namespace NerdNewsNavigator2.Model
         public string Url { get; set; }
 
         /// <summary>
-        /// The <c>PubDate</c> is a <see cref="string"/> of <see cref="Podcast"/> Class.
+        /// The <c>PubDate</c> is a <see cref="DateTime"/> of <see cref="Podcast"/> Class.
         /// </summary>
-        public string PubDate { get; set; }
+        public DateTime PubDate { get; set; }
     }
 }

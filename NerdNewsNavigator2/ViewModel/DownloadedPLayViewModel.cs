@@ -5,16 +5,22 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that inherits from <see cref="BaseViewModel"/> and manages displaying video's from <see cref="Show"/> class.
+/// A class that extends <see cref="BaseViewModel"/> and manages <see cref="DownloadPlayPage"/>
 /// </summary>
+
 [QueryProperty("Url", "Url")]
-public partial class TabletPlayPodcastViewModel : BaseViewModel
+public partial class DownloadedPlayViewModel : BaseViewModel
 {
-    private readonly ILogger<TabletPlayPodcastViewModel> _logger;
+    #region Properties
+
+    /// <summary>
+    /// Initializes the <see cref="ILogger{TCategoryName}"/> instance of <see cref="DownloadedPlayViewModel"/>
+    /// </summary>
+    private readonly ILogger<DownloadedPlayViewModel> _logger;
+
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
-    #region Properties
     string _url;
 
     /// <summary>
@@ -28,15 +34,17 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
             SetProperty(ref _url, value);
             Preferences.Default.Remove("New_Url", null);
             Preferences.Default.Set("New_Url", value);
+            Debug.WriteLine($"Url is: {value}");
         }
     }
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TabletPlayPodcastViewModel"/> class.
+    /// Initializes the instance of <see cref="DownloadedPlayViewModel"/>
     /// </summary>
-    public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger)
-        : base(logger)
+    /// <param name="logger"></param>
+    public DownloadedPlayViewModel(ILogger<DownloadedPlayViewModel> logger)
+    : base(logger)
     {
         _logger = logger;
     }

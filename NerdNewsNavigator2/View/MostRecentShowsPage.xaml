@@ -35,7 +35,7 @@
                     WidthRequest="{OnPlatform WinUI=370,
                                               Android=370,
                                               iOS=320}">
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,870">
+                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
@@ -61,8 +61,22 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
+
+                        <HorizontalStackLayout Grid.Row="2" Padding="10">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                Text="Published: "
+                                TextColor="Black" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                Text="{Binding PubDate}"
+                                TextColor="Black" />
+                        </HorizontalStackLayout>
+
                         <Label
-                            Grid.Row="2"
+                            Grid.Row="3"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"

@@ -65,49 +65,6 @@ public static class PodcastServices
     }
 
     /// <summary>
-    /// Get file name from Url <see cref="string"/>
-    /// </summary>
-    /// <param name="url">A URL <see cref="string"/></param>
-    /// <returns>Filename <see cref="string"/> with file extension</returns>
-    public static string GetFileName(string url)
-    {
-        var result = new Uri(url).LocalPath;
-        return System.IO.Path.GetFileName(result);
-
-    }
-
-    /// <summary>
-    /// Download a file to local filesystem from a URL
-    /// </summary>
-    /// <param name="url"><see cref="string"/> Url to download file. </param>
-    /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
-    public static async Task<bool> DownloadFile(string url)
-    {
-        string filename = GetFileName(url);
-        try
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-                using (Stream readFrom = await response.Content.ReadAsStreamAsync())
-                {
-                    string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
-                    using (Stream writeTo = File.Open(tempFile, FileMode.Create))
-                    {
-                        await readFrom.CopyToAsync(writeTo);
-                    }
-                }
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-            return false;
-        }
-    }
-
-    /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
@@ -167,7 +124,7 @@ public static class PodcastServices
     /// <summary>
     /// Method Returns a <see cref="Show"/> from RSS Feed.
     /// </summary>
-    /// <param name="url">The <see cref="System.String"/> URL of the Show.</param> 
+    /// <param name="url">The <see cref="string"/> URL of the Show.</param> 
     /// <param name="getFirstOnly">The <see cref="bool"/> Get First value only.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
     public static Task<List<Show>> GetShow(string url, bool getFirstOnly)
@@ -208,17 +165,26 @@ public static class PodcastServices
     /// <summary>
     /// Method Deletes a <see cref="Podcast"/> from Database.
     /// </summary>
-    /// <param name="url"><see cref="System.String"/> URL of <see cref="Podcast"/> to delete</param>
+    /// <param name="url"><see cref="string"/> URL of <see cref="Podcast"/> to delete</param>
     /// <returns>nothing</returns>
-    public static async Task Delete(string url)
+    public static async Task<bool> Delete(string url)
     {
         var current = await App.PositionData.GetAllPodcasts();
         foreach (var item in current)
         {
             if (item.Url == url)
             {
-                await App.PositionData.DeletePodcast(item);
+                try
+                {
+                    await App.PositionData.DeletePodcast(item);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
+        return true;
     }
 }

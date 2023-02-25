@@ -18,4 +18,9 @@ public partial class TabletShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Ok", "Added show to downloads!", "Ok");
+    }
 }

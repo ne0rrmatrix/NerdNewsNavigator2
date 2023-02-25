@@ -26,6 +26,7 @@ public static class FeedService
             feed.Description = level1Element.Element("description").Value;
             feed.Url = item;
             feed.Id = counter;
+            feed.Download = false;
             counter++;
 
             foreach (var level2Element in level1Element.Elements("image"))
@@ -61,7 +62,7 @@ public static class FeedService
                 Show show = new()
                 {
                     Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                    PubDate = node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty,
+                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
                     Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                     Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                     Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
@@ -85,5 +86,15 @@ public static class FeedService
     {
         hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         return hTMLCode;
+    }
+
+    /// <summary>
+    /// Method returns <see cref="DateTime"/> object from string.
+    /// </summary>
+    /// <param name="dateTime"> DateTime <see cref="string"/></param>
+    /// <returns><see cref="DateTime"/></returns>
+    public static DateTime ConvertToDateTime(string dateTime)
+    {
+        return DateTime.Parse(dateTime.Remove(25));
     }
 }

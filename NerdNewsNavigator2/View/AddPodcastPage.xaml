@@ -85,7 +85,7 @@
             FontSize="{OnIdiom Tablet=24,
                                Default=12}"
             HorizontalOptions="Start"
-            Text="Remove Item"
+            Text="Edit Item"
             TextColor="Black"
             VerticalOptions="Center" />
         <Button

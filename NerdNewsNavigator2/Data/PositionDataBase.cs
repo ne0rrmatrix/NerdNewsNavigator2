@@ -49,9 +49,13 @@ public class PositionDataBase
 #endif
             _logger.LogInformation("Database path is: {Path}", databasePath);
             _connection = new SQLiteAsyncConnection(databasePath);
+
             await _connection.CreateTableAsync<Position>();
             _logger.LogInformation("Position Init {DatabasePath}", databasePath);
             await _connection.CreateTableAsync<Podcast>();
+            _logger.LogInformation("Podcast Init {DataBasePath}", databasePath);
+            await _connection.CreateTableAsync<Download>();
+            _logger.LogInformation("Download Init {DatabasePath}", databasePath);
         }
         catch (Exception ex)
         {
@@ -118,6 +122,25 @@ public class PositionDataBase
     }
 
     /// <summary>
+    /// Method Retrieves a <see cref="List{T}"/> of <see cref="Download"/> from database.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Download"/></returns>
+    public async Task<List<Download>> GetAllDownloads()
+    {
+        try
+        {
+            var temp = await _connection.Table<Download>().ToListAsync();
+            _logger.LogInformation("Got all Downloads from Database.");
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to get Downloads from Database: {Message}", ex.Message);
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Method deletes all <see cref="Podcast"/> from database.
     /// </summary>
     /// <returns><see cref="bool"/></returns>
@@ -133,6 +156,26 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.LogError("Failed to delete all Podcasts. {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method deletes all <see cref="Download"/> from database.
+    /// </summary>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteAllDownloads()
+    {
+        try
+        {
+
+            await _connection.DeleteAllAsync<Download>();
+            _logger.LogInformation("Succesfully Deleted all Downloads.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to delete all Downloads. {Message}", ex.Message);
             return false;
         }
     }
@@ -232,6 +275,46 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.LogError("Failed to Delete Podcast from Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method add a <see cref="Download"/> to Database.
+    /// </summary>
+    /// <param name="download">an instance of <see cref="Download"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> AddDownload(Download download)
+    {
+        try
+        {
+            await _connection.InsertAsync(download);
+            _logger.LogInformation("Saved to Database Download: {Title}", download.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation("Failed to save Download to Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Deletes a <see cref="Download"/> from Database
+    /// </summary>
+    /// <param name="download">an instance of <see cref="Download"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteDownload(Download download)
+    {
+        try
+        {
+            await _connection.DeleteAsync(download);
+            _logger.LogInformation("Deleted Podcast: {Title}", download.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Delete Download from Database: {Message}", ex.Message);
             return false;
         }
     }

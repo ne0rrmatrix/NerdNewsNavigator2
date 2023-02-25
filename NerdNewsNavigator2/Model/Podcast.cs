@@ -27,9 +27,9 @@ public class Podcast
     /// </summary>
     public string Link { get; set; }
     /// <summary>
-    /// The <c>PubDate</c> is a <see cref="string"/> of <see cref="Podcast"/> Class.
+    /// The <c>PubDate</c> is a <see cref="DateTime"/> of <see cref="Podcast"/> Class.
     /// </summary>
-    public string PubDate { get; set; }
+    public DateTime PubDate { get; set; }
     /// <summary>
     /// The <c>EnclosureUrl</c> is a <see cref="string"/> of <see cref="Podcast"/> Class
     /// </summary>
@@ -50,4 +50,12 @@ public class Podcast
     /// the <c>Url</c> is a <see cref="string"/> of <see cref="Podcast"/> Class.
     /// </summary>
     public string Url { get; set; }
+    /// <summary>
+    /// the <c>Download</c> is a <see cref="bool"/> of <see cref="Podcast"/> Class.
+    /// </summary>
+    public bool Download { get; set; }
+    /// <summary>
+    /// the <c>IsDownloaded</c> is a <see cref="bool"/> of <see cref="Podcast"/> Class.
+    /// </summary>
+    public bool IsDownloaded { get; set; }
 }

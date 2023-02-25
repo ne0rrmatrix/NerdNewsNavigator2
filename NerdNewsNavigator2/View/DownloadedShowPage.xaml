@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.TabletShowPage"
+    x:Class="NerdNewsNavigator2.View.DownloadedShowPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title=""
-    x:DataType="viewmodel:TabletShowViewModel"
+    Title="DownloadedShowsPage"
+    x:DataType="viewmodel:DownloadedShowViewModel"
     BackgroundColor="Wheat"
     Shell.NavBarIsVisible="False">
 
@@ -17,7 +17,7 @@
     <CollectionView
         Margin="5"
         BackgroundColor="Wheat"
-        ItemsSource="{Binding Shows}"
+        ItemsSource="{Binding DownloadedShows}"
         SelectionMode="None">
 
         <CollectionView.ItemsLayout>
@@ -25,7 +25,7 @@
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Show">
+            <DataTemplate x:DataType="model:Download">
 
                 <Frame
                     Margin="{OnPlatform WinUI=90,
@@ -35,12 +35,16 @@
                     WidthRequest="{OnPlatform WinUI=370,
                                               Android=370,
                                               iOS=320}">
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
+                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding FileName}" />
+                        </Grid.GestureRecognizers>
 
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            FontSize="10"
+                            FontSize="12"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
@@ -51,9 +55,6 @@
                             Aspect="AspectFit"
                             HeightRequest="320"
                             WidthRequest="320">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                            </Image.GestureRecognizers>
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="40"
@@ -73,23 +74,11 @@
                                 FontSize="12"
                                 Text="{Binding PubDate}"
                                 TextColor="Black" />
-                            <Button
-                                Margin="20"
-                                BackgroundColor="Green"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                Clicked="Button_Clicked"
-                                Text="Download"
-                                TextColor="Black">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-                            </Button>
                         </HorizontalStackLayout>
 
                         <Label
                             Grid.Row="3"
+                            Margin="10"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
