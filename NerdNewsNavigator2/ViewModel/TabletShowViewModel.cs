@@ -63,7 +63,7 @@ public partial class TabletShowViewModel : BaseViewModel
                 {
                     Title = item.Title,
                     Url = url,
-                    Image= item.Image,
+                    Image = item.Image,
                     Description = item.Description,
                     FileName = DownloadService.GetFileName(url)
                 };

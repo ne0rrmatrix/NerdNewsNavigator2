@@ -36,9 +36,9 @@ public partial class DownloadedShowViewModel : BaseViewModel
     [RelayCommand]
     async Task Tap(string url)
     {
-        string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), url);
-        _logger.LogInformation("Url being passed is: {name}", tempFile);
-        await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={tempFile}");
+        string item = "ms-appdata:///LocalCache/Local/" + url;
+        _logger.LogInformation("Url being passed is: {name}", item);
+        await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
     }
 }
 

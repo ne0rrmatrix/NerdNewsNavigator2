@@ -94,7 +94,7 @@ public static class DownloadService
                 using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
                 using (Stream readFrom = await response.Content.ReadAsStreamAsync())
                 {
-                    string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
+                    string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
                     using (Stream writeTo = File.Open(tempFile, FileMode.Create))
                     {
                         await readFrom.CopyToAsync(writeTo);
