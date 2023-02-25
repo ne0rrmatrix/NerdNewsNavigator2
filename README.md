@@ -9,9 +9,10 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 4. Add or remove both default and custom podcasts from twit.tv
 5. There is a reset button in case you want to go back to defaults
 6. Always on screen now works. It is set on during video playback. It turns off automatically after playback ends. No more dead phone/tablet if you fall asleep listening to podcast.
+7. Startup behavior fixed! It now does not appear to freeze up when running for the first time, or during reset of app.
+8. List of most recent show from each podcast now has a dedicated page.
 
 ## Current known issues
-1. At first launch it appears to freeze for about 15 to 45 seconds while it loads data from the web into datatbase
 2. Requires internet access all the time in order to function in any way
 3. Full screen has to be toggled in Options. You need to restart application for changes to be active.
 
@@ -19,14 +20,13 @@ A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Tw
 1. Full screen option on android and windows.
 2. Work on better UI implementation.
 3. Add syncing between devices to track playback. Currently it is by individual device and has no awareness of other devices or platforms.
-4. Fix startup behavior so that it does not appear to freeze on first start. Fix freeze when resetting data.
-5. Release on Google play store.
-6. Release on Apple store
-7. Respond to feedback
-8. Optimize UI from feedback
-9. Add the ability to download podcasts and select options like, download all, download most recent.
-10. Create list of most recent list of episodes from favorite podcasts.
-11. Create list of favorites that users can create.
+4. Release on Google play store.
+5. Release on Apple store
+6. Respond to feedback
+7. Optimize UI from feedback
+8. Add the ability to download podcasts and select options like, download all, download most recent.
+9. Create list of most recent list of episodes from favorite podcasts.
+10. Create list of favorites that users can create.
 
 ## Suggestions/Bugs?
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
