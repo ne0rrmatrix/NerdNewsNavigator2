@@ -43,10 +43,12 @@ public partial class App : Application
     {
         InitializeComponent();
         MainPage = new AppShell();
+
         FullScreenMode = false;
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
+
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
@@ -92,57 +94,8 @@ public partial class App : Application
         if (sender != null)
         {
             Debug.WriteLine("SetFullScreen Triggered");
-#if ANDROID
-            SetFullScreenAndroid();
-#endif
+
 #if WINDOWS
-            SetFullScreenWindows(sender, eventArgs);
-#endif
-        }
-
-    }
-
-#nullable disable
-
-    /// <summary>
-    /// Android Specific Method to set Full Screen mode depending on <see cref="FullScreenMode"/> variable.
-    /// </summary>
-    private static void SetFullScreenAndroid()
-    {
-#if ANDROID
-        var activity = Platform.CurrentActivity;
-
-        if (activity == null || activity.Window == null) return;
-
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
-        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
-        var types = Views.WindowInsetsCompat.Type.StatusBars() |
-                    Views.WindowInsetsCompat.Type.NavigationBars();
-
-
-        if (FullScreenMode)
-        {
-            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-            windowInsetsControllerCompat.Hide(types);
-        }
-        else
-        {
-            windowInsetsControllerCompat.Show(types);
-        }
-#endif
-    }
-#nullable enable
-
-    /// <summary>
-    /// Windows specific Method for setting Full Screen mode depending on <see cref="FullScreenMode"/> variable.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="eventArgs"></param>
-    private static void SetFullScreenWindows(object? sender, EventArgs eventArgs)
-    {
-#if WINDOWS
-        if (sender is not null)
-        {
             var currentWindow = sender.As<Window>();
             var uiWindow = currentWindow.Handler.PlatformView.As<MauiWinUIWindow>();
             var handle = WinRT.Interop.WindowNative.GetWindowHandle(uiWindow);
@@ -164,8 +117,10 @@ public partial class App : Application
                     }
                     break;
             }
-        }
 #endif
+        }
     }
+
 #nullable disable
 }
+
