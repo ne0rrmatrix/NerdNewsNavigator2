@@ -18,4 +18,8 @@ public partial class DownloadedShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Ok", "Deleted Show!", "Ok");
+    }
 }

@@ -40,6 +40,7 @@
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
+                        
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"

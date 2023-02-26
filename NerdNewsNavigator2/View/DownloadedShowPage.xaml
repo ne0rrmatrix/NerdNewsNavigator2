@@ -37,10 +37,6 @@
                                               iOS=320}">
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding FileName}" />
-                        </Grid.GestureRecognizers>
-
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
@@ -61,8 +57,39 @@
                                     CachingEnabled="True"
                                     Uri="{Binding Image}" />
                             </Image.Source>
+
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding FileName}" />
+                            </Image.GestureRecognizers>
                         </Image>
 
+                        <HorizontalStackLayout Grid.Row="2" Padding="10">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                Text="Published: "
+                                TextColor="Black" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                Text="{Binding PubDate}"
+                                TextColor="Black" />
+                            <Button
+                                Margin="20"
+                                BackgroundColor="Red"
+                                Clicked="Button_Clicked"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="35"
+                                Text="Delete"
+                                TextColor="White">
+
+                                <Button.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
+                                </Button.GestureRecognizers>
+
+                            </Button>
+                        </HorizontalStackLayout>
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
                             <Label
                                 FontAttributes="Bold"

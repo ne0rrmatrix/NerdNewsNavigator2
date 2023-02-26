@@ -51,9 +51,11 @@
                             Aspect="AspectFit"
                             HeightRequest="320"
                             WidthRequest="320">
+
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Image.GestureRecognizers>
+
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="40"
@@ -75,16 +77,28 @@
                                 TextColor="Black" />
                             <Button
                                 Margin="20"
-                                BackgroundColor="Green"
+                                BackgroundColor="Red"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=IsDownloading}"
+                                Text="Downloading"
+                                TextColor="White" />
+                            <Button
+                                Margin="20"
+                                BackgroundColor="Green"
                                 Clicked="Button_Clicked"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="35"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=IsNotDownloading}"
                                 Text="Download"
                                 TextColor="Black">
+
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
+
                             </Button>
                         </HorizontalStackLayout>
 

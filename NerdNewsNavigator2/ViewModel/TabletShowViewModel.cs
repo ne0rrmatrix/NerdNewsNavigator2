@@ -24,6 +24,7 @@ public partial class TabletShowViewModel : BaseViewModel
             OnPropertyChanged(nameof(Shows));
         }
     }
+
     #endregion
 
     /// <summary>
@@ -54,6 +55,7 @@ public partial class TabletShowViewModel : BaseViewModel
     async Task Download(string url)
     {
         _logger.LogInformation("Trying to start download of {URL}", url);
+        IsDownloading = true;
         foreach (var item in AllShows.ToList())
         {
             if (item.Url == url)
@@ -81,6 +83,12 @@ public partial class TabletShowViewModel : BaseViewModel
                     }
 
                     await DownloadService.AddDownloadDatabase(download);
+                    IsDownloading = false;
+                }
+                else
+                {
+                    IsDownloading = false;
+
                 }
                 return;
             }

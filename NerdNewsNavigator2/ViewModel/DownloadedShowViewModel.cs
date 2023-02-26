@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Maui.Storage;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 public partial class DownloadedShowViewModel : BaseViewModel
@@ -39,6 +37,44 @@ public partial class DownloadedShowViewModel : BaseViewModel
         string item = "ms-appdata:///LocalCache/Local/" + url;
         _logger.LogInformation("Url being passed is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
+    }
+
+    /// <summary>
+    /// Deletes file and removes it from database.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+
+    [RelayCommand]
+    async Task Delete(string url)
+    {
+        foreach (var item in DownloadedShows.ToList())
+        {
+            if (item.Url == url)
+            {
+                var filename = DownloadService.GetFileName(url);
+                var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+                try
+                {
+                    if (File.Exists(tempFile))
+                    {
+                        File.Delete(tempFile);
+                        _logger.LogInformation("Deleted file {file}", tempFile);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("File {file} was not found in file system.", tempFile);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Failed to delete file: {file} {Message}", tempFile, ex.Message);
+                }
+                await App.PositionData.DeleteDownload(item);
+                DownloadedShows.Remove(item);
+                _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+            }
+        }
     }
 }
 

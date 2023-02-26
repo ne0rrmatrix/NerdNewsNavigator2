@@ -61,6 +61,18 @@ public partial class BaseViewModel : ObservableObject
     /// A <see cref="bool"/> instance managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
+
+    /// <summary>
+    /// A <see cref="bool"/> instance managed by this class.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
+    public bool _isDownloading;
+
+    /// <summary>
+    /// A <see cref="bool"/> instance managed by this class.
+    /// </summary>
+    public bool IsNotDownloading => !IsDownloading;
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
