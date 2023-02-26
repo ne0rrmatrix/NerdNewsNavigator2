@@ -40,6 +40,7 @@ public static class PodcastServices
             "https://feeds.twit.tv/mikah_video_hd.xml"
         };
     #endregion
+
     /// <summary>
     /// Method Gets updated <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
@@ -49,6 +50,7 @@ public static class PodcastServices
         var temp = await App.PositionData.GetAllPodcasts();
         return temp;
     }
+
     /// <summary>
     /// Method Adds Playback <see cref="Position"/> to Database.
     /// </summary>
@@ -61,6 +63,7 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
@@ -75,6 +78,7 @@ public static class PodcastServices
         }
         return podcasts;
     }
+
     /// <summary>
     /// Method resets <see cref="List{T}"/> <see cref="Podcast"/> to default list.
     /// </summary>
@@ -82,7 +86,6 @@ public static class PodcastServices
     public static async Task RemoveDefaultPodcasts()
     {
         var current = await App.PositionData.GetAllPodcasts();
-        Debug.WriteLine("Got current");
         foreach (var item in current)
         {
             if (item.Url.Contains("feeds.twit.tv"))
@@ -91,6 +94,7 @@ public static class PodcastServices
             }
         }
     }
+
     /// <summary>
     /// Method Adds default <see cref="List{T}"/> <see cref="Podcast"/> from RSS feed to Database.
     /// </summary>
@@ -106,6 +110,7 @@ public static class PodcastServices
             await App.PositionData.AddPodcast(item);
         }
     }
+
     /// <summary>
     /// Method Removes <see cref="List{T}"/> <see cref="Podcast"/> from Database.
     /// </summary>
@@ -114,16 +119,18 @@ public static class PodcastServices
     {
         await App.PositionData.DeleteAllPodcasts();
     }
+
     /// <summary>
     /// Method Returns a <see cref="Show"/> from RSS Feed.
     /// </summary>
-    /// <param name="url">The <see cref="System.String"/> URL of the Show.</param> 
+    /// <param name="url">The <see cref="string"/> URL of the Show.</param> 
     /// <param name="getFirstOnly">The <see cref="bool"/> Get First value only.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
     public static Task<List<Show>> GetShow(string url, bool getFirstOnly)
     {
         return FeedService.GetShows(url, getFirstOnly);
     }
+
     /// <summary>
     /// Method Saves <see cref="List{T}"/> of <see cref="Podcast"/> to database.
     /// </summary>
@@ -136,6 +143,7 @@ public static class PodcastServices
             await AddPodcast(item.Url);
         }
     }
+
     /// <summary>
     /// Method Adds a <see cref="Podcast"/> to Database.
     /// </summary>
@@ -152,20 +160,30 @@ public static class PodcastServices
             Image = podcast.Image,
         });
     }
+
     /// <summary>
     /// Method Deletes a <see cref="Podcast"/> from Database.
     /// </summary>
-    /// <param name="url"><see cref="System.String"/> URL of <see cref="Podcast"/> to delete</param>
+    /// <param name="url"><see cref="string"/> URL of <see cref="Podcast"/> to delete</param>
     /// <returns>nothing</returns>
-    public static async Task Delete(string url)
+    public static async Task<bool> Delete(string url)
     {
         var current = await App.PositionData.GetAllPodcasts();
         foreach (var item in current)
         {
             if (item.Url == url)
             {
-                await App.PositionData.DeletePodcast(item);
+                try
+                {
+                    await App.PositionData.DeletePodcast(item);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
+        return true;
     }
 }

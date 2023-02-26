@@ -22,6 +22,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
         Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
         Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
+        Routing.RegisterRoute(nameof(DownloadPlayPage), typeof(DownloadPlayPage));
+        Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
     /// <summary>
     /// Method quits application
@@ -82,5 +84,15 @@ public partial class AppShell : Shell
     {
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(AddPodcastPage)}");
+    }
+    /// <summary>
+    /// Method navigates user to Page that allows you to add a podcast.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void GotoDownloadedPage(object sender, EventArgs e)
+    {
+        FlyoutIsPresented = false;
+        await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
     }
 }

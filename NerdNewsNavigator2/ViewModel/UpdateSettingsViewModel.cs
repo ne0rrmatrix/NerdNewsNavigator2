@@ -8,25 +8,28 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class UpdateSettingsViewModel : BaseViewModel
 {
+    readonly ILogger<UpdateSettingsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateSettingsViewModel"/> class.
     /// </summary>
-    public UpdateSettingsViewModel()
+    public UpdateSettingsViewModel(ILogger<UpdateSettingsViewModel> logger)
+        : base(logger)
     {
         Shell.Current.FlyoutIsPresented = false;
         IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
         ThreadPool.QueueUserWorkItem(DeleteAllPodcasts);
         ThreadPool.QueueUserWorkItem(ForceReset);
+        _logger = logger;
     }
-    private async void Next(Object stateInfo)
+    private async void Next(object stateInfo)
     {
         await MainThread.InvokeOnMainThreadAsync(() => Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}"));
     }
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
     /// </summary>
-    private async void DeleteAllPodcasts(Object stateInfo)
+    private async void DeleteAllPodcasts(object stateInfo)
     {
         try
         {
@@ -34,6 +37,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
             {
                 await App.PositionData.DeleteAll();
                 await App.PositionData.DeleteAllPodcasts();
+                await App.PositionData.DeleteAllDownloads();
                 IsBusy = false;
                 ThreadPool.QueueUserWorkItem(Next);
             }
@@ -45,7 +49,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     /// </summary>
     /// <param name="stateinfo"></param>
     /// <returns></returns>
-    public async void ForceReset(Object stateinfo)
+    public async void ForceReset(object stateinfo)
     {
         Shows.Clear();
         Podcasts.Clear();

@@ -62,6 +62,10 @@
         IconImageSource="house.png"
         Text="Recent" />
     <MenuItem
+        Clicked="GotoDownloadedPage"
+        IconImageSource="house.png"
+        Text="Downloads" />
+    <MenuItem
         Clicked="GotoLivePage"
         IconImageSource="live_broadcasting.png"
         Text="Live" />

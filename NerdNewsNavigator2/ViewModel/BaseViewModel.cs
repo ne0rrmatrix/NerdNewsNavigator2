@@ -10,6 +10,7 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
+
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
@@ -19,11 +20,20 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
+    /// <summary>
+    /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
+    /// </summary>
+    public ObservableCollection<Show> AllShows { get; set; } = new();
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> MostRecentShows { get; set; } = new();
+
+    /// <summary>
+    /// An <see cref="ObservableCollection{T}"/> of downloaded <see cref="Download"/> managed by this class.
+    /// </summary>
+    public ObservableCollection<Download> DownloadedShows { get; set; } = new();
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
@@ -48,10 +58,18 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     public bool IsNotBusy => !IsBusy;
 
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
+    ILogger<BaseViewModel> Logger { get; set; }
+
     #endregion
-    public BaseViewModel()
+    public BaseViewModel(ILogger<BaseViewModel> logger)
     {
+        Logger = logger;
         ThreadPool.QueueUserWorkItem(GetMostRecent);
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        ThreadPool.QueueUserWorkItem(GetAllShows);
     }
 
     #region Podcast data functions
@@ -67,6 +85,22 @@ public partial class BaseViewModel : ObservableObject
         Shows.Clear();
         var temp = await FeedService.GetShows(url, getFirstOnly);
         Shows = new ObservableCollection<Show>(temp);
+    }
+
+    /// <summary>
+    /// Method gets most recent episode from each podcast on twit.tv
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    /// <returns></returns>
+    public async void GetMostRecent(object stateinfo)
+    {
+        Shows.Clear();
+        await GetUpdatedPodcasts();
+        foreach (var show in Podcasts.ToList())
+        {
+            var item = await FeedService.GetShows(show.Url, true);
+            MostRecentShows.Add(item.First());
+        }
     }
 
     /// <summary>
@@ -100,18 +134,38 @@ public partial class BaseViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Method gets most recent episode from each podcast on twit.tv
+    /// Method dowloads All Show data and adds it to <see cref="AllShows"/>
     /// </summary>
     /// <param name="stateinfo"></param>
     /// <returns></returns>
-    public async void GetMostRecent(Object stateinfo)
+    public async void GetAllShows(object stateinfo)
     {
-        Shows.Clear();
-        await GetUpdatedPodcasts();
-        foreach (var show in Podcasts.ToList())
+        Thread.Sleep(1000);
+        foreach (var podcast in Podcasts.ToList())
         {
-            var item = await FeedService.GetShows(show.Url, true);
-            MostRecentShows.Add(item.First());
+            var shows = await PodcastServices.GetShow(podcast.Url, false);
+            foreach (var show in shows)
+            {
+                AllShows.Add(show);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Method gets downloaded shows on device from Database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    /// <returns></returns>
+    public async void GetDownloadedShows(object stateinfo)
+    {
+        DownloadedShows.Clear();
+        var temp = await App.PositionData.GetAllDownloads();
+        if (temp is not null)
+        {
+            foreach (var item in temp)
+            {
+                DownloadedShows.Add(item);
+            }
         }
     }
 

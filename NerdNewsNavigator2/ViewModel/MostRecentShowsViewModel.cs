@@ -9,14 +9,18 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class MostRecentShowsViewModel : BaseViewModel
 {
+    private readonly ILogger<MostRecentShowsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
+    /// <paramref name="logger"/>
     /// </summary>
-    public MostRecentShowsViewModel()
+    public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger)
+    : base(logger)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(MostRecentShows));
+        _logger = logger;
     }
 
     /// <summary>

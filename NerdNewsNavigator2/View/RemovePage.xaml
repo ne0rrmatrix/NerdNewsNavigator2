@@ -28,7 +28,8 @@
                     Margin="55"
                     BackgroundColor="White"
                     WidthRequest="375">
-                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
                         <Label
                             Grid.Row="0"
                             Margin="10"
@@ -73,10 +74,29 @@
                             Text="Delete"
                             TextColor="White"
                             WidthRequest="90">
+
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
+
                         </Button>
+                        <Button
+                            Grid.Column="2"
+                            Margin="20"
+                            BackgroundColor="Red"
+                            FontAttributes="Bold"
+                            FontSize="Micro"
+                            HeightRequest="35"
+                            Text="Auto Download"
+                            TextColor="White"
+                            WidthRequest="120">
+
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
+                            </Button.GestureRecognizers>
+
+                        </Button>
+
                     </Grid>
                 </Frame>
             </DataTemplate>

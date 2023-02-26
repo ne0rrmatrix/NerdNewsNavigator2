@@ -9,15 +9,18 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class SettingsViewModel : BaseViewModel
 {
+    private readonly ILogger<SettingsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
     /// </summary>
-    public SettingsViewModel()
+    public SettingsViewModel(ILogger<SettingsViewModel> logger)
+        : base(logger)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
         _ = GetUpdatedPodcasts();
+        _logger = logger;
     }
 
     /// <summary>
