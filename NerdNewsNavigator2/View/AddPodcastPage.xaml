@@ -16,7 +16,7 @@
 
     <Grid
         HorizontalOptions="Center"
-        RowDefinitions="65,65,65,65,65,65"
+        RowDefinitions="65,65,65,65,65,65,65,65"
         VerticalOptions="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{OnIdiom Tablet=200, Phone=80}" />
@@ -47,9 +47,8 @@
             Text="Click Me"
             TextColor="White"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
-
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
         <Label
             Grid.Row="1"
             Grid.Column="0"
@@ -74,8 +73,8 @@
             Text="Reset"
             TextColor="White"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
 
         <Label
             Grid.Row="2"
@@ -98,8 +97,8 @@
             HorizontalOptions="End"
             Text="Remove"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
 
         <Label
             Grid.Row="3"
@@ -134,8 +133,8 @@
             HorizontalOptions="End"
             Text="Add"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
 
         <Label
             Grid.Row="4"
@@ -158,8 +157,8 @@
             HorizontalOptions="End"
             Text="Set"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
         <Button
             Grid.Row="4"
             Grid.Column="2"
@@ -171,8 +170,8 @@
             HorizontalOptions="End"
             Text="Remove"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
         <Label
             Grid.Row="5"
             Grid.Column="0"
@@ -181,7 +180,9 @@
             FontSize="{OnIdiom Tablet=24,
                                Default=12}"
             HorizontalOptions="Start"
-            Text="Full Screen"
+            IsVisible="{OnPlatform iOS=false,
+                                   Default=true}"
+            Text="Default"
             TextColor="Black"
             VerticalOptions="Center" />
         <Button
@@ -193,10 +194,12 @@
             FontSize="{OnIdiom Tablet=24,
                                Default=12}"
             HorizontalOptions="End"
+            IsVisible="{OnPlatform iOS=false,
+                                   Default=true}"
             Text="Enable"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
         <Button
             Grid.Row="5"
             Grid.Column="2"
@@ -206,10 +209,39 @@
             FontSize="{OnIdiom Tablet=24,
                                Default=12}"
             HorizontalOptions="End"
+            IsVisible="{OnPlatform iOS=false,
+                                   Default=true}"
             Text="Disable"
             VerticalOptions="Center"
-            WidthRequest="{OnIdiom Tablet=150,
-                                   Default=75}" />
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
+        <Label
+            Grid.Row="6"
+            Grid.Column="0"
+            BackgroundColor="Wheat"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
+            HorizontalOptions="Start"
+            IsVisible="{OnPlatform iOS=false,
+                                   Default=true}"
+            Text="Full Screen"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Button
+            Grid.Row="6"
+            Grid.Column="2"
+            Clicked="SetFullScreenItem"
+            FontAttributes="Bold"
+            FontSize="{OnIdiom Tablet=24,
+                               Default=12}"
+            HorizontalOptions="End"
+            IsVisible="{OnPlatform iOS=false,
+                                   Default=true}"
+            Text="Full Screen"
+            VerticalOptions="Center"
+            WidthRequest="{OnIdiom Tablet=170,
+                                   Default=90}" />
     </Grid>
 
 </ContentPage>

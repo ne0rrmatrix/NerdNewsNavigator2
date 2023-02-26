@@ -2,6 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Application = Microsoft.Maui.Controls.Application;
+using Platform = Microsoft.Maui.ApplicationModel.Platform;
+using MetroLog.Maui;
+
+#if ANDROID
+using Views = AndroidX.Core.View;
+#endif
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -9,6 +17,12 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class TabletPodcastPage : ContentPage
 {
+
+    /// <summary>
+    /// Private <see cref="bool"/> which sets Full Screen Mode.
+    /// </summary>
+    public bool FullScreenMode { get; set; } = new();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletPodcastPage"/> class.
     /// </summary>
@@ -17,5 +31,38 @@ public partial class TabletPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        FullScreenMode = Preferences.Default.Get("FullScreen", false);
+        SetFullScreen();
     }
+    /// <summary>
+    /// Method toggles Full Screen On/Off
+    /// </summary>
+
+#nullable enable
+    public void SetFullScreen()
+    {
+
+#if ANDROID
+            var activity = Platform.CurrentActivity;
+
+            if (activity == null || activity.Window == null) return;
+
+            Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
+            var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+            var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                        Views.WindowInsetsCompat.Type.NavigationBars();
+            if (FullScreenMode)
+            {
+                windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+                windowInsetsControllerCompat.Hide(types);
+            }
+            else
+            {
+                windowInsetsControllerCompat.Show(types);
+            }
+#endif
+    }
+
+#nullable disable
+
 }
