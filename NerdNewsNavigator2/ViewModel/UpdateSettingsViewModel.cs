@@ -19,7 +19,6 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
         ThreadPool.QueueUserWorkItem(DeleteAllPodcasts);
-        ThreadPool.QueueUserWorkItem(ForceReset);
         _logger = logger;
     }
     private async void Next(object stateInfo)
@@ -38,26 +37,12 @@ public partial class UpdateSettingsViewModel : BaseViewModel
                 await App.PositionData.DeleteAll();
                 await App.PositionData.DeleteAllPodcasts();
                 await App.PositionData.DeleteAllDownloads();
+                Shows.Clear();
+                Podcasts.Clear();
                 IsBusy = false;
                 ThreadPool.QueueUserWorkItem(Next);
             }
         }
         catch { }
-    }
-    /// <summary>
-    /// Method force resets application database.
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    /// <returns></returns>
-    public async void ForceReset(object stateinfo)
-    {
-        Shows.Clear();
-        Podcasts.Clear();
-        await PodcastServices.AddDefaultPodcasts();
-        foreach (var show in Podcasts.ToList())
-        {
-            var item = await FeedService.GetShows(show.Url, true);
-            MostRecentShows.Add(item.First());
-        }
     }
 }
