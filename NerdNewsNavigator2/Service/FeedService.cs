@@ -20,22 +20,30 @@ public static class FeedService
     {
         var counter = 0;
         Podcast feed = new();
-        foreach (var level1Element in XElement.Load(item).Elements("channel"))
+        try
         {
-            feed.Title = level1Element.Element("title").Value;
-            feed.Description = level1Element.Element("description").Value;
-            feed.Url = item;
-            feed.Id = counter;
-            feed.Download = false;
-            counter++;
-
-            foreach (var level2Element in level1Element.Elements("image"))
+            foreach (var level1Element in XElement.Load(item).Elements("channel"))
             {
-                feed.Image = level2Element.Element("url")?.Value;
-            }
-        }
+                feed.Title = level1Element.Element("title").Value;
+                feed.Description = level1Element.Element("description").Value;
+                feed.Url = item;
+                feed.Id = counter;
+                feed.Download = false;
+                counter++;
 
-        return Task.FromResult(feed);
+                foreach (var level2Element in level1Element.Elements("image"))
+                {
+                    feed.Image = level2Element.Element("url")?.Value;
+                }
+            }
+
+            return Task.FromResult(feed);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return Task.FromResult(feed);
+        }
     }
     #endregion
 
@@ -51,29 +59,37 @@ public static class FeedService
     {
         List<Show> shows = new();
         XmlDocument rssDoc = new();
-        rssDoc.Load(items);
-        var mgr = new XmlNamespaceManager(rssDoc.NameTable);
-        mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-        mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
-        var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-        if (rssNodes != null)
-            foreach (XmlNode node in rssNodes)
-            {
-                Show show = new()
+        try
+        {
+            rssDoc.Load(items);
+            var mgr = new XmlNamespaceManager(rssDoc.NameTable);
+            mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
+            mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
+            var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
+            if (rssNodes != null)
+                foreach (XmlNode node in rssNodes)
                 {
-                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
-                    Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                    Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
-                    Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                };
-                shows.Add(show);
-                if (getFirstOnly)
-                {
-                    return Task.FromResult(shows);
+                    Show show = new()
+                    {
+                        Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
+                        PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
+                        Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
+                        Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
+                        Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+                    };
+                    shows.Add(show);
+                    if (getFirstOnly)
+                    {
+                        return Task.FromResult(shows);
+                    }
                 }
-            }
-        return Task.FromResult(shows);
+            return Task.FromResult(shows);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return Task.FromResult(shows);
+        }
     }
     #endregion
 

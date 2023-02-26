@@ -12,10 +12,6 @@ public partial class BaseViewModel : ObservableObject
     #region Properties
 
     /// <summary>
-    /// The status of <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/> return value.
-    /// </summary>
-    public bool Started { get; set; }
-    /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
     public DisplayInfo MyMainDisplay { get; set; } = new();
@@ -63,33 +59,17 @@ public partial class BaseViewModel : ObservableObject
     public bool IsNotBusy => !IsBusy;
 
     /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
-    public bool _isDownloading;
-
-    /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
-    /// </summary>
-    public bool IsNotDownloading => !IsDownloading;
-    /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
-    ILogger<BaseViewModel> _logger { get; set; }
+    ILogger<BaseViewModel> Logger { get; set; }
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger)
     {
-        _logger = logger;
-        Started = false;
-        _logger.LogInformation("Starting background tasks.");
-        Started = ThreadPool.QueueUserWorkItem(GetMostRecent);
-        _logger.LogInformation("Started GetMostRecent: {started}", Started);
-        Started = ThreadPool.QueueUserWorkItem(GetDownloadedShows);
-        _logger.LogInformation("Started GetDownloadedShows: {started}", Started);
-        Started = ThreadPool.QueueUserWorkItem(GetAllShows);
-        _logger.LogInformation("Started GeteAllShows: {started}", Started);
+        Logger = logger;
+        ThreadPool.QueueUserWorkItem(GetMostRecent);
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        ThreadPool.QueueUserWorkItem(GetAllShows);
     }
 
     #region Podcast data functions
@@ -112,7 +92,7 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     /// <param name="stateinfo"></param>
     /// <returns></returns>
-    public async void GetMostRecent(Object stateinfo)
+    public async void GetMostRecent(object stateinfo)
     {
         Shows.Clear();
         await GetUpdatedPodcasts();
@@ -158,7 +138,7 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     /// <param name="stateinfo"></param>
     /// <returns></returns>
-    public async void GetAllShows(Object stateinfo)
+    public async void GetAllShows(object stateinfo)
     {
         Thread.Sleep(1000);
         foreach (var podcast in Podcasts.ToList())
@@ -169,7 +149,6 @@ public partial class BaseViewModel : ObservableObject
                 AllShows.Add(show);
             }
         }
-        _logger.LogInformation("Downloaded all show data.");
     }
 
     /// <summary>
@@ -177,7 +156,7 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     /// <param name="stateinfo"></param>
     /// <returns></returns>
-    public async void GetDownloadedShows(Object stateinfo)
+    public async void GetDownloadedShows(object stateinfo)
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();

@@ -55,7 +55,7 @@ public partial class TabletShowViewModel : BaseViewModel
     async Task Download(string url)
     {
         _logger.LogInformation("Trying to start download of {URL}", url);
-        IsDownloading = true;
+        IsBusy = true;
         foreach (var item in AllShows.ToList())
         {
             if (item.Url == url)
@@ -83,11 +83,11 @@ public partial class TabletShowViewModel : BaseViewModel
                     }
 
                     await DownloadService.AddDownloadDatabase(download);
-                    IsDownloading = false;
+                    IsBusy = false;
                 }
                 else
                 {
-                    IsDownloading = false;
+                    IsBusy = false;
 
                 }
                 return;

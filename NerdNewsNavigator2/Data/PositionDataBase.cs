@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.Data;
 /// </summary>
 public class PositionDataBase
 {
+    #region Properties
     /// <summary>
     /// A variable to manage logs.
     /// </summary>
@@ -18,7 +19,7 @@ public class PositionDataBase
     /// A variable to manage <see cref="SQLiteAsyncConnection"/>
     /// </summary>
     private SQLiteAsyncConnection _connection;
-
+    #endregion
     /// <summary>
     /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
     /// </summary>

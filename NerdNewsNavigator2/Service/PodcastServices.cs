@@ -86,7 +86,6 @@ public static class PodcastServices
     public static async Task RemoveDefaultPodcasts()
     {
         var current = await App.PositionData.GetAllPodcasts();
-        Debug.WriteLine("Got current");
         foreach (var item in current)
         {
             if (item.Url.Contains("feeds.twit.tv"))

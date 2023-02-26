@@ -24,6 +24,25 @@
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
+        <CollectionView.Header>
+            <StackLayout>
+                <Label
+                    Padding="20"
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    Text="Downloading..."
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                <ActivityIndicator
+                    IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    Color="Red" />
+            </StackLayout>
+        </CollectionView.Header>
+        
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
 
@@ -77,21 +96,12 @@
                                 TextColor="Black" />
                             <Button
                                 Margin="20"
-                                BackgroundColor="Red"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=IsDownloading}"
-                                Text="Downloading"
-                                TextColor="White" />
-                            <Button
-                                Margin="20"
                                 BackgroundColor="Green"
                                 Clicked="Button_Clicked"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=IsNotDownloading}"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
                                 Text="Download"
                                 TextColor="Black">
 
