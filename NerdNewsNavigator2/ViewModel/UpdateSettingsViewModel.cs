@@ -34,6 +34,25 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         {
             while (IsBusy)
             {
+                var temp = await App.PositionData.GetAllDownloads();
+                if (temp is not null)
+                {
+                    foreach (var item in temp)
+                    {
+
+                        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName);
+                        if (File.Exists(tempFile))
+                        {
+                            File.Delete(tempFile);
+                            _logger.LogInformation("Deleted {file}", item.FileName);
+                        }
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("Did not find any files to delete.");
+                }
+
                 await App.PositionData.DeleteAll();
                 await App.PositionData.DeleteAllPodcasts();
                 await App.PositionData.DeleteAllDownloads();

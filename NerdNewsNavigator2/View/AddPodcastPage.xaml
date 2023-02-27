@@ -182,7 +182,7 @@
             HorizontalOptions="Start"
             IsVisible="{OnPlatform iOS=false,
                                    Default=true}"
-            Text="Default"
+            Text="Full Screen"
             TextColor="Black"
             VerticalOptions="Center" />
         <Button
@@ -225,7 +225,7 @@
             HorizontalOptions="Start"
             IsVisible="{OnPlatform iOS=false,
                                    Default=true}"
-            Text="Full Screen"
+            Text="Toggle"
             TextColor="Black"
             VerticalOptions="Center" />
         <Button
