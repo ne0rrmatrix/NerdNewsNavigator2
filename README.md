@@ -40,18 +40,18 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
 
 ## Phone:
  <br/><br/>
-<img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> <img
-src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> <img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> <img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> <img
+src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
  <br/><br/>
 ## Tablet:
  <br/><br/>
-<img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%"></img>
+<img src="./images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%"></img>
  <br/><br/>
 
 ## Help support me work on this project
 
 <div align="center">
 
-[![Donate with PayPal](https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD)
+[![Donate with PayPal](./paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD)
 
 </div>
