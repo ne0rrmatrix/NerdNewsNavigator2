@@ -40,12 +40,19 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
 
 ## Phone:
  <br/><br/>
-<img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> <img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> <img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> <img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> <img
-src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> 
+<img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
  <br/><br/>
 ## Tablet:
  <br/><br/>
-<img src="./images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"></img> <img src="./images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%"></img>
+<img src="./images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%"></img> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"></img> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"></img> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"></img> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%"></img>
  <br/><br/>
 
 ## Help support me work on this project
