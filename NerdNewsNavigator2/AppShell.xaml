@@ -59,11 +59,11 @@
         Text="Home" />
     <MenuItem
         Clicked="GotoMostRecentShowPage"
-        IconImageSource="house.png"
+        IconImageSource="history.png"
         Text="Recent" />
     <MenuItem
         Clicked="GotoDownloadedPage"
-        IconImageSource="house.png"
+        IconImageSource="download.png"
         Text="Downloads" />
     <MenuItem
         Clicked="GotoLivePage"

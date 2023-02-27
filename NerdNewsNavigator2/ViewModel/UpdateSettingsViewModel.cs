@@ -15,11 +15,11 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     public UpdateSettingsViewModel(ILogger<UpdateSettingsViewModel> logger)
         : base(logger)
     {
+        _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
-        ThreadPool.QueueUserWorkItem(DeleteAllPodcasts);
-        _logger = logger;
+        DeleteAllPodcasts();
     }
     private async void Next(object stateInfo)
     {
@@ -28,7 +28,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
     /// </summary>
-    private async void DeleteAllPodcasts(object stateInfo)
+    private async void DeleteAllPodcasts()
     {
         try
         {
@@ -59,7 +59,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
                 Shows.Clear();
                 Podcasts.Clear();
                 IsBusy = false;
-                ThreadPool.QueueUserWorkItem(Next);
+                await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
             }
         }
         catch { }
