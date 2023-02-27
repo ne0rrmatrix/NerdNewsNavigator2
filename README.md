@@ -42,7 +42,7 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
  <br/><br/>
 <img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> 
 <img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> 
-<img src="https://github.com/ne0rrmatrix/NerdNewsNavigator2/blob/main/images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> 
 <img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> 
 <img src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
  <br/><br/>
@@ -58,7 +58,7 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
 ## Help support me work on this project
 
 <div align="center">
-
-[![Donate with PayPal](./paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD)
+<a href="https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD"><img src"/paypal-donate-button.png?raw=true""> <img border="0" alt="W3Schools" src="./paypal-donate-button.png?raw=true" width="48%">
+</a>
 
 </div>
