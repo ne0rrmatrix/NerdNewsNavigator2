@@ -18,7 +18,7 @@
 		<ApplicationTitle>NerdNewsNavigator2</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.nerdnewsnavigator2</ApplicationId>
+		<ApplicationId>com.android.nerdnewsnavigator2</ApplicationId>
 		<ApplicationIdGuid>bec751aa-42c5-41d6-8e3f-5f40783fe069</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -50,9 +50,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
@@ -91,6 +91,11 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+  
+	<ItemGroup>
+	  <MauiAsset Include="Resources\Images\recent.svg" />
 	</ItemGroup>
 	
 	<ItemGroup>
