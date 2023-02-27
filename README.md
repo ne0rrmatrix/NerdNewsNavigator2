@@ -40,25 +40,26 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
 
 ## Phone:
  <br/><br/>
-<img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"></img> 
-<img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"></img> 
-<img src="./images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"></img> 
-<img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"></img> 
-<img src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%"></img> 
+<img src="./images/Phone/NerdNewsNavigatorPhone-1080x2340_framed.png" width="33%"> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneMenu-1080x2340_framed.png" width="33%"> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneSettings-1080x2340_framed.png" width="33%"> 
+<img src="./images/Phone/NerdNewsNavigatorPhoneShowScreen-1080-2340_framed.png" width="33%"> 
+<img src="./images/Phone/NerdNewsNavigatorVidePlayback-1080x2340_framed.png" width="33%">
  <br/><br/>
 ## Tablet:
  <br/><br/>
-<img src="./images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%"></img> 
-<img src="./images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"></img> 
-<img src="./images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"></img> 
-<img src="./images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"></img> 
-<img src="./images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%"></img>
+<img src="./images/Tablet/NerdNewsNavigatorTabletMainPage-2340x1080_framed.png" width="48%">
+<img src="./images/Tablet/NerdNewsNavigatorTabletMenu-2340x1080_framed.png" width="48%"> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletSettings-2340x1080_framed.png" width="48%"> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletShowPage-2340x1080_framed.png" width="48%"> 
+<img src="./images/Tablet/NerdNewsNavigatorTabletVideoPlaying-2340x1080_framed.png" width="48%">
  <br/><br/>
 
 ## Help support me work on this project
 
 <div align="center">
-<a href="https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD"><img src"/paypal-donate-button.png?raw=true""> <img border="0" alt="W3Schools" src="./paypal-donate-button.png?raw=true" width="48%">
+<a href="https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD">
+<img src="./paypal-donate-button.png" width="48%">
 </a>
 
 </div>
