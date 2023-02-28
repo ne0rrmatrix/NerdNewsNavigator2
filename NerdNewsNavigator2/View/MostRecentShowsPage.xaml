@@ -20,6 +20,25 @@
         ItemsSource="{Binding MostRecentShows}"
         SelectionMode="None">
 
+        <CollectionView.Header>
+            <StackLayout>
+                <Label
+                    Padding="20"
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    Text="Loading..."
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                <ActivityIndicator
+                    IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    Color="Red" />
+            </StackLayout>
+        </CollectionView.Header>
+
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
@@ -37,10 +56,9 @@
                                               iOS=320}">
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                        </Grid.GestureRecognizers>
-                        
+
+
+
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
@@ -61,6 +79,9 @@
                                     CachingEnabled="True"
                                     Uri="{Binding Image}" />
                             </Image.Source>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                            </Image.GestureRecognizers>
                         </Image>
 
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
@@ -68,22 +89,40 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="Published: "
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="{Binding PubDate}"
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
+                            <Button
+                                Margin="10"
+                                BackgroundColor="Green"
+                                Clicked="Button_Clicked"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="35"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
+                                Text="Download"
+                                TextColor="Black">
+
+                                <Button.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
+                                </Button.GestureRecognizers>
+                            </Button>
                         </HorizontalStackLayout>
 
                         <Label
-                            Grid.Row="3"
+                            Grid.Row="4"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
                             TextType="Html"
                             WidthRequest="300" />
+
                     </Grid>
 
                 </Frame>

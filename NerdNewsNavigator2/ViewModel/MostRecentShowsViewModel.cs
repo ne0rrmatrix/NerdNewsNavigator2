@@ -21,6 +21,55 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         this._orientation = OnDeviceOrientationChange();
         _logger = logger;
     }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    async Task Download(string url)
+    {
+        _logger.LogInformation("Trying to start download of {URL}", url);
+        IsBusy = true;
+        foreach (var item in MostRecentShows.ToList())
+        {
+            if (item.Url == url)
+            {
+                _logger.LogInformation("Found match!");
+                Download download = new()
+                {
+                    Title = item.Title,
+                    Url = url,
+                    Image = item.Image,
+                    PubDate = item.PubDate,
+                    Description = item.Description,
+                    FileName = DownloadService.GetFileName(url)
+                };
+                var downloaded = await DownloadService.DownloadShow(download);
+                if (downloaded)
+                {
+                    _logger.LogInformation("Downloaded file: {file}", download.FileName);
+                    var result = await App.PositionData.GetAllDownloads();
+                    foreach (var show in result)
+                    {
+                        if (show.Title == download.Title)
+                        {
+                            await App.PositionData.DeleteDownload(show);
+                        }
+                    }
+
+                    await DownloadService.AddDownloadDatabase(download);
+                    IsBusy = false;
+                }
+                else
+                {
+                    IsBusy = false;
+
+                }
+                return;
+            }
+        }
+    }
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
