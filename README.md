@@ -22,7 +22,7 @@ Or download them for offline watching.
 ## TODO
 1. Work on better UI implementation.
 2. Add syncing between devices to track playback. Currently it is by individual device and has no awareness of other devices or platforms.
-3. Release on Google play store.
+3. Release on Google play store. - Waiting for store approval now.
 4. Release on Apple store
 5. Respond to feedback
 6. Optimize UI from feedback
@@ -56,7 +56,7 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
  <br/><br/>
 
 ## Help support me work on this project
-
+If you enjoy using the app consider supporting development by purchasing on Microsoft store at:  [Microsoft store link](https://www.microsoft.com/store/apps/9N28GJQGP369)
 <div align="center">
 <a href="https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD">
 <img src="./paypal-donate-button.png" width="48%">

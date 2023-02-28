@@ -65,6 +65,7 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetMostRecent);
+
     }
 
     public async Task Downloading(string url, bool mostRecent)
