@@ -67,6 +67,53 @@ public partial class BaseViewModel : ObservableObject
         ThreadPool.QueueUserWorkItem(GetMostRecent);
     }
 
+    public async Task Downloading(string url, bool mostRecent)
+    {
+        Logger.LogInformation("Trying to start download of {URL}", url);
+        IsBusy = true;
+        List<Show> list;
+        if (mostRecent) { list = MostRecentShows.ToList(); }
+        else { list = Shows.ToList(); }
+        foreach (var item in list)
+        {
+            if (item.Url == url)
+            {
+                Logger.LogInformation("Found match!");
+                Download download = new()
+                {
+                    Title = item.Title,
+                    Url = url,
+                    Image = item.Image,
+                    PubDate = item.PubDate,
+                    Description = item.Description,
+                    FileName = DownloadService.GetFileName(url)
+                };
+                var downloaded = await DownloadService.DownloadShow(download);
+                if (downloaded)
+                {
+                    Logger.LogInformation("Downloaded file: {file}", download.FileName);
+                    var result = await App.PositionData.GetAllDownloads();
+                    foreach (var show in result)
+                    {
+                        if (show.Title == download.Title)
+                        {
+                            await App.PositionData.DeleteDownload(show);
+                        }
+                    }
+
+                    await DownloadService.AddDownloadDatabase(download);
+                    IsBusy = false;
+                }
+                else
+                {
+                    IsBusy = false;
+
+                }
+                return;
+            }
+        }
+    }
+
     #region Podcast data functions
 
     /// <summary>
