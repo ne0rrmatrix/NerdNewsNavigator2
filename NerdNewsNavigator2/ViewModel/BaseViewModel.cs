@@ -1,4 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -74,42 +75,41 @@ public partial class BaseViewModel : ObservableObject
         List<Show> list;
         if (mostRecent) { list = MostRecentShows.ToList(); }
         else { list = Shows.ToList(); }
-        foreach (var item in list)
+
+        foreach (var item in from item in list
+                             where item.Url == url
+                             select item)
         {
-            if (item.Url == url)
+            Logger.LogInformation("Found match!");
+            Download download = new()
             {
-                Logger.LogInformation("Found match!");
-                Download download = new()
+                Title = item.Title,
+                Url = url,
+                Image = item.Image,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = DownloadService.GetFileName(url)
+            };
+            var downloaded = await DownloadService.DownloadShow(download);
+            if (!downloaded)
+            {
+                IsBusy = false;
+
+            }
+            else
+            {
+                Logger.LogInformation("Downloaded file: {file}", download.FileName);
+                var result = await App.PositionData.GetAllDownloads();
+                foreach (var show in result)
                 {
-                    Title = item.Title,
-                    Url = url,
-                    Image = item.Image,
-                    PubDate = item.PubDate,
-                    Description = item.Description,
-                    FileName = DownloadService.GetFileName(url)
-                };
-                var downloaded = await DownloadService.DownloadShow(download);
-                if (downloaded)
-                {
-                    Logger.LogInformation("Downloaded file: {file}", download.FileName);
-                    var result = await App.PositionData.GetAllDownloads();
-                    foreach (var show in result)
+                    if (show.Title == download.Title)
                     {
-                        if (show.Title == download.Title)
-                        {
-                            await App.PositionData.DeleteDownload(show);
-                        }
+                        await App.PositionData.DeleteDownload(show);
                     }
-
-                    await DownloadService.AddDownloadDatabase(download);
-                    IsBusy = false;
                 }
-                else
-                {
-                    IsBusy = false;
 
-                }
-                return;
+                await DownloadService.AddDownloadDatabase(download);
+                IsBusy = false;
             }
         }
     }

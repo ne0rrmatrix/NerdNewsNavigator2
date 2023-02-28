@@ -11,7 +11,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class TabletShowViewModel : BaseViewModel
 {
     #region Properties
-    readonly ILogger<TabletShowViewModel> _logger;
     /// <summary>
     /// A Url <see cref="string"/> containing the <see cref="Show"/>
     /// </summary>
@@ -35,7 +34,6 @@ public partial class TabletShowViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        _logger = logger;
     }
 
     /// <summary>
