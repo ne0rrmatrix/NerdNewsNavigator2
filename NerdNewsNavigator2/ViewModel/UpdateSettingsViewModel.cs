@@ -1,4 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -19,38 +20,32 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         Shell.Current.FlyoutIsPresented = false;
         IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
-        DeleteAllPodcasts();
-    }
-    private async void Next(object stateInfo)
-    {
-        await MainThread.InvokeOnMainThreadAsync(() => Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}"));
+        _ = DeleteAllPodcasts();
     }
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
     /// </summary>
-    private async void DeleteAllPodcasts()
+    private async Task DeleteAllPodcasts()
     {
         try
         {
             while (IsBusy)
             {
                 var temp = await App.PositionData.GetAllDownloads();
-                if (temp is not null)
+                if (temp is null)
                 {
-                    foreach (var item in temp)
-                    {
-
-                        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName);
-                        if (File.Exists(tempFile))
-                        {
-                            File.Delete(tempFile);
-                            _logger.LogInformation("Deleted {file}", item.FileName);
-                        }
-                    }
+                    _logger.LogInformation("Did not find any files to delete.");
                 }
                 else
                 {
-                    _logger.LogInformation("Did not find any files to delete.");
+                    foreach (var (item, tempFile) in from item in temp
+                                                     let tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName)
+                                                     where File.Exists(tempFile)
+                                                     select (item, tempFile))
+                    {
+                        File.Delete(tempFile);
+                        _logger.LogInformation("Deleted {file}", item.FileName);
+                    }
                 }
 
                 await App.PositionData.DeleteAll();
@@ -62,6 +57,9 @@ public partial class UpdateSettingsViewModel : BaseViewModel
                 await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogError("Delete podcasts failed. {Message}", ex.Message);
+        }
     }
 }
