@@ -20,10 +20,6 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
-    /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
-    /// </summary>
-    public ObservableCollection<Show> AllShows { get; set; } = new();
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
@@ -67,9 +63,8 @@ public partial class BaseViewModel : ObservableObject
     public BaseViewModel(ILogger<BaseViewModel> logger)
     {
         Logger = logger;
-        ThreadPool.QueueUserWorkItem(GetMostRecent);
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
-        ThreadPool.QueueUserWorkItem(GetAllShows);
+        ThreadPool.QueueUserWorkItem(GetMostRecent);
     }
 
     #region Podcast data functions
@@ -95,11 +90,15 @@ public partial class BaseViewModel : ObservableObject
     public async void GetMostRecent(object stateinfo)
     {
         Shows.Clear();
+        MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        foreach (var show in Podcasts.ToList())
+        if (Podcasts.Count > 0 || Podcasts is not null)
         {
-            var item = await FeedService.GetShows(show.Url, true);
-            MostRecentShows.Add(item.First());
+            foreach (var show in Podcasts.ToList())
+            {
+                var item = await FeedService.GetShows(show.Url, true);
+                MostRecentShows.Add(item.First());
+            }
         }
     }
 
@@ -132,30 +131,6 @@ public partial class BaseViewModel : ObservableObject
             IsBusy = false;
         }
     }
-
-    /// <summary>
-    /// Method dowloads All Show data and adds it to <see cref="AllShows"/>
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    /// <returns></returns>
-    public async void GetAllShows(object stateinfo)
-    {
-        Thread.Sleep(1000);
-        foreach (var podcast in Podcasts.ToList())
-        {
-            var shows = await PodcastServices.GetShow(podcast.Url, false);
-            foreach (var show in shows)
-            {
-                AllShows.Add(show);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Method gets downloaded shows on device from Database.
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    /// <returns></returns>
     public async void GetDownloadedShows(object stateinfo)
     {
         DownloadedShows.Clear();

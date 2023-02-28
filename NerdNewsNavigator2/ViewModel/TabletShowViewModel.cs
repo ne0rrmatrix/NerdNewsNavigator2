@@ -56,7 +56,7 @@ public partial class TabletShowViewModel : BaseViewModel
     {
         _logger.LogInformation("Trying to start download of {URL}", url);
         IsBusy = true;
-        foreach (var item in AllShows.ToList())
+        foreach (var item in Shows.ToList())
         {
             if (item.Url == url)
             {

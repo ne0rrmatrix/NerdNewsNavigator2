@@ -1,4 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -86,12 +87,11 @@ public static class PodcastServices
     public static async Task RemoveDefaultPodcasts()
     {
         var current = await App.PositionData.GetAllPodcasts();
-        foreach (var item in current)
+        foreach (var item in from item in current
+                             where item.Url.Contains("feeds.twit.tv")
+                             select item)
         {
-            if (item.Url.Contains("feeds.twit.tv"))
-            {
-                await App.PositionData.DeletePodcast(item);
-            }
+            await App.PositionData.DeletePodcast(item);
         }
     }
 
@@ -104,10 +104,13 @@ public static class PodcastServices
         await RemoveDefaultPodcasts();
 
         var items = GetFromUrl().Result;
-        foreach (var item in items)
+        if (items is not null)
         {
-            Debug.WriteLine($"Adding Podcast: {item.Title}");
-            await App.PositionData.AddPodcast(item);
+            foreach (var item in items)
+            {
+                Debug.WriteLine($"Adding Podcast: {item.Title}");
+                await App.PositionData.AddPodcast(item);
+            }
         }
     }
 
@@ -152,13 +155,16 @@ public static class PodcastServices
     public static async Task AddPodcast(string url)
     {
         var podcast = await Task.FromResult(FeedService.GetFeed(url)).Result;
-        await App.PositionData.AddPodcast(new Podcast
+        if (podcast != null)
         {
-            Title = podcast.Title,
-            Url = podcast.Url,
-            Description = podcast.Description,
-            Image = podcast.Image,
-        });
+            await App.PositionData.AddPodcast(new Podcast
+            {
+                Title = podcast.Title,
+                Url = podcast.Url,
+                Description = podcast.Description,
+                Image = podcast.Image,
+            });
+        }
     }
 
     /// <summary>
