@@ -1,4 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -65,6 +66,53 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetMostRecent);
+
+    }
+
+    public async Task Downloading(string url, bool mostRecent)
+    {
+        Logger.LogInformation("Trying to start download of {URL}", url);
+        IsBusy = true;
+        List<Show> list;
+        if (mostRecent) { list = MostRecentShows.ToList(); }
+        else { list = Shows.ToList(); }
+
+        foreach (var item in from item in list
+                             where item.Url == url
+                             select item)
+        {
+            Logger.LogInformation("Found match!");
+            Download download = new()
+            {
+                Title = item.Title,
+                Url = url,
+                Image = item.Image,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = DownloadService.GetFileName(url)
+            };
+            var downloaded = await DownloadService.DownloadShow(download);
+            if (!downloaded)
+            {
+                IsBusy = false;
+
+            }
+            else
+            {
+                Logger.LogInformation("Downloaded file: {file}", download.FileName);
+                var result = await App.PositionData.GetAllDownloads();
+                foreach (var show in result)
+                {
+                    if (show.Title == download.Title)
+                    {
+                        await App.PositionData.DeleteDownload(show);
+                    }
+                }
+
+                await DownloadService.AddDownloadDatabase(download);
+                IsBusy = false;
+            }
+        }
     }
 
     #region Podcast data functions

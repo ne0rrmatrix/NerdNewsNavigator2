@@ -18,4 +18,8 @@ public partial class MostRecentShowsPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Ok", "Added show to downloads!", "Ok");
+    }
 }

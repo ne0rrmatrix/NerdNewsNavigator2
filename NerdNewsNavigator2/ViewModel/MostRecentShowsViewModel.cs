@@ -21,6 +21,16 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         this._orientation = OnDeviceOrientationChange();
         _logger = logger;
     }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    async Task Download(string url)
+    {
+        await Downloading(url, true);
+    }
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -11,7 +11,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class TabletShowViewModel : BaseViewModel
 {
     #region Properties
-    readonly ILogger<TabletShowViewModel> _logger;
     /// <summary>
     /// A Url <see cref="string"/> containing the <see cref="Show"/>
     /// </summary>
@@ -35,7 +34,6 @@ public partial class TabletShowViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        _logger = logger;
     }
 
     /// <summary>
@@ -54,45 +52,6 @@ public partial class TabletShowViewModel : BaseViewModel
     [RelayCommand]
     async Task Download(string url)
     {
-        _logger.LogInformation("Trying to start download of {URL}", url);
-        IsBusy = true;
-        foreach (var item in Shows.ToList())
-        {
-            if (item.Url == url)
-            {
-                _logger.LogInformation("Found match!");
-                Download download = new()
-                {
-                    Title = item.Title,
-                    Url = url,
-                    Image = item.Image,
-                    PubDate = item.PubDate,
-                    Description = item.Description,
-                    FileName = DownloadService.GetFileName(url)
-                };
-                var downloaded = await DownloadService.DownloadShow(download);
-                if (downloaded)
-                {
-                    _logger.LogInformation("Downloaded file: {file}", download.FileName);
-                    var result = await App.PositionData.GetAllDownloads();
-                    foreach (var show in result)
-                    {
-                        if (show.Title == download.Title)
-                        {
-                            await App.PositionData.DeleteDownload(show);
-                        }
-                    }
-
-                    await DownloadService.AddDownloadDatabase(download);
-                    IsBusy = false;
-                }
-                else
-                {
-                    IsBusy = false;
-
-                }
-                return;
-            }
-        }
+        await Downloading(url, false);
     }
 }
