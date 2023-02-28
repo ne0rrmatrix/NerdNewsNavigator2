@@ -9,56 +9,27 @@
     FlyoutWidth="200"
     Shell.NavBarIsVisible="False">
 
-    <Shell.ItemTemplate>
-        <DataTemplate>
-
-            <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
-
-                <Grid
-                    Margin="5"
-                    ColumnDefinitions="50,*"
-                    RowDefinitions="50">
-                    <Image
-                        BackgroundColor="LightGray"
-                        Source="{Binding Icon}"
-                        WidthRequest="50" />
-                    <Label
-                        Grid.Column="1"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        Text="{Binding Title}"
-                        TextColor="Black" />
-                </Grid>
-
-            </ScrollView>
-
-        </DataTemplate>
-    </Shell.ItemTemplate>
-
     <Shell.MenuItemTemplate>
         <DataTemplate>
 
-            <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
+            <Grid
+                Margin="5"
+                ColumnDefinitions="50,*"
+                RowDefinitions="50">
+                <Image
+                    BackgroundColor="LightGray"
+                    HeightRequest="50"
+                    Source="{Binding Icon}"
+                    WidthRequest="50" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HeightRequest="40"
+                    Text="{Binding Title}"
+                    TextColor="Black" />
+            </Grid>
 
-                <Grid
-                    Margin="5"
-                    ColumnDefinitions="50,*"
-                    RowDefinitions="50">
-                    <Image
-                        BackgroundColor="LightGray"
-                        HeightRequest="50"
-                        Source="{Binding Icon}"
-                        WidthRequest="50" />
-                    <Label
-                        Grid.Column="1"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        HeightRequest="40"
-                        Text="{Binding Title}"
-                        TextColor="Black" />
-                </Grid>
-
-            </ScrollView>
 
         </DataTemplate>
     </Shell.MenuItemTemplate>
