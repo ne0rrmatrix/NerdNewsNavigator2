@@ -41,6 +41,7 @@
                             Grid.Row="0"
                             FontAttributes="Bold"
                             FontSize="12"
+                            HeightRequest="35"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
@@ -68,12 +69,14 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="Published: "
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="{Binding PubDate}"
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Button
                                 Margin="20"
                                 BackgroundColor="Red"
@@ -89,18 +92,6 @@
                                 </Button.GestureRecognizers>
 
                             </Button>
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Grid.Row="2" Padding="10">
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="Published: "
-                                TextColor="Black" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="{Binding PubDate}"
-                                TextColor="Black" />
                         </HorizontalStackLayout>
 
                         <Label
