@@ -19,7 +19,6 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(MostRecentShows));
         _logger = logger;
     }
 

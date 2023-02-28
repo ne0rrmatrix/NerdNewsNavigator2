@@ -58,7 +58,7 @@
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
 	  <ProvisioningType>automatic</ProvisioningType>
 	  <CodesignKey>Apple Development: Created via API (MX4QCQ2742)</CodesignKey>
-	  <CodesignProvision>VS: com.companyname.nerdnewsnavigator2 Development</CodesignProvision>
+	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
@@ -91,11 +91,6 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-
-  
-	<ItemGroup>
-	  <MauiAsset Include="Resources\Images\recent.svg" />
 	</ItemGroup>
 	
 	<ItemGroup>

@@ -42,7 +42,7 @@
                     Color="Red" />
             </StackLayout>
         </CollectionView.Header>
-        
+
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
 
@@ -88,14 +88,16 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="Published: "
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 Text="{Binding PubDate}"
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Button
-                                Margin="20"
+                                Margin="5"
                                 BackgroundColor="Green"
                                 Clicked="Button_Clicked"
                                 FontAttributes="Bold"

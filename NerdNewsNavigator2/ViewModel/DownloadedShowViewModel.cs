@@ -35,7 +35,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     async Task Tap(string url)
     {
 #if ANDROID || IOS
-        string item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
+        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
         _logger.LogInformation("Url being passed is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
 #endif
