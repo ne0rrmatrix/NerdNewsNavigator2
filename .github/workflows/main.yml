@@ -45,5 +45,7 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"ne0rrmatrix_NerdNewsNavigator2" /o:"ne0rrmatrix" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet restore
-          dotnet build --no-restore
+          dotnet tool install --global dotnet-coverage
+          dotnet build --no-incremental
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
