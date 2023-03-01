@@ -21,7 +21,7 @@ public partial class TabletPodcastPage : ContentPage
     /// <summary>
     /// Private <see cref="bool"/> which sets Full Screen Mode.
     /// </summary>
-    public bool FullScreenMode { get; set; } = new();
+    private bool FullScreenMode { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletPodcastPage"/> class.
@@ -39,7 +39,7 @@ public partial class TabletPodcastPage : ContentPage
     /// </summary>
 
 #nullable enable
-    public void SetFullScreen()
+    private void SetFullScreen()
     {
 
 #if ANDROID

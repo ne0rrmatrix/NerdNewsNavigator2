@@ -22,11 +22,6 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     private Position Pos { get; set; } = new();
 
-    /// <summary>
-    /// Instance variable for tracking whether a video has started. <see cref="MediaStateChangedEventArgs"/>
-    /// </summary>
-    private bool _isPlaying = false;
-
     #endregion
     /// <summary>
     /// Class Constructor that initilizes <see cref="TabletPlayPodcastPage"/>
@@ -54,9 +49,9 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
+    private async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
-        if (sender is null || _isPlaying == false)
+        if (sender is null)
         {
             return;
         }
@@ -79,9 +74,9 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Seek(object? sender, EventArgs e)
+    private async void Seek(object? sender, EventArgs e)
     {
-        if (sender is null && _isPlaying == false)
+        if (sender is null)
         {
             return;
         }
@@ -99,7 +94,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.ShouldKeepScreenOn = true;
         _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
         mediaElement.SeekTo(Pos.SavedPosition);
-        _isPlaying = true;
         mediaElement.StateChanged += Media_Stopped;
     }
 
@@ -108,7 +102,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
+    private async void SeekIOS(object sender, MediaStateChangedEventArgs e)
     {
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.Zero;
@@ -125,7 +119,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         {
             mediaElement.SeekTo(Pos.SavedPosition);
         }
-        _isPlaying = true;
         mediaElement.ShouldKeepScreenOn = true;
         mediaElement.StateChanged += Media_Stopped;
     }

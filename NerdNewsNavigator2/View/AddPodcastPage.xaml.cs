@@ -21,7 +21,7 @@ public partial class AddPodcastPage : ContentPage
     /// <summary>
     /// Private <see cref="bool"/> which sets Full Screen Mode.
     /// </summary>
-    public bool FullScreenMode { get; set; } = new();
+    private bool FullScreenMode { get; set; } = new();
 
     /// <summary>
     /// Initializes a new instance of <see cref="AddPodcastPage"/>
@@ -39,7 +39,7 @@ public partial class AddPodcastPage : ContentPage
     /// <summary>
     /// Method is required for switching Full Screen Mode for Windows
     /// </summary>
-    private Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
+    private static Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
     {
         var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
         var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
@@ -163,7 +163,7 @@ public partial class AddPodcastPage : ContentPage
     /// <param name="sender"></param>
     /// <param name="e"></param>
 #nullable enable
-    public void SetFullScreenItem(object sender, EventArgs e)
+    private void SetFullScreenItem(object sender, EventArgs e)
     {
         if (FullScreenMode)
         {
@@ -180,7 +180,7 @@ public partial class AddPodcastPage : ContentPage
     /// <summary>
     /// Method toggles Full Screen Mode Off and On
     /// </summary>
-    public void SetFullScreen()
+    private void SetFullScreen()
     {
 #if ANDROID
             var activity = Platform.CurrentActivity;
@@ -202,8 +202,8 @@ public partial class AddPodcastPage : ContentPage
             }
 #endif
 #if WINDOWS
-		var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-        
+        var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+
         var appWindow = GetAppWindow(window);
 
         switch (appWindow.Presenter)
