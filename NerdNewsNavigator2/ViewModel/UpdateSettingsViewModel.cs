@@ -1,5 +1,4 @@
-﻿using System.Linq;
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -9,7 +8,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class UpdateSettingsViewModel : BaseViewModel
 {
-    readonly ILogger<UpdateSettingsViewModel> _logger;
+    private readonly ILogger<UpdateSettingsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateSettingsViewModel"/> class.
     /// </summary>
@@ -24,8 +23,9 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     }
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
+    /// Function has to be public to work. I don't know why!
     /// </summary>
-    private async Task DeleteAllPodcasts()
+    public async Task DeleteAllPodcasts()
     {
         try
         {

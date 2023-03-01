@@ -20,12 +20,12 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         this._orientation = OnDeviceOrientationChange();
     }
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowPage"/>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    async Task Download(string url)
+    private async Task Download(string url)
     {
         await Downloading(url, true);
     }
@@ -37,5 +37,5 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// <returns></returns>
     [RelayCommand]
 
-    async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={url}");
+    public async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={url}");
 }

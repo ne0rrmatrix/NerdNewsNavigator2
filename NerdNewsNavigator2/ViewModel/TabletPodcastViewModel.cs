@@ -26,7 +26,7 @@ public partial class TabletPodcastViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    async Task Tap(string url)
+    public async Task Tap(string url)
     {
         var encodedUrl = HttpUtility.UrlEncode(url);
         await Shell.Current.GoToAsync($"{nameof(TabletShowPage)}?Url={encodedUrl}");

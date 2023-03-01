@@ -16,7 +16,7 @@ public partial class DownloadedPlayViewModel : BaseViewModel
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
-    string _url;
+    private string _url;
 
     /// <summary>
     /// A public facing <see cref="string"/> that contains a Url for <see cref="Show"/>

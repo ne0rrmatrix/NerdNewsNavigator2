@@ -14,7 +14,7 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
     #region Properties
-    string _url;
+    private string _url;
 
     /// <summary>
     /// A public facing <see cref="string"/> that contains a Url for <see cref="Show"/>

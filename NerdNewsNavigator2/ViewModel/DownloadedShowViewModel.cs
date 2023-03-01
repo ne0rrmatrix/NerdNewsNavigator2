@@ -8,7 +8,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
 {
     #region Properties
 
-    readonly ILogger<DownloadedShowViewModel> _logger;
+    private readonly ILogger<DownloadedShowViewModel> _logger;
     /// <summary>
     /// Intilializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="logger"/>
@@ -32,7 +32,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    async Task Tap(string url)
+    public async Task Tap(string url)
     {
 #if ANDROID || IOS
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
@@ -40,7 +40,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
 #endif
 #if WINDOWS
-        string item = "ms-appdata:///LocalCache/Local/" + url;
+        var item = "ms-appdata:///LocalCache/Local/" + url;
         _logger.LogInformation("Url being passed is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
 #endif
@@ -53,7 +53,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     /// <returns></returns>
 
     [RelayCommand]
-    async Task Delete(string url)
+    public async Task Delete(string url)
     {
         foreach (var item in DownloadedShows.ToList())
         {
