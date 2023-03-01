@@ -37,12 +37,12 @@ public partial class DownloadedShowViewModel : BaseViewModel
 #if ANDROID || IOS
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
         _logger.LogInformation("Url being passed is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
+        await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={item}");
 #endif
 #if WINDOWS
         var item = "ms-appdata:///LocalCache/Local/" + url;
         _logger.LogInformation("Url being passed is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(DownloadPlayPage)}?Url={item}");
+        await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={item}");
 #endif
     }
 

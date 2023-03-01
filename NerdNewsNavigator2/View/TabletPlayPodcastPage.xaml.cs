@@ -49,7 +49,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
+    private async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
         if (sender is null)
         {
@@ -74,7 +74,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Seek(object? sender, EventArgs e)
+    private async void Seek(object? sender, EventArgs e)
     {
         if (sender is null)
         {
@@ -102,7 +102,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
+    private async void SeekIOS(object sender, MediaStateChangedEventArgs e)
     {
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.Zero;
@@ -127,7 +127,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// Manages saving of <see cref="Pos"/> to <see cref="PositionDataBase"/> Database.
     /// </summary>
     /// <returns></returns>
-    public async Task Save()
+    private async Task Save()
     {
         await App.PositionData.Add(new Position
         {
@@ -141,7 +141,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void ContentPage_Unloaded(object? sender, EventArgs e)
+    private void ContentPage_Unloaded(object? sender, EventArgs e)
     {
         if (sender is null)
         {

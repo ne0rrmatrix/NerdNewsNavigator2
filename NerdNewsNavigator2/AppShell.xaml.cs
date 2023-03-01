@@ -22,7 +22,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
         Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
         Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
-        Routing.RegisterRoute(nameof(DownloadPlayPage), typeof(DownloadPlayPage));
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
     /// <summary>
