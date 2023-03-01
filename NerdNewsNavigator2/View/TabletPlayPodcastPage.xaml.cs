@@ -49,7 +49,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
+    public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
         if (sender is null)
         {
@@ -74,7 +74,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void Seek(object? sender, EventArgs e)
+    public async void Seek(object? sender, EventArgs e)
     {
         if (sender is null)
         {
@@ -102,7 +102,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void SeekIOS(object sender, MediaStateChangedEventArgs e)
+    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
     {
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.Zero;
