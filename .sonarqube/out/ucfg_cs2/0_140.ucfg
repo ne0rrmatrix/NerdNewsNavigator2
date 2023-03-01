@@ -1,0 +1,18 @@
+
+ANerdNewsNavigator2.ViewModel.TabletShowViewModel.Download(string)l
+bC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\TabletShowViewModel.cs8 8("0*Ú
+0: :($Å
+Â
+: :(%!
+%0System.Threading.Tasks.Task"DNerdNewsNavigator2.ViewModel.BaseViewModel.Downloading(string, bool)*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel*
+
+urlstring*
+""*
+1*.
+1; ;("
+; ;(
+implicit return:
+8 8()
+urlstringB42
+0NerdNewsNavigator2.ViewModel.TabletShowViewModel

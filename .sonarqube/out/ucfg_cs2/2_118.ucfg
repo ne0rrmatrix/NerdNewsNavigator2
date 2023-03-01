@@ -1,0 +1,42 @@
+
+ONerdNewsNavigator2.View.AddPodcastPage.Button_Clicked(object, System.EventArgs)g
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs8 8(%"0*Ó
+0: ;(;Ž
+‹
+:) :(,#
+%0Microsoft.Maui.Controls.Entry"__id*TR*P(
+&NerdNewsNavigator2.View.AddPodcastPage"$
+UrlMicrosoft.Maui.Controls.Entryo
+m
+:) :(1
+%1string"*Microsoft.Maui.Controls.InputView.Text.get*'%
+#
+%0Microsoft.Maui.Controls.Entry?
+=
+:) :(<
+%2string"string.ToString()*
+
+%1string³
+°
+: :(=!
+%3System.Threading.Tasks.Task"=NerdNewsNavigator2.Service.PodcastServices.AddPodcast(string)*0.",
+*NerdNewsNavigator2.Service.PodcastServices*
+
+%2stringÅ
+Â
+; ;(<!
+%4System.Threading.Tasks.Task"AMicrosoft.Maui.Controls.Page.DisplayAlert(string, string, string)*" 
+Microsoft.Maui.Controls.Page*
+
+Sucess*
+Podcast Added!*
+Ok*
+1*.
+1< <("
+< <(
+implicit return:
+8& 8(3
+senderobject:!
+85 8(@
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

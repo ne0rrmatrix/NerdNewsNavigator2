@@ -1,0 +1,56 @@
+
+DNerdNewsNavigator2.App.App(NerdNewsNavigator2.Data.PositionDataBase)W
+MC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\App.xaml.cs* *("1*€
+17 7(l
+j
+
+%0void"1Microsoft.Maui.Controls.Application.Application()*)'%
+#Microsoft.Maui.Controls.Application*
+0*Ë
+0, 5('d
+b
+, ,(
+
+%1void",NerdNewsNavigator2.App.InitializeComponent()*
+NerdNewsNavigator2.AppLJ
+- -(!!
+%2NerdNewsNavigator2.AppShell"NerdNewsNavigator2.AppShellg
+e
+- -(
+
+%3void"&NerdNewsNavigator2.AppShell.AppShell()*%#
+!
+%2NerdNewsNavigator2.AppShellµ
+²
+- -(!"
+%4Microsoft.Maui.Controls.Page"0Microsoft.Maui.Controls.Application.MainPage.set*)'%
+#Microsoft.Maui.Controls.Application*%#
+!
+%2NerdNewsNavigator2.AppShellk
+i
+/ /(
+
+%5bool")NerdNewsNavigator2.App.FullScreenMode.set*"
+NerdNewsNavigator2.App*
+""«
+¨
+0 2(7
+
+%6void"ÎMetroLog.Maui.LogController.InitializeNavigation(System.Func<Microsoft.Maui.Controls.Page, System.Threading.Tasks.Task>, System.Func<System.Threading.Tasks.Task>, System.Func<Microsoft.Maui.Controls.Page>?)*!"
+MetroLog.Maui.LogController*
+""*
+""*
+""Æ
+Ã
+5 5('.
+%7(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.set*"
+NerdNewsNavigator2.App*@>
+<
+positionDataBase(NerdNewsNavigator2.Data.PositionDataBase*
+2*.
+27 7("
+7 7(
+implicit return:H
+* *(0<
+positionDataBase(NerdNewsNavigator2.Data.PositionDataBaseB
+NerdNewsNavigator2.App

@@ -1,0 +1,7 @@
+Ä
+)NerdNewsNavigator2.View.TabletPodcastPage#Microsoft.Maui.Controls.ContentPage%Microsoft.Maui.Controls.TemplatedPageMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobjectº
+FTabletPodcastPage(NerdNewsNavigator2.ViewModel.TabletPodcastViewModel)pNerdNewsNavigator2.View.TabletPodcastPage.TabletPodcastPage(NerdNewsNavigator2.ViewModel.TabletPodcastViewModel)L
+SetFullScreen()9NerdNewsNavigator2.View.TabletPodcastPage.SetFullScreen()X
+InitializeComponent()?NerdNewsNavigator2.View.TabletPodcastPage.InitializeComponent()R
+FullScreenMode.get<NerdNewsNavigator2.View.TabletPodcastPage.FullScreenMode.getR
+FullScreenMode.set<NerdNewsNavigator2.View.TabletPodcastPage.FullScreenMode.set

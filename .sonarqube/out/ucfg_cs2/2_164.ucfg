@@ -1,0 +1,59 @@
+
+4NerdNewsNavigator2.Data.PositionDataBase.DeleteAll()d
+ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.csH H(%"0*
+0U U(*
+1
+2*Œ
+1L N(ñ
+ì
+L L("
+%0SQLite.SQLiteAsyncConnection"__id*][*Y*
+(NerdNewsNavigator2.Data.PositionDataBase"+
+_connectionSQLite.SQLiteAsyncConnectionì
+ê
+L L(8*
+%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAllAsync<T>()*&$
+"
+%0SQLite.SQLiteAsyncConnection¿
+Ω
+M M(9
+%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>∏
+µ
+M M(A
+
+%3void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%23Microsoft.Extensions.Logging.ILogger<TCategoryName>* 
+Deleted All Position data.*
+"""
+N N(
+""*°
+2R S(¿
+Ω
+R R(9
+%43Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>a_
+RX R(b
+%5string"System.Exception.Message.get*
+
+exSystem.Exception2Message.get◊
+‘
+R R(c
+
+%6void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%43Microsoft.Extensions.Logging.ILogger<TCategoryName>*=;9
+7Failed to delete Position data from database: {Message}*
+
+%5string"
+S S(
+""*.
+3U U("
+U U(
+implicit returnB,*
+(NerdNewsNavigator2.Data.PositionDataBase

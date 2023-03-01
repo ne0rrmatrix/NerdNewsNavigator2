@@ -1,0 +1,49 @@
+
+?NerdNewsNavigator2.ViewModel.TabletPlayPodcastViewModel.Url.sets
+iC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\TabletPlayPodcastViewModel.cs ("0*¡
+0 (4q
+o
+ ( 
+%0string"__id*OM*K9
+7NerdNewsNavigator2.ViewModel.TabletPlayPodcastViewModel"
+_urlstringà
+Ý
+ ((
+
+%1bool"WCommunityToolkit.Mvvm.ComponentModel.ObservableObject.SetProperty<T>(ref T, T, string?)*;97
+5CommunityToolkit.Mvvm.ComponentModel.ObservableObject*
+
+%0string*
+
+valuestring*
+""’
+
+ ()
+%2#Microsoft.Maui.Storage.IPreferences".Microsoft.Maui.Storage.Preferences.Default.get*(&"$
+"Microsoft.Maui.Storage.Preferences·´
+ (7
+
+%3void";Microsoft.Maui.Storage.IPreferences.Remove(string, string?)*-+
+)
+%2#Microsoft.Maui.Storage.IPreferences*	
+New_Url*
+""2Remove(string, string?)’
+
+ ()
+%4#Microsoft.Maui.Storage.IPreferences".Microsoft.Maui.Storage.Preferences.Default.get*(&"$
+"Microsoft.Maui.Storage.PreferencesÒÏ
+ (5
+
+%5void">Microsoft.Maui.Storage.IPreferences.Set<T>(string, T, string?)*-+
+)
+%4#Microsoft.Maui.Storage.IPreferences*	
+New_Url*
+
+valuestring*
+""2Set<T>(string, T, string?)*
+1*.
+1	 (	"
+ (	
+implicit return:
+valuestringB;9
+7NerdNewsNavigator2.ViewModel.TabletPlayPodcastViewModel

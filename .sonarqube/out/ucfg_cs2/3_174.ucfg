@@ -1,0 +1,212 @@
+
+MNerdNewsNavigator2.View.TabletPlayPodcastPage.Seek(object?, System.EventArgs)n
+dC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\TabletPlayPodcastPage.xaml.csM M("0*
+0O O(*
+1
+2*!
+1b b("
+Q Q(
+""*ò
+2S V()¢
+ü
+S S('
+%0!NerdNewsNavigator2.Model.Position"5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get*31/
+-NerdNewsNavigator2.View.TabletPlayPodcastPageí
+è
+S S(')
+%1#Microsoft.Maui.Storage.IPreferences".Microsoft.Maui.Storage.Preferences.Default.get*(&"$
+"Microsoft.Maui.Storage.PreferencesA
+?
+S7 S(C
+%2string"__id**
+string"
+Emptystring—Œ
+S S(D
+%3string">Microsoft.Maui.Storage.IPreferences.Get<T>(string, T, string?)*-+
+)
+%1#Microsoft.Maui.Storage.IPreferences*	
+New_Url*
+
+%2string*
+""2Get<T>(string, T, string?)á
+Ñ
+S S(D
+%4string"+NerdNewsNavigator2.Model.Position.Title.set*+)
+'
+%0!NerdNewsNavigator2.Model.Position*
+
+%3string¢
+ü
+T T('
+%5!NerdNewsNavigator2.Model.Position"5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get*31/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage[
+Y
+T T()
+%6System.TimeSpan"__id*0.*,
+System.TimeSpan"
+ZeroSystem.TimeSpan°
+û
+T T()
+%7System.TimeSpan"3NerdNewsNavigator2.Model.Position.SavedPosition.set*+)
+'
+%5!NerdNewsNavigator2.Model.Position*
+
+%6System.TimeSpanÑ
+Å
+U! U(1.
+%8(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.App©
+¶
+U! U(C*
+%9$System.Threading.Tasks.Task<TResult>":NerdNewsNavigator2.Data.PositionDataBase.GetAllPositions()*20
+.
+%8(NerdNewsNavigator2.Data.PositionDataBaseP
+N
+U U(C2
+positionList"System.Collections.Generic.List<T>"__id*
+""*
+3*
+3b b(*
+4
+5*ü
+4X X('£
+†
+X X((
+%10!NerdNewsNavigator2.Model.Position"5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get*31/
+-NerdNewsNavigator2.View.TabletPlayPodcastPagev
+t
+X X(
+%11string"+NerdNewsNavigator2.Model.Position.Title.get*,*
+(
+%10!NerdNewsNavigator2.Model.Positionw
+u
+X X('
+%12string"+NerdNewsNavigator2.Model.Position.Title.get*-+
+)
+item!NerdNewsNavigator2.Model.Positionq
+o
+X X('
+%13bool""string.operator ==(string, string)*
+"
+string*
+
+%11string*
+
+%12string*
+6
+3*ö
+6	Z [(ô£
+†
+Z Z((
+%14!NerdNewsNavigator2.Model.Position"5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get*31/
+-NerdNewsNavigator2.View.TabletPlayPodcastPageâ
+Ü
+Z$ Z(6
+%15System.TimeSpan"3NerdNewsNavigator2.Model.Position.SavedPosition.get*-+
+)
+item!NerdNewsNavigator2.Model.Position§
+°
+Z Z(6
+%16System.TimeSpan"3NerdNewsNavigator2.Model.Position.SavedPosition.set*,*
+(
+%14!NerdNewsNavigator2.Model.Position*
+
+%15System.TimeSpan∆
+√
+[ [(:
+%173Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*us*q/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>w
+u
+[n [(x
+%18string"+NerdNewsNavigator2.Model.Position.Title.get*-+
+)
+item!NerdNewsNavigator2.Model.Positionä
+á
+	[z [(å
+%19System.TimeSpan"3NerdNewsNavigator2.Model.Position.SavedPosition.get*-+
+)
+item!NerdNewsNavigator2.Model.PositionZ
+X
+	[z [(ô
+%20double" System.TimeSpan.TotalSeconds.get*
+
+%19System.TimeSpanÄ
+˝
+	[ [(ö
+%21void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%173Microsoft.Extensions.Logging.ILogger<TCategoryName>*IGE
+CRetrieved Saved position from database is: {Title} - {TotalSeconds}*
+
+%18string*
+
+%20double*
+3*˙
+5^ a(2µ
+≤
+^ ^(/
+%22(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage"8
+mediaElement(CommunityToolkit.Maui.Views.MediaElementö
+ó
+^ ^(.
+%23bool"?CommunityToolkit.Maui.Views.MediaElement.ShouldKeepScreenOn.set*31
+/
+%22(CommunityToolkit.Maui.Views.MediaElement*
+""∆
+√
+_ _(:
+%243Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*us*q/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>⁄
+◊
+_ _(\
+%25void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%243Microsoft.Extensions.Logging.ILogger<TCategoryName>*@><
+:Media playback started. ShouldKeepScreenOn is set to true.*
+""µ
+≤
+` `(/
+%26(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage"8
+mediaElement(CommunityToolkit.Maui.Views.MediaElement£
+†
+` `((
+%27!NerdNewsNavigator2.Model.Position"5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get*31/
+-NerdNewsNavigator2.View.TabletPlayPodcastPageà
+Ö
+` `(-
+%28System.TimeSpan"3NerdNewsNavigator2.Model.Position.SavedPosition.get*,*
+(
+%27!NerdNewsNavigator2.Model.Position≠
+™
+` `(.
+%29void"@CommunityToolkit.Maui.Views.MediaElement.SeekTo(System.TimeSpan)*31
+/
+%26(CommunityToolkit.Maui.Views.MediaElement*
+
+%28System.TimeSpanµ
+≤
+a a(/
+%30(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage"8
+mediaElement(CommunityToolkit.Maui.Views.MediaElementô
+ñ
+a a(2
+%31void"9CommunityToolkit.Maui.Views.MediaElement.StateChanged.add*.,"*
+(CommunityToolkit.Maui.Views.MediaElement*
+""*
+""*
+7*.
+7b b("
+b b(
+implicit return:
+M M()
+senderobject:!
+M+ M(6
+eSystem.EventArgsB1/
+-NerdNewsNavigator2.View.TabletPlayPodcastPage

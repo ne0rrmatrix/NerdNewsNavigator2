@@ -1,0 +1,22 @@
+
+hNerdNewsNavigator2.Service.DownloadService.RemoveDownloadFromDatabase(NerdNewsNavigator2.Model.Download)f
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\DownloadService.cs? ?(7"0*ò
+0A A(6Ñ
+Å
+A A(.
+%0(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.App¸
+˘
+A A(7*
+%1$System.Threading.Tasks.Task<TResult>"ZNerdNewsNavigator2.Data.PositionDataBase.DeleteDownload(NerdNewsNavigator2.Model.Download)*20
+.
+%0(NerdNewsNavigator2.Data.PositionDataBase*1/
+-
+download!NerdNewsNavigator2.Model.Download*
+1*.
+1B B("
+B B(
+implicit return:9
+?8 ?(I-
+download!NerdNewsNavigator2.Model.DownloadB.",
+*NerdNewsNavigator2.Service.DownloadService

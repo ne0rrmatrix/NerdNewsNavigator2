@@ -1,0 +1,29 @@
+
+ANerdNewsNavigator2.AppShell.GotoAddPage(object, System.EventArgs)\
+RC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\AppShell.xaml.csR R(""0*—
+0T U(?|
+z
+T T(!
+
+%0bool"3Microsoft.Maui.Controls.Shell.FlyoutIsPresented.set*#!
+Microsoft.Maui.Controls.Shell*
+""Å
+
+U U(#
+%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
+Microsoft.Maui.Controls.Shell∫
+∑
+U U(B!
+%2System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
+#
+%1Microsoft.Maui.Controls.Shell*
+""*
+1*.
+1V V("
+V V(
+implicit return:
+R# R(0
+senderobject:!
+R2 R(=
+eSystem.EventArgsB
+NerdNewsNavigator2.AppShell

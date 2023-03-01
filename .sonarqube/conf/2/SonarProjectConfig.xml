@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>C:\Users\james\source\repos\NerdNewsNavigator2\.sonarqube\conf\SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\NerdNewsNavigator2.csproj</ProjectPath>
+  <FilesToAnalyzePath>C:\Users\james\source\repos\NerdNewsNavigator2\.sonarqube\conf\2\FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>C:\Users\james\source\repos\NerdNewsNavigator2\.sonarqube\out\2</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+</SonarProjectConfig>

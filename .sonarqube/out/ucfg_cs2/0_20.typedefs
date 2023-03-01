@@ -1,0 +1,35 @@
+Œ
+*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobjectî
+_BaseViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.BaseViewModel>)ŠNerdNewsNavigator2.ViewModel.BaseViewModel.BaseViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.BaseViewModel>)a
+Downloading(string, bool)DNerdNewsNavigator2.ViewModel.BaseViewModel.Downloading(string, bool)[
+GetShows(string, bool)ANerdNewsNavigator2.ViewModel.BaseViewModel.GetShows(string, bool)Y
+GetMostRecent(object)@NerdNewsNavigator2.ViewModel.BaseViewModel.GetMostRecent(object)W
+GetUpdatedPodcasts()?NerdNewsNavigator2.ViewModel.BaseViewModel.GetUpdatedPodcasts()c
+GetDownloadedShows(object)ENerdNewsNavigator2.ViewModel.BaseViewModel.GetDownloadedShows(object)ò
+aDeviceDisplay_MainDisplayInfoChanged(object?, Microsoft.Maui.Devices.DisplayInfoChangedEventArgs)ŒNerdNewsNavigator2.ViewModel.BaseViewModel.DeviceDisplay_MainDisplayInfoChanged(object?, Microsoft.Maui.Devices.DisplayInfoChangedEventArgs)c
+OnOrientationChanging(int)ENerdNewsNavigator2.ViewModel.BaseViewModel.OnOrientationChanging(int)a
+OnOrientationChanged(int)DNerdNewsNavigator2.ViewModel.BaseViewModel.OnOrientationChanged(int)[
+OnIsBusyChanging(bool)ANerdNewsNavigator2.ViewModel.BaseViewModel.OnIsBusyChanging(bool)Y
+OnIsBusyChanged(bool)@NerdNewsNavigator2.ViewModel.BaseViewModel.OnIsBusyChanged(bool)Q
+MyMainDisplay.get<NerdNewsNavigator2.ViewModel.BaseViewModel.MyMainDisplay.getQ
+MyMainDisplay.set<NerdNewsNavigator2.ViewModel.BaseViewModel.MyMainDisplay.setA
+	Shows.get4NerdNewsNavigator2.ViewModel.BaseViewModel.Shows.getA
+	Shows.set4NerdNewsNavigator2.ViewModel.BaseViewModel.Shows.setU
+MostRecentShows.get>NerdNewsNavigator2.ViewModel.BaseViewModel.MostRecentShows.getU
+MostRecentShows.set>NerdNewsNavigator2.ViewModel.BaseViewModel.MostRecentShows.setU
+DownloadedShows.get>NerdNewsNavigator2.ViewModel.BaseViewModel.DownloadedShows.getU
+DownloadedShows.set>NerdNewsNavigator2.ViewModel.BaseViewModel.DownloadedShows.setG
+Podcasts.get7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.getG
+Podcasts.set7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.setI
+IsNotBusy.get8NerdNewsNavigator2.ViewModel.BaseViewModel.IsNotBusy.getI
+IsNotBusy.set8NerdNewsNavigator2.ViewModel.BaseViewModel.IsNotBusy.setC
+
+Logger.get5NerdNewsNavigator2.ViewModel.BaseViewModel.Logger.getC
+
+Logger.set5NerdNewsNavigator2.ViewModel.BaseViewModel.Logger.setM
+Orientation.get:NerdNewsNavigator2.ViewModel.BaseViewModel.Orientation.getM
+Orientation.set:NerdNewsNavigator2.ViewModel.BaseViewModel.Orientation.setC
+
+IsBusy.get5NerdNewsNavigator2.ViewModel.BaseViewModel.IsBusy.getC
+
+IsBusy.set5NerdNewsNavigator2.ViewModel.BaseViewModel.IsBusy.set

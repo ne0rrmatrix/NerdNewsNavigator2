@@ -1,0 +1,73 @@
+
+:NerdNewsNavigator2.ViewModel.SettingsViewModel.Tap(string)j
+`C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\SettingsViewModel.cs ("0*á
+0  !(%π
+∂
+   ()*
+%0$System.Threading.Tasks.Task<TResult>"9NerdNewsNavigator2.Service.PodcastServices.Delete(string)*0.",
+*NerdNewsNavigator2.Service.PodcastServices*
+
+urlstring∂
+≥
+! !(%<
+%16System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel*
+1*
+1) )(*
+2
+3*˙
+2# #(r
+p
+# #(
+%2string"(NerdNewsNavigator2.Model.Podcast.Url.get*,*
+(
+item NerdNewsNavigator2.Model.Podcasto
+m
+# #(
+
+%3bool""string.operator ==(string, string)*
+"
+string*
+
+%2string*
+
+urlstring*
+4
+1*î
+4% %(*∂
+≥
+% %(<
+%46System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel√
+¿
+% %(+
+
+%5bool"8System.Collections.ObjectModel.Collection<T>.Contains(T)*@>
+<
+%46System.Collections.ObjectModel.ObservableCollection<T>*,*
+(
+item NerdNewsNavigator2.Model.Podcast*
+5
+6*è
+5%/ %(C∂
+≥
+%/ %(7<
+%66System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel¡
+æ
+%/ %(D
+
+%7bool"6System.Collections.ObjectModel.Collection<T>.Remove(T)*@>
+<
+%66System.Collections.ObjectModel.ObservableCollection<T>*,*
+(
+item NerdNewsNavigator2.Model.Podcast*
+6*
+6) )(*
+3*.
+3) )("
+) )(
+implicit return:
+ ($
+urlstringB20
+.NerdNewsNavigator2.ViewModel.SettingsViewModel

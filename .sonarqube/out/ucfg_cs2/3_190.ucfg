@@ -1,0 +1,377 @@
+
+FNerdNewsNavigator2.ViewModel.BaseViewModel.OnDeviceOrientationChange()h
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\BaseViewModel.cs· ·(/"0*¢
+0
+„ „(?ë
+é
+
+„ „((
+%0"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo©¶
+
+„ „('+
+%1%Microsoft.Maui.Devices.DevicePlatform"/Microsoft.Maui.Devices.IDeviceInfo.Platform.get*,*
+(
+%0"Microsoft.Maui.Devices.IDeviceInfo2Platform.getö
+ó
+
+„+ „(?+
+%2%Microsoft.Maui.Devices.DevicePlatform"/Microsoft.Maui.Devices.DevicePlatform.WinUI.get*+)"'
+%Microsoft.Maui.Devices.DevicePlatform´
+®
+
+„ „(?
+
+%3bool"Microsoft.Maui.Devices.DevicePlatform.operator ==(Microsoft.Maui.Devices.DevicePlatform, Microsoft.Maui.Devices.DevicePlatform)*+)"'
+%Microsoft.Maui.Devices.DevicePlatform*/-
++
+%1%Microsoft.Maui.Devices.DevicePlatform*/-
++
+%2%Microsoft.Maui.Devices.DevicePlatform*
+1
+2*#
+1
+‰ ‰("
+
+‰ ‰(2*˛
+2
+Â Â(>ë
+é
+
+Â Â(#(
+%4"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo†ù
+
+Â Â()(
+%5"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.IDeviceInfo.Idiom.get*,*
+(
+%4"Microsoft.Maui.Devices.IDeviceInfo2	Idiom.getë
+é
+
+Â- Â(>(
+%6"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.DeviceIdiom.Phone.get*(&"$
+"Microsoft.Maui.Devices.DeviceIdiomô
+ñ
+
+Â Â(>
+
+%7bool"vMicrosoft.Maui.Devices.DeviceIdiom.operator ==(Microsoft.Maui.Devices.DeviceIdiom, Microsoft.Maui.Devices.DeviceIdiom)*(&"$
+"Microsoft.Maui.Devices.DeviceIdiom*,*
+(
+%5"Microsoft.Maui.Devices.DeviceIdiom*,*
+(
+%6"Microsoft.Maui.Devices.DeviceIdiom*
+3
+4*¿
+3ÂB Â(íö
+ó
+
+ÂB Â(W+
+%8%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplay∫∑
+
+ÂB Â(g(
+%9"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*/-
++
+%8%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get£
+†
+
+ÂB Â(s0
+%10)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*,*
+(
+%9"Microsoft.Maui.Devices.DisplayInfo&
+$
+Âw Â(í
+%11"__id*
+""*
+5
+4*#
+5
+Ê Ê("
+
+Ê Ê(2*Ö
+4
+Á Á(>í
+è
+
+Á Á(#)
+%12"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo¢ü
+
+Á Á())
+%13"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.IDeviceInfo.Idiom.get*-+
+)
+%12"Microsoft.Maui.Devices.IDeviceInfo2	Idiom.getí
+è
+
+Á- Á(>)
+%14"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.DeviceIdiom.Phone.get*(&"$
+"Microsoft.Maui.Devices.DeviceIdiomú
+ô
+
+Á Á(>
+%15bool"vMicrosoft.Maui.Devices.DeviceIdiom.operator ==(Microsoft.Maui.Devices.DeviceIdiom, Microsoft.Maui.Devices.DeviceIdiom)*(&"$
+"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%13"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%14"Microsoft.Maui.Devices.DeviceIdiom*
+6
+7*ƒ
+6ÁB Á(ìõ
+ò
+
+ÁB Á(W,
+%16%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayºπ
+
+ÁB Á(g)
+%17"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*0.
+,
+%16%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get§
+°
+
+ÁB Á(s0
+%18)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*-+
+)
+%17"Microsoft.Maui.Devices.DisplayInfo&
+$
+Áw Á(ì
+%19"__id*
+""*
+8
+7*#
+8
+Ë Ë("
+
+Ë Ë(2*á
+7
+È È(?í
+è
+
+È È(#)
+%20"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo¢ü
+
+È È())
+%21"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.IDeviceInfo.Idiom.get*-+
+)
+%20"Microsoft.Maui.Devices.IDeviceInfo2	Idiom.getì
+ê
+
+È- È(?)
+%22"Microsoft.Maui.Devices.DeviceIdiom"-Microsoft.Maui.Devices.DeviceIdiom.Tablet.get*(&"$
+"Microsoft.Maui.Devices.DeviceIdiomú
+ô
+
+È È(?
+%23bool"vMicrosoft.Maui.Devices.DeviceIdiom.operator ==(Microsoft.Maui.Devices.DeviceIdiom, Microsoft.Maui.Devices.DeviceIdiom)*(&"$
+"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%21"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%22"Microsoft.Maui.Devices.DeviceIdiom*
+9
+10*∆
+9ÈC È(ìõ
+ò
+
+ÈC È(X,
+%24%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayºπ
+
+ÈC È(h)
+%25"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*0.
+,
+%24%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get§
+°
+
+ÈC È(t0
+%26)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*-+
+)
+%25"Microsoft.Maui.Devices.DisplayInfo&
+$
+Èx È(ì
+%27"__id*
+""*
+11
+10*$
+11
+Í Í("
+
+Í Í(2*â
+10
+Î Î(?í
+è
+
+Î Î(#)
+%28"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo¢ü
+
+Î Î())
+%29"Microsoft.Maui.Devices.DeviceIdiom",Microsoft.Maui.Devices.IDeviceInfo.Idiom.get*-+
+)
+%28"Microsoft.Maui.Devices.IDeviceInfo2	Idiom.getì
+ê
+
+Î- Î(?)
+%30"Microsoft.Maui.Devices.DeviceIdiom"-Microsoft.Maui.Devices.DeviceIdiom.Tablet.get*(&"$
+"Microsoft.Maui.Devices.DeviceIdiomú
+ô
+
+Î Î(?
+%31bool"vMicrosoft.Maui.Devices.DeviceIdiom.operator ==(Microsoft.Maui.Devices.DeviceIdiom, Microsoft.Maui.Devices.DeviceIdiom)*(&"$
+"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%29"Microsoft.Maui.Devices.DeviceIdiom*-+
+)
+%30"Microsoft.Maui.Devices.DeviceIdiom*
+12
+13*«
+12ÎC Î(îõ
+ò
+
+ÎC Î(X,
+%32%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayºπ
+
+ÎC Î(h)
+%33"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*0.
+,
+%32%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get§
+°
+
+ÎC Î(t0
+%34)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*-+
+)
+%33"Microsoft.Maui.Devices.DisplayInfo&
+$
+Îx Î(î
+%35"__id*
+""*
+14
+13*$
+14
+Ï Ï("
+
+Ï Ï(2*™
+13
+Ì Ì(Bí
+è
+
+Ì Ì(#)
+%36"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo´®
+
+Ì Ì(,,
+%37%Microsoft.Maui.Devices.DevicePlatform"/Microsoft.Maui.Devices.IDeviceInfo.Platform.get*-+
+)
+%36"Microsoft.Maui.Devices.IDeviceInfo2Platform.getô
+ñ
+
+Ì0 Ì(B,
+%38%Microsoft.Maui.Devices.DevicePlatform"-Microsoft.Maui.Devices.DevicePlatform.iOS.get*+)"'
+%Microsoft.Maui.Devices.DevicePlatformÆ
+´
+
+Ì Ì(B
+%39bool"Microsoft.Maui.Devices.DevicePlatform.operator ==(Microsoft.Maui.Devices.DevicePlatform, Microsoft.Maui.Devices.DevicePlatform)*+)"'
+%Microsoft.Maui.Devices.DevicePlatform*0.
+,
+%37%Microsoft.Maui.Devices.DevicePlatform*0.
+,
+%38%Microsoft.Maui.Devices.DevicePlatform*
+15
+16*«
+15ÌF Ì(ñõ
+ò
+
+ÌF Ì([,
+%40%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayºπ
+
+ÌF Ì(k)
+%41"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*0.
+,
+%40%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get§
+°
+
+ÌF Ì(w0
+%42)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*-+
+)
+%41"Microsoft.Maui.Devices.DisplayInfo&
+$
+Ì{ Ì(ñ
+%43"__id*
+""*
+17
+16*$
+17
+Ó Ó("
+
+Ó Ó(2*™
+16
+Ô Ô(Bí
+è
+
+Ô Ô(#)
+%44"Microsoft.Maui.Devices.IDeviceInfo"-Microsoft.Maui.Devices.DeviceInfo.Current.get*'%"#
+!Microsoft.Maui.Devices.DeviceInfo´®
+
+Ô Ô(,,
+%45%Microsoft.Maui.Devices.DevicePlatform"/Microsoft.Maui.Devices.IDeviceInfo.Platform.get*-+
+)
+%44"Microsoft.Maui.Devices.IDeviceInfo2Platform.getô
+ñ
+
+Ô0 Ô(B,
+%46%Microsoft.Maui.Devices.DevicePlatform"-Microsoft.Maui.Devices.DevicePlatform.iOS.get*+)"'
+%Microsoft.Maui.Devices.DevicePlatformÆ
+´
+
+Ô Ô(B
+%47bool"Microsoft.Maui.Devices.DevicePlatform.operator ==(Microsoft.Maui.Devices.DevicePlatform, Microsoft.Maui.Devices.DevicePlatform)*+)"'
+%Microsoft.Maui.Devices.DevicePlatform*0.
+,
+%45%Microsoft.Maui.Devices.DevicePlatform*0.
+,
+%46%Microsoft.Maui.Devices.DevicePlatform*
+18
+19*«
+18ÔF Ô(óõ
+ò
+
+ÔF Ô([,
+%48%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayºπ
+
+ÔF Ô(k)
+%49"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*0.
+,
+%48%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get§
+°
+
+ÔF Ô(w0
+%50)Microsoft.Maui.Devices.DisplayOrientation"2Microsoft.Maui.Devices.DisplayInfo.Orientation.get*-+
+)
+%49"Microsoft.Maui.Devices.DisplayInfo&
+$
+Ô{ Ô(ó
+%51"__id*
+""*
+20
+19*$
+20
+ ("
+
+ (2*$
+19
+Ò Ò("
+
+Ò Ò(2*3
+21
+Ú Ú("!
+
+Ú Ú(
+implicit returnB.",
+*NerdNewsNavigator2.ViewModel.BaseViewModel

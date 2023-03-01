@@ -1,0 +1,191 @@
+
+CNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.Delete(string)p
+fC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\DownloadedShowViewModel.cs8 8("0*≈
+0: :(5Ω
+∫
+: :(,<
+%06System.Collections.ObjectModel.ObservableCollection<T>">NerdNewsNavigator2.ViewModel.BaseViewModel.DownloadedShows.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel
+Ì
+: :(5(
+%1"System.Collections.Generic.List<T>"WSystem.Linq.Enumerable.ToList<TSource>(System.Collections.Generic.IEnumerable<TSource>)*"
+System.Linq.Enumerable*@>
+<
+%06System.Collections.ObjectModel.ObservableCollection<T>*
+1*
+1U U(*
+2
+3*¸
+2< <(t
+r
+< <(
+%2string")NerdNewsNavigator2.Model.Download.Url.get*-+
+)
+item!NerdNewsNavigator2.Model.Downloado
+m
+< <(
+
+%3bool""string.operator ==(string, string)*
+"
+string*
+
+%2string*
+
+urlstring*
+4
+1*€
+4> ?(†
+ù
+> >(?
+%4string">NerdNewsNavigator2.Service.DownloadService.GetFileName(string)*0.",
+*NerdNewsNavigator2.Service.DownloadService*
+
+urlstring8
+6
+> >(?
+filenamestring"__id*
+
+%4string"
+ 
+?F ?(t
+%5"__id*
+""É
+Ä
+?, ?(u
+%6string"BSystem.Environment.GetFolderPath(System.Environment.SpecialFolder)*"
+System.Environment*
+
+%5Ñ
+Å
+	? ?(Ä
+%7string"&System.IO.Path.Combine(string, string)*"
+System.IO.Path*
+
+%6string*
+
+filenamestring9
+7
+	? ?(Ä
+tempFilestring"__id*
+
+%7string*
+5*}
+5B B(,f
+d
+B B(-
+
+%8bool"System.IO.File.Exists(string?)*"
+System.IO.File*
+
+tempFilestring*
+6
+7*ç
+6D E(Ne
+c
+D D(-
+
+%9void"System.IO.File.Delete(string)*"
+System.IO.File*
+
+tempFilestringÕ
+ 
+E E(:
+%103Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>¡
+æ
+E E(O
+%11void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%103Microsoft.Extensions.Logging.ILogger<TCategoryName>*
+Deleted file {file}*
+
+tempFilestring*
+8*º
+7I I(dÕ
+ 
+I I(:
+%123Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>◊
+‘
+I I(e
+%13void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%123Microsoft.Extensions.Logging.ILogger<TCategoryName>*/-+
+)File {file} was not found in file system.*
+
+tempFilestring*
+8*
+8U U(*
+9
+10*¨
+9N N(dÕ
+ 
+N N(:
+%143Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>b`
+NZ N(d
+%15string"System.Exception.Message.get*
+
+exSystem.Exception2Message.get‚
+ﬂ
+N N(e
+%16void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%143Microsoft.Extensions.Logging.ILogger<TCategoryName>*-+)
+'Failed to delete file: {file} {Message}*
+
+tempFilestring*
+
+%15string*
+10*∆
+
+10P R(XÖ
+Ç
+P P(&/
+%17(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.App˙
+˜
+P P(;+
+%18$System.Threading.Tasks.Task<TResult>"ZNerdNewsNavigator2.Data.PositionDataBase.DeleteDownload(NerdNewsNavigator2.Model.Download)*31
+/
+%17(NerdNewsNavigator2.Data.PositionDataBase*-+
+)
+item!NerdNewsNavigator2.Model.Downloadæ
+ª
+Q Q(=
+%196System.Collections.ObjectModel.ObservableCollection<T>">NerdNewsNavigator2.ViewModel.BaseViewModel.DownloadedShows.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModelƒ
+¡
+Q Q(,
+%20bool"6System.Collections.ObjectModel.Collection<T>.Remove(T)*A?
+=
+%196System.Collections.ObjectModel.ObservableCollection<T>*-+
+)
+item!NerdNewsNavigator2.Model.DownloadÕ
+ 
+R R(:
+%213Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>”
+–
+R R(Y
+%22void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*><
+:
+%213Microsoft.Extensions.Logging.ILogger<TCategoryName>*0.,
+*Removed {file} from Downloaded Shows list.*
+
+urlstring*
+1*.
+3U U("
+U U(
+implicit return:
+8 8('
+urlstringB86
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel

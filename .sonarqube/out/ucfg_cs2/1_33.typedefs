@@ -1,0 +1,11 @@
+ú
+-NerdNewsNavigator2.View.TabletPlayPodcastPage#Microsoft.Maui.Controls.ContentPage%Microsoft.Maui.Controls.TemplatedPageMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobject˙
+£TabletPlayPodcastPage(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.View.TabletPlayPodcastPage>, NerdNewsNavigator2.ViewModel.TabletPlayPodcastViewModel)—NerdNewsNavigator2.View.TabletPlayPodcastPage.TabletPlayPodcastPage(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.View.TabletPlayPodcastPage>, NerdNewsNavigator2.ViewModel.TabletPlayPodcastViewModel)„
+XMedia_Stopped(object?, CommunityToolkit.Maui.Core.Primitives.MediaStateChangedEventArgs)ÜNerdNewsNavigator2.View.TabletPlayPodcastPage.Media_Stopped(object?, CommunityToolkit.Maui.Core.Primitives.MediaStateChangedEventArgs)p
+Seek(object?, System.EventArgs)MNerdNewsNavigator2.View.TabletPlayPodcastPage.Seek(object?, System.EventArgs)‘
+QSeekIOS(object, CommunityToolkit.Maui.Core.Primitives.MediaStateChangedEventArgs)NerdNewsNavigator2.View.TabletPlayPodcastPage.SeekIOS(object, CommunityToolkit.Maui.Core.Primitives.MediaStateChangedEventArgs)>
+Save()4NerdNewsNavigator2.View.TabletPlayPodcastPage.Save()ê
+/ContentPage_Unloaded(object?, System.EventArgs)]NerdNewsNavigator2.View.TabletPlayPodcastPage.ContentPage_Unloaded(object?, System.EventArgs)\
+InitializeComponent()CNerdNewsNavigator2.View.TabletPlayPodcastPage.InitializeComponent()@
+Pos.get5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.get@
+Pos.set5NerdNewsNavigator2.View.TabletPlayPodcastPage.Pos.set

@@ -1,0 +1,35 @@
+
+uNerdNewsNavigator2.Service.PodcastServices.SaveAll(System.Collections.Generic.List<NerdNewsNavigator2.Model.Podcast>)h
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\PodcastServices.csé é($"0*
+0
+ê ê(%*
+1*
+1
+î î(*
+2
+3*¬
+2
+í í(%t
+r
+
+í í(%
+%0string"(NerdNewsNavigator2.Model.Podcast.Url.get*,*
+(
+item NerdNewsNavigator2.Model.Podcastµ
+≤
+
+í í(&!
+%1System.Threading.Tasks.Task"=NerdNewsNavigator2.Service.PodcastServices.AddPodcast(string)*0.",
+*NerdNewsNavigator2.Service.PodcastServices*
+
+%0string*
+1*2
+3
+î î("!
+
+î î(
+implicit return:<
+
+é% é(;.
+podcasts"System.Collections.Generic.List<T>B.",
+*NerdNewsNavigator2.Service.PodcastServices

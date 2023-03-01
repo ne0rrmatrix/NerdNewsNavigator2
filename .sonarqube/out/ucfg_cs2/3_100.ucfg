@@ -1,0 +1,25 @@
+
+lNerdNewsNavigator2.MainActivity.CurrentDomain_UnhandledException(object, System.UnhandledExceptionEventArgs)m
+cC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Platforms\Android\MainActivity.cs (1"0*ó
+0 (5fd
+) (5
+%0string"object.ToString()*+)
+'
+e"System.UnhandledExceptionEventArgs2
+ToString()w
+u
+ (6
+
+%1void"+System.Diagnostics.Debug.WriteLine(string?)*"
+System.Diagnostics.Debug*
+
+%0string*
+1*.
+19 (9"
+8 (9
+implicit return:
+2 (?
+senderobject:3
+A (^'
+e"System.UnhandledExceptionEventArgsB#!
+NerdNewsNavigator2.MainActivity

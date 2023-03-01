@@ -1,0 +1,5 @@
+Ì
+NerdNewsNavigator2.MainActivity$Microsoft.Maui.MauiAppCompatActivity(AndroidX.AppCompat.App.AppCompatActivity&AndroidX.Fragment.App.FragmentActivity#AndroidX.Activity.ComponentActivity#AndroidX.Core.App.ComponentActivityAndroid.App.Activity!Android.Views.ContextThemeWrapperAndroid.Content.ContextWrapperAndroid.Content.ContextJava.Lang.ObjectobjectZ
+OnCreate(Android.OS.Bundle);NerdNewsNavigator2.MainActivity.OnCreate(Android.OS.Bundle)¼
+LCurrentDomain_UnhandledException(object, System.UnhandledExceptionEventArgs)lNerdNewsNavigator2.MainActivity.CurrentDomain_UnhandledException(object, System.UnhandledExceptionEventArgs)@
+MainActivity().NerdNewsNavigator2.MainActivity.MainActivity()

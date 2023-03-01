@@ -1,0 +1,26 @@
+Ã
+!NerdNewsNavigator2.Model.Downloadobject:
+
+Download(),NerdNewsNavigator2.Model.Download.Download()2
+Id.get(NerdNewsNavigator2.Model.Download.Id.get2
+Id.set(NerdNewsNavigator2.Model.Download.Id.set8
+	Title.get+NerdNewsNavigator2.Model.Download.Title.get8
+	Title.set+NerdNewsNavigator2.Model.Download.Title.setD
+Description.get1NerdNewsNavigator2.Model.Download.Description.getD
+Description.set1NerdNewsNavigator2.Model.Download.Description.set6
+Link.get*NerdNewsNavigator2.Model.Download.Link.get6
+Link.set*NerdNewsNavigator2.Model.Download.Link.set<
+PubDate.get-NerdNewsNavigator2.Model.Download.PubDate.get<
+PubDate.set-NerdNewsNavigator2.Model.Download.PubDate.setF
+EnclosureUrl.get2NerdNewsNavigator2.Model.Download.EnclosureUrl.getF
+EnclosureUrl.set2NerdNewsNavigator2.Model.Download.EnclosureUrl.setH
+EnclosureType.get3NerdNewsNavigator2.Model.Download.EnclosureType.getH
+EnclosureType.set3NerdNewsNavigator2.Model.Download.EnclosureType.set@
+CopyRight.get/NerdNewsNavigator2.Model.Download.CopyRight.get@
+CopyRight.set/NerdNewsNavigator2.Model.Download.CopyRight.set8
+	Image.get+NerdNewsNavigator2.Model.Download.Image.get8
+	Image.set+NerdNewsNavigator2.Model.Download.Image.set4
+Url.get)NerdNewsNavigator2.Model.Download.Url.get4
+Url.set)NerdNewsNavigator2.Model.Download.Url.set>
+FileName.get.NerdNewsNavigator2.Model.Download.FileName.get>
+FileName.set.NerdNewsNavigator2.Model.Download.FileName.set

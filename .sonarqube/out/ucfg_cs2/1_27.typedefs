@@ -1,0 +1,16 @@
+ø
+&NerdNewsNavigator2.View.AddPodcastPage#Microsoft.Maui.Controls.ContentPage%Microsoft.Maui.Controls.TemplatedPageMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobject´
+@AddPodcastPage(NerdNewsNavigator2.ViewModel.AddPodcastViewModel)gNerdNewsNavigator2.View.AddPodcastPage.AddPodcastPage(NerdNewsNavigator2.ViewModel.AddPodcastViewModel){
+(Button_Clicked(object, System.EventArgs)ONerdNewsNavigator2.View.AddPodcastPage.Button_Clicked(object, System.EventArgs)s
+$AddDefault(object, System.EventArgs)KNerdNewsNavigator2.View.AddPodcastPage.AddDefault(object, System.EventArgs)y
+'RemoveDefault(object, System.EventArgs)NNerdNewsNavigator2.View.AddPodcastPage.RemoveDefault(object, System.EventArgs){
+(RemovePodcasts(object, System.EventArgs)ONerdNewsNavigator2.View.AddPodcastPage.RemovePodcasts(object, System.EventArgs)y
+'ResetPodcasts(object, System.EventArgs)NNerdNewsNavigator2.View.AddPodcastPage.ResetPodcasts(object, System.EventArgs)É
+,OpenUrlForDonation(object, System.EventArgs)SNerdNewsNavigator2.View.AddPodcastPage.OpenUrlForDonation(object, System.EventArgs)ì
+4Button_Full_Screen_Disable(object, System.EventArgs)[NerdNewsNavigator2.View.AddPodcastPage.Button_Full_Screen_Disable(object, System.EventArgs)ë
+3Button_Full_Screen_Enable(object, System.EventArgs)ZNerdNewsNavigator2.View.AddPodcastPage.Button_Full_Screen_Enable(object, System.EventArgs)Å
++SetFullScreenItem(object, System.EventArgs)RNerdNewsNavigator2.View.AddPodcastPage.SetFullScreenItem(object, System.EventArgs)I
+SetFullScreen()6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()U
+InitializeComponent()<NerdNewsNavigator2.View.AddPodcastPage.InitializeComponent()O
+FullScreenMode.get9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.getO
+FullScreenMode.set9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.set

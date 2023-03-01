@@ -1,0 +1,61 @@
+
+ŒNerdNewsNavigator2.ViewModel.BaseViewModel.DeviceDisplay_MainDisplayInfoChanged(object?, Microsoft.Maui.Devices.DisplayInfoChangedEventArgs)h
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\BaseViewModel.csÍ Í(4"0*ç	
+0
+Õ Ø(-š
+—
+
+Õ Õ(-+
+%0%Microsoft.Maui.Devices.IDeviceDisplay"0Microsoft.Maui.Devices.DeviceDisplay.Current.get**("&
+$Microsoft.Maui.Devices.DeviceDisplayº·
+
+Õ Õ(=(
+%1"Microsoft.Maui.Devices.DisplayInfo"9Microsoft.Maui.Devices.IDeviceDisplay.MainDisplayInfo.get*/-
++
+%0%Microsoft.Maui.Devices.IDeviceDisplay2MainDisplayInfo.get×
+Ô
+
+Õ Õ(=(
+%2"Microsoft.Maui.Devices.DisplayInfo"<NerdNewsNavigator2.ViewModel.BaseViewModel.MyMainDisplay.set*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel*,*
+(
+%1"Microsoft.Maui.Devices.DisplayInfo´
+±
+
+Ö Ö(0
+
+%3void"PCommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged(string?)*;97
+5CommunityToolkit.Mvvm.ComponentModel.ObservableObject*
+""”
+‘
+
+× ×(1	
+%4int"FNerdNewsNavigator2.ViewModel.BaseViewModel.OnDeviceOrientationChange()*0.",
+*NerdNewsNavigator2.ViewModel.BaseViewModel—
+”
+
+× ×(1	
+%5int":NerdNewsNavigator2.ViewModel.BaseViewModel.Orientation.set*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel*
+	
+%4int´
+±
+
+Ø Ø(.
+
+%6void"PCommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged(string?)*;97
+5CommunityToolkit.Mvvm.ComponentModel.ObservableObject*
+""*
+1*2
+1
+Ù Ù("!
+
+Ù Ù(
+implicit return:
+
+Í5 Í(C
+senderobject:E
+
+ÍE Í(b7
+e2Microsoft.Maui.Devices.DisplayInfoChangedEventArgsB.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel

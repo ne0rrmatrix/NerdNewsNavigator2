@@ -1,0 +1,69 @@
+
+[NerdNewsNavigator2.View.AddPodcastPage.Button_Full_Screen_Disable(object, System.EventArgs)i
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.csâ â(1"0*¥	
+0
+ã è(Aî
+ë
+
+ã ã()
+%0#Microsoft.Maui.Storage.IPreferences".Microsoft.Maui.Storage.Preferences.Default.get*(&"$
+"Microsoft.Maui.Storage.Preferencesºπ
+
+ã ã(6
+
+%1void";Microsoft.Maui.Storage.IPreferences.Remove(string, string?)*-+
+)
+%0#Microsoft.Maui.Storage.IPreferences*
+
+FullScreen*
+""2Remove(string, string?)î
+ë
+
+å å()
+%2#Microsoft.Maui.Storage.IPreferences".Microsoft.Maui.Storage.Preferences.Default.get*(&"$
+"Microsoft.Maui.Storage.PreferencesÃ…
+
+å å(4
+
+%3void">Microsoft.Maui.Storage.IPreferences.Set<T>(string, T, string?)*-+
+)
+%2#Microsoft.Maui.Storage.IPreferences*
+
+FullScreen*
+""*
+""2Set<T>(string, T, string?)é
+ã
+
+ç ç(
+
+%4bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.set*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+""Ä
+~
+
+é é(
+
+%5void"6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()*,*(
+&NerdNewsNavigator2.View.AddPodcastPageÕ
+ 
+
+è è(B!
+%6System.Threading.Tasks.Task"AMicrosoft.Maui.Controls.Page.DisplayAlert(string, string, string)*" 
+Microsoft.Maui.Controls.Page*
+
+Sucess*
+Full Screen Disabled*
+Ok*
+1*2
+1
+ê ê("!
+
+ê ê(
+implicit return:
+
+â2 â(?
+senderobject:#
+
+âA â(L
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

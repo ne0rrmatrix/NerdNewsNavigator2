@@ -1,0 +1,153 @@
+
+?NerdNewsNavigator2.App.SetFullScreen(object?, System.EventArgs)W
+MC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\App.xaml.cs\ \(%"0*Å
+0^ ^(j
+h
+^ ^(
+
+%0bool""object.operator !=(object, object)*
+"
+object*
+
+senderobject*
+""*
+1
+2*⁄
+1` h('Ö
+Ç
+` `(6
+
+%1void"+System.Diagnostics.Debug.WriteLine(string?)*"
+System.Diagnostics.Debug*
+SetFullScreen Triggeredí
+è
+c  c(3$
+%2Microsoft.Maui.Controls.Window"+WinRT.CastExtensions.As<TInterface>(object)*"
+WinRT.CastExtensions*
+
+senderobjectm
+k
+c c(3/
+currentWindowMicrosoft.Maui.Controls.Window"__id*(&
+$
+%2Microsoft.Maui.Controls.Windowï
+í
+d d(0$
+%3Microsoft.Maui.IElementHandler"+Microsoft.Maui.Controls.Element.Handler.get*31
+/
+currentWindowMicrosoft.Maui.Controls.WindowàÖ
+d d(=
+%4object"/Microsoft.Maui.IElementHandler.PlatformView.get*(&
+$
+%3Microsoft.Maui.IElementHandler2PlatformView.geté
+ã
+d d(S$
+%5Microsoft.Maui.MauiWinUIWindow"+WinRT.CastExtensions.As<TInterface>(object)*"
+WinRT.CastExtensions*
+
+%4objecth
+f
+d d(S*
+uiWindowMicrosoft.Maui.MauiWinUIWindow"__id*(&
+$
+%5Microsoft.Maui.MauiWinUIWindowü
+ú
+e e(M
+
+%6nint"2WinRT.Interop.WindowNative.GetWindowHandle(object)* "
+WinRT.Interop.WindowNative*.,
+*
+uiWindowMicrosoft.Maui.MauiWinUIWindow2
+0
+e e(M
+handlenint"__id*
+
+
+%6nintñ
+ì
+f f(?
+%7Microsoft.UI.WindowId"5Microsoft.UI.Win32Interop.GetWindowIdFromWindow(nint)*"
+Microsoft.UI.Win32Interop*
+
+handlenintP
+N
+f f(?
+idMicrosoft.UI.WindowId"__id*
+
+%7Microsoft.UI.WindowId«
+ƒ
+g g(9&
+%8 Microsoft.UI.Windowing.AppWindow"GMicrosoft.UI.Windowing.AppWindow.GetFromWindowId(Microsoft.UI.WindowId)*&$""
+ Microsoft.UI.Windowing.AppWindow*
+
+idMicrosoft.UI.WindowIdm
+k
+g g(9-
+	appWindow Microsoft.UI.Windowing.AppWindow"__id**(
+&
+%8 Microsoft.UI.Windowing.AppWindow°
+û
+h h('/
+%9)Microsoft.UI.Windowing.AppWindowPresenter".Microsoft.UI.Windowing.AppWindow.Presenter.get*1/
+-
+	appWindow Microsoft.UI.Windowing.AppWindow*
+3*£
+3j j(<ã
+à
+j j(<A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter"__id*31
+/
+%9)Microsoft.UI.Windowing.AppWindowPresenter*
+4
+2*â
+4k l(&ç
+ä
+k k(?
+%10bool"7Microsoft.UI.Xaml.Window.ExtendsContentIntoTitleBar.set*.,
+*
+uiWindowMicrosoft.Maui.MauiWinUIWindow*
+""b
+`
+l l(&
+%11bool")NerdNewsNavigator2.App.FullScreenMode.get*"
+NerdNewsNavigator2.App*
+5
+6*Ú
+5n o(6¬
+ø
+n n(N
+%12void"KMicrosoft.UI.Windowing.OverlappedPresenter.SetBorderAndTitleBar(bool, bool)*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+""*
+""ò
+ï
+o o(6
+%13void"5Microsoft.UI.Windowing.OverlappedPresenter.Maximize()*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+7*Ò
+6s t(5¬
+ø
+s s(L
+%14void"KMicrosoft.UI.Windowing.OverlappedPresenter.SetBorderAndTitleBar(bool, bool)*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+""*
+""ó
+î
+t t(5
+%15void"4Microsoft.UI.Windowing.OverlappedPresenter.Restore()*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+7*
+7z z(*
+2*.
+2z z("
+z z(
+implicit return:
+\& \(4
+senderobject:)
+\6 \(I
+	eventArgsSystem.EventArgsB"
+NerdNewsNavigator2.App

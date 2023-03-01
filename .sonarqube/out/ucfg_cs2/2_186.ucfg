@@ -1,0 +1,122 @@
+
+6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()i
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs∑ ∑("0*Ÿ
+0
+Õ —(#úô
+
+Õ Õ(&$
+%0Microsoft.Maui.Controls.Window".Microsoft.Maui.Controls.Page.GetParentWindow()*" 
+Microsoft.Maui.Controls.Page2GetParentWindow()å
+â
+
+Õ Õ(.$
+%1Microsoft.Maui.IElementHandler"+Microsoft.Maui.Controls.Element.Handler.get*(&
+$
+%0Microsoft.Maui.Controls.Windowäá
+
+Õ Õ(;
+%2object"/Microsoft.Maui.IElementHandler.PlatformView.get*(&
+$
+%1Microsoft.Maui.IElementHandler2PlatformView.get4
+2
+
+Õ Õ(N
+%3object"__id*
+
+%2objectP
+N
+
+Õ Õ(N(
+windowMicrosoft.Maui.MauiWinUIWindow"__id*
+
+%3objectË
+Â
+
+œ œ(,&
+%4 Microsoft.UI.Windowing.AppWindow"SNerdNewsNavigator2.View.AddPodcastPage.GetAppWindow(Microsoft.Maui.MauiWinUIWindow)*,*"(
+&NerdNewsNavigator2.View.AddPodcastPage*,*
+(
+windowMicrosoft.Maui.MauiWinUIWindowo
+m
+
+œ œ(,-
+	appWindow Microsoft.UI.Windowing.AppWindow"__id**(
+&
+%4 Microsoft.UI.Windowing.AppWindow£
+†
+
+— —(#/
+%5)Microsoft.UI.Windowing.AppWindowPresenter".Microsoft.UI.Windowing.AppWindow.Presenter.get*1/
+-
+	appWindow Microsoft.UI.Windowing.AppWindow*
+1*ß
+1
+” ”(Oç
+ä
+
+” ”(OA
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter"__id*31
+/
+%5)Microsoft.UI.Windowing.AppWindowPresenter*
+2
+3*É
+2
+‘ ‘(j√
+¿
+
+‘ ‘(-5
+%6/Microsoft.UI.Windowing.OverlappedPresenterState"4Microsoft.UI.Windowing.OverlappedPresenter.State.get*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter$
+"
+
+‘1 ‘(j
+%7"__id*
+""*
+4
+5*ı
+4
+÷ ◊(1√
+¿
+
+÷ ÷(H
+
+%8void"KMicrosoft.UI.Windowing.OverlappedPresenter.SetBorderAndTitleBar(bool, bool)*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+""*
+""ò
+ï
+
+◊ ◊(1
+
+%9void"4Microsoft.UI.Windowing.OverlappedPresenter.Restore()*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+6*¯
+5
+€ ‹(2ƒ
+¡
+
+€ €(J
+%10void"KMicrosoft.UI.Windowing.OverlappedPresenter.SetBorderAndTitleBar(bool, bool)*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+""*
+""ö
+ó
+
+‹ ‹(2
+%11void"5Microsoft.UI.Windowing.OverlappedPresenter.Maximize()*EC
+A
+overlappedPresenter*Microsoft.UI.Windowing.OverlappedPresenter*
+6*
+6
+‚ ‚(*
+3*2
+3
+‚ ‚("!
+
+‚ ‚(
+implicit returnB*(
+&NerdNewsNavigator2.View.AddPodcastPage

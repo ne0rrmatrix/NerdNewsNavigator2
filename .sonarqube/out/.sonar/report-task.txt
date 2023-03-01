@@ -1,0 +1,7 @@
+organization=ne0rrmatrix
+projectKey=ne0rrmatrix_NerdNewsNavigator2
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.38375
+dashboardUrl=https://sonarcloud.io/dashboard?id=ne0rrmatrix_NerdNewsNavigator2
+ceTaskId=AYaeYk_dG2yWL-0lCblC
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AYaeYk_dG2yWL-0lCblC

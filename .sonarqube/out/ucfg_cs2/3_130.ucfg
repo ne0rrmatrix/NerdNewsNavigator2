@@ -1,0 +1,29 @@
+
+CNerdNewsNavigator2.AppShell.GotoFirstPage(object, System.EventArgs)\
+RC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\AppShell.xaml.cs' '($"0*—
+0) *(B|
+z
+) )(!
+
+%0bool"3Microsoft.Maui.Controls.Shell.FlyoutIsPresented.set*#!
+Microsoft.Maui.Controls.Shell*
+""Å
+
+* *(#
+%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
+Microsoft.Maui.Controls.Shell∫
+∑
+* *(E!
+%2System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
+#
+%1Microsoft.Maui.Controls.Shell*
+""*
+1*.
+1+ +("
++ +(
+implicit return:
+'% '(2
+senderobject:!
+'4 '(?
+eSystem.EventArgsB
+NerdNewsNavigator2.AppShell

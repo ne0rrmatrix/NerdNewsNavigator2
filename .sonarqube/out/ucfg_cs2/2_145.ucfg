@@ -1,0 +1,65 @@
+
+@NerdNewsNavigator2.ViewModel.DownloadedShowViewModel.Tap(string)p
+fC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\DownloadedShowViewModel.cs# #("0*°	
+0+ -(Qr
+p
++ +(:
+%0string"__concat*/
++ +(4#!
+ms-appdata:///LocalCache/Local/*
++7 +(:
+
+urlstring4
+2
++ +(:
+itemstring"__id*
+
+%0stringÃ
+…
+, ,(9
+%13Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>√
+¿
+, ,(C
+
+%2void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%13Microsoft.Extensions.Logging.ILogger<TCategoryName>*!
+Url being passed is: {name}*
+
+itemstringÅ
+
+- -(#
+%3Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
+Microsoft.Maui.Controls.ShellG
+E
+-& -(S
+%4"__concat*
+-( -(G
+""*
+-G -(L	
+?Url=D
+B
+-& -(S
+%5"__concat*
+
+%4*
+-L -(R
+
+itemstring∫
+∑
+- -(T!
+%6System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
+#
+%3Microsoft.Maui.Controls.Shell*
+
+%5*
+1*.
+1/ /("
+/ /(
+implicit return:
+# #($
+urlstringB86
+4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel

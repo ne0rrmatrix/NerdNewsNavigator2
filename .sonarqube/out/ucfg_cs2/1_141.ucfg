@@ -1,0 +1,23 @@
+
+NNerdNewsNavigator2.View.AddPodcastPage.ResetPodcasts(object, System.EventArgs)g
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.csu u($"0*”
+0w w(CÅ
+
+w w(#
+%0Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
+Microsoft.Maui.Controls.Shell∫
+∑
+w w(F!
+%1System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
+#
+%0Microsoft.Maui.Controls.Shell*
+""*
+1*.
+1x x("
+x x(
+implicit return:
+u% u(2
+senderobject:!
+u4 u(?
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

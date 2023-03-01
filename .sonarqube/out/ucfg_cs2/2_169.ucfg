@@ -1,0 +1,57 @@
+
+RNerdNewsNavigator2.View.AddPodcastPage.SetFullScreenItem(object, System.EventArgs)i
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs¶ ¶(""0*û
+0
+® ®(Ñ
+Å
+
+® ®(
+
+%0bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.get*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+1
+2*®
+1
+™ ´(é
+ã
+
+™ ™("
+
+%1bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.set*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+""Ä
+~
+
+´ ´(
+
+%2void"6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+3*®
+2
+Ø ∞(é
+ã
+
+Ø Ø(!
+
+%3bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.set*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+""Ä
+~
+
+∞ ∞(
+
+%4void"6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()*,*(
+&NerdNewsNavigator2.View.AddPodcastPage*
+3*2
+3
+≤ ≤("!
+
+≤ ≤(
+implicit return:
+
+¶# ¶(0
+senderobject:#
+
+¶2 ¶(=
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

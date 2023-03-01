@@ -1,0 +1,25 @@
+
+KNerdNewsNavigator2.View.AddPodcastPage.AddDefault(object, System.EventArgs)g
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.csC C(!"0*Å
+0E F(<£
+†
+E E(2!
+%0System.Threading.Tasks.Task"?NerdNewsNavigator2.Service.PodcastServices.AddDefaultPodcasts()*0.",
+*NerdNewsNavigator2.Service.PodcastServices∆
+√
+F F(=!
+%1System.Threading.Tasks.Task"AMicrosoft.Maui.Controls.Page.DisplayAlert(string, string, string)*" 
+Microsoft.Maui.Controls.Page*
+
+Sucess*
+Defaults Added!*
+Ok*
+1*.
+1G G("
+G G(
+implicit return:
+C" C(/
+senderobject:!
+C1 C(<
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

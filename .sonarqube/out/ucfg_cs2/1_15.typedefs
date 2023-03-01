@@ -1,0 +1,4 @@
+¥
+4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobject 
+sUpdateSettingsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel>)¨NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel.UpdateSettingsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel>)_
+DeleteAllPodcasts()HNerdNewsNavigator2.ViewModel.UpdateSettingsViewModel.DeleteAllPodcasts()

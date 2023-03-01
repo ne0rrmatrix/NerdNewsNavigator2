@@ -1,0 +1,85 @@
+
+:NerdNewsNavigator2.Data.PositionDataBase.GetAllDownloads()f
+ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.csÅ& Å(5"0*
+0
+é é(*
+1
+2*…
+1
+Ö á(ò
+ï
+
+Ö Ö(("
+%0SQLite.SQLiteAsyncConnection"__id*][*Y*
+(NerdNewsNavigator2.Data.PositionDataBase"+
+_connectionSQLite.SQLiteAsyncConnectionÄ
+~
+
+Ö Ö(:
+%1SQLite.AsyncTableQuery<T>"'SQLite.SQLiteAsyncConnection.Table<T>()*&$
+"
+%0SQLite.SQLiteAsyncConnectionâ
+Ü
+
+Ö Ö(H*
+%2$System.Threading.Tasks.Task<TResult>"'SQLite.AsyncTableQuery<T>.ToListAsync()*#!
+
+%1SQLite.AsyncTableQuery<T>J
+H
+
+Ö Ö(H*
+temp"System.Collections.Generic.List<T>"__id*
+""¬
+ø
+
+Ü Ü(9
+%33Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>¿
+Ω
+
+Ü Ü(F
+
+%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%33Microsoft.Extensions.Logging.ILogger<TCategoryName>*&$"
+ Got all Downloads from Database.*
+""":
+
+á á(,
+*
+temp"System.Collections.Generic.List<T>*§
+2
+ã å(¬
+ø
+
+ã ã(9
+%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
+
+ãQ ã([
+%6string"System.Exception.Message.get*
+
+exSystem.Exception2Message.get“
+œ
+
+ã ã(\
+
+%7void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*642
+0Failed to get Downloads from Database: {Message}*
+
+%6string"
+
+å å(
+""*2
+3
+é é("!
+
+é é(
+implicit returnB,*
+(NerdNewsNavigator2.Data.PositionDataBase

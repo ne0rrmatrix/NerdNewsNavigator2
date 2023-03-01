@@ -1,0 +1,88 @@
+
+9NerdNewsNavigator2.Service.PodcastServices.Delete(string)h
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\PodcastServices.cs¯# ¯()"0*™
+0
+± ²($†
+ƒ
+
+± ±(,.
+%0(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.Appª
+§
+
+± ±(=*
+%1$System.Threading.Tasks.Task<TResult>"9NerdNewsNavigator2.Data.PositionDataBase.GetAllPodcasts()*20
+.
+%0(NerdNewsNavigator2.Data.PositionDataBaseM
+K
+
+± ±(=-
+current"System.Collections.Generic.List<T>"__id*
+""*
+1*
+1
+Â Â(*
+2
+3*€
+2
+´ ´(t
+r
+
+´ ´(
+%2string"(NerdNewsNavigator2.Model.Podcast.Url.get*,*
+(
+item NerdNewsNavigator2.Model.Podcastq
+o
+
+´ ´(
+
+%3bool""string.operator ==(string, string)*
+"
+string*
+
+%2string*
+
+urlstring*
+4
+1*
+4
+Â Â(*
+5
+6*¨
+5
+¸ ¹(†
+ƒ
+
+¸ ¸(*.
+%4(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.App÷
+ô
+
+¸ ¸(>*
+%5$System.Threading.Tasks.Task<TResult>"XNerdNewsNavigator2.Data.PositionDataBase.DeletePodcast(NerdNewsNavigator2.Model.Podcast)*20
+.
+%4(NerdNewsNavigator2.Data.PositionDataBase*,*
+(
+item NerdNewsNavigator2.Model.Podcast"
+
+¹ ¹( 
+""*%
+6
+½ ½( "
+
+½ ½(!
+""*%
+3
+Á Á("
+
+Á Á(
+""*2
+7
+Â Â("!
+
+Â Â(
+implicit return:
+
+¯* ¯(4
+urlstringB.",
+*NerdNewsNavigator2.Service.PodcastServices

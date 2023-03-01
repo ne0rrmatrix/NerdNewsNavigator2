@@ -1,0 +1,5 @@
+ß
++NerdNewsNavigator2.View.MostRecentShowsPage#Microsoft.Maui.Controls.ContentPage%Microsoft.Maui.Controls.TemplatedPageMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobjectÄ
+JMostRecentShowsPage(NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel)vNerdNewsNavigator2.View.MostRecentShowsPage.MostRecentShowsPage(NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel)€
+(Button_Clicked(object, System.EventArgs)TNerdNewsNavigator2.View.MostRecentShowsPage.Button_Clicked(object, System.EventArgs)Z
+InitializeComponent()ANerdNewsNavigator2.View.MostRecentShowsPage.InitializeComponent()

@@ -1,0 +1,72 @@
+
+,NerdNewsNavigator2.AppDelegate.AppDelegate()h
+^C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Platforms\iOS\AppDelegate.cs ("1*
+1 (*
+0*¸
+0 (Rè
+å
+ (!
+
+%0void"DMicrosoft.Maui.MauiUIApplicationDelegate.MauiUIApplicationDelegate()*.,*
+(Microsoft.Maui.MauiUIApplicationDelegate…
+∆
+ (@
+%1:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>"__id*rp*n&
+$Microsoft.Maui.Handlers.LabelHandler"D
+Mapper:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>Á
+‰
+ (O
+
+%2void"¬Microsoft.Maui.PropertyMapperExtensions.AppendToMapping<TVirtualView, TViewHandler>(Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>, string, System.Action<TViewHandler, TVirtualView>)*-+")
+'Microsoft.Maui.PropertyMapperExtensions*DB
+@
+%1:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>*
+""*
+""…
+∆
+ (@
+%3:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>"__id*rp*n&
+$Microsoft.Maui.Handlers.LabelHandler"D
+Mapper:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>Á
+‰
+ (U
+
+%4void"¬Microsoft.Maui.PropertyMapperExtensions.AppendToMapping<TVirtualView, TViewHandler>(Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>, string, System.Action<TViewHandler, TVirtualView>)*-+")
+'Microsoft.Maui.PropertyMapperExtensions*DB
+@
+%3:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>*
+""*
+""…
+∆
+ (@
+%5:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>"__id*rp*n&
+$Microsoft.Maui.Handlers.LabelHandler"D
+Mapper:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>Á
+‰
+ (S
+
+%6void"¬Microsoft.Maui.PropertyMapperExtensions.AppendToMapping<TVirtualView, TViewHandler>(Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>, string, System.Action<TViewHandler, TVirtualView>)*-+")
+'Microsoft.Maui.PropertyMapperExtensions*DB
+@
+%5:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>*
+""*
+""…
+∆
+ (@
+%7:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>"__id*rp*n&
+$Microsoft.Maui.Handlers.LabelHandler"D
+Mapper:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>Á
+‰
+ (S
+
+%8void"¬Microsoft.Maui.PropertyMapperExtensions.AppendToMapping<TVirtualView, TViewHandler>(Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>, string, System.Action<TViewHandler, TVirtualView>)*-+")
+'Microsoft.Maui.PropertyMapperExtensions*DB
+@
+%7:Microsoft.Maui.IPropertyMapper<TVirtualView, TViewHandler>*
+""*
+""*
+2*.
+2 ("
+ (
+implicit returnB" 
+NerdNewsNavigator2.AppDelegate

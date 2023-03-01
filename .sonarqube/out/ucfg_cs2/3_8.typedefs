@@ -1,0 +1,10 @@
+×
+!NerdNewsNavigator2.Model.Positionobject:
+
+Position(),NerdNewsNavigator2.Model.Position.Position()2
+Id.get(NerdNewsNavigator2.Model.Position.Id.get2
+Id.set(NerdNewsNavigator2.Model.Position.Id.set8
+	Title.get+NerdNewsNavigator2.Model.Position.Title.get8
+	Title.set+NerdNewsNavigator2.Model.Position.Title.setH
+SavedPosition.get3NerdNewsNavigator2.Model.Position.SavedPosition.getH
+SavedPosition.set3NerdNewsNavigator2.Model.Position.SavedPosition.set

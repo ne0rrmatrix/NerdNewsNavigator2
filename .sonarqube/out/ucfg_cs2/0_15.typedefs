@@ -1,0 +1,5 @@
+¶
+&NerdNewsNavigator2.View.TabletShowPage#Microsoft.Maui.Controls.ContentPage%Microsoft.Maui.Controls.TemplatedPageMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobject«
+@TabletShowPage(NerdNewsNavigator2.ViewModel.TabletShowViewModel)gNerdNewsNavigator2.View.TabletShowPage.TabletShowPage(NerdNewsNavigator2.ViewModel.TabletShowViewModel){
+(Button_Clicked(object, System.EventArgs)ONerdNewsNavigator2.View.TabletShowPage.Button_Clicked(object, System.EventArgs)U
+InitializeComponent()<NerdNewsNavigator2.View.TabletShowPage.InitializeComponent()

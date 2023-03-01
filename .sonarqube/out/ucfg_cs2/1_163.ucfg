@@ -1,0 +1,57 @@
+
+ANerdNewsNavigator2.ViewModel.BaseViewModel.GetShows(string, bool)f
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\BaseViewModel.cs} }("0*Ù	
+0	 Å(3≥
+∞
+ (<
+%06System.Collections.ObjectModel.ObservableCollection<T>"4NerdNewsNavigator2.ViewModel.BaseViewModel.Shows.get*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModelë
+é
+ (
+
+%1void"4System.Collections.ObjectModel.Collection<T>.Clear()*@>
+<
+%06System.Collections.ObjectModel.ObservableCollection<T>≈
+¬
+
+Ä Ä(@*
+%2$System.Threading.Tasks.Task<TResult>"=NerdNewsNavigator2.Service.FeedService.GetShows(string, bool)*,*"(
+&NerdNewsNavigator2.Service.FeedService*
+
+urlstring*
+""J
+H
+
+Ä Ä(@*
+temp"System.Collections.Generic.List<T>"__id*
+""ÖÇ
+
+Å Å(4<
+%36System.Collections.ObjectModel.ObservableCollection<T>"6System.Collections.ObjectModel.ObservableCollection<T>˛
+˚
+
+Å Å(.
+
+%4void"oSystem.Collections.ObjectModel.ObservableCollection<T>.ObservableCollection(System.Collections.Generic.List<T>)*@>
+<
+%36System.Collections.ObjectModel.ObservableCollection<T>*.,
+*
+temp"System.Collections.Generic.List<T>˜
+Ù
+
+Å Å(4<
+%56System.Collections.ObjectModel.ObservableCollection<T>"4NerdNewsNavigator2.ViewModel.BaseViewModel.Shows.set*0.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel*@>
+<
+%36System.Collections.ObjectModel.ObservableCollection<T>*
+1*2
+1
+Ç Ç("!
+
+Ç Ç(
+implicit return:
+} }()
+urlstring: 
+}+ }(<
+getFirstOnlyboolB.,
+*NerdNewsNavigator2.ViewModel.BaseViewModel

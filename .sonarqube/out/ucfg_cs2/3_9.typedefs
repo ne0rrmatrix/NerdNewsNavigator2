@@ -1,0 +1,15 @@
+ó
+NerdNewsNavigator2.Model.Showobject.
+Show()$NerdNewsNavigator2.Model.Show.Show()4
+	Title.get'NerdNewsNavigator2.Model.Show.Title.get4
+	Title.set'NerdNewsNavigator2.Model.Show.Title.set@
+Description.get-NerdNewsNavigator2.Model.Show.Description.get@
+Description.set-NerdNewsNavigator2.Model.Show.Description.set2
+Link.get&NerdNewsNavigator2.Model.Show.Link.get2
+Link.set&NerdNewsNavigator2.Model.Show.Link.set4
+	Image.get'NerdNewsNavigator2.Model.Show.Image.get4
+	Image.set'NerdNewsNavigator2.Model.Show.Image.set0
+Url.get%NerdNewsNavigator2.Model.Show.Url.get0
+Url.set%NerdNewsNavigator2.Model.Show.Url.set8
+PubDate.get)NerdNewsNavigator2.Model.Show.PubDate.get8
+PubDate.set)NerdNewsNavigator2.Model.Show.PubDate.set

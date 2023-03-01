@@ -1,0 +1,85 @@
+
+XNerdNewsNavigator2.Data.PositionDataBase.DeletePodcast(NerdNewsNavigator2.Model.Podcast)f
+ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cså å()"0*
+0
+ô ô(*
+1
+2*å
+1
+ê í(ò
+ï
+
+ê ê("
+%0SQLite.SQLiteAsyncConnection"__id*][*Y*
+(NerdNewsNavigator2.Data.PositionDataBase"+
+_connectionSQLite.SQLiteAsyncConnection∆
+√
+
+ê ê(2*
+%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAsync(object)*&$
+"
+%0SQLite.SQLiteAsyncConnection*/-
++
+podcast NerdNewsNavigator2.Model.Podcast¬
+ø
+
+ë ë(9
+%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>y
+w
+
+ë? ë(L
+%3string"*NerdNewsNavigator2.Model.Podcast.Title.get*/-
++
+podcast NerdNewsNavigator2.Model.Podcast¿
+Ω
+
+ë ë(M
+
+%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*
+Deleted Podcast: {Title}*
+
+%3string"
+
+í í(
+""*•
+2
+ñ ó(¬
+ø
+
+ñ ñ(9
+%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
+(NerdNewsNavigator2.Data.PositionDataBase">
+_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
+
+ñR ñ(\
+%6string"System.Exception.Message.get*
+
+exSystem.Exception2Message.get”
+–
+
+ñ ñ(]
+
+%7void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
+-Microsoft.Extensions.Logging.LoggerExtensions*=;
+9
+%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*753
+1Failed to Delete Podcast from Database: {Message}*
+
+%6string"
+
+ó ó(
+""*2
+3
+ô ô("!
+
+ô ô(
+implicit return:9
+
+å* å(9+
+podcast NerdNewsNavigator2.Model.PodcastB,*
+(NerdNewsNavigator2.Data.PositionDataBase

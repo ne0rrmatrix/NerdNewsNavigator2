@@ -1,0 +1,11 @@
+º
+0NerdNewsNavigator2.ViewModel.TabletShowViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobjectŒ
+kTabletShowViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.TabletShowViewModel>)œNerdNewsNavigator2.ViewModel.TabletShowViewModel.TabletShowViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.TabletShowViewModel>)K
+Tap(string)<NerdNewsNavigator2.ViewModel.TabletShowViewModel.Tap(string)U
+Download(string)ANerdNewsNavigator2.ViewModel.TabletShowViewModel.Download(string)C
+Url.get8NerdNewsNavigator2.ViewModel.TabletShowViewModel.Url.getC
+Url.set8NerdNewsNavigator2.ViewModel.TabletShowViewModel.Url.setQ
+TapCommand.get?NerdNewsNavigator2.ViewModel.TabletShowViewModel.TapCommand.getQ
+TapCommand.set?NerdNewsNavigator2.ViewModel.TabletShowViewModel.TapCommand.set[
+DownloadCommand.getDNerdNewsNavigator2.ViewModel.TabletShowViewModel.DownloadCommand.get[
+DownloadCommand.setDNerdNewsNavigator2.ViewModel.TabletShowViewModel.DownloadCommand.set

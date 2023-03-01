@@ -1,0 +1,12 @@
+ƒ	
+NerdNewsNavigator2.AppShellMicrosoft.Maui.Controls.ShellMicrosoft.Maui.Controls.Page%Microsoft.Maui.Controls.VisualElement(Microsoft.Maui.Controls.NavigableElementMicrosoft.Maui.Controls.Element&Microsoft.Maui.Controls.BindableObjectobject4
+
+AppShell()&NerdNewsNavigator2.AppShell.AppShell()\
+Quit(object, System.EventArgs):NerdNewsNavigator2.AppShell.Quit(object, System.EventArgs)n
+'GotoFirstPage(object, System.EventArgs)CNerdNewsNavigator2.AppShell.GotoFirstPage(object, System.EventArgs)€
+0GotoMostRecentShowPage(object, System.EventArgs)LNerdNewsNavigator2.AppShell.GotoMostRecentShowPage(object, System.EventArgs)^
+Reset(object, System.EventArgs);NerdNewsNavigator2.AppShell.Reset(object, System.EventArgs)l
+&GotoLivePage(object, System.EventArgs)BNerdNewsNavigator2.AppShell.GotoLivePage(object, System.EventArgs)j
+%GotoAddPage(object, System.EventArgs)ANerdNewsNavigator2.AppShell.GotoAddPage(object, System.EventArgs)x
+,GotoDownloadedPage(object, System.EventArgs)HNerdNewsNavigator2.AppShell.GotoDownloadedPage(object, System.EventArgs)J
+InitializeComponent()1NerdNewsNavigator2.AppShell.InitializeComponent()

@@ -1,0 +1,24 @@
+
+@NerdNewsNavigator2.Service.FeedService.ConvertToDateTime(string)b
+XC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\FeedService.csq q(,"0*ï
+0s s(0N
+L
+s s(1
+%0string"string.Remove(int)*
+
+dateTimestring*2k
+i
+s s(2
+%1System.DateTime"System.DateTime.Parse(string)*"
+System.DateTime*
+
+%0string"#
+s s(3
+
+%1System.DateTime*.
+1t t("
+t t(
+implicit return:
+q- q(<
+dateTimestringB*"(
+&NerdNewsNavigator2.Service.FeedService

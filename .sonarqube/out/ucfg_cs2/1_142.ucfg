@@ -1,0 +1,20 @@
+
+SNerdNewsNavigator2.View.AddPodcastPage.OpenUrlForDonation(object, System.EventArgs)g
+]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs ()"0*î
+0Å Å(Ï¸
+˘
+Å Å(Ì*
+%0$System.Threading.Tasks.Task<TResult>"9Microsoft.Maui.ApplicationModel.Browser.OpenAsync(string)*-+")
+'Microsoft.Maui.ApplicationModel.Browser*”–Õ
+ https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD*
+1*2
+1
+Ç Ç("!
+
+Ç Ç(
+implicit return:
+* (7
+senderobject:!
+9 (D
+eSystem.EventArgsB*(
+&NerdNewsNavigator2.View.AddPodcastPage

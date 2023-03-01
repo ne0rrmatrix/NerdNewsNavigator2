@@ -1,0 +1,10 @@
+Ä
+NerdNewsNavigator2.WinUI.App#Microsoft.Maui.MauiWinUIApplicationMicrosoft.UI.Xaml.Applicationobject.Microsoft.UI.Xaml.Markup.IXamlMetadataProvider+
+App()"NerdNewsNavigator2.WinUI.App.App()?
+CreateMauiApp(),NerdNewsNavigator2.WinUI.App.CreateMauiApp()K
+InitializeComponent()2NerdNewsNavigator2.WinUI.App.InitializeComponent()Q
+GetXamlType(System.Type)5NerdNewsNavigator2.WinUI.App.GetXamlType(System.Type)G
+GetXamlType(string)0NerdNewsNavigator2.WinUI.App.GetXamlType(string)K
+GetXmlnsDefinitions()2NerdNewsNavigator2.WinUI.App.GetXmlnsDefinitions()A
+_AppProvider.get-NerdNewsNavigator2.WinUI.App._AppProvider.getA
+_AppProvider.set-NerdNewsNavigator2.WinUI.App._AppProvider.set

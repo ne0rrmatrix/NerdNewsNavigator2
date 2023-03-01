@@ -1,0 +1,24 @@
+
+?NerdNewsNavigator2.Service.PodcastServices.GetUpdatedPodcasts()f
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\PodcastServices.cs1, 1(>"0*√
+03 4(Ñ
+Å
+3 3().
+%0(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
+NerdNewsNavigator2.App®
+•
+3 3(:*
+%1$System.Threading.Tasks.Task<TResult>"9NerdNewsNavigator2.Data.PositionDataBase.GetAllPodcasts()*20
+.
+%0(NerdNewsNavigator2.Data.PositionDataBaseH
+F
+3 3(:*
+temp"System.Collections.Generic.List<T>"__id*
+"""8
+4 4(,
+*
+temp"System.Collections.Generic.List<T>*.
+15 5("
+5 5(
+implicit returnB.",
+*NerdNewsNavigator2.Service.PodcastServices

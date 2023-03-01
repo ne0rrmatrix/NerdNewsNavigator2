@@ -1,0 +1,165 @@
+
+?NerdNewsNavigator2.Service.DownloadService.DownloadFile(string)f
+\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\DownloadService.csU# U(/"0*Ï
+0W X(0 
+
+W W('
+%0string">NerdNewsNavigator2.Service.DownloadService.GetFileName(string)*0.",
+*NerdNewsNavigator2.Service.DownloadService*
+
+urlstring8
+6
+W W('
+filenamestring"__id*
+
+%0stringe
+c
+X X(2
+%1string"__concat*
+X X('
+filename is: * 
+X' X(1
+
+filenamestringw
+u
+X X(3
+
+%2void"+System.Diagnostics.Debug.WriteLine(string?)*"
+System.Diagnostics.Debug*
+
+%1string*
+1*¯
+1[ \(7…
+‚
+[ [(6
+
+%3void"+System.Diagnostics.Debug.WriteLine(string?)*"
+System.Diagnostics.Debug*
+Tring to download file!JH
+\' \(7 
+%4System.Net.Http.HttpClient"System.Net.Http.HttpClientg
+e
+\+ \(5
+
+%5void"'System.Net.Http.HttpClient.HttpClient()*$"
+ 
+%4System.Net.Http.HttpClient^
+\
+\ \(7$
+clientSystem.Net.Http.HttpClient"__id*$"
+ 
+%4System.Net.Http.HttpClient*
+2*Ü
+2^+ ^(y"
+ 
+^Q ^(y
+%6"__id*
+""Ô
+Ñ
+^< ^(z*
+%7$System.Threading.Tasks.Task<TResult>"RSystem.Net.Http.HttpClient.GetAsync(string?, System.Net.Http.HttpCompletionOption)*(&
+$
+clientSystem.Net.Http.HttpClient*
+
+urlstring*
+
+%6M
+K
+^+ ^(z/
+response#System.Net.Http.HttpResponseMessage"__id*
+""*
+3*û
+3_ _(S–
+“
+_/ _(?!
+%8System.Net.Http.HttpContent"/System.Net.Http.HttpResponseMessage.Content.get*31
+/
+response#System.Net.Http.HttpResponseMessage‘
+Ž
+_/ _(S*
+%9$System.Threading.Tasks.Task<TResult>"/System.Net.Http.HttpContent.ReadAsStreamAsync()*%#
+!
+%8System.Net.Http.HttpContent:
+8
+_ _(S
+readFromSystem.IO.Stream"__id*
+""*
+4*’
+4a b(O#
+!
+aM a({
+%10"__id*
+""…
+‚
+a3 a(|
+%11string"BSystem.Environment.GetFolderPath(System.Environment.SpecialFolder)*"
+System.Environment*	
+
+%10†
+ƒ
+	a& a(‡
+%12string"&System.IO.Path.Combine(string, string)*"
+System.IO.Path*
+
+%11string*
+
+filenamestring:
+8
+	a a(‡
+tempFilestring"__id*
+
+%12string#
+!
+b@ b(O
+%13"__id*
+""”
+‘
+b, b(P
+%14System.IO.FileStream"/System.IO.File.Open(string, System.IO.FileMode)*"
+System.IO.File*
+
+tempFilestring*	
+
+%13P
+N
+b" b(P
+writeToSystem.IO.Stream"__id*
+
+%14System.IO.FileStream*
+5*¹
+5d d(:¤
+¡
+d d(;"
+%15System.Threading.Tasks.Task".System.IO.Stream.CopyToAsync(System.IO.Stream)* 
+
+readFromSystem.IO.Stream*
+
+writeToSystem.IO.Stream*
+6*
+6o o(*
+7*
+7o o(*
+8*!
+8g g("
+g g(
+""*
+9o o(*
+10*
+10o o(*
+11
+12*¨
+11l m(ƒ
+€
+l l(
+%16void"+System.Diagnostics.Debug.WriteLine(object?)*"
+System.Diagnostics.Debug*
+
+exSystem.Exception"
+m m(
+""*/
+12o o("
+o o(
+implicit return:
+U0 U(:
+urlstringB.",
+*NerdNewsNavigator2.Service.DownloadService
