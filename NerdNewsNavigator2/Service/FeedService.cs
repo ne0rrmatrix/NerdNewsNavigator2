@@ -66,23 +66,24 @@ public static class FeedService
             mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
             mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
-            if (rssNodes != null)
-                foreach (XmlNode node in rssNodes)
+            if (rssNodes == null)
+                return Task.FromResult(shows);
+            foreach (XmlNode node in rssNodes)
+            {
+                Show show = new()
                 {
-                    Show show = new()
-                    {
-                        Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                        PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
-                        Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                        Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
-                        Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                    };
-                    shows.Add(show);
-                    if (getFirstOnly)
-                    {
-                        return Task.FromResult(shows);
-                    }
+                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description").InnerText),
+                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate").InnerText),
+                    Title = node.SelectSingleNode("title").InnerText,
+                    Url = node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText,
+                    Image = node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText,
+                };
+                shows.Add(show);
+                if (getFirstOnly)
+                {
+                    return Task.FromResult(shows);
                 }
+            }
             return Task.FromResult(shows);
         }
         catch (Exception ex)

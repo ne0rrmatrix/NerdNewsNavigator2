@@ -12,7 +12,6 @@ namespace NerdNewsNavigator2;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
-    // protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     // Next line is for SqlLite
     protected override MauiApp CreateMauiApp()
     {

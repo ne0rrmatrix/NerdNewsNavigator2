@@ -9,13 +9,11 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class AddPodcastViewModel : BaseViewModel
 {
-    private readonly ILogger<AddPodcastViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="AddPodcastViewModel"/>
     /// </summary>
     public AddPodcastViewModel(ILogger<AddPodcastViewModel> logger)
         : base(logger)
     {
-        _logger = logger;
     }
 }

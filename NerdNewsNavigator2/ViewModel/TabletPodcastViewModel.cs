@@ -8,7 +8,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class TabletPodcastViewModel : BaseViewModel
 {
-    readonly ILogger<TabletPodcastViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletPodcastViewModel"/> class.
     /// </summary>
@@ -19,7 +18,6 @@ public partial class TabletPodcastViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
-        _logger = logger;
     }
 
     /// <summary>
