@@ -10,7 +10,6 @@ namespace NerdNewsNavigator2.ViewModel;
 [QueryProperty("Url", "Url")]
 public partial class TabletPlayPodcastViewModel : BaseViewModel
 {
-    private readonly ILogger<TabletPlayPodcastViewModel> _logger;
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
@@ -38,6 +37,5 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
     public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger)
         : base(logger)
     {
-        _logger = logger;
     }
 }

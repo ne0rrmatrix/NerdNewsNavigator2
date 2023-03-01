@@ -9,7 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class MostRecentShowsViewModel : BaseViewModel
 {
-    private readonly ILogger<MostRecentShowsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
     /// <paramref name="logger"/>
@@ -19,7 +18,6 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
-        _logger = logger;
     }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowPage"/>

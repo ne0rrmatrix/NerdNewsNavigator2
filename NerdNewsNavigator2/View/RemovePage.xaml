@@ -86,7 +86,8 @@
                                                         Phone=Start}"
                             Text="Delete"
                             TextColor="White"
-                            WidthRequest="70">
+                            WidthRequest="{OnIdiom Default=70,
+                                                   Tablet=80}">
 
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />

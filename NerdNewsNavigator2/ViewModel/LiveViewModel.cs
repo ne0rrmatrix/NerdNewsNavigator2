@@ -9,7 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class LiveViewModel : BaseViewModel
 {
-    private readonly ILogger<LiveViewModel> _logger;
     /// <summary>
     /// A <see cref="string"/> variable containing the URL for Live video for twit.tv
     /// </summary>
@@ -23,6 +22,5 @@ public partial class LiveViewModel : BaseViewModel
     public LiveViewModel(ILogger<LiveViewModel> logger)
     : base(logger)
     {
-        _logger = logger;
     }
 }

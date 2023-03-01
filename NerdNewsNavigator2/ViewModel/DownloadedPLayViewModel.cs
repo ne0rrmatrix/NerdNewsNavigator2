@@ -14,11 +14,6 @@ public partial class DownloadedPlayViewModel : BaseViewModel
     #region Properties
 
     /// <summary>
-    /// Initializes the <see cref="ILogger{TCategoryName}"/> instance of <see cref="DownloadedPlayViewModel"/>
-    /// </summary>
-    private readonly ILogger<DownloadedPlayViewModel> _logger;
-
-    /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
     string _url;
@@ -46,6 +41,5 @@ public partial class DownloadedPlayViewModel : BaseViewModel
     public DownloadedPlayViewModel(ILogger<DownloadedPlayViewModel> logger)
     : base(logger)
     {
-        _logger = logger;
     }
 }
