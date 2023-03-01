@@ -1,28 +1,0 @@
-
-UNerdNewsNavigator2.View.LivePage.LivePage(NerdNewsNavigator2.ViewModel.LiveViewModel)a
-WC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\LivePage.xaml.cs ("1*€
-1 (l
-j
-
-%0void"1Microsoft.Maui.Controls.ContentPage.ContentPage()*)'%
-#Microsoft.Maui.Controls.ContentPage*
-0*Ô
-0 (&x
-v
- (
-
-%1void"6NerdNewsNavigator2.View.LivePage.InitializeComponent()*&$"
- NerdNewsNavigator2.View.LivePageÅ
-Â
- (&
-%2object"9Microsoft.Maui.Controls.BindableObject.BindingContext.set*,*(
-&Microsoft.Maui.Controls.BindableObject*?=
-;
-liveViewModel*NerdNewsNavigator2.ViewModel.LiveViewModel*
-2*.
-2 ("
- (
-implicit return:G
- (/;
-liveViewModel*NerdNewsNavigator2.ViewModel.LiveViewModelB$"
- NerdNewsNavigator2.View.LivePage

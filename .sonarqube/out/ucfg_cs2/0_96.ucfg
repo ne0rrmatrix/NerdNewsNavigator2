@@ -1,29 +1,0 @@
-
-BNerdNewsNavigator2.AppShell.GotoLivePage(object, System.EventArgs)\
-RC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\AppShell.xaml.csG G(#"0*—
-0I J(9|
-z
-I I(!
-
-%0bool"3Microsoft.Maui.Controls.Shell.FlyoutIsPresented.set*#!
-Microsoft.Maui.Controls.Shell*
-""Å
-
-J J(#
-%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.Shell∫
-∑
-J J(<!
-%2System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
-#
-%1Microsoft.Maui.Controls.Shell*
-""*
-1*.
-1K K("
-K K(
-implicit return:
-G$ G(1
-senderobject:!
-G3 G(>
-eSystem.EventArgsB
-NerdNewsNavigator2.AppShell

@@ -1,18 +1,0 @@
-
-FNerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.Download(string)q
-gC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\MostRecentShowsViewModel.cs ("0*Ú
-0 (#Å
-Â
- ($!
-%0System.Threading.Tasks.Task"DNerdNewsNavigator2.ViewModel.BaseViewModel.Downloading(string, bool)*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel*
-
-urlstring*
-""*
-1*.
-1 ("
- (
-implicit return:
-  (*
-urlstringB97
-5NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel

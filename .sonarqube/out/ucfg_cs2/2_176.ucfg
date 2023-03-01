@@ -1,73 +1,0 @@
-
-=NerdNewsNavigator2.Data.PositionDataBase.DeleteAllDownloads()f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cs® ®(."0*
-0
-∂ ∂(*
-1
-2*‚
-1
-≠ Ø(ò
-ï
-
-≠ ≠("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnectionï
-í
-
-≠ ≠(8*
-%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAllAsync<T>()*&$
-"
-%0SQLite.SQLiteAsyncConnection¬
-ø
-
-Æ Æ(9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>¬
-ø
-
-Æ Æ(H
-
-%3void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*(&$
-"Succesfully Deleted all Downloads.*
-"""
-
-Ø Ø(
-""*ù
-2
-≥ ¥(¬
-ø
-
-≥ ≥(9
-%43Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
-
-≥J ≥(T
-%5string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÀ
-»
-
-≥ ≥(U
-
-%6void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%43Microsoft.Extensions.Logging.ILogger<TCategoryName>*/-+
-)Failed to delete all Downloads. {Message}*
-
-%5string"
-
-¥ ¥(
-""*2
-3
-∂ ∂("!
-
-∂ ∂(
-implicit returnB,*
-(NerdNewsNavigator2.Data.PositionDataBase

@@ -1,37 +1,0 @@
-
-ENerdNewsNavigator2.App.CreateWindow(Microsoft.Maui.IActivationState?)W
-MC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\App.xaml.cs? ?(*"0*½
-0A T(Š
-A A(:$
-%0Microsoft.Maui.Controls.Window"RMicrosoft.Maui.Controls.Application.CreateWindow(Microsoft.Maui.IActivationState?)*
-NerdNewsNavigator2.App*64
-2
-activationStateMicrosoft.Maui.IActivationState2.CreateWindow(Microsoft.Maui.IActivationState?)f
-d
-A A(:(
-windowMicrosoft.Maui.Controls.Window"__id*(&
-$
-%0Microsoft.Maui.Controls.Window~
-|
-B G(	
-
-%1void"*Microsoft.Maui.Controls.Window.Created.add*$"" 
-Microsoft.Maui.Controls.Window*
-""*
-""~
-|
-H R(	
-
-%2void"*Microsoft.Maui.Controls.Window.Resumed.add*$"" 
-Microsoft.Maui.Controls.Window*
-""*
-"""6
-T T(*
-(
-windowMicrosoft.Maui.Controls.Window*.
-1U U("
-U U(
-implicit return:>
-?+ ?(L2
-activationStateMicrosoft.Maui.IActivationStateB
-NerdNewsNavigator2.App

@@ -1,6 +1,0 @@
-ç
-.NerdNewsNavigator2.ViewModel.SettingsViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobjectÇ
-gSettingsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.SettingsViewModel>)ñNerdNewsNavigator2.ViewModel.SettingsViewModel.SettingsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.SettingsViewModel>)I
-Tap(string):NerdNewsNavigator2.ViewModel.SettingsViewModel.Tap(string)O
-TapCommand.get=NerdNewsNavigator2.ViewModel.SettingsViewModel.TapCommand.getO
-TapCommand.set=NerdNewsNavigator2.ViewModel.SettingsViewModel.TapCommand.set

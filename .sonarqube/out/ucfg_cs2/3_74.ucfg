@@ -1,54 +1,0 @@
-
-®NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel.UpdateSettingsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel>)p
-fC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\UpdateSettingsViewModel.cs (""1*
-1 (*
-0*á
-
-0 (õ
-ò
- (
-
-%0void"äNerdNewsNavigator2.ViewModel.BaseViewModel.BaseViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.BaseViewModel>)*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel*A?
-=
-logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>–
-Õ
- (x6
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*A?
-=
-logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>Å
-
- (#
-%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.ShellÄ
-~
- (/
-
-%2bool"3Microsoft.Maui.Controls.Shell.FlyoutIsPresented.set*'%
-#
-%1Microsoft.Maui.Controls.Shell*
-""å
-â
- (
-
-%3bool"5NerdNewsNavigator2.ViewModel.BaseViewModel.IsBusy.set*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel*
-""≤
-Ø
- ()
-
-%4void"PCommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged(string?)*;97
-5CommunityToolkit.Mvvm.ComponentModel.ObservableObject*
-""∂
-≥
- (!
-%5System.Threading.Tasks.Task"HNerdNewsNavigator2.ViewModel.UpdateSettingsViewModel.DeleteAllPodcasts()*:86
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel*
-2*.
-2 ("
- (
-implicit return:I
-# (J=
-logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>B86
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel

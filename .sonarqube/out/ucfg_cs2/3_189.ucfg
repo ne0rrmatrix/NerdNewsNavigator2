@@ -1,85 +1,0 @@
-
-UNerdNewsNavigator2.Data.PositionDataBase.AddPodcast(NerdNewsNavigator2.Model.Podcast)f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.csø ø(&"0*
-0
-… …(*
-1
-2*–
-1
-ü þ(˜
-•
-
-ü ü("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnectionÆ
-Ã
-
-ü ü(2*
-%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.InsertAsync(object)*&$
-"
-%0SQLite.SQLiteAsyncConnection*/-
-+
-podcast NerdNewsNavigator2.Model.PodcastÂ
-¿
-
-ý ý(9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>y
-w
-
-ýI ý(V
-%3string"*NerdNewsNavigator2.Model.Podcast.Title.get*/-
-+
-podcast NerdNewsNavigator2.Model.PodcastÊ
-Ç
-
-ý ý(W
-
-%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*(&$
-"Saved to Database Podcast: {Title}*
-
-%3string"
-
-þ þ(
-""*§
-2
-‚ ƒ(Â
-¿
-
-‚ ‚(9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
-
-‚T ‚(^
-%6string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÕ
-Ò
-
-‚ ‚(_
-
-%7void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*31/
--Failed to save Podcast to Database: {Message}*
-
-%6string"
-
-ƒ ƒ(
-""*2
-3
-… …("!
-
-… …(
-implicit return:9
-
-ø' ø(6+
-podcast NerdNewsNavigator2.Model.PodcastB,*
-(NerdNewsNavigator2.Data.PositionDataBase

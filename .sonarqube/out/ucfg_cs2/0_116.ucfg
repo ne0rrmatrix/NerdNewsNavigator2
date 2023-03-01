@@ -1,23 +1,0 @@
-
-ONerdNewsNavigator2.View.AddPodcastPage.RemovePodcasts(object, System.EventArgs)g
-]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.csj j(%"0*Ó
-0l l(;
-
-l l(#
-%0Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.Shellº
-·
-l l(>!
-%1System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
-#
-%0Microsoft.Maui.Controls.Shell*
-""*
-1*.
-1m m("
-m m(
-implicit return:
-j& j(3
-senderobject:!
-j5 j(@
-eSystem.EventArgsB*(
-&NerdNewsNavigator2.View.AddPodcastPage

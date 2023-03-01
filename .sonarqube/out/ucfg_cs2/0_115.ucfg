@@ -1,23 +1,0 @@
-
-ZNerdNewsNavigator2.Service.DownloadService.DownloadShow(NerdNewsNavigator2.Model.Download)f
-\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\DownloadService.cs# (/"0*Ü
-0 (.x
-v
-" (.
-%0string")NerdNewsNavigator2.Model.Download.Url.get*1/
--
-download!NerdNewsNavigator2.Model.Download¾
-»
- (/*
-%1$System.Threading.Tasks.Task<TResult>"?NerdNewsNavigator2.Service.DownloadService.DownloadFile(string)*0.",
-*NerdNewsNavigator2.Service.DownloadService*
-
-%0string"
- (0
-""*.
-1 ("
- (
-implicit return:9
-0 (A-
-download!NerdNewsNavigator2.Model.DownloadB.",
-*NerdNewsNavigator2.Service.DownloadService

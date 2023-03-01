@@ -1,59 +1,0 @@
-
-8NerdNewsNavigator2.ViewModel.RemoveViewModel.Tap(string)h
-^C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\RemoveViewModel.cs ("0*ˇ
-0  !(π
-∂
-   (6*
-%0$System.Threading.Tasks.Task<TResult>"9NerdNewsNavigator2.Service.PodcastServices.Delete(string)*0.",
-*NerdNewsNavigator2.Service.PodcastServices*
-
-urlstring,
-*
-   (6
-resultbool"__id*
-""*
-1
-2*!
-1) )("
-! !(
-""*≠
-2" %((∂
-≥
-" "(<
-%16System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel
-Ì
-" "(%(
-%2"System.Collections.Generic.List<T>"WSystem.Linq.Enumerable.ToList<TSource>(System.Collections.Generic.IEnumerable<TSource>)*"
-System.Linq.Enumerable*@>
-<
-%16System.Collections.ObjectModel.ObservableCollection<T>m
-k
-" "(%+
-items"System.Collections.Generic.List<T>"__id*,*
-(
-%2"System.Collections.Generic.List<T>*
-3*
-3) )(*
-4
-5*è
-4' '( ∂
-≥
-' '(<
-%36System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel¡
-æ
-' '(!
-
-%4bool"6System.Collections.ObjectModel.Collection<T>.Remove(T)*@>
-<
-%36System.Collections.ObjectModel.ObservableCollection<T>*,*
-(
-item NerdNewsNavigator2.Model.Podcast*
-3*.
-5) )("
-) )(
-implicit return:
- ($
-urlstringB0.
-,NerdNewsNavigator2.ViewModel.RemoveViewModel

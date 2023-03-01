@@ -1,7 +1,0 @@
-º
-*NerdNewsNavigator2.ViewModel.LiveViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobjectî
-_LiveViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.LiveViewModel>)ŠNerdNewsNavigator2.ViewModel.LiveViewModel.LiveViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.LiveViewModel>)Y
-OnUrlChanging(string)@NerdNewsNavigator2.ViewModel.LiveViewModel.OnUrlChanging(string)W
-OnUrlChanged(string)?NerdNewsNavigator2.ViewModel.LiveViewModel.OnUrlChanged(string)=
-Url.get2NerdNewsNavigator2.ViewModel.LiveViewModel.Url.get=
-Url.set2NerdNewsNavigator2.ViewModel.LiveViewModel.Url.set

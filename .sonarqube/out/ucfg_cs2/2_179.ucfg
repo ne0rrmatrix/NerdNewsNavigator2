@@ -1,77 +1,0 @@
-
-]NerdNewsNavigator2.View.TabletPlayPodcastPage.ContentPage_Unloaded(object?, System.EventArgs)p
-dC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\TabletPlayPodcastPage.xaml.csê ê($"0*
-0
-í í(*
-1
-2*%
-1
-õ õ("
-
-î î(
-""*Ó	
-2
-ó ö(«
-ƒ
-
-ó ó(9
-%03Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*us*q/
--NerdNewsNavigator2.View.TabletPlayPodcastPage">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>√
-¿
-
-ó ó(E
-
-%1void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%03Microsoft.Extensions.Logging.ILogger<TCategoryName>*)'%
-#Unloaded Media Element from memory.*
-""∂
-≥
-
-ò ò(.
-%2(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
--NerdNewsNavigator2.View.TabletPlayPodcastPage"8
-mediaElement(CommunityToolkit.Maui.Views.MediaElement∂
-≥
-
-ô ô(.
-%3(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
--NerdNewsNavigator2.View.TabletPlayPodcastPage"8
-mediaElement(CommunityToolkit.Maui.Views.MediaElement∂
-≥
-
-ö ö(.
-%4(CommunityToolkit.Maui.Views.MediaElement"__id*om*k/
--NerdNewsNavigator2.View.TabletPlayPodcastPage"8
-mediaElement(CommunityToolkit.Maui.Views.MediaElementô
-ñ
-
-ö ö(!
-%5Microsoft.Maui.IViewHandler"1Microsoft.Maui.Controls.VisualElement.Handler.get*20
-.
-%4(CommunityToolkit.Maui.Views.MediaElement*
-3
-4*¢
-4
-ö ö(/ãà
-
-ö ö(1
-
-%6void"2Microsoft.Maui.IElementHandler.DisconnectHandler()*%#
-!
-%5Microsoft.Maui.IViewHandler2DisconnectHandler()*
-3*2
-3
-õ õ("!
-
-õ õ(
-implicit return:
-
-ê% ê(3
-senderobject:#
-
-ê5 ê(@
-eSystem.EventArgsB1/
--NerdNewsNavigator2.View.TabletPlayPodcastPage

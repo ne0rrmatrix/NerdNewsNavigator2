@@ -1,16 +1,0 @@
-ð
-(NerdNewsNavigator2.Data.PositionDataBaseobjectî
-`PositionDataBase(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.Data.PositionDataBase>)‰NerdNewsNavigator2.Data.PositionDataBase.PositionDataBase(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.Data.PositionDataBase>)9
-Init()/NerdNewsNavigator2.Data.PositionDataBase.Init()C
-DeleteAll()4NerdNewsNavigator2.Data.PositionDataBase.DeleteAll()O
-GetAllPositions():NerdNewsNavigator2.Data.PositionDataBase.GetAllPositions()M
-GetAllPodcasts()9NerdNewsNavigator2.Data.PositionDataBase.GetAllPodcasts()O
-GetAllDownloads():NerdNewsNavigator2.Data.PositionDataBase.GetAllDownloads()S
-DeleteAllPodcasts()<NerdNewsNavigator2.Data.PositionDataBase.DeleteAllPodcasts()U
-DeleteAllDownloads()=NerdNewsNavigator2.Data.PositionDataBase.DeleteAllDownloads()y
-&Add(NerdNewsNavigator2.Model.Position)ONerdNewsNavigator2.Data.PositionDataBase.Add(NerdNewsNavigator2.Model.Position)
-)Delete(NerdNewsNavigator2.Model.Position)RNerdNewsNavigator2.Data.PositionDataBase.Delete(NerdNewsNavigator2.Model.Position)…
-,AddPodcast(NerdNewsNavigator2.Model.Podcast)UNerdNewsNavigator2.Data.PositionDataBase.AddPodcast(NerdNewsNavigator2.Model.Podcast)‹
-/DeletePodcast(NerdNewsNavigator2.Model.Podcast)XNerdNewsNavigator2.Data.PositionDataBase.DeletePodcast(NerdNewsNavigator2.Model.Podcast)‰
-.AddDownload(NerdNewsNavigator2.Model.Download)WNerdNewsNavigator2.Data.PositionDataBase.AddDownload(NerdNewsNavigator2.Model.Download)
-1DeleteDownload(NerdNewsNavigator2.Model.Download)ZNerdNewsNavigator2.Data.PositionDataBase.DeleteDownload(NerdNewsNavigator2.Model.Download)

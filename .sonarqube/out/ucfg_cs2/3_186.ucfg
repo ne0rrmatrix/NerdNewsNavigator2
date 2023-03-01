@@ -1,194 +1,0 @@
-
-ONerdNewsNavigator2.Data.PositionDataBase.Add(NerdNewsNavigator2.Model.Position)f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.csΩ Ω("0*ä
-0
-ø ¡(!ß
-§
-
-ø ø(**
-%0$System.Threading.Tasks.Task<TResult>":NerdNewsNavigator2.Data.PositionDataBase.GetAllPositions()*.,*
-(NerdNewsNavigator2.Data.PositionDataBaseJ
-H
-
-ø ø(**
-test"System.Collections.Generic.List<T>"__id*
-""*
-1*
-1
-› ›(*
-2
-3*Å
-2
-√ √(,x
-v
-
-√ √(
-%1string"+NerdNewsNavigator2.Model.Position.Title.get*-+
-)
-item!NerdNewsNavigator2.Model.Position|
-z
-
-√ √(,
-%2string"+NerdNewsNavigator2.Model.Position.Title.get*1/
--
-position!NerdNewsNavigator2.Model.Positionp
-n
-
-√ √(,
-
-%3bool""string.operator ==(string, string)*
-"
-string*
-
-%1string*
-
-%2string*
-4
-1*å
-4
-» …(bò
-ï
-
-» »(%"
-%4SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnectionƒ
-¡
-
-» »(7*
-%5$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAsync(object)*&$
-"
-%4SQLite.SQLiteAsyncConnection*-+
-)
-item!NerdNewsNavigator2.Model.Position¬
-ø
-
-… …(9
-%63Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>|
-z
-
-…T …(b
-%7string"+NerdNewsNavigator2.Model.Position.Title.get*1/
--
-position!NerdNewsNavigator2.Model.PositionÕ
- 
-
-… …(c
-
-%8void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%63Microsoft.Extensions.Logging.ILogger<TCategoryName>*+)'
-%Succesfully deleted Position: {Title}*
-
-%7string*
-5
-1*ô
-5
-Õ Œ( ¬
-ø
-
-Õ Õ(9
-%93Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>db
-
-ÕK Õ(U
-%10string"System.Exception.Message.get*
-
-exSystem.Exception2Message.get∆
-√
-
-Õ Õ(V
-%11void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%93Microsoft.Extensions.Logging.ILogger<TCategoryName>*(&$
-"Error deleting Position: {Message}*
-
-%10string"
-
-Œ Œ(!
-""*
-3
-› ›(*
-6
-7*õ
-6
-‘ ÷(ô
-ñ
-
-‘ ‘(#
-%12SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection 
-«
-
-‘ ‘(3+
-%13$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.InsertAsync(object)*'%
-#
-%12SQLite.SQLiteAsyncConnection*1/
--
-position!NerdNewsNavigator2.Model.Position√
-¿
-
-’ ’(:
-%143Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>}
-{
-
-’A ’(O
-%15string"+NerdNewsNavigator2.Model.Position.Title.get*1/
--
-position!NerdNewsNavigator2.Model.Position≈
-¬
-
-’ ’(P
-%16void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%143Microsoft.Extensions.Logging.ILogger<TCategoryName>* 
-Saved to database: {Title}*
-
-%15string"
-
-÷ ÷(
-""*û
-7
-⁄ €(√
-¿
-
-⁄ ⁄(:
-%173Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>db
-
-⁄F ⁄(P
-%18string"System.Exception.Message.get*
-
-exSystem.Exception2Message.get 
-«
-
-⁄ ⁄(Q
-%19void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%173Microsoft.Extensions.Logging.ILogger<TCategoryName>*+)'
-%Failed to save to Database: {Message}*
-
-%18string"
-
-€ €(
-""*2
-8
-› ›("!
-
-› ›(
-implicit return:;
-
-Ω  Ω(1-
-position!NerdNewsNavigator2.Model.PositionB,*
-(NerdNewsNavigator2.Data.PositionDataBase

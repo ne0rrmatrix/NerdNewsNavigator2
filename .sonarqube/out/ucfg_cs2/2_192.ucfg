@@ -1,85 +1,0 @@
-
-WNerdNewsNavigator2.Data.PositionDataBase.AddDownload(NerdNewsNavigator2.Model.Download)f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cs   ('"0*
-0
-­ ­(*
-1
-2*œ
-1
-¤ ¦(˜
-•
-
-¤ ¤("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnectionÈ
-Å
-
-¤ ¤(3*
-%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.InsertAsync(object)*&$
-"
-%0SQLite.SQLiteAsyncConnection*1/
--
-download!NerdNewsNavigator2.Model.DownloadÂ
-¿
-
-¥ ¥(9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>|
-z
-
-¥J ¥(X
-%3string"+NerdNewsNavigator2.Model.Download.Title.get*1/
--
-download!NerdNewsNavigator2.Model.DownloadË
-È
-
-¥ ¥(Y
-
-%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*)'%
-#Saved to Database Download: {Title}*
-
-%3string"
-
-¦ ¦(
-""*¨
-2
-ª «(Â
-¿
-
-ª ª(9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
-
-ªU ª(_
-%6string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÖ
-Ó
-
-ª ª(`
-
-%7void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*420
-.Failed to save Download to Database: {Message}*
-
-%6string"
-
-« «(
-""*2
-3
-­ ­("!
-
-­ ­(
-implicit return:;
-
- (  (9-
-download!NerdNewsNavigator2.Model.DownloadB,*
-(NerdNewsNavigator2.Data.PositionDataBase

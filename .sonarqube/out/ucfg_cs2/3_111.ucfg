@@ -1,20 +1,0 @@
-
-SNerdNewsNavigator2.View.DownloadedShowPage.Button_Clicked(object, System.EventArgs)k
-aC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\DownloadedShowPage.xaml.cs (%"0*Õ
-0 (6À
-½
- (7!
-%0System.Threading.Tasks.Task"AMicrosoft.Maui.Controls.Page.DisplayAlert(string, string, string)*" 
-Microsoft.Maui.Controls.Page*
-Ok*
-Deleted Show!*
-Ok*
-1*.
-1 ("
- (
-implicit return:
-& (3
-senderobject:!
-5 (@
-eSystem.EventArgsB.,
-*NerdNewsNavigator2.View.DownloadedShowPage

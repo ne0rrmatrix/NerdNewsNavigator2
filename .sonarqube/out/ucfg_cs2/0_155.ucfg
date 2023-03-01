@@ -1,85 +1,0 @@
-
-ZNerdNewsNavigator2.Data.PositionDataBase.DeleteDownload(NerdNewsNavigator2.Model.Download)f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cs´ ´(*"0*
-0
-Á Á(*
-1
-2*‘
-1
-¸ º(˜
-•
-
-¸ ¸("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnectionÈ
-Å
-
-¸ ¸(3*
-%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAsync(object)*&$
-"
-%0SQLite.SQLiteAsyncConnection*1/
--
-download!NerdNewsNavigator2.Model.DownloadÂ
-¿
-
-¹ ¹(9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>|
-z
-
-¹? ¹(M
-%3string"+NerdNewsNavigator2.Model.Download.Title.get*1/
--
-download!NerdNewsNavigator2.Model.DownloadÀ
-½
-
-¹ ¹(N
-
-%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*
-Deleted Podcast: {Title}*
-
-%3string"
-
-º º(
-""*¦
-2
-¾ ¿(Â
-¿
-
-¾ ¾(9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
-
-¾S ¾(]
-%6string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÔ
-Ñ
-
-¾ ¾(^
-
-%7void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*864
-2Failed to Delete Download from Database: {Message}*
-
-%6string"
-
-¿ ¿(
-""*2
-3
-Á Á("!
-
-Á Á(
-implicit return:;
-
-´+ ´(<-
-download!NerdNewsNavigator2.Model.DownloadB,*
-(NerdNewsNavigator2.Data.PositionDataBase

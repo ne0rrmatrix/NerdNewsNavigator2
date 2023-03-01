@@ -1,172 +1,0 @@
-
-6NerdNewsNavigator2.View.AddPodcastPage.SetFullScreen()i
-]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs· ·("0*‰
-0
-º ¼( ™
-–
-
-º º(3
-%0Android.App.Activity"<Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.get*.,"*
-(Microsoft.Maui.ApplicationModel.PlatformV
-T
-
-º º(3 
-activityAndroid.App.Activity"__id*
-
-%0Android.App.Activity|
-z
-
-¼ ¼( 
-
-%1bool""object.operator ==(object, object)*
-"
-object*$"
- 
-activityAndroid.App.Activity*
-""*
-1
-2*Ž
-2
-¼$ ¼(;}{
-
-¼$ ¼(3
-%2Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.getv
-t
-
-¼$ ¼(;
-
-%3bool""object.operator ==(object, object)*
-"
-object*
-
-%2Android.Views.Window*
-""*
-1
-3*%
-1
-â â("
-
-¼= ¼(D
-""*Ñ
-3
-¾ Â(}{
-
-¾9 ¾(H
-%4Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.get„
-
-
-¾K ¾(Y
-
-%5bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.get*,*(
-&NerdNewsNavigator2.View.AddPodcastPageÃ
-À
-
-¾ ¾(Z
-
-%6void"UAndroidX.Core.View.WindowCompat.SetDecorFitsSystemWindows(Android.Views.Window, bool)*%#"!
-AndroidX.Core.View.WindowCompat*
-
-%4Android.Views.Window*
-""}{
-
-¿V ¿(e
-%7Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.get}{
-
-¿g ¿(v
-%8Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.getm
-k
-¿g ¿(€
-%9Android.Views.View""Android.Views.Window.DecorView.get*
-
-%8Android.Views.WindowŒ
-‰
-¿/ ¿(6
-%10/AndroidX.Core.View.WindowInsetsControllerCompat"]AndroidX.Core.View.WindowCompat.GetInsetsController(Android.Views.Window, Android.Views.View)*%#"!
-AndroidX.Core.View.WindowCompat*
-
-%7Android.Views.Window*
-
-%9Android.Views.View£
- 
-¿ ¿(O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat"__id*:8
-6
-%10/AndroidX.Core.View.WindowInsetsControllerCompat†
-ƒ
-
-À À(B
-
-%11int"7AndroidX.Core.View.WindowInsetsCompat.Type.StatusBars()*0.",
-*AndroidX.Core.View.WindowInsetsCompat.TypeŠ
-‡
-
-Á Á(F
-
-%12int";AndroidX.Core.View.WindowInsetsCompat.Type.NavigationBars()*0.",
-*AndroidX.Core.View.WindowInsetsCompat.Type,
-*
-
-À Á(F
-typesint"__id*
-""…
-‚
-
-Â Â(
-%13bool"9NerdNewsNavigator2.View.AddPodcastPage.FullScreenMode.get*,*(
-&NerdNewsNavigator2.View.AddPodcastPage*
-4
-5*Â
-4
-Ä Å(7%
-#
-
-ÄB Ä(|
-%14"__id*
-""Ã
-À
-
-Ä Ä(|
-
-%15int"FAndroidX.Core.View.WindowInsetsControllerCompat.SystemBarsBehavior.set*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*	
-
-%14¾
-»
-
-Å Å(8
-%16void"9AndroidX.Core.View.WindowInsetsControllerCompat.Hide(int)*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*
-
-typesint*
-6*Õ
-5
-É É(7¾
-»
-
-É É(8
-%17void"9AndroidX.Core.View.WindowInsetsControllerCompat.Show(int)*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*
-
-typesint*
-6*2
-6
-â â("!
-
-â â(
-implicit returnB*(
-&NerdNewsNavigator2.View.AddPodcastPage

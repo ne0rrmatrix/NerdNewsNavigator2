@@ -1,29 +1,0 @@
-
-LNerdNewsNavigator2.AppShell.GotoMostRecentShowPage(object, System.EventArgs)\
-RC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\AppShell.xaml.cs2 2(-"0*—
-04 5(D|
-z
-4 4(!
-
-%0bool"3Microsoft.Maui.Controls.Shell.FlyoutIsPresented.set*#!
-Microsoft.Maui.Controls.Shell*
-""Å
-
-5 5(#
-%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.Shell∫
-∑
-5 5(G!
-%2System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
-#
-%1Microsoft.Maui.Controls.Shell*
-""*
-1*.
-16 6("
-6 6(
-implicit return:
-2. 2(;
-senderobject:!
-2= 2(H
-eSystem.EventArgsB
-NerdNewsNavigator2.AppShell

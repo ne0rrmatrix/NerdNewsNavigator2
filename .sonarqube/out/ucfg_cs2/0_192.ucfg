@@ -1,159 +1,0 @@
-
-UNerdNewsNavigator2.AppDelegate.CleanseFontName(string, Microsoft.Maui.IFontRegistrar)h
-^C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Platforms\iOS\AppDelegate.cs= =("0*Ñ
-0@ @(+®•
-@ @(,
-%0string"-Microsoft.Maui.IFontRegistrar.GetFont(string)*31
-/
-_fontRegistrarMicrosoft.Maui.IFontRegistrar*
-
-fontNamestring2GetFont(string)B
-@
-@ @(I
-fontPostScriptNamestring"__id*
-
-%0string*
-1
-2*9
-1A A(%"*
-A A(&
-
-fontPostScriptNamestring*Õ
-2C E(9è
-å
-C C(4
-%1Microsoft.Maui.FontFile"*Microsoft.Maui.FontFile.FromString(string)*"
-Microsoft.Maui.FontFile*
-
-fontNamestringZ
-X
-C C(4#
-fontFileMicrosoft.Maui.FontFile"__id*!
-
-%1Microsoft.Maui.FontFilej
-h
-E' E(9
-%2string"%Microsoft.Maui.FontFile.Extension.get*'%
-#
-fontFileMicrosoft.Maui.FontFile\
-Z
-E E(:
-
-%3bool""string.IsNullOrWhiteSpace(string?)*
-"
-string*
-
-%2string*
-3
-4*Í
-3G G(Gt
-r
-G' G(G
-%4string"/Microsoft.Maui.FontFile.FileNameWithExtension()*'%
-#
-fontFileMicrosoft.Maui.FontFile¢ü
-G G(H
-%5string"-Microsoft.Maui.IFontRegistrar.GetFont(string)*31
-/
-_fontRegistrarMicrosoft.Maui.IFontRegistrar*
-
-%4string2GetFont(string)8
-6
-G G([
-filePathstring"__id*
-
-%5string*
-5
-6*É
-5H H(8
-6
-H H(
-%7string"__id*
-
-filePathstring2
-0
-H H(
-%6string"__id*
-
-%7string*
-7
-8*Î
-7H# H(:o
-m
-H# H(:
-%9string"*Microsoft.Maui.FontFile.PostScriptName.get*'%
-#
-fontFileMicrosoft.Maui.FontFile2
-0
-H# H(:
-%8string"__id*
-
-%9string2
-0
-H# H(:
-%6string"__id*
-
-%8string*
-8*)
-8U U("
-H H(;
-
-%6string*p
-4L  L(3\
-Z
-L  L(3
-%10string[]"__id*75*3
-Microsoft.Maui.FontFile"
-
-Extensionsstring[]*
-9*
-9U U(*
-10
-6*Œ
-10N O(4ê
-ç
-N  N(C
-%11string"6Microsoft.Maui.FontFile.FileNameWithExtension(string?)*'%
-#
-fontFileMicrosoft.Maui.FontFile*
-
-extstring:
-8
-N N(C
-	formattedstring"__id*
-
-%11string™ß
-O O(5
-%12string"-Microsoft.Maui.IFontRegistrar.GetFont(string)*31
-/
-_fontRegistrarMicrosoft.Maui.IFontRegistrar*
-
-	formattedstring2GetFont(string)9
-7
-O O(H
-filePathstring"__id*
-
-%12string*
-11
-9*0
-11P P(#" 
-P P($
-
-filePathstring*ú
-6T T(&p
-n
-T T(&
-%13string"*Microsoft.Maui.FontFile.PostScriptName.get*'%
-#
-fontFileMicrosoft.Maui.FontFile"
-T T('
-
-%13string*/
-12U U("
-U U(
-implicit return:
-= =(+
-fontNamestring:;
-=- =(J/
-_fontRegistrarMicrosoft.Maui.IFontRegistrarB" 
-NerdNewsNavigator2.AppDelegate

@@ -1,145 +1,0 @@
-
-9NerdNewsNavigator2.View.TabletPodcastPage.SetFullScreen()i
-_C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\TabletPodcasPage.xaml.cs* *("0*Å
-0. 0( ó
-î
-. .(3
-%0Android.App.Activity"<Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.get*.,"*
-(Microsoft.Maui.ApplicationModel.PlatformT
-R
-. .(3 
-activityAndroid.App.Activity"__id*
-
-%0Android.App.Activityz
-x
-0 0( 
-
-%1bool""object.operator ==(object, object)*
-"
-object*$"
- 
-activityAndroid.App.Activity*
-""*
-1
-2*à
-20$ 0(;{y
-0$ 0(3
-%2Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.gett
-r
-0$ 0(;
-
-%3bool""object.operator ==(object, object)*
-"
-object*
-
-%2Android.Views.Window*
-""*
-1
-3*!
-1@ @("
-0= 0(D
-""*√
-32 6({y
-29 2(H
-%4Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.getà
-Ö
-2K 2(Y
-
-%5bool"<NerdNewsNavigator2.View.TabletPodcastPage.FullScreenMode.get*/-+
-)NerdNewsNavigator2.View.TabletPodcastPage¡
-æ
-2 2(Z
-
-%6void"UAndroidX.Core.View.WindowCompat.SetDecorFitsSystemWindows(Android.Views.Window, bool)*%#"!
-AndroidX.Core.View.WindowCompat*
-
-%4Android.Views.Window*
-""{y
-3V 3(e
-%7Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.get{y
-3g 3(v
-%8Android.Views.Window"Android.App.Activity.Window.get*$"
- 
-activityAndroid.App.Activity2
-Window.getk
-i
-	3g 3(Ä
-%9Android.Views.View""Android.Views.Window.DecorView.get*
-
-%8Android.Views.Windowä
-á
-	3/ 3(Å6
-%10/AndroidX.Core.View.WindowInsetsControllerCompat"]AndroidX.Core.View.WindowCompat.GetInsetsController(Android.Views.Window, Android.Views.View)*%#"!
-AndroidX.Core.View.WindowCompat*
-
-%7Android.Views.Window*
-
-%9Android.Views.View°
-û
-	3 3(ÅO
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat"__id*:8
-6
-%10/AndroidX.Core.View.WindowInsetsControllerCompatÑ
-Å
-4 4(B
-
-%11int"7AndroidX.Core.View.WindowInsetsCompat.Type.StatusBars()*0.",
-*AndroidX.Core.View.WindowInsetsCompat.Typeà
-Ö
-5 5(F
-
-%12int";AndroidX.Core.View.WindowInsetsCompat.Type.NavigationBars()*0.",
-*AndroidX.Core.View.WindowInsetsCompat.Type*
-(
-4 5(F
-typesint"__id*
-""â
-Ü
-6 6(
-%13bool"<NerdNewsNavigator2.View.TabletPodcastPage.FullScreenMode.get*/-+
-)NerdNewsNavigator2.View.TabletPodcastPage*
-4
-5*∫
-48 9(7#
-!
-8B 8(|
-%14"__id*
-""¡
-æ
-8 8(|
-
-%15int"FAndroidX.Core.View.WindowInsetsControllerCompat.SystemBarsBehavior.set*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*	
-
-%14º
-π
-9 9(8
-%16void"9AndroidX.Core.View.WindowInsetsControllerCompat.Hide(int)*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*
-
-typesint*
-6*—
-5= =(7º
-π
-= =(8
-%17void"9AndroidX.Core.View.WindowInsetsControllerCompat.Show(int)*SQ
-O
-windowInsetsControllerCompat/AndroidX.Core.View.WindowInsetsControllerCompat*
-
-typesint*
-6*.
-6@ @("
-@ @(
-implicit returnB-+
-)NerdNewsNavigator2.View.TabletPodcastPage

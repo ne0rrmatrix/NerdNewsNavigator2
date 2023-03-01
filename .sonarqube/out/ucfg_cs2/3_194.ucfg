@@ -1,73 +1,0 @@
-
-<NerdNewsNavigator2.Data.PositionDataBase.DeleteAllPodcasts()f
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cs” ”(-"0*
-0
-¢ ¢(*
-1
-2*á
-1
-™ ›(˜
-•
-
-™ ™("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection•
-’
-
-™ ™(7*
-%1$System.Threading.Tasks.Task<TResult>"0SQLite.SQLiteAsyncConnection.DeleteAllAsync<T>()*&$
-"
-%0SQLite.SQLiteAsyncConnectionÂ
-¿
-
-š š(9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>Á
-¾
-
-š š(G
-
-%3void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%23Microsoft.Extensions.Logging.ILogger<TCategoryName>*'%#
-!Succesfully Deleted all Podcasts.*
-"""
-
-› ›(
-""*œ
-2
-Ÿ  (Â
-¿
-
-Ÿ Ÿ(9
-%43Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ca
-
-ŸI Ÿ(S
-%5string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÊ
-Ç
-
-Ÿ Ÿ(T
-
-%6void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%43Microsoft.Extensions.Logging.ILogger<TCategoryName>*.,*
-(Failed to delete all Podcasts. {Message}*
-
-%5string"
-
-   (
-""*2
-3
-¢ ¢("!
-
-¢ ¢(
-implicit returnB,*
-(NerdNewsNavigator2.Data.PositionDataBase

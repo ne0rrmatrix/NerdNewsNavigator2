@@ -1,36 +1,0 @@
-
-@NerdNewsNavigator2.Service.FeedService.RemoveBADHtmlTags(string)b
-XC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\FeedService.csf f(*"0*©
-0h i("
- 
-h? h(V
-%0"__id*
-"""
- 
-hY h(p
-%1"__id*
-""õ
-ò
-h h(q
-%2string"qSystem.Text.RegularExpressions.Regex.Replace(string, string, string, System.Text.RegularExpressions.RegexOptions)**("&
-$System.Text.RegularExpressions.Regex*
-
-hTMLCodestring*
-
-/\?.*?."*
-"*
-""8
-6
-h h(q
-hTMLCodestring"__id*
-
-%2string" 
-i i(
-
-hTMLCodestring*.
-1j j("
-j j(
-implicit return:
-f+ f(:
-hTMLCodestringB*"(
-&NerdNewsNavigator2.Service.FeedService

@@ -1,48 +1,0 @@
-
-SNerdNewsNavigator2.View.AddPodcastPage.GetAppWindow(Microsoft.Maui.MauiWinUIWindow)g
-]C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\View\AddPodcastPage.xaml.cs*4 *(@"0*¬
-0, /(ù
-ö
-, ,(G
-
-%0nint"2WinRT.Interop.WindowNative.GetWindowHandle(object)* "
-WinRT.Interop.WindowNative*,*
-(
-windowMicrosoft.Maui.MauiWinUIWindow2
-0
-, ,(G
-handlenint"__id*
-
-
-%0nintñ
-ì
-- -(H
-%1Microsoft.UI.WindowId"5Microsoft.UI.Win32Interop.GetWindowIdFromWindow(nint)*"
-Microsoft.UI.Win32Interop*
-
-handlenintP
-N
-- -(H
-idMicrosoft.UI.WindowId"__id*
-
-%1Microsoft.UI.WindowId«
-ƒ
-. .(L&
-%2 Microsoft.UI.Windowing.AppWindow"GMicrosoft.UI.Windowing.AppWindow.GetFromWindowId(Microsoft.UI.WindowId)*&$""
- Microsoft.UI.Windowing.AppWindow*
-
-idMicrosoft.UI.WindowIdm
-k
-. .(L-
-	appWindow Microsoft.UI.Windowing.AppWindow"__id**(
-&
-%2 Microsoft.UI.Windowing.AppWindow";
-/ /(/
--
-	appWindow Microsoft.UI.Windowing.AppWindow*.
-10 0("
-0 0(
-implicit return:4
-*A *(W(
-windowMicrosoft.Maui.MauiWinUIWindowB*"(
-&NerdNewsNavigator2.View.AddPodcastPage

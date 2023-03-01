@@ -1,166 +1,0 @@
-
-HNerdNewsNavigator2.ViewModel.UpdateSettingsViewModel.DeleteAllPodcasts()p
-fC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\UpdateSettingsViewModel.cs ('"0*ô
-0   (Å
-
-   (
-
-%0bool"5NerdNewsNavigator2.ViewModel.BaseViewModel.IsBusy.get*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel*
-1
-2*í
-1" #( Ñ
-Å
-"! "(1.
-%1(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.App©
-¶
-"! "(C*
-%2$System.Threading.Tasks.Task<TResult>":NerdNewsNavigator2.Data.PositionDataBase.GetAllDownloads()*20
-.
-%1(NerdNewsNavigator2.Data.PositionDataBaseH
-F
-" "(C*
-temp"System.Collections.Generic.List<T>"__id*
-""*
-3
-4*£
-3% %(NÃ
-…
-% %(9
-%33Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>ø
-º
-% %(O
-
-%4void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%33Microsoft.Extensions.Logging.ILogger<TCategoryName>*'%#
-!Did not find any files to delete.*
-""*
-5*
-4)5 ,(L*
-6*
-6@ @(*
-7
-5*˙
-7. /(Ne
-c
-. .(-
-
-%5void"System.IO.File.Delete(string)*"
-System.IO.File*
-
-tempFilestringÃ
-…
-/ /(9
-%63Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>y
-w
-/A /(N
-%7string".NerdNewsNavigator2.Model.Download.FileName.get*-+
-)
-item!NerdNewsNavigator2.Model.Download¥
-±
-/ /(O
-
-%8void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%63Microsoft.Extensions.Logging.ILogger<TCategoryName>*
-Deleted {file}*
-
-%7string*
-6*£
-53 9(JÑ
-Å
-3 3(&.
-%9(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.App§
-°
-3 3(2+
-%10$System.Threading.Tasks.Task<TResult>"4NerdNewsNavigator2.Data.PositionDataBase.DeleteAll()*20
-.
-%9(NerdNewsNavigator2.Data.PositionDataBaseÖ
-Ç
-4 4(&/
-%11(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.App≠
-™
-4 4(:+
-%12$System.Threading.Tasks.Task<TResult>"<NerdNewsNavigator2.Data.PositionDataBase.DeleteAllPodcasts()*31
-/
-%11(NerdNewsNavigator2.Data.PositionDataBaseÖ
-Ç
-5 5(&/
-%13(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.AppÆ
-´
-5 5(;+
-%14$System.Threading.Tasks.Task<TResult>"=NerdNewsNavigator2.Data.PositionDataBase.DeleteAllDownloads()*31
-/
-%13(NerdNewsNavigator2.Data.PositionDataBase¥
-±
-6 6(=
-%156System.Collections.ObjectModel.ObservableCollection<T>"4NerdNewsNavigator2.ViewModel.BaseViewModel.Shows.get*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModelì
-ê
-6 6(
-%16void"4System.Collections.ObjectModel.Collection<T>.Clear()*A?
-=
-%156System.Collections.ObjectModel.ObservableCollection<T>∑
-¥
-7 7(=
-%176System.Collections.ObjectModel.ObservableCollection<T>"7NerdNewsNavigator2.ViewModel.BaseViewModel.Podcasts.get*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModelì
-ê
-7 7( 
-%18void"4System.Collections.ObjectModel.Collection<T>.Clear()*A?
-=
-%176System.Collections.ObjectModel.ObservableCollection<T>ç
-ä
-8 8(
-%19bool"5NerdNewsNavigator2.ViewModel.BaseViewModel.IsBusy.set*0.,
-*NerdNewsNavigator2.ViewModel.BaseViewModel*
-""É
-Ä
-9 9(#$
-%20Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.Shellº
-π
-9 9(M"
-%21System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*(&
-$
-%20Microsoft.Maui.Controls.Shell*
-""*
-0*
-2@ @(*
-8
-9*ç
-8> >(LÕ
- 
-> >(:
-%223Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*|z*x6
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>b`
->B >(L
-%23string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getƒ
-¡
-> >(M
-%24void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%223Microsoft.Extensions.Logging.ILogger<TCategoryName>*'%#
-!Delete podcasts failed. {Message}*
-
-%23string*
-9*.
-9@ @("
-@ @(
-implicit returnB86
-4NerdNewsNavigator2.ViewModel.UpdateSettingsViewModel

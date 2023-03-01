@@ -1,9 +1,0 @@
-ì
-5NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobject¥
-uMostRecentShowsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel>)«NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.MostRecentShowsViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.MostRecentShowsViewModel>)Z
-Download(string)FNerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.Download(string)P
-Tap(string)ANerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.Tap(string)`
-DownloadCommand.getINerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.DownloadCommand.get`
-DownloadCommand.setINerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.DownloadCommand.setV
-TapCommand.getDNerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.TapCommand.getV
-TapCommand.setDNerdNewsNavigator2.ViewModel.MostRecentShowsViewModel.TapCommand.set

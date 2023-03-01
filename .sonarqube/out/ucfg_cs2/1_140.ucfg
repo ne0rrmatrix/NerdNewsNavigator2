@@ -1,182 +1,0 @@
-
-/NerdNewsNavigator2.Data.PositionDataBase.Init()d
-ZC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Data\PositionDataBase.cs% %( "0*¬
-0) )(#–
-“
-) )("
-%0SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection|
-z
-) )(#
-
-%1bool""object.operator !=(object, object)*
-"
-object*&$
-"
-%0SQLite.SQLiteAsyncConnection*
-""*
-1
-2*!
-1+ +("
-+ +(
-""*É
-21 ;(O"
- 
-1F 1(k
-%2"__id*
-""ƒ
-€
-1, 1(l
-%3string"BSystem.Environment.GetFolderPath(System.Environment.SpecialFolder)*"
-System.Environment*
-
-%2{
-y
-1 1(z
-%4string"&System.IO.Path.Combine(string, string)*"
-System.IO.Path*
-
-%3string*
-	MyData.db<
-:
-1 1(z
-databasePathstring"__id*
-
-%4stringÀ
-½
-3 3(9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>È
-Å
-3 3(L
-
-%6void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*=;
-9
-%53Microsoft.Extensions.Logging.ILogger<TCategoryName>*
-Database path is: {Path}*
-
-databasePathstringNL
-4 4(A"
-%7SQLite.SQLiteAsyncConnection"SQLite.SQLiteAsyncConnection©
-¦
-4 4(3
-
-%8void"@SQLite.SQLiteAsyncConnection.SQLiteAsyncConnection(string, bool)*&$
-"
-%7SQLite.SQLiteAsyncConnection*
-
-databasePathstring*
-""–
-“
-4 4(AY*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection"__id*&$
-"
-%7SQLite.SQLiteAsyncConnection–
-“
-6 6("
-%9SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection²
-¯
-6 6(:+
-%10$System.Threading.Tasks.Task<TResult>"DSQLite.SQLiteAsyncConnection.CreateTableAsync<T>(SQLite.CreateFlags)*&$
-"
-%9SQLite.SQLiteAsyncConnection*
-""Á
-¾
-7 7(:
-%113Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>Î
-Ë
-7 7(P
-%12void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%113Microsoft.Extensions.Logging.ILogger<TCategoryName>*" 
-Position Init {DatabasePath}*
-
-databasePathstring—
-”
-8 8(#
-%13SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection³
-°
-8 8(9+
-%14$System.Threading.Tasks.Task<TResult>"DSQLite.SQLiteAsyncConnection.CreateTableAsync<T>(SQLite.CreateFlags)*'%
-#
-%13SQLite.SQLiteAsyncConnection*
-""Á
-¾
-9 9(:
-%153Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>Í
-Ê
-9 9(O
-%16void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%153Microsoft.Extensions.Logging.ILogger<TCategoryName>*!
-Podcast Init {DataBasePath}*
-
-databasePathstring—
-”
-: :(#
-%17SQLite.SQLiteAsyncConnection"__id*][*Y*
-(NerdNewsNavigator2.Data.PositionDataBase"+
-_connectionSQLite.SQLiteAsyncConnection³
-°
-: :(:+
-%18$System.Threading.Tasks.Task<TResult>"DSQLite.SQLiteAsyncConnection.CreateTableAsync<T>(SQLite.CreateFlags)*'%
-#
-%17SQLite.SQLiteAsyncConnection*
-""Á
-¾
-; ;(:
-%193Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>Î
-Ë
-; ;(P
-%20void"}Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%193Microsoft.Extensions.Logging.ILogger<TCategoryName>*" 
-Download Init {DatabasePath}*
-
-databasePathstring*
-3
-4*Œ
-3? ?(WÁ
-¾
-? ?(:
-%213Microsoft.Extensions.Logging.ILogger<TCategoryName>"__id*pn*l*
-(NerdNewsNavigator2.Data.PositionDataBase">
-_logger3Microsoft.Extensions.Logging.ILogger<TCategoryName>b`
-?M ?(W
-%22string"System.Exception.Message.get*
-
-exSystem.Exception2Message.getÏ
-Ì
-? ?(X
-%23void"wMicrosoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger, string?, params object?[])*31"/
--Microsoft.Extensions.Logging.LoggerExtensions*><
-:
-%213Microsoft.Extensions.Logging.ILogger<TCategoryName>*20.
-,Failed to start Position Database: {Message}*
-
-%22string*
-4*!
-4A A("
-A A(
-""*.
-5B B("
-B B(
-implicit returnB,*
-(NerdNewsNavigator2.Data.PositionDataBase

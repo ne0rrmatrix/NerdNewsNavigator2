@@ -1,67 +1,0 @@
-
-aNerdNewsNavigator2.Service.DownloadService.AddDownloadDatabase(NerdNewsNavigator2.Model.Download)f
-\C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Service\DownloadService.cs# (6"0*ê
-0 ("Ñ
-Å
- (*.
-%0(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.App©
-¶
- (<*
-%1$System.Threading.Tasks.Task<TResult>":NerdNewsNavigator2.Data.PositionDataBase.GetAllDownloads()*20
-.
-%0(NerdNewsNavigator2.Data.PositionDataBaseI
-G
- (<+
-items"System.Collections.Generic.List<T>"__id*
-""*
-1*
-1   (*
-2
-3*ı
-2 ((t
-r
- (
-%2string")NerdNewsNavigator2.Model.Download.Url.get*-+
-)
-item!NerdNewsNavigator2.Model.Downloadx
-v
- ((
-%3string")NerdNewsNavigator2.Model.Download.Url.get*1/
--
-download!NerdNewsNavigator2.Model.Downloadn
-l
- ((
-
-%4bool""string.operator ==(string, string)*
-"
-string*
-
-%2string*
-
-%3string*
-4
-1*!
-43 (8"
-, (9
-""*§
-3 (Ñ
-Å
- (.
-%5(NerdNewsNavigator2.Data.PositionDataBase"'NerdNewsNavigator2.App.PositionData.get*"
-NerdNewsNavigator2.App˘
-ˆ
- (4*
-%6$System.Threading.Tasks.Task<TResult>"WNerdNewsNavigator2.Data.PositionDataBase.AddDownload(NerdNewsNavigator2.Model.Download)*20
-.
-%5(NerdNewsNavigator2.Data.PositionDataBase*1/
--
-download!NerdNewsNavigator2.Model.Download"
- (
-""*.
-5   ("
-   (
-implicit return:9
-7 (H-
-download!NerdNewsNavigator2.Model.DownloadB.",
-*NerdNewsNavigator2.Service.DownloadService

@@ -1,27 +1,0 @@
-·
- NerdNewsNavigator2.Model.Podcastobject7
-	Podcast()*NerdNewsNavigator2.Model.Podcast.Podcast()1
-Id.get'NerdNewsNavigator2.Model.Podcast.Id.get1
-Id.set'NerdNewsNavigator2.Model.Podcast.Id.set7
-	Title.get*NerdNewsNavigator2.Model.Podcast.Title.get7
-	Title.set*NerdNewsNavigator2.Model.Podcast.Title.setC
-Description.get0NerdNewsNavigator2.Model.Podcast.Description.getC
-Description.set0NerdNewsNavigator2.Model.Podcast.Description.set5
-Link.get)NerdNewsNavigator2.Model.Podcast.Link.get5
-Link.set)NerdNewsNavigator2.Model.Podcast.Link.set;
-PubDate.get,NerdNewsNavigator2.Model.Podcast.PubDate.get;
-PubDate.set,NerdNewsNavigator2.Model.Podcast.PubDate.setE
-EnclosureUrl.get1NerdNewsNavigator2.Model.Podcast.EnclosureUrl.getE
-EnclosureUrl.set1NerdNewsNavigator2.Model.Podcast.EnclosureUrl.setG
-EnclosureType.get2NerdNewsNavigator2.Model.Podcast.EnclosureType.getG
-EnclosureType.set2NerdNewsNavigator2.Model.Podcast.EnclosureType.set?
-CopyRight.get.NerdNewsNavigator2.Model.Podcast.CopyRight.get?
-CopyRight.set.NerdNewsNavigator2.Model.Podcast.CopyRight.set7
-	Image.get*NerdNewsNavigator2.Model.Podcast.Image.get7
-	Image.set*NerdNewsNavigator2.Model.Podcast.Image.set3
-Url.get(NerdNewsNavigator2.Model.Podcast.Url.get3
-Url.set(NerdNewsNavigator2.Model.Podcast.Url.set=
-Download.get-NerdNewsNavigator2.Model.Podcast.Download.get=
-Download.set-NerdNewsNavigator2.Model.Podcast.Download.setE
-IsDownloaded.get1NerdNewsNavigator2.Model.Podcast.IsDownloaded.getE
-IsDownloaded.set1NerdNewsNavigator2.Model.Podcast.IsDownloaded.set

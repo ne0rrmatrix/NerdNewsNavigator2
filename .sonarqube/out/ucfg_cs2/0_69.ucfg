@@ -1,30 +1,0 @@
-
-.NerdNewsNavigator2.AppDelegate.CreateMauiApp()h
-^C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\Platforms\iOS\AppDelegate.cs (,"0*¬
-0 (*XV
- (5'
-%0!SQLitePCL.SQLite3Provider_sqlite3"!SQLitePCL.SQLite3Provider_sqlite3É
-Ä
- (3
-
-%1void";SQLitePCL.SQLite3Provider_sqlite3.SQLite3Provider_sqlite3()*+)
-'
-%0!SQLitePCL.SQLite3Provider_sqlite3í
-è
- (6
-
-%2void"5SQLitePCL.raw.SetProvider(SQLitePCL.ISQLite3Provider)*"
-SQLitePCL.raw*+)
-'
-%0!SQLitePCL.SQLite3Provider_sqlite3â
-Ü
- (*$
-%3Microsoft.Maui.Hosting.MauiApp".NerdNewsNavigator2.MauiProgram.CreateMauiApp()*$"" 
-NerdNewsNavigator2.MauiProgram"2
- (+&
-$
-%3Microsoft.Maui.Hosting.MauiApp*.
-1 ("
- (
-implicit returnB" 
-NerdNewsNavigator2.AppDelegate

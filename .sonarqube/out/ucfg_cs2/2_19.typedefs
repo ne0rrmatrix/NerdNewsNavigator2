@@ -1,9 +1,0 @@
-Ô
-4NerdNewsNavigator2.ViewModel.DownloadedShowViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobject 
-sDownloadedShowViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.DownloadedShowViewModel>)¨NerdNewsNavigator2.ViewModel.DownloadedShowViewModel.DownloadedShowViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.DownloadedShowViewModel>)O
-Tap(string)@NerdNewsNavigator2.ViewModel.DownloadedShowViewModel.Tap(string)U
-Delete(string)CNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.Delete(string)U
-TapCommand.getCNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.TapCommand.getU
-TapCommand.setCNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.TapCommand.set[
-DeleteCommand.getFNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.DeleteCommand.get[
-DeleteCommand.setFNerdNewsNavigator2.ViewModel.DownloadedShowViewModel.DeleteCommand.set

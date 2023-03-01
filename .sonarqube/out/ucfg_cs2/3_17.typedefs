@@ -1,6 +1,0 @@
-˚
-,NerdNewsNavigator2.ViewModel.RemoveViewModel*NerdNewsNavigator2.ViewModel.BaseViewModel5CommunityToolkit.Mvvm.ComponentModel.ObservableObjectobject¯
-cRemoveViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.RemoveViewModel>)êNerdNewsNavigator2.ViewModel.RemoveViewModel.RemoveViewModel(Microsoft.Extensions.Logging.ILogger<NerdNewsNavigator2.ViewModel.RemoveViewModel>)G
-Tap(string)8NerdNewsNavigator2.ViewModel.RemoveViewModel.Tap(string)M
-TapCommand.get;NerdNewsNavigator2.ViewModel.RemoveViewModel.TapCommand.getM
-TapCommand.set;NerdNewsNavigator2.ViewModel.RemoveViewModel.TapCommand.set

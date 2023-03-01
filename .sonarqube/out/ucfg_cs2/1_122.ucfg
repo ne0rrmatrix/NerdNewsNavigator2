@@ -1,31 +1,0 @@
-
-?NerdNewsNavigator2.App.SetFullScreen(object?, System.EventArgs)W
-MC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\App.xaml.cs\ \(%"0*Å
-0^ ^(j
-h
-^ ^(
-
-%0bool""object.operator !=(object, object)*
-"
-object*
-
-senderobject*
-""*
-1
-2*ö
-1` `(5Ö
-Ç
-` `(6
-
-%1void"+System.Diagnostics.Debug.WriteLine(string?)*"
-System.Diagnostics.Debug*
-SetFullScreen Triggered*
-2*.
-2z z("
-z z(
-implicit return:
-\& \(4
-senderobject:)
-\6 \(I
-	eventArgsSystem.EventArgsB"
-NerdNewsNavigator2.App

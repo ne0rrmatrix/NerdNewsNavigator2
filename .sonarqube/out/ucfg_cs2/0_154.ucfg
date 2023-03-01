@@ -1,50 +1,0 @@
-
-?NerdNewsNavigator2.ViewModel.TabletPodcastViewModel.Tap(string)o
-eC:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\ViewModel\TabletPodcastViewModel.cs ("0*ú
-0  (Pv
-t
- (3
-%0string")System.Web.HttpUtility.UrlEncode(string?)*"
-System.Web.HttpUtility*
-
-urlstring:
-8
- (3
-
-encodedUrlstring"__id*
-
-%0stringÅ
-
-   (#
-%1Microsoft.Maui.Controls.Shell")Microsoft.Maui.Controls.Shell.Current.get*#!"
-Microsoft.Maui.Controls.ShellG
-E
- &  (R
-%2"__concat*
- (  (@
-""*
- @  (E	
-?Url=J
-H
- &  (R
-%3"__concat*
-
-%2*"
- E  (Q
-
-
-encodedUrlstring∫
-∑
-   (S!
-%4System.Threading.Tasks.Task"UMicrosoft.Maui.Controls.Shell.GoToAsync(Microsoft.Maui.Controls.ShellNavigationState)*'%
-#
-%1Microsoft.Maui.Controls.Shell*
-
-%3*
-1*.
-1! !("
-! !(
-implicit return:
- ($
-urlstringB75
-3NerdNewsNavigator2.ViewModel.TabletPodcastViewModel
