@@ -5,17 +5,16 @@
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
-/// A class that Displays a Video from twit.tv.
+/// A class to manage Playback of A Downloaded Show
 /// </summary>
-/// 
-public partial class TabletPlayPodcastPage : ContentPage
+public partial class DownloadPlayPage : ContentPage
 {
     #region Properties
 
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
-    private readonly ILogger<TabletPlayPodcastPage> _logger;
+    private readonly ILogger<DownloadPlayPage> _logger;
 
     /// <summary>
     /// Initilizes a new instance of the <see cref="Position"/> class
@@ -23,13 +22,12 @@ public partial class TabletPlayPodcastPage : ContentPage
     private Position Pos { get; set; } = new();
 
     #endregion
-    /// <summary>
-    /// Class Constructor that initilizes <see cref="TabletPlayPodcastPage"/>
-    /// </summary>
-    /// <param name="logger">This Applications <see cref="ILogger{TCategoryName}"/> instance is managed through this class</param>
-    /// <param name="viewModel">This Applications <see cref="TabletPlayPodcastPage"/> instance is managed through this class.</param>
 
-    public TabletPlayPodcastPage(ILogger<TabletPlayPodcastPage> logger, TabletPlayPodcastViewModel viewModel)
+    /// <summary>
+    /// Initializes a new instance of <see cref="DownloadPlayPage"/>
+    /// </summary>
+    /// <param name="viewModel"></param>
+    public DownloadPlayPage(ILogger<DownloadPlayPage> logger, DownloadedPlayViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
