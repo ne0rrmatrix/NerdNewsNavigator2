@@ -27,7 +27,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="DownloadPlayPage"/>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="TabletPlayPodcastPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>

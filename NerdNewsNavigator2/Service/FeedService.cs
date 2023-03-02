@@ -72,11 +72,11 @@ public static class FeedService
             {
                 Show show = new()
                 {
-                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description").InnerText),
-                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate").InnerText),
-                    Title = node.SelectSingleNode("title").InnerText,
-                    Url = node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText,
-                    Image = node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText,
+                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
+                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
+                    Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
+                    Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
+                    Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
                 };
                 shows.Add(show);
                 if (getFirstOnly)

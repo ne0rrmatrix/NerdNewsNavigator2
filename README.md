@@ -37,9 +37,12 @@ Free Version:
 - [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
 
 Paid Version:
-<br/>
 - [Microsoft store link](https://www.microsoft.com/store/apps/9N28GJQGP369)
 - [Google Play link](https://play.google.com/store/apps/details?id=com.ahdftech.nerdNewsNavigator)
+
+[Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
+<br/></br>
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ne0rrmatrix_NerdNewsNavigator2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ne0rrmatrix_NerdNewsNavigator2)
  <br/><br/> 
 
 ## Phone:
