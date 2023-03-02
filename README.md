@@ -22,18 +22,23 @@ Or download them for offline watching.
 ## TODO
 1. Work on better UI implementation.
 2. Add syncing between devices to track playback. Currently it is by individual device and has no awareness of other devices or platforms.
-3. Release on Google play store. - Waiting for store approval now.
-4. Release on Apple store
-5. Respond to feedback
-6. Optimize UI from feedback
-7. Add the ability to download podcasts automatically. Right now it is on an individual show basis as user clicks to download an episode.
-9. Create list of most recent list of episodes from favorite podcasts.
-10. Create list of favorites that users can create.
+3. Release on Apple store
+4. Respond to feedback
+5. Optimize UI from feedback
+6. Add the ability to download podcasts automatically. Right now it is on an individual show basis as user clicks to download an episode.
+7. Create list of most recent list of episodes from favorite podcasts.
+8. Create list of favorites that users can create.
 
 ## Suggestions/Bugs?
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
 
 ## Link to current release
+Free Version:
+- [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
+
+Paid Version:
+- [Microsoft store link](https://www.microsoft.com/store/apps/9N28GJQGP369)
+- [Google Play link](https://play.google.com/store/apps/details?id=com.ahdftech.nerdNewsNavigator)
 
 [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
 <br/></br>
@@ -58,7 +63,7 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
  <br/><br/>
 
 ## Help support me work on this project
-If you enjoy using the app consider supporting development by purchasing on Microsoft store at:  [Microsoft store link](https://www.microsoft.com/store/apps/9N28GJQGP369)
+If you enjoy using the app consider supporting development by purchasing on Microsoft store or Google play.
 <div align="center">
 <a href="https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD">
 <img src="./paypal-donate-button.png" width="48%">
