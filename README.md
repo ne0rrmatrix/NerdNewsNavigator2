@@ -36,6 +36,8 @@ If you see any bugs or have any suggestions please open an issue and/or contact 
 ## Link to current release
 
 [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases)
+<br/></br>
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ne0rrmatrix_NerdNewsNavigator2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ne0rrmatrix_NerdNewsNavigator2)
  <br/><br/> 
 
 ## Phone:
