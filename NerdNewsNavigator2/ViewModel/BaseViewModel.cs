@@ -58,7 +58,7 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<BaseViewModel> Logger { get; set; }
-    IConnectivity connectivity;
+    private readonly IConnectivity _connectivity;
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
@@ -66,11 +66,11 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetMostRecent);
-        this.connectivity = connectivity;
+        this._connectivity = connectivity;
     }
     public bool InternetConnected()
     {
-        if (connectivity.NetworkAccess == NetworkAccess.Internet)
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
             return true;
         }

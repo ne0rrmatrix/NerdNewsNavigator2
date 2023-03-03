@@ -22,7 +22,7 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
     }
 
     /// <summary>
-    /// Method recieves <see cref="DeletedItemMessage"/> and invokes <see cref="RecievedDelete(bool)"/>
+    /// Method recieves <see cref="DeletedItemMessage"/> and invokes <see cref="MessagingService.RecievedDelete(bool)"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(DeletedItemMessage message)

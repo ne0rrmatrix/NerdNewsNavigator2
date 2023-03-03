@@ -34,7 +34,7 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     }
 
     /// <summary>
-    /// Method invokes <see cref="RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(DownloadItemMessage message)
@@ -47,7 +47,7 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     }
 
     /// <summary>
-    /// Method invokes <see cref="RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(InternetItemMessage message)

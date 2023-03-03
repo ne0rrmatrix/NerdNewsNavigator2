@@ -23,7 +23,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     }
 
     /// <summary>
-    /// Method invokes <see cref="RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(InternetItemMessage message)
@@ -35,7 +35,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     }
 
     /// <summary>
-    /// Method invokes <see cref="RecievedDownloadSucess(bool)"/> for display a <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for display a <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(DownloadItemMessage message)
