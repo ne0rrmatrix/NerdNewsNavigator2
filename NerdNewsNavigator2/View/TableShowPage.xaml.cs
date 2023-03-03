@@ -19,6 +19,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
         InitializeComponent();
         BindingContext = viewModel;
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
     }
 
     /// <summary>
