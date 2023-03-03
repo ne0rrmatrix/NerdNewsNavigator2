@@ -52,8 +52,8 @@ public partial class UpdateSettingsViewModel : BaseViewModel
                 await App.PositionData.DeleteAllDownloads();
                 Shows.Clear();
                 Podcasts.Clear();
-                IsBusy = false;
                 await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+                IsBusy = false;
             }
         }
         catch (Exception ex)
