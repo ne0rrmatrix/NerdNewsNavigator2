@@ -7,8 +7,9 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages showing a <see cref="List{T}"/> of <see cref="Show"/> to users.
 /// </summary>
-public partial class TabletShowPage : ContentPage
+public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletShowPage"/> class.
     /// </summary>
@@ -17,10 +18,32 @@ public partial class TabletShowPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
     }
 
-    private async void Button_Clicked(object sender, EventArgs e)
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(InternetItemMessage message)
     {
-        await DisplayAlert("Ok", "Added show to downloads!", "Ok");
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingS.RecievedInternetMessage(message.Value);
+        });
+    }
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for display a <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DownloadItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingS.RecievedDownloadMessage(message.Value);
+            WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        });
     }
 }

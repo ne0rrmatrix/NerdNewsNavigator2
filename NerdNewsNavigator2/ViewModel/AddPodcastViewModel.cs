@@ -12,8 +12,8 @@ public partial class AddPodcastViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="AddPodcastViewModel"/>
     /// </summary>
-    public AddPodcastViewModel(ILogger<AddPodcastViewModel> logger)
-        : base(logger)
+    public AddPodcastViewModel(ILogger<AddPodcastViewModel> logger, IConnectivity connectivity)
+        : base(logger, connectivity)
     {
     }
 }

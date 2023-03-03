@@ -19,8 +19,7 @@ public partial class LiveViewModel : BaseViewModel
     /// Initializes a new instance of the <see cref="LiveViewModel"/>
     /// <paramref name="logger"/>
     /// </summary>
-    public LiveViewModel(ILogger<LiveViewModel> logger)
-    : base(logger)
+    public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
     }
 }

@@ -7,8 +7,9 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that Manages the display of the most recent Shows from twit.tv
 /// </summary>
-public partial class MostRecentShowsPage : ContentPage
+public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemMessage>, IRecipient<InternetItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsPage"/>
     /// </summary>
@@ -17,9 +18,43 @@ public partial class MostRecentShowsPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewmodel;
+        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
     }
+
+    /// <summary>
+    /// Method display a <see cref="Toast"/> about status of download starting.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Ok", "Added show to downloads!", "Ok");
+        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        WeakReferenceMessenger.Default.Reset();
+    }
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DownloadItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingS.RecievedDownloadMessage(message.Value);
+            WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        });
+    }
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(InternetItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingS.RecievedInternetMessage(message.Value);
+        });
     }
 }

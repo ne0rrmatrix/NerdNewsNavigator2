@@ -56,7 +56,7 @@ public partial class AddPodcastPage : ContentPage
     private async void Button_Clicked(object sender, EventArgs e)
     {
         await PodcastServices.AddPodcast(Url.Text.ToString());
-        await DisplayAlert("Sucess", "Podcast Added!", "Ok");
+        await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public partial class AddPodcastPage : ContentPage
     private async void AddDefault(object sender, EventArgs e)
     {
         await PodcastServices.AddDefaultPodcasts();
-        await DisplayAlert("Sucess", "Defaults Added!", "Ok");
+        await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
     }
 
     /// <summary>
@@ -88,12 +88,12 @@ public partial class AddPodcastPage : ContentPage
         }
         if (!unique)
         {
-            await DisplayAlert("Failed", "At least one podcast needs to be added", "Ok");
+            await DisplayAlert("", "At least one podcast needs to be added", "Ok");
         }
         else
         {
             await PodcastServices.RemoveDefaultPodcasts();
-            await DisplayAlert("Sucess", "Defaults removed", "Ok");
+            await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
 
         }
     }
@@ -140,7 +140,7 @@ public partial class AddPodcastPage : ContentPage
         Preferences.Default.Set("FullScreen", false);
         FullScreenMode = false;
         SetFullScreen();
-        await DisplayAlert("Sucess", "Full Screen Disabled", "Ok");
+        await DisplayAlert("", "Full Screen Disabled", "Ok");
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public partial class AddPodcastPage : ContentPage
         Preferences.Default.Set("FullScreen", true);
         FullScreenMode = true;
         SetFullScreen();
-        await DisplayAlert("Sucess", "Full Screen Enabled", "Ok");
+        await DisplayAlert("", "Full Screen Enabled", "Ok");
     }
 
     /// <summary>
@@ -183,23 +183,23 @@ public partial class AddPodcastPage : ContentPage
     private void SetFullScreen()
     {
 #if ANDROID
-            var activity = Platform.CurrentActivity;
+        var activity = Platform.CurrentActivity;
 
-            if (activity == null || activity.Window == null) return;
+        if (activity == null || activity.Window == null) return;
 
-            Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
-            var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
-            var types = Views.WindowInsetsCompat.Type.StatusBars() |
-                        Views.WindowInsetsCompat.Type.NavigationBars();
-            if (FullScreenMode)
-            {
-                windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-                windowInsetsControllerCompat.Hide(types);
-            }
-            else
-            {
-                windowInsetsControllerCompat.Show(types);
-            }
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+        if (FullScreenMode)
+        {
+            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+            windowInsetsControllerCompat.Hide(types);
+        }
+        else
+        {
+            windowInsetsControllerCompat.Show(types);
+        }
 #endif
 #if WINDOWS
         var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;

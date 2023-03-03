@@ -7,8 +7,9 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages showing a <see cref="List{T}"/> of downloaded <see cref="Show"/> to users.
 /// </summary>
-public partial class DownloadedShowPage : ContentPage
+public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowPage"/>
     /// </summary>
@@ -17,9 +18,19 @@ public partial class DownloadedShowPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
     }
-    private async void Button_Clicked(object sender, EventArgs e)
+
+    /// <summary>
+    /// Method recieves <see cref="DeletedItemMessage"/> and invokes <see cref="MessagingService.RecievedDelete(bool)"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DeletedItemMessage message)
     {
-        await DisplayAlert("Ok", "Deleted Show!", "Ok");
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingS.RecievedDelete(message.Value);
+            WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
+        });
     }
 }

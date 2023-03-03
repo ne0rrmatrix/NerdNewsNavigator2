@@ -58,16 +58,27 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<BaseViewModel> Logger { get; set; }
+    private readonly IConnectivity _connectivity;
 
     #endregion
-    public BaseViewModel(ILogger<BaseViewModel> logger)
+    public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
         Logger = logger;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetMostRecent);
-
+        this._connectivity = connectivity;
     }
-
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public async Task Downloading(string url, bool mostRecent)
     {
         Logger.LogInformation("Trying to start download of {URL}", url);
@@ -94,9 +105,10 @@ public partial class BaseViewModel : ObservableObject
             if (!downloaded)
             {
                 IsBusy = false;
+                WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false));
 
             }
-            else
+            else if (downloaded)
             {
                 Logger.LogInformation("Downloaded file: {file}", download.FileName);
                 var result = await App.PositionData.GetAllDownloads();
@@ -107,8 +119,8 @@ public partial class BaseViewModel : ObservableObject
                         await App.PositionData.DeleteDownload(show);
                     }
                 }
-
                 await DownloadService.AddDownloadDatabase(download);
+                WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
                 IsBusy = false;
             }
         }
@@ -125,8 +137,15 @@ public partial class BaseViewModel : ObservableObject
     public async Task GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        var temp = await FeedService.GetShows(url, getFirstOnly);
-        Shows = new ObservableCollection<Show>(temp);
+        if (InternetConnected())
+        {
+            var temp = await FeedService.GetShows(url, getFirstOnly);
+            Shows = new ObservableCollection<Show>(temp);
+        }
+        else
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
     }
 
     /// <summary>
@@ -139,13 +158,18 @@ public partial class BaseViewModel : ObservableObject
         Shows.Clear();
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if (Podcasts.Count > 0 || Podcasts is not null)
+        if ((Podcasts.Count > 0 || Podcasts is not null) && InternetConnected())
         {
             foreach (var show in Podcasts.ToList())
             {
                 var item = await FeedService.GetShows(show.Url, true);
                 MostRecentShows.Add(item.First());
             }
+        }
+        else if (!InternetConnected())
+        {
+
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
 
@@ -159,7 +183,7 @@ public partial class BaseViewModel : ObservableObject
         OnPropertyChanged(nameof(IsBusy));
         IsBusy = true;
         var temp = await PodcastServices.GetUpdatedPodcasts();
-        if (temp is null || temp.Count == 0)
+        if ((temp is null || temp.Count == 0) && InternetConnected())
         {
             var items = await PodcastServices.GetFromUrl();
             await PodcastServices.AddToDatabase(items);
@@ -169,13 +193,17 @@ public partial class BaseViewModel : ObservableObject
             }
             IsBusy = false;
         }
-        else
+        else if (temp is not null)
         {
             foreach (var item in temp)
             {
                 Podcasts.Add(item);
             }
             IsBusy = false;
+            if (!InternetConnected())
+            {
+                WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+            }
         }
     }
     public async void GetDownloadedShows(object stateinfo)

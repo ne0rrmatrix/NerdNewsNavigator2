@@ -39,3 +39,7 @@ global using MetroLog;
 global using MetroLog.MicrosoftExtensions;
 global using Microsoft.Extensions.Options;
 global using MetroLog.Operators;
+global using CommunityToolkit.Mvvm.Messaging.Messages;
+global using CommunityToolkit.Mvvm.Messaging;
+global using NerdNewsNavigator2.Messages;
+global using CommunityToolkit.Maui.Alerts;

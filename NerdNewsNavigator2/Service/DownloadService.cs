@@ -3,7 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Service;
-
+/// <summary>
+/// A class that manages downloading <see cref="Podcast"/> to local file system.
+/// </summary>
 public static class DownloadService
 {
     /// <summary>
@@ -15,6 +17,7 @@ public static class DownloadService
     {
         return await DownloadFile(download.Url);
     }
+
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.
     /// </summary>
@@ -30,6 +33,7 @@ public static class DownloadService
         await App.PositionData.AddDownload(download);
         return true;
     }
+
     /// <summary>
     /// Method Adds Auto Download of <see cref="Podcast"/> to Database.
     /// </summary>
@@ -55,6 +59,7 @@ public static class DownloadService
             }
         }
     }
+
     /// <summary>
     /// Method Removes Downloaded <see cref="Download"/> from Database.
     /// </summary>
@@ -85,10 +90,8 @@ public static class DownloadService
     public static async Task<bool> DownloadFile(string url)
     {
         var filename = GetFileName(url);
-        Debug.WriteLine($"filename is: {filename}");
         try
         {
-            Debug.WriteLine("Tring to download file!");
             using (HttpClient client = new HttpClient())
             {
                 using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))

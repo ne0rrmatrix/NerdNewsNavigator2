@@ -12,8 +12,7 @@ public partial class SettingsViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
     /// </summary>
-    public SettingsViewModel(ILogger<SettingsViewModel> logger)
-        : base(logger)
+    public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();

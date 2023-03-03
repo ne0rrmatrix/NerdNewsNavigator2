@@ -34,8 +34,7 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletPlayPodcastViewModel"/> class.
     /// </summary>
-    public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger)
-        : base(logger)
+    public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
     }
 }

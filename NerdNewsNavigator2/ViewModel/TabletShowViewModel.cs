@@ -32,8 +32,7 @@ public partial class TabletShowViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletShowViewModel"/> class.
     /// </summary>
-    public TabletShowViewModel(ILogger<TabletShowViewModel> logger)
-        : base(logger)
+    public TabletShowViewModel(ILogger<TabletShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
@@ -55,6 +54,7 @@ public partial class TabletShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Download(string url)
     {
+        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         await Downloading(url, false);
     }
 }

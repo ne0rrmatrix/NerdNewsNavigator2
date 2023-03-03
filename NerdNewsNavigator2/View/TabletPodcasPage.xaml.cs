@@ -34,6 +34,7 @@ public partial class TabletPodcastPage : ContentPage
         FullScreenMode = Preferences.Default.Get("FullScreen", false);
         SetFullScreen();
     }
+
     /// <summary>
     /// Method toggles Full Screen On/Off
     /// </summary>
@@ -43,23 +44,23 @@ public partial class TabletPodcastPage : ContentPage
     {
 
 #if ANDROID
-            var activity = Platform.CurrentActivity;
+        var activity = Platform.CurrentActivity;
 
-            if (activity == null || activity.Window == null) return;
+        if (activity == null || activity.Window == null) return;
 
-            Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
-            var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
-            var types = Views.WindowInsetsCompat.Type.StatusBars() |
-                        Views.WindowInsetsCompat.Type.NavigationBars();
-            if (FullScreenMode)
-            {
-                windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-                windowInsetsControllerCompat.Hide(types);
-            }
-            else
-            {
-                windowInsetsControllerCompat.Show(types);
-            }
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+        if (FullScreenMode)
+        {
+            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+            windowInsetsControllerCompat.Hide(types);
+        }
+        else
+        {
+            windowInsetsControllerCompat.Show(types);
+        }
 #endif
     }
 

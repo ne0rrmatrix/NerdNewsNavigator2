@@ -16,8 +16,8 @@ public partial class DownloadedShowViewModel : BaseViewModel
 
     #endregion
 
-    public DownloadedShowViewModel(ILogger<DownloadedShowViewModel> logger)
-        : base(logger)
+    public DownloadedShowViewModel(ILogger<DownloadedShowViewModel> logger, IConnectivity connectivity)
+        : base(logger, connectivity)
     {
         _logger = logger;
         _logger.LogInformation("DownloadedShowViewModel started.");
@@ -67,6 +67,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
                     {
                         File.Delete(tempFile);
                         _logger.LogInformation("Deleted file {file}", tempFile);
+                        WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
                     }
                     else
                     {
@@ -75,11 +76,13 @@ public partial class DownloadedShowViewModel : BaseViewModel
                 }
                 catch (Exception ex)
                 {
+                    WeakReferenceMessenger.Default.Send(new DeletedItemMessage(false));
                     _logger.LogError("Failed to delete file: {file} {Message}", tempFile, ex.Message);
                 }
                 await App.PositionData.DeleteDownload(item);
                 DownloadedShows.Remove(item);
                 _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+                return;
             }
         }
     }
