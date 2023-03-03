@@ -11,8 +11,7 @@ public partial class TabletPodcastViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletPodcastViewModel"/> class.
     /// </summary>
-    public TabletPodcastViewModel(ILogger<TabletPodcastViewModel> logger)
-        : base(logger)
+    public TabletPodcastViewModel(ILogger<TabletPodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;

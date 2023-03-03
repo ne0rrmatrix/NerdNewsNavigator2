@@ -80,7 +80,6 @@
                             <Button
                                 Margin="20"
                                 BackgroundColor="Red"
-                                Clicked="Button_Clicked"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"

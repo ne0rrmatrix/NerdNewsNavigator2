@@ -99,7 +99,6 @@
                             <Button
                                 Margin="5"
                                 BackgroundColor="Green"
-                                Clicked="Button_Clicked"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"

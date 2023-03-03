@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages showing a <see cref="List{T}"/> of downloaded <see cref="Show"/> to users.
 /// </summary>
-public partial class DownloadedShowPage : ContentPage
+public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMessage>
 {
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowPage"/>
@@ -17,9 +17,37 @@ public partial class DownloadedShowPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
     }
-    private async void Button_Clicked(object sender, EventArgs e)
+
+    /// <summary>
+    /// Method recieves <see cref="DeletedItemMessage"/> and invokes <see cref="RecievedDelete(bool)"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DeletedItemMessage message)
     {
-        await DisplayAlert("Ok", "Deleted Show!", "Ok");
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await RecievedDelete(message.Value);
+        });
+    }
+
+    /// <summary>
+    /// Method displays a <see cref="Toast"/> about status of deleted files.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private async Task RecievedDelete(bool value)
+    {
+        if (value)
+        {
+            await Toast.Make("Download is Deleted.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        }
+        else
+        {
+            await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        }
+        WeakReferenceMessenger.Default.Reset();
+        WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
     }
 }

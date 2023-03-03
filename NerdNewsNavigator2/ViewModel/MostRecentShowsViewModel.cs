@@ -13,8 +13,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
     /// <paramref name="logger"/>
     /// </summary>
-    public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger)
-    : base(logger)
+    public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();

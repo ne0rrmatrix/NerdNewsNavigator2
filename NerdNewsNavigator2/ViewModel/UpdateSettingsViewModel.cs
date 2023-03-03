@@ -12,12 +12,10 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateSettingsViewModel"/> class.
     /// </summary>
-    public UpdateSettingsViewModel(ILogger<UpdateSettingsViewModel> logger)
-        : base(logger)
+    public UpdateSettingsViewModel(ILogger<UpdateSettingsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
-        IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
         _ = DeleteAllPodcasts();
     }
@@ -29,6 +27,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     {
         try
         {
+            IsBusy = true;
             while (IsBusy)
             {
                 var temp = await App.PositionData.GetAllDownloads();
@@ -53,8 +52,8 @@ public partial class UpdateSettingsViewModel : BaseViewModel
                 await App.PositionData.DeleteAllDownloads();
                 Shows.Clear();
                 Podcasts.Clear();
-                await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
                 IsBusy = false;
+                await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
             }
         }
         catch (Exception ex)

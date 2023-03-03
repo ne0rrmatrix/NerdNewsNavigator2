@@ -95,7 +95,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
-
+        builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         return builder.Build();
     }
 }

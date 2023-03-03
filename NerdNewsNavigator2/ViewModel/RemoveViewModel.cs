@@ -12,8 +12,7 @@ public partial class RemoveViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveViewModel"/> instance.
     /// </summary>
-    public RemoveViewModel(ILogger<RemoveViewModel> logger)
-        : base(logger)
+    public RemoveViewModel(ILogger<RemoveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
