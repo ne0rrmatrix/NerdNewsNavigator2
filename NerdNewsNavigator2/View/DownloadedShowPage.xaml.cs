@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowPage"/>
     /// </summary>
@@ -28,26 +29,8 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await RecievedDelete(message.Value);
+            await MessagingS.RecievedDelete(message.Value);
+            WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
         });
-    }
-
-    /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of deleted files.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task RecievedDelete(bool value)
-    {
-        if (value)
-        {
-            await Toast.Make("Download is Deleted.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        else
-        {
-            await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
     }
 }

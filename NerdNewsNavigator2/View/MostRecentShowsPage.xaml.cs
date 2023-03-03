@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemMessage>, IRecipient<InternetItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsPage"/>
     /// </summary>
@@ -19,41 +20,6 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
         BindingContext = viewmodel;
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-    }
-
-    /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of deleted files.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task RecievedDownloadMessage(bool value)
-    {
-        if (value)
-        {
-
-            await Toast.Make("Download is completed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        else
-        {
-
-            await Toast.Make("Download Failed!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-    }
-
-    /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of internet.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task RecievedInternetMessage(bool value)
-    {
-        if (!value)
-        {
-            await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            WeakReferenceMessenger.Default.Reset();
-        }
     }
 
     /// <summary>
@@ -75,7 +41,8 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await RecievedDownloadMessage(message.Value);
+            await MessagingS.RecievedDownloadMessage(message.Value);
+            WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }
 
@@ -87,7 +54,7 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await RecievedInternetMessage(message.Value);
+            await MessagingS.RecievedInternetMessage(message.Value);
         });
     }
 }

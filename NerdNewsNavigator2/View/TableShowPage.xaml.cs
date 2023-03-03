@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
+    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletShowPage"/> class.
     /// </summary>
@@ -21,40 +22,6 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     }
 
     /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of downloaded files.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task RecievedDownloadSucess(bool value)
-    {
-        if (value)
-        {
-            await Toast.Make("Download is completed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        else
-        {
-
-            await Toast.Make("Download Failed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-    }
-
-    /// <summary>
-    /// Method display a <see cref="Toast"/> about status of Internet.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task RecievedInternetMessage(bool value)
-    {
-        if (!value)
-        {
-            await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            WeakReferenceMessenger.Default.Reset();
-        }
-    }
-
-    /// <summary>
     /// Method invokes <see cref="RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
@@ -62,7 +29,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await RecievedInternetMessage(message.Value);
+            await MessagingS.RecievedInternetMessage(message.Value);
         });
     }
 
@@ -74,7 +41,8 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await RecievedDownloadSucess(message.Value);
+            await MessagingS.RecievedDownloadMessage(message.Value);
+            WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }
 }
