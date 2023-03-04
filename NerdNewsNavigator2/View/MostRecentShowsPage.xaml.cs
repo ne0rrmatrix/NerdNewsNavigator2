@@ -23,17 +23,6 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     }
 
     /// <summary>
-    /// Method display a <see cref="Toast"/> about status of download starting.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void Button_Clicked(object sender, EventArgs e)
-    {
-        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        WeakReferenceMessenger.Default.Reset();
-    }
-
-    /// <summary>
     /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>

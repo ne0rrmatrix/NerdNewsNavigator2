@@ -56,9 +56,6 @@
                                               iOS=320}">
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
-
-
-
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
@@ -100,14 +97,12 @@
                             <Button
                                 Margin="10"
                                 BackgroundColor="Green"
-                                Clicked="Button_Clicked"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
                                 IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
                                 Text="Download"
                                 TextColor="Black">
-
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
