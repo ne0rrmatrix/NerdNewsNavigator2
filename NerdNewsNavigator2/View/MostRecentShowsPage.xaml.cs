@@ -30,7 +30,6 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     private async void Button_Clicked(object sender, EventArgs e)
     {
         await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        WeakReferenceMessenger.Default.Reset();
     }
 
     /// <summary>
