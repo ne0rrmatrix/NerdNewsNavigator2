@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Model;
+
 /// <summary>
 /// A class for storing <see cref="Podcast"/> in a Database.
 /// </summary>

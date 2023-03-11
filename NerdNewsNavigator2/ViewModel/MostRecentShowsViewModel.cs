@@ -15,8 +15,10 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         this._orientation = OnDeviceOrientationChange();
+        OnPropertyChanged(nameof(Orientation));
     }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
@@ -24,7 +26,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    private async Task Download(string url)
+    public async Task Download(string url)
     {
 
         await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();

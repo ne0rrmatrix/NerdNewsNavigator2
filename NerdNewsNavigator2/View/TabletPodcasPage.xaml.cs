@@ -17,7 +17,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class TabletPodcastPage : ContentPage
 {
-
     /// <summary>
     /// Private <see cref="bool"/> which sets Full Screen Mode.
     /// </summary>
@@ -31,9 +30,21 @@ public partial class TabletPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-        FullScreenMode = Preferences.Default.Get("FullScreen", false);
-        SetFullScreen();
+        FullScreenMode = false;
     }
+
+#if WINDOWS
+    /// <summary>
+    /// Method is required for switching Full Screen Mode for Windows
+    /// </summary>
+    private static Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
+    {
+        var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
+        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
+        return appWindow;
+    }
+#endif
 
     /// <summary>
     /// Method toggles Full Screen On/Off
@@ -62,6 +73,29 @@ public partial class TabletPodcastPage : ContentPage
             windowInsetsControllerCompat.Show(types);
         }
 #endif
+#if WINDOWS
+        var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        if (window is not null)
+        {
+            var appWindow = GetAppWindow(window);
+
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
+                    {
+                        overlappedPresenter.SetBorderAndTitleBar(true, true);
+                        overlappedPresenter.Restore();
+                    }
+                    break;
+            }
+        }
+#endif
+    }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        SetFullScreen();
     }
 
 #nullable disable

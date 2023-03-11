@@ -3,11 +3,13 @@
     x:Class="NerdNewsNavigator2.View.TabletShowPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
+    ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:TabletShowViewModel"
-    BackgroundColor="Wheat"
+    BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -16,7 +18,7 @@
 
     <CollectionView
         Margin="5"
-        BackgroundColor="Wheat"
+        BackgroundColor="#34AAD2"
         ItemsSource="{Binding Shows}"
         SelectionMode="None">
 

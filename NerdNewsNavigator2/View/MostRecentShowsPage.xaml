@@ -7,7 +7,7 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="MostRecentShowsPage"
     x:DataType="viewmodel:MostRecentShowsViewModel"
-    BackgroundColor="Wheat"
+    BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -16,7 +16,7 @@
 
     <CollectionView
         Margin="5"
-        BackgroundColor="Wheat"
+        BackgroundColor="#34AAD2"
         ItemsSource="{Binding MostRecentShows}"
         SelectionMode="None">
 

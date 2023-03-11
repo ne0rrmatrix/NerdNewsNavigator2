@@ -14,7 +14,7 @@
     </Shell.BackButtonBehavior>
 
     <CollectionView
-        BackgroundColor="Wheat"
+        BackgroundColor="#34AAD2"
         ItemsSource="{Binding Podcasts}"
         SelectionMode="None">
 
