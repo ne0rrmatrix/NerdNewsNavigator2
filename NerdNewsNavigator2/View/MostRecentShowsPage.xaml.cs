@@ -23,7 +23,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemMessage>, IRecipient<InternetItemMessage>
 {
-    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsPage"/>
     /// </summary>
@@ -44,7 +43,7 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await MessagingS.RecievedDownloadMessage(message.Value);
+            await MessagingService.RecievedDownloadMessage(message.Value);
             WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }
@@ -57,7 +56,7 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await MessagingS.RecievedInternetMessage(message.Value);
+            await MessagingService.RecievedInternetMessage(message.Value);
         });
     }
 

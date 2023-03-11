@@ -75,21 +75,13 @@ public partial class LivePage : ContentPage
         switch (appWindow.Presenter)
         {
             case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
-                {
-                    overlappedPresenter.SetBorderAndTitleBar(true, true);
-                    overlappedPresenter.Restore();
-                }
-                else
-                {
-                    overlappedPresenter.SetBorderAndTitleBar(false, false);
-                    overlappedPresenter.Maximize();
-                }
-
+                overlappedPresenter.SetBorderAndTitleBar(true, true);
+                overlappedPresenter.Restore();
                 break;
         }
 #endif
     }
+
     /// <summary>
     /// Method is event handler for LivePage OnLoad event.
     /// </summary>

@@ -9,7 +9,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
-    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of the <see cref="TabletShowPage"/> class.
     /// </summary>
@@ -30,7 +29,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await MessagingS.RecievedInternetMessage(message.Value);
+            await MessagingService.RecievedInternetMessage(message.Value);
         });
     }
 
@@ -42,7 +41,7 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await MessagingS.RecievedDownloadMessage(message.Value);
+            await MessagingService.RecievedDownloadMessage(message.Value);
             WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }

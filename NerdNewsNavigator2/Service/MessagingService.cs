@@ -13,7 +13,7 @@ public class MessagingService
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public async Task RecievedDownloadMessage(bool value)
+    public static async Task RecievedDownloadMessage(bool value)
     {
         if (value)
         {
@@ -33,7 +33,7 @@ public class MessagingService
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public async Task RecievedInternetMessage(bool value)
+    public static async Task RecievedInternetMessage(bool value)
     {
         if (!value)
         {
@@ -47,7 +47,7 @@ public class MessagingService
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public async Task RecievedDelete(bool value)
+    public static async Task RecievedDelete(bool value)
     {
         if (value)
         {

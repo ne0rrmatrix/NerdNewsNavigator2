@@ -50,7 +50,7 @@ public partial class App : Application
     /// <returns></returns>
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        Window window = base.CreateWindow(activationState);
+        var window = base.CreateWindow(activationState);
         window.Created += (s, e) =>
         {
             //NOTE: Change this to fetch the value true/false according to your app logic.

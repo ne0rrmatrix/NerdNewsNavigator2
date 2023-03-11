@@ -39,11 +39,6 @@ public partial class TabletPlayPodcastPage : ContentPage
     #endregion
 
     /// <summary>
-    /// Private <see cref="bool"/> which sets Full Screen Mode.
-    /// </summary>
-    private bool FullScreenMode { get; set; }
-
-    /// <summary>
     /// Class Constructor that initilizes <see cref="TabletPlayPodcastPage"/>
     /// </summary>
     /// <param name="logger">This Applications <see cref="ILogger{TCategoryName}"/> instance is managed through this class</param>
@@ -53,7 +48,6 @@ public partial class TabletPlayPodcastPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-        FullScreenMode = true;
         _logger = logger;
 
 #if WINDOWS || ANDROID
@@ -207,19 +201,13 @@ public partial class TabletPlayPodcastPage : ContentPage
 
         if (activity == null || activity.Window == null) return;
 
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-        if (FullScreenMode)
-        {
+        
             windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
             windowInsetsControllerCompat.Hide(types);
-        }
-        else
-        {
-            windowInsetsControllerCompat.Show(types);
-        }
 #endif
 
 #if WINDOWS
@@ -227,21 +215,11 @@ public partial class TabletPlayPodcastPage : ContentPage
         if (window is not null)
         {
             var appWindow = GetAppWindow(window);
-
             switch (appWindow.Presenter)
             {
                 case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(true, true);
-                        overlappedPresenter.Restore();
-                    }
-                    else
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(false, false);
-                        overlappedPresenter.Maximize();
-                    }
-
+                    overlappedPresenter.SetBorderAndTitleBar(false, false);
+                    overlappedPresenter.Maximize();
                     break;
             }
         }
