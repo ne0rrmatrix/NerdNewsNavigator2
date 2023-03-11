@@ -78,10 +78,7 @@
                             </Image.GestureRecognizers>
 
                             <Image.Source>
-                                <UriImageSource
-                                    CacheValidity="40"
-                                    CachingEnabled="True"
-                                    Uri="{Binding Image}" />
+                                <UriImageSource CacheValidity="10:00:0:00" Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
 
