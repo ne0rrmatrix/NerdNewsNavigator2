@@ -84,9 +84,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         }
         if (e.NewState == MediaElementState.Playing)
         {
-#if ANDROID
             SetFullScreen();
-#endif
         }
     }
 

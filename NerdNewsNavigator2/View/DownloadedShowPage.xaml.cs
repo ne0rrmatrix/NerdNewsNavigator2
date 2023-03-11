@@ -9,7 +9,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMessage>
 {
-    MessagingService MessagingS { get; set; } = new();
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowPage"/>
     /// </summary>
