@@ -7,6 +7,7 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="DownloadedShowsPage"
     x:DataType="viewmodel:DownloadedShowViewModel"
+    Loaded="ContentPage_Loaded"
     BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="False">
 

@@ -8,6 +8,7 @@
     Title=""
     x:DataType="viewmodel:AddPodcastViewModel"
     BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
