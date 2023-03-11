@@ -108,7 +108,6 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
        
-        //windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
         windowInsetsControllerCompat.Show(types);
       
 #endif
