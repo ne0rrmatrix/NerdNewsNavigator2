@@ -7,6 +7,7 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
     x:DataType="viewmodel:LiveViewModel"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>

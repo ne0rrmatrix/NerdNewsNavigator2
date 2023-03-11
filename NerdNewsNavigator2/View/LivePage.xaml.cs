@@ -4,12 +4,17 @@
 
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
-using MetroLog.Maui;
 
 #if ANDROID
 using Views = AndroidX.Core.View;
 #endif
 
+#if WINDOWS
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using WinRT;
+using Microsoft.Maui.Controls;
+#endif
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -19,11 +24,6 @@ public partial class LivePage : ContentPage
 {
 
     /// <summary>
-    /// Private <see cref="bool"/> which sets Full Screen Mode.
-    /// </summary>
-    private bool FullScreenMode { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
     /// <param name="liveViewModel">This classes <see cref="ViewModel"/> from <see cref="LiveViewModel"/></param>
@@ -31,8 +31,6 @@ public partial class LivePage : ContentPage
     {
         InitializeComponent();
         BindingContext = liveViewModel;
-        FullScreenMode = true;
-        SetFullScreen();
     }
 
 #if WINDOWS
@@ -49,6 +47,9 @@ public partial class LivePage : ContentPage
 #endif
 
 #nullable enable
+    /// <summary>
+    /// Method sets Full Screen mode.
+    /// </summary>
     private void SetFullScreen()
     {
 
@@ -57,19 +58,14 @@ public partial class LivePage : ContentPage
 
         if (activity == null || activity.Window == null) return;
 
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, !FullScreenMode);
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-        if (FullScreenMode)
-        {
-            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-            windowInsetsControllerCompat.Hide(types);
-        }
-        else
-        {
-            windowInsetsControllerCompat.Show(types);
-        }
+       
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+        windowInsetsControllerCompat.Hide(types);
+      
 #endif
 #if WINDOWS
         var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
@@ -93,6 +89,15 @@ public partial class LivePage : ContentPage
                 break;
         }
 #endif
+    }
+    /// <summary>
+    /// Method is event handler for LivePage OnLoad event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        SetFullScreen();
     }
 
 #nullable disable

@@ -5,19 +5,12 @@
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
-#if ANDROID
-using Views = AndroidX.Core.View;
-#endif
-
 #if WINDOWS
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
 #endif
-
-using MetroLog.Maui;
-
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -72,7 +65,7 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Method to set Full Screen status depending on <see cref="FullScreenMode"/> variable.
+    /// Method to set Full Screen status.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="eventArgs"></param>
@@ -91,12 +84,12 @@ public partial class App : Application
             switch (appWindow.Presenter)
             {
                 case OverlappedPresenter overlappedPresenter:
-                uiWindow.ExtendsContentIntoTitleBar = false;
-                {
-                    overlappedPresenter.SetBorderAndTitleBar(true, true);
-                    overlappedPresenter.Restore();
-                }
-                break;
+                    uiWindow.ExtendsContentIntoTitleBar = false;
+                    {
+                        overlappedPresenter.SetBorderAndTitleBar(true, true);
+                        overlappedPresenter.Restore();
+                    }
+                    break;
             }
 #endif
         }

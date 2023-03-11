@@ -253,7 +253,7 @@ public partial class BaseViewModel : ObservableObject
         }
     }
 
-#endregion
+    #endregion
 
     #region Display Functions
 

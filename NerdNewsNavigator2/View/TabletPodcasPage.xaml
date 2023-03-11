@@ -91,7 +91,10 @@
                                                    Tablet=340,
                                                    Desktop=350}">
                             <Image.Source>
-                                <UriImageSource CacheValidity="10:00:0:00" Uri="{Binding Image}" />
+                                <UriImageSource
+                                    CacheValidity="10:00:0:00"
+                                    CachingEnabled="true"
+                                    Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
 

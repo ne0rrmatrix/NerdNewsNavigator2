@@ -8,6 +8,7 @@
     Title="MostRecentShowsPage"
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -71,7 +72,10 @@
                             HeightRequest="320"
                             WidthRequest="320">
                             <Image.Source>
-                                <UriImageSource CacheValidity="10:00:0:00" Uri="{Binding Image}" />
+                                <UriImageSource
+                                    CacheValidity="10:00:0:00"
+                                    CachingEnabled="true"
+                                    Uri="{Binding Image}" />
                             </Image.Source>
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />

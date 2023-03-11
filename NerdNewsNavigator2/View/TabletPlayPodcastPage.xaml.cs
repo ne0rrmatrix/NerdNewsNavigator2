@@ -4,10 +4,16 @@
 
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
-using MetroLog.Maui;
 
 #if ANDROID
 using Views = AndroidX.Core.View;
+#endif
+
+#if WINDOWS
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using WinRT;
+using Microsoft.Maui.Controls;
 #endif
 
 namespace NerdNewsNavigator2.View;
@@ -82,6 +88,12 @@ public partial class TabletPlayPodcastPage : ContentPage
             mediaElement.ShouldKeepScreenOn = false;
             _logger.LogInformation("ShouldKeepScreenOn set to false.");
         }
+        if (e.NewState == MediaElementState.Playing)
+        {
+#if ANDROID
+            SetFullScreen();
+#endif
+        }
     }
 
     /// <summary>
@@ -109,7 +121,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.ShouldKeepScreenOn = true;
         _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
         mediaElement.SeekTo(Pos.SavedPosition);
-        SetFullScreen();
         mediaElement.StateChanged += Media_Stopped;
     }
 
@@ -213,7 +224,7 @@ public partial class TabletPlayPodcastPage : ContentPage
 
 #if WINDOWS
         var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-        if(window is not null)
+        if (window is not null)
         {
             var appWindow = GetAppWindow(window);
 
@@ -234,8 +245,12 @@ public partial class TabletPlayPodcastPage : ContentPage
                     break;
             }
         }
-        
 #endif
+    }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        SetFullScreen();
     }
 
 #nullable disable
