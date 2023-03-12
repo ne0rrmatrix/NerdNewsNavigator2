@@ -107,7 +107,6 @@ public static class PodcastServices
         {
             foreach (var item in items)
             {
-                Debug.WriteLine($"Adding Podcast: {item.Title}");
                 await App.PositionData.AddPodcast(item);
             }
         }

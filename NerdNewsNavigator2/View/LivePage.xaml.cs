@@ -15,6 +15,7 @@ using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
 #endif
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -46,10 +47,11 @@ public partial class LivePage : ContentPage
     }
 #endif
 
-#nullable enable
     /// <summary>
-    /// Method sets Full Screen mode.
+    /// Method toggles Full Screen On
     /// </summary>
+
+#nullable enable
     private void SetFullScreen()
     {
 
@@ -62,22 +64,23 @@ public partial class LivePage : ContentPage
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-       
-        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-        windowInsetsControllerCompat.Hide(types);
-      
+        
+            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+            windowInsetsControllerCompat.Hide(types);
 #endif
+
 #if WINDOWS
         var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-
-        var appWindow = GetAppWindow(window);
-
-        switch (appWindow.Presenter)
+        if (window is not null)
         {
-            case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                overlappedPresenter.SetBorderAndTitleBar(true, true);
-                overlappedPresenter.Restore();
-                break;
+            var appWindow = GetAppWindow(window);
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    overlappedPresenter.SetBorderAndTitleBar(false, false);
+                    overlappedPresenter.Maximize();
+                    break;
+            }
         }
 #endif
     }

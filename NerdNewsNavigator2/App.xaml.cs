@@ -73,7 +73,6 @@ public partial class App : Application
     {
         if (sender != null)
         {
-            Debug.WriteLine("SetFullScreen Triggered");
 
 #if WINDOWS
             var currentWindow = sender.As<Window>();

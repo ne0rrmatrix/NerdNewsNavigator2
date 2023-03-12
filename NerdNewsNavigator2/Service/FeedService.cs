@@ -39,9 +39,8 @@ public static class FeedService
 
             return Task.FromResult(feed);
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.WriteLine(ex);
             return Task.FromResult(feed);
         }
     }
@@ -86,9 +85,8 @@ public static class FeedService
             }
             return Task.FromResult(shows);
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.WriteLine(ex);
             return Task.FromResult(shows);
         }
     }

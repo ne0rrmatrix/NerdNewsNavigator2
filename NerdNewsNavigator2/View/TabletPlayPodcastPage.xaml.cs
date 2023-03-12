@@ -53,11 +53,43 @@ public partial class TabletPlayPodcastPage : ContentPage
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif
+
 #if IOS
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
+
 #nullable enable
+
+    /// <summary>
+    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
+    {
+        if (sender == null)
+        {
+            return;
+        }
+        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
+        Pos.SavedPosition = TimeSpan.Zero;
+        var positionList = await App.PositionData.GetAllPositions();
+        foreach (var item in positionList)
+        {
+            if (Pos.Title == item.Title)
+            {
+                Pos.SavedPosition = item.SavedPosition;
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
+            }
+        }
+        if (e.NewState == MediaElementState.Playing)
+        {
+            mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.ShouldKeepScreenOn = true;
+            _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
+        }
+    }
 
     /// <summary>
     /// Manages the saving of <see cref="Position"/> data in <see cref="PositionDataBase"/>
@@ -70,21 +102,37 @@ public partial class TabletPlayPodcastPage : ContentPage
         {
             return;
         }
-        if ((mediaElement.CurrentState == MediaElementState.Paused) && mediaElement.Position != Pos.SavedPosition)
+        switch (e.NewState)
         {
-            Pos.SavedPosition = mediaElement.Position;
-            _logger.LogInformation("Paused: {Position}", mediaElement.Position);
-            await Save();
+            case MediaElementState.Playing:
+                SetFullScreen();
+                break;
+
+            case MediaElementState.Stopped:
+                _logger.LogInformation("Media has finished playing.");
+                mediaElement.ShouldKeepScreenOn = false;
+                _logger.LogInformation("ShouldKeepScreenOn set to false.");
+                break;
+
+            case MediaElementState.Paused:
+                if (mediaElement.Position > Pos.SavedPosition)
+                {
+                    Pos.SavedPosition = mediaElement.Position;
+                    _logger.LogInformation("Paused: {Position}", mediaElement.Position);
+                    await Save();
+                }
+                break;
         }
-        if (e.NewState == MediaElementState.Stopped)
+        switch (e.PreviousState)
         {
-            _logger.LogInformation("Media has finished playing.");
-            mediaElement.ShouldKeepScreenOn = false;
-            _logger.LogInformation("ShouldKeepScreenOn set to false.");
-        }
-        if (e.NewState == MediaElementState.Playing)
-        {
-            SetFullScreen();
+            case MediaElementState.Playing:
+                if (mediaElement.Position < Pos.SavedPosition)
+                {
+                    Pos.SavedPosition = mediaElement.Position;
+                    _logger.LogInformation("Finished Seeking: {Position}", mediaElement.Position);
+                    await Save();
+                }
+                break;
         }
     }
 
@@ -102,45 +150,23 @@ public partial class TabletPlayPodcastPage : ContentPage
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
+
         foreach (var item in positionList)
         {
             if (Pos.Title == item.Title)
             {
                 Pos.SavedPosition = item.SavedPosition;
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition.TotalSeconds);
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
             }
         }
+
         mediaElement.ShouldKeepScreenOn = true;
         _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
         mediaElement.SeekTo(Pos.SavedPosition);
         mediaElement.StateChanged += Media_Stopped;
     }
 
-    /// <summary>
-    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void SeekIOS(object sender, MediaStateChangedEventArgs e)
-    {
-        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
-        Pos.SavedPosition = TimeSpan.Zero;
-        var positionList = await App.PositionData.GetAllPositions();
-        foreach (var item in positionList)
-        {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition.TotalSeconds);
-            }
-        }
-        if (e.NewState == MediaElementState.Playing)
-        {
-            mediaElement.SeekTo(Pos.SavedPosition);
-        }
-        mediaElement.ShouldKeepScreenOn = true;
-        mediaElement.StateChanged += Media_Stopped;
-    }
+#nullable disable
 
     /// <summary>
     /// Manages saving of <see cref="Pos"/> to <see cref="PositionDataBase"/> Database.
@@ -148,6 +174,14 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// <returns></returns>
     public async Task Save()
     {
+        var items = await App.PositionData.GetAllPositions();
+        foreach (var item in items)
+        {
+            if (item.Title == Pos.Title)
+            {
+                await App.PositionData.Delete(item);
+            }
+        }
         await App.PositionData.Add(new Position
         {
             Title = Pos.Title,
@@ -155,23 +189,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         });
     }
 
-    /// <summary>
-    /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void ContentPage_Unloaded(object? sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        // Stop and cleanup MediaElement when we navigate away
-        _logger.LogInformation("Unloaded Media Element from memory.");
-        mediaElement.MediaOpened -= Seek;
-        mediaElement.StateChanged -= Media_Stopped;
-        mediaElement.Handler?.DisconnectHandler();
-    }
+    #region Full/Restore Screen Events
 
 #if WINDOWS
     /// <summary>
@@ -186,11 +204,35 @@ public partial class TabletPlayPodcastPage : ContentPage
     }
 #endif
 
-    /// <summary>
-    /// Method toggles Full Screen On/Off
-    /// </summary>
-
 #nullable enable
+    /// <summary>
+    /// Method toggles Full Screen Off
+    /// </summary>
+    public void RestoreScreen()
+    {
+#if WINDOWS
+        var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        if (window is not null)
+        {
+            var appWindow = GetAppWindow(window);
+
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
+                    {
+                        overlappedPresenter.SetBorderAndTitleBar(true, true);
+                        overlappedPresenter.Restore();
+                    }
+                    break;
+            }
+        }
+#endif
+    }
+
+    /// <summary>
+    /// Method toggles Full Screen On
+    /// </summary>
     private void SetFullScreen()
     {
 
@@ -223,11 +265,38 @@ public partial class TabletPlayPodcastPage : ContentPage
         }
 #endif
     }
+    #endregion
 
-    private void ContentPage_Loaded(object sender, EventArgs e)
+    #region Load/Unload Events
+#nullable enable
+
+    /// <summary>
+    /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public void ContentPage_Unloaded(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
+        // Stop and cleanup MediaElement when we navigate away
+        _logger.LogInformation("Unloaded Media Element from memory.");
+        mediaElement.StateChanged -= Media_Stopped;
+        Pos.SavedPosition = TimeSpan.Zero;
+        Pos.Title = string.Empty;
+        mediaElement.Handler?.DisconnectHandler();
+    }
+    private void ContentPage_Loaded(object? sender, EventArgs e)
+    {
+        if (sender is null)
+        {
+            return;
+        }
         SetFullScreen();
     }
-
 #nullable disable
+
+    #endregion
 }

@@ -78,6 +78,7 @@
                             Padding="10"
                             FontAttributes="Bold"
                             FontSize="10"
+                            HorizontalOptions="Center"
                             HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"

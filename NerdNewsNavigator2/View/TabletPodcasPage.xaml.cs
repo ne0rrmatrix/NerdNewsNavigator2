@@ -71,6 +71,7 @@ public partial class TabletPodcastPage : ContentPage
             }
         }
 #endif
+
 #if ANDROID
         var activity = Platform.CurrentActivity;
 
@@ -80,8 +81,6 @@ public partial class TabletPodcastPage : ContentPage
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-       
-        //windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
         windowInsetsControllerCompat.Show(types);
       
 #endif
