@@ -1,5 +1,4 @@
-﻿using System.Linq;
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -108,7 +107,6 @@ public static class PodcastServices
         {
             foreach (var item in items)
             {
-                Debug.WriteLine($"Adding Podcast: {item.Title}");
                 await App.PositionData.AddPodcast(item);
             }
         }

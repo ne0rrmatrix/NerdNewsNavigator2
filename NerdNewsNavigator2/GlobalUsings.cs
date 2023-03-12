@@ -43,3 +43,4 @@ global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using CommunityToolkit.Mvvm.Messaging;
 global using NerdNewsNavigator2.Messages;
 global using CommunityToolkit.Maui.Alerts;
+global using MetroLog.Maui;

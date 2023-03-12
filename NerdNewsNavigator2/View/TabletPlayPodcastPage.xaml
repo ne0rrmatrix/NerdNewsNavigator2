@@ -9,6 +9,7 @@
     x:DataType="viewmodel:TabletPlayPodcastViewModel"
     BackgroundColor="Black"
     Shell.NavBarIsVisible="False"
+    Loaded="ContentPage_Loaded"
     Unloaded="ContentPage_Unloaded">
 
     <Shell.BackButtonBehavior>

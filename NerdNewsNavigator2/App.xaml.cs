@@ -5,19 +5,12 @@
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
-#if ANDROID
-using Views = AndroidX.Core.View;
-#endif
-
 #if WINDOWS
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
 #endif
-
-using MetroLog.Maui;
-
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -25,11 +18,6 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
-    /// <summary>
-    /// Private <see cref="bool"/> which sets Full Screen Mode.
-    /// </summary>
-    private static bool FullScreenMode { get; set; }
-
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -44,15 +32,15 @@ public partial class App : Application
         InitializeComponent();
         MainPage = new AppShell();
 
-        FullScreenMode = false;
-        LogController.InitializeNavigation(
-            page => MainPage!.Navigation.PushModalAsync(page),
-            () => MainPage!.Navigation.PopModalAsync());
-
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
+
+        LogController.InitializeNavigation(
+            page => MainPage!.Navigation.PushModalAsync(page),
+            () => MainPage!.Navigation.PopModalAsync());
     }
+
 #nullable enable
 
     /// <summary>
@@ -62,30 +50,22 @@ public partial class App : Application
     /// <returns></returns>
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        Window window = base.CreateWindow(activationState);
+        var window = base.CreateWindow(activationState);
         window.Created += (s, e) =>
         {
-            FullScreenMode = Preferences.Default.Get("FullScreen", false);
             //NOTE: Change this to fetch the value true/false according to your app logic.
             SetFullScreen(s, e);
         };
         window.Resumed += (s, e) =>
         {
-            //When resumed, the nav & status bar reappeared for android.
-            //Fixing it by calling SetFullScreen again on resume,
-            //If fullscreen had been set.
-            //Not sure if it is needed for windows. Haven't tested yet.
-            if (FullScreenMode)
-            {
-                SetFullScreen(s, e);
-            }
+            SetFullScreen(s, e);
         };
 
         return window;
     }
 
     /// <summary>
-    /// Method to set Full Screen status depending on <see cref="FullScreenMode"/> variable.
+    /// Method to set Full Screen status.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="eventArgs"></param>
@@ -93,7 +73,6 @@ public partial class App : Application
     {
         if (sender != null)
         {
-            Debug.WriteLine("SetFullScreen Triggered");
 
 #if WINDOWS
             var currentWindow = sender.As<Window>();
@@ -105,12 +84,6 @@ public partial class App : Application
             {
                 case OverlappedPresenter overlappedPresenter:
                     uiWindow.ExtendsContentIntoTitleBar = false;
-                    if (FullScreenMode)
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(false, false);
-                        overlappedPresenter.Maximize();
-                    }
-                    else
                     {
                         overlappedPresenter.SetBorderAndTitleBar(true, true);
                         overlappedPresenter.Restore();

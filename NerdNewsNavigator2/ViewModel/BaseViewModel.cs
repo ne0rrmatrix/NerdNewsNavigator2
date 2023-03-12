@@ -58,15 +58,24 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<BaseViewModel> Logger { get; set; }
+
+    /// <summary>
+    /// an <see cref="IConnectivity"/> instance managed by this class.
+    /// </summary>
     private readonly IConnectivity _connectivity;
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
         Logger = logger;
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
-        ThreadPool.QueueUserWorkItem(GetMostRecent);
         this._connectivity = connectivity;
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+#if WINDOWS || ANDROID
+        ThreadPool.QueueUserWorkItem(GetMostRecent);
+#endif
+#if IOS
+        GetMostRecent();
+#endif
     }
     public bool InternetConnected()
     {
@@ -147,7 +156,7 @@ public partial class BaseViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
-
+#if WINDOWS || ANDROID
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
@@ -155,10 +164,9 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async void GetMostRecent(object stateinfo)
     {
-        Shows.Clear();
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if ((Podcasts.Count > 0 || Podcasts is not null) && InternetConnected())
+        if (InternetConnected())
         {
             foreach (var show in Podcasts.ToList())
             {
@@ -172,6 +180,32 @@ public partial class BaseViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+#endif
+
+#if IOS
+    /// <summary>
+    /// Method gets most recent episode from each podcast on twit.tv
+    /// </summary>
+    /// <returns></returns>
+    public async void GetMostRecent()
+    {
+        MostRecentShows.Clear();
+        await GetUpdatedPodcasts();
+        if (InternetConnected())
+        {
+            foreach (var show in Podcasts.ToList())
+            {
+                var item = await FeedService.GetShows(show.Url, true);
+                MostRecentShows.Add(item.First());
+            }
+        }
+        else if (!InternetConnected())
+        {
+
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+    }
+#endif
 
     /// <summary>
     /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.

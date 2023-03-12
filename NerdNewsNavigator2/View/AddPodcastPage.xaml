@@ -7,7 +7,8 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
     x:DataType="viewmodel:AddPodcastViewModel"
-    BackgroundColor="Wheat"
+    BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -31,7 +32,6 @@
 
                 <HorizontalStackLayout>
                     <Label
-                        BackgroundColor="Wheat"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
@@ -43,7 +43,6 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
-                        BackgroundColor="Blue"
                         Clicked="OpenUrlForDonation"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -52,7 +51,6 @@
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         Text="Click Me"
-                        TextColor="White"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -60,7 +58,6 @@
 
                 <HorizontalStackLayout>
                     <Label
-                        BackgroundColor="Wheat"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
@@ -72,7 +69,6 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
-                        BackgroundColor="Red"
                         Clicked="ResetPodcasts"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -81,7 +77,6 @@
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         Text="Reset"
-                        TextColor="White"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -89,7 +84,6 @@
 
                 <HorizontalStackLayout>
                     <Label
-                        BackgroundColor="Wheat"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
@@ -116,38 +110,6 @@
 
                 <HorizontalStackLayout>
                     <Label
-                        BackgroundColor="Wheat"
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HorizontalOptions="Start"
-                        IsVisible="{OnPlatform iOS=false,
-                                               Default=true}"
-                        Text="Toggle"
-                        TextColor="Black"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
-                    <Button
-                        Margin="10"
-                        Clicked="SetFullScreenItem"
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
-                                                Tablet=50}"
-                        HorizontalOptions="End"
-                        IsVisible="{OnPlatform iOS=false,
-                                               Default=true}"
-                        Text="Full Screen"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout>
-                    <Label
-                        BackgroundColor="Wheat"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
@@ -188,55 +150,6 @@
 
                 <HorizontalStackLayout>
                     <Label
-                        BackgroundColor="Wheat"
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HorizontalOptions="Start"
-                        IsVisible="{OnPlatform iOS=false,
-                                               Default=true}"
-                        Text="Full Screen"
-                        TextColor="Black"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=140}" />
-                    <Button
-                        Margin="10"
-                        Clicked="Button_Full_Screen_Enable"
-                        FontAttributes="Bold"
-                        FontAutoScalingEnabled="True"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
-                                                Tablet=50}"
-                        HorizontalOptions="End"
-                        IsVisible="{OnPlatform iOS=false,
-                                               Default=true}"
-                        Text="Enable"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
-                    <Button
-                        Margin="10"
-                        Clicked="Button_Full_Screen_Disable"
-                        FontAttributes="Bold"
-                        FontAutoScalingEnabled="True"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
-                                                Tablet=50}"
-                        HorizontalOptions="End"
-                        IsVisible="{OnPlatform iOS=false,
-                                               Default=true}"
-                        Text="Disable"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout>
-                    <Label
-                        BackgroundColor="Wheat"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"

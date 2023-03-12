@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class UpdateSettingsViewModel : BaseViewModel
 {
     private readonly ILogger<UpdateSettingsViewModel> _logger;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateSettingsViewModel"/> class.
     /// </summary>
@@ -19,11 +20,12 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsBusy));
         _ = DeleteAllPodcasts();
     }
+
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
     /// Function has to be public to work. I don't know why!
     /// </summary>
-    public async Task DeleteAllPodcasts()
+    private async Task DeleteAllPodcasts()
     {
         try
         {

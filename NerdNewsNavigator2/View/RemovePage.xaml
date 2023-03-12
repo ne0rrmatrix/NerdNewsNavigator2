@@ -14,7 +14,7 @@
     </Shell.BackButtonBehavior>
 
     <CollectionView
-        BackgroundColor="Wheat"
+        BackgroundColor="#34AAD2"
         ItemsSource="{Binding Podcasts}"
         SelectionMode="None">
 
@@ -48,13 +48,13 @@
                         <Label
                             Grid.Row="0"
                             Margin="5"
-                            Padding="10"
                             FontAttributes="Bold"
                             FontSize="10"
-                            HorizontalTextAlignment="Center"
+                            HorizontalTextAlignment="Start"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
-                            TextColor="Black" />
+                            TextColor="Black"
+                            VerticalOptions="Center" />
                         <Image
                             Grid.Row="1"
                             Margin="10"
@@ -82,10 +82,10 @@
                             FontAttributes="Bold"
                             FontSize="Micro"
                             HeightRequest="35"
-                            HorizontalOptions="{OnIdiom Default=Start,
-                                                        Phone=Start}"
+                            HorizontalOptions="End"
                             Text="Delete"
                             TextColor="White"
+                            VerticalOptions="Center"
                             WidthRequest="{OnIdiom Default=70,
                                                    Tablet=80}">
 

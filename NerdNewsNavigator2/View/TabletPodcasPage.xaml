@@ -3,11 +3,14 @@
     x:Class="NerdNewsNavigator2.View.TabletPodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
+    ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:TabletPodcastViewModel"
-    BackgroundColor="Wheat"
+    BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -16,7 +19,7 @@
 
     <CollectionView
         Margin="5"
-        BackgroundColor="Wheat"
+        BackgroundColor="#34AAD2"
         ItemsSource="{Binding Podcasts}"
         SelectionMode="None">
 
@@ -75,6 +78,7 @@
                             Padding="10"
                             FontAttributes="Bold"
                             FontSize="10"
+                            HorizontalOptions="Center"
                             HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
@@ -84,10 +88,17 @@
                             Margin="10"
                             Aspect="AspectFit"
                             HorizontalOptions="Center"
-                            Source="{Binding Image}"
                             WidthRequest="{OnIdiom Phone=350,
                                                    Tablet=340,
-                                                   Desktop=350}" />
+                                                   Desktop=350}">
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:0:00"
+                                    CachingEnabled="true"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
+                        </Image>
+
                         <Label
                             Grid.Row="2"
                             Margin="10"

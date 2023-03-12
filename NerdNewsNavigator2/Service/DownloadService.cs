@@ -106,9 +106,8 @@ public static class DownloadService
                 return true;
             }
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.WriteLine(ex);
             return false;
         }
     }

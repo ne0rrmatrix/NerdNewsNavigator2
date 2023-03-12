@@ -198,7 +198,7 @@ public class PositionDataBase
                 {
 
                     await _connection.DeleteAsync(item);
-                    _logger.LogInformation("Succesfully deleted Position: {Title}", position.Title);
+                    _logger.LogInformation("Succesfully deleted Position: {Title} {Position}", item.Title, item.SavedPosition);
                 }
                 catch (Exception ex)
                 {
@@ -210,7 +210,7 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(position);
-            _logger.LogInformation("Saved to database: {Title}", position.Title);
+            _logger.LogInformation("Saved to database: {Title} {Position}", position.Title, position.SavedPosition);
             return true;
         }
         catch (Exception ex)
@@ -230,7 +230,7 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(position);
-            _logger.LogInformation("Deleted from Database: {Title}", position.Title);
+            _logger.LogInformation("Deleted from Database: {Title} {Position}", position.Title, position.SavedPosition);
             return true;
         }
         catch (Exception ex)
