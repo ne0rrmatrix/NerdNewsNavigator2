@@ -17,7 +17,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     {
         OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        this._orientation = OnDeviceOrientationChange();
+        Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
     }
     /// <summary>
