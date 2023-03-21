@@ -60,10 +60,12 @@ public static class FeedService
         XmlDocument rssDoc = new();
         try
         {
+            var itunesNamespace = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+            var mediaNamespace = "http://search.yahoo.com/mrss/";
             rssDoc.Load(items);
             var mgr = new XmlNamespaceManager(rssDoc.NameTable);
-            mgr.AddNamespace("itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
-            mgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
+            mgr.AddNamespace("itunes", itunesNamespace);
+            mgr.AddNamespace("media", mediaNamespace);
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
             if (rssNodes == null)
                 return Task.FromResult(shows);
@@ -99,7 +101,7 @@ public static class FeedService
     /// <returns><see cref="string"/></returns>
     public static string RemoveBADHtmlTags(string hTMLCode)
     {
-        hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline, TimeSpan.FromMilliseconds(500));
         return hTMLCode;
     }
 

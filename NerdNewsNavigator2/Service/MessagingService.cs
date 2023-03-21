@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Service;
 /// <summary>
 /// A class to manage Messaging between classes.
 /// </summary>
-public class MessagingService
+public static class MessagingService
 {
     /// <summary>
     /// Method displays a <see cref="Toast"/> about status of deleted files.

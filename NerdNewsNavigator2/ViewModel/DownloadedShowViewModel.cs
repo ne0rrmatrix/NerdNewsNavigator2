@@ -22,7 +22,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
         _logger = logger;
         _logger.LogInformation("DownloadedShowViewModel started.");
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        this._orientation = OnDeviceOrientationChange();
+        Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(DownloadedShows));
     }
 
@@ -34,7 +34,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Tap(string url)
     {
-#if ANDROID || IOS
+#if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
         _logger.LogInformation("Url being passed is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={item}");

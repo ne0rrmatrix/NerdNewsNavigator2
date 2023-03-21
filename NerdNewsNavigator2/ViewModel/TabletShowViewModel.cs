@@ -35,7 +35,7 @@ public partial class TabletShowViewModel : BaseViewModel
     public TabletShowViewModel(ILogger<TabletShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        this._orientation = OnDeviceOrientationChange();
+        Orientation = OnDeviceOrientationChange();
     }
 
     /// <summary>
