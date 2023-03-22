@@ -59,10 +59,15 @@ jobs:
           dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release 
           dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -p:BuildIpa=True
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3.1.0
+# ********************************* #
+# >>>>>>> Upload Artifacts <<<<<<< #
+# ********************************* #
+
+    - uses: actions/upload-artifact@v2
       with:
-        path: ./**/NerdNews*.pkg
+          name: artifacts-mac
+          path: |
+            NerdNewsNavigator2/bin/Release/net7.0-maccatalyst/**/*.pkg
 
 # ********************************* #
 # >>>>>>> Build Release <<<<<<< #
