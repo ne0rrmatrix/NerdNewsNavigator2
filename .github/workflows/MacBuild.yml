@@ -56,12 +56,12 @@ jobs:
     - name: Build MAUI MacCatalyst project
       shell: bash
       run: |
-          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -o ./artifacts
-          dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -p:BuildIpa=True -o ./artifacts
+          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release 
+          dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -p:BuildIpa=True
     
     - uses: actions/upload-artifact@v2
       with:
           name: artifacts-mac
           path: |
-            NerdNewsNavigator2/artifacts/NerdNewsNavigator2*.pkg
+            NerdNewsNavigator2/bin/Release/net7.0-maccatalyst/**/*.pkg
         
