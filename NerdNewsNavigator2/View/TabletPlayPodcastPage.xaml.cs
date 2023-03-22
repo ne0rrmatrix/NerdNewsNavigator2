@@ -54,7 +54,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.MediaOpened += Seek;
 #endif
 
-#if IOS
+#if IOS || MACCATALYST
         mediaElement.StateChanged += SeekIOS;
 #endif
     }

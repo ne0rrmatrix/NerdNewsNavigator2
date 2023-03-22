@@ -69,7 +69,7 @@ public static class MauiProgram
 #if WINDOWS
         builder.Services.AddSingleton<TabletPlayPodcastPage>();
 #endif
-#if IOS || ANDROID
+#if IOS || ANDROID || MACCATALYST
         builder.Services.AddTransient<TabletPlayPodcastPage>();
 #endif
         builder.Services.AddTransient<TabletPlayPodcastViewModel>();
