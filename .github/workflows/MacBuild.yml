@@ -63,5 +63,5 @@ jobs:
       with:
           name: artifacts-mac
           path: |
-            NerdNewsNavigator2/artifacts/**/*.pkg
+            NerdNewsNavigator2/NerdNewsNavigator2/artifacts/NerdNewsNavigator2-1.0.pkg
         
