@@ -42,10 +42,10 @@ public class PositionDataBase
             {
                 return false;
             }
-#if WINDOWS || IOS
+#if WINDOWS || IOS || MACCATALYST
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
 #endif
-#if ANDROID || MACCATALYST
+#if ANDROID 
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
 #endif
             _logger.LogInformation("Database path is: {Path}", databasePath);
