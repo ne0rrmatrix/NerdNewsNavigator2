@@ -56,8 +56,8 @@ jobs:
     - name: Build MAUI MacCatalyst project
       shell: bash
       run: |
-          dotnet build ${{ env.PROJECT_PATH }} -f net6.0-maccatalyst -c Release -o ./artifacts
-          dotnet publish ${{ env.PROJECT_PATH }} -f net6.0-maccatalyst -c Release -p:BuildIpa=True -o ./artifacts
+          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -o ./artifacts
+          dotnet publish ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release -p:BuildIpa=True -o ./artifacts
     
     - uses: actions/upload-artifact@v2
       with:
