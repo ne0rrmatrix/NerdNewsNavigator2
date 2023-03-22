@@ -92,7 +92,7 @@ public partial class BaseViewModel : ObservableObject
 #if WINDOWS || ANDROID
         ThreadPool.QueueUserWorkItem(GetMostRecent);
 #endif
-#if IOS
+#if IOS || MACCATALYST
         _ = GetMostRecent();
 #endif
     }
@@ -201,7 +201,7 @@ public partial class BaseViewModel : ObservableObject
     }
 #endif
 
-#if IOS
+#if IOS || MACCATALYST
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
