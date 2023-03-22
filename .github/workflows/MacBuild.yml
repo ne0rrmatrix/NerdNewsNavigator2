@@ -2,7 +2,8 @@ name: Build Maccatalyst
 
 on:
   workflow_dispatch:
-permissions: read | write
+permissions:
+  actions: read|write
 
 env:
   DOTNET_NOLOGO: true                     # Disable the .NET logo
