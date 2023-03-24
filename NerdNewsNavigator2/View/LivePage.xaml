@@ -15,7 +15,7 @@
     </Shell.BackButtonBehavior>
 
     <Grid>
-        <WebView Source="{Binding Url}" />
+        <WebView x:Name="Video" Source="{Binding Url}" />
     </Grid>
 
 </ContentPage>
