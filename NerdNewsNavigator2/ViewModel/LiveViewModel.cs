@@ -12,8 +12,15 @@ public partial class LiveViewModel : BaseViewModel
     /// <summary>
     /// A <see cref="string"/> variable containing the URL for Live video for twit.tv
     /// </summary>
-    [ObservableProperty]
-    public string _url = "https://www.youtube.com/embed/F2NreNEmMy4";
+    public string Url
+    {
+        get => _url;
+        set => SetProperty(ref _url, value);
+    }
+    /// <summary>
+    /// A <see cref="string"/> variable containing the URL for Live video for twit.tv
+    /// </summary>
+    private string _url = "https://www.youtube.com/embed/F2NreNEmMy4";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LiveViewModel"/>

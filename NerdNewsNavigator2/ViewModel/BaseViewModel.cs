@@ -35,19 +35,38 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
-
+    /// <summary>
+    /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// </summary>
+    private int _orientation;
     /// <summary>
     /// An <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
-    [ObservableProperty]
-    public int _orientation;
+    public int Orientation
+    {
+        get => _orientation;
+        set => SetProperty(ref _orientation, value);
+    }
+
+    /// <summary>
+    /// A <see cref="bool"/> instance managed by this class. 
+    /// </summary>
+    private bool _isBusy;
 
     /// <summary>
     /// A <see cref="bool"/> instance managed by this class.
     /// </summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
-    public bool _isBusy;
+    public bool IsBusy
+    {
+        get => _isBusy;
+        set
+        {
+            if (SetProperty(ref _isBusy, value))
+            {
+                OnPropertyChanged(nameof(IsNotBusy));
+            }
+        }
+    }
 
     /// <summary>
     /// A <see cref="bool"/> instance managed by this class.
@@ -73,8 +92,8 @@ public partial class BaseViewModel : ObservableObject
 #if WINDOWS || ANDROID
         ThreadPool.QueueUserWorkItem(GetMostRecent);
 #endif
-#if IOS
-        GetMostRecent();
+#if IOS || MACCATALYST
+        _ = GetMostRecent();
 #endif
     }
     public bool InternetConnected()
@@ -182,12 +201,12 @@ public partial class BaseViewModel : ObservableObject
     }
 #endif
 
-#if IOS
+#if IOS || MACCATALYST
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
     /// <returns></returns>
-    public async void GetMostRecent()
+    public async Task GetMostRecent()
     {
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();

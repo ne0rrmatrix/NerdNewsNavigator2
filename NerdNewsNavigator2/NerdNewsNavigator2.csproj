@@ -71,7 +71,9 @@
 	  <BuildIpa>False</BuildIpa>
 	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
 	</PropertyGroup>
-
+<PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
+    <RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
+</PropertyGroup>
   
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->

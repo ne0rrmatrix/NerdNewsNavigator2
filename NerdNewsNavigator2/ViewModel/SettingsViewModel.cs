@@ -15,7 +15,7 @@ public partial class SettingsViewModel : BaseViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        this._orientation = OnDeviceOrientationChange();
+        Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
         _ = GetUpdatedPodcasts();
     }
