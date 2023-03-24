@@ -33,6 +33,14 @@ public partial class LivePage : ContentPage
         InitializeComponent();
         BindingContext = liveViewModel;
     }
+     /// <summary>
+    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
+    /// </summary>
+    protected override void OnDisappearing()
+    {
+        Video.Source = string.Empty;
+        base.OnDisappearing();
+    }
 
 #if WINDOWS
     /// <summary>
