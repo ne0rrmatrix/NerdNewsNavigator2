@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title="MostRecentShowsPage"
+    Title=""
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
@@ -49,10 +49,12 @@
 
                 <Frame
                     Margin="{OnPlatform WinUI=90,
+                                        MacCatalyst=90,
                                         Android=90,
                                         iOS=90}"
                     BackgroundColor="White"
                     WidthRequest="{OnPlatform WinUI=370,
+                                              MacCatalyst=370,
                                               Android=370,
                                               iOS=320}">
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
