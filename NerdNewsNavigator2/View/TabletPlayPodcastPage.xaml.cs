@@ -58,6 +58,14 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
+    /// <summary>
+    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
+    /// </summary>
+    protected override void OnDisappearing()
+    {
+        mediaElement.Stop();
+        mediaElement.ShouldKeepScreenOn = false;
+    }
 
 #nullable enable
 
