@@ -2,8 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using YoutubeExplode;
+
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
+using YoutubeExplode.Videos;
 
 #if ANDROID
 using Views = AndroidX.Core.View;
@@ -38,10 +42,44 @@ public partial class LivePage : ContentPage
     /// </summary>
     protected override void OnDisappearing()
     {
-        Video.Source = new UrlWebViewSource { Url = string.Empty };
-        Video.Reload();
-        base.OnDisappearing();
+        mediaElement.Stop();
+        mediaElement.ShouldKeepScreenOn = false;
     }
+    #region Load/Unload Events
+#nullable enable
+
+    /// <summary>
+    /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public void ContentPage_Unloaded(object? sender, EventArgs e)
+    {
+        if (sender is null)
+        {
+            return;
+        }
+        mediaElement.Handler?.DisconnectHandler();
+    }
+    private void ContentPage_Loaded(object? sender, EventArgs e)
+    {
+        if (sender is null)
+        {
+            return;
+        }
+
+        _ = LoadVideo();
+        SetFullScreen();
+    }
+    private async Task LoadVideo()
+    {
+        var youtube = new YoutubeClient();
+        mediaElement.Source = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync("F2NreNEmMy4");
+        mediaElement.Play();
+    }
+#nullable disable
+
+    #endregion
 
 #if WINDOWS
     /// <summary>
@@ -92,16 +130,6 @@ public partial class LivePage : ContentPage
             }
         }
 #endif
-    }
-
-    /// <summary>
-    /// Method is event handler for LivePage OnLoad event.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        SetFullScreen();
     }
 
 #nullable disable
