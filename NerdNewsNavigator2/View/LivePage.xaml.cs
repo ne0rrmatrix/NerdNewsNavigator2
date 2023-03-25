@@ -23,7 +23,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class LivePage : ContentPage
 {
-
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -33,12 +32,14 @@ public partial class LivePage : ContentPage
         InitializeComponent();
         BindingContext = liveViewModel;
     }
-     /// <summary>
+
+    /// <summary>
     /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
     /// </summary>
     protected override void OnDisappearing()
     {
-        Video.Source = string.Empty;
+        Video.Source = new UrlWebViewSource { Url = string.Empty };
+        Video.Reload();
         base.OnDisappearing();
     }
 
@@ -72,9 +73,9 @@ public partial class LivePage : ContentPage
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-        
-            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-            windowInsetsControllerCompat.Hide(types);
+
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+        windowInsetsControllerCompat.Hide(types);
 #endif
 
 #if WINDOWS
