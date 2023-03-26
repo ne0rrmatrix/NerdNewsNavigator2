@@ -44,3 +44,6 @@ global using CommunityToolkit.Mvvm.Messaging;
 global using NerdNewsNavigator2.Messages;
 global using CommunityToolkit.Maui.Alerts;
 global using MetroLog.Maui;
+global using YoutubeExplode;
+global using YoutubeExplode.Videos;
+global using M3U8Parser;

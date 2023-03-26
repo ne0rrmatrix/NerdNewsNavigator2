@@ -100,6 +100,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+		<PackageReference Include="M3U8Parser" Version="1.0.0" />
 		<PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
@@ -108,6 +109,7 @@
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.4" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.4" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.11" />
 	</ItemGroup>
   
   <ItemGroup>

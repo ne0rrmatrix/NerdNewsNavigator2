@@ -8,14 +8,18 @@
     Title=""
     x:DataType="viewmodel:LiveViewModel"
     Loaded="ContentPage_Loaded"
+    Unloaded="ContentPage_Unloaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
     <Grid>
-        <WebView x:Name="Video" Source="{Binding Url}" />
+        <toolkit:MediaElement
+            x:Name="mediaElement"
+            ShouldAutoPlay="True"
+            ShouldShowPlaybackControls="True" />
     </Grid>
 
 </ContentPage>
