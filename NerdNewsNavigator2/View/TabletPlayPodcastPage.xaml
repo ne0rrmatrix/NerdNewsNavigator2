@@ -28,6 +28,10 @@
             Clicked="BtnFullScreen_Clicked"
             HeightRequest="40"
             HorizontalOptions="End"
+            IsVisible="{OnPlatform Android=true,
+                                   iOS=false,
+                                   WinUI=true,
+                                   MacCatalyst=true}"
             Source="iconfullscreen.png"
             VerticalOptions="Start"
             WidthRequest="40">
