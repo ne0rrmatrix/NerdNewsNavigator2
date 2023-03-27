@@ -20,8 +20,10 @@
     <CollectionView
         Margin="5"
         BackgroundColor="#34AAD2"
+        HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Podcasts}"
-        SelectionMode="None">
+        SelectionMode="None"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.Header>
             <StackLayout>

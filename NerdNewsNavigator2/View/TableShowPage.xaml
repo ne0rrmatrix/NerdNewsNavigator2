@@ -19,8 +19,10 @@
     <CollectionView
         Margin="5"
         BackgroundColor="#34AAD2"
+        HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Shows}"
-        SelectionMode="None">
+        SelectionMode="None"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />

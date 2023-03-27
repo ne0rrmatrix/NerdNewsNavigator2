@@ -24,6 +24,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class LivePage : ContentPage
 {
+    private bool _fullScreen = false;
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -32,6 +33,20 @@ public partial class LivePage : ContentPage
     {
         InitializeComponent();
         BindingContext = liveViewModel;
+    }
+
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    {
+        if (_fullScreen)
+        {
+            _fullScreen = false;
+            RestoreScreen();
+        }
+        else
+        {
+            SetFullScreen();
+            _fullScreen = true;
+        }
     }
 
     /// <summary>
@@ -71,7 +86,6 @@ public partial class LivePage : ContentPage
         }
 
         _ = LoadVideo();
-        SetFullScreen();
     }
 
     /// <summary>
@@ -133,11 +147,49 @@ public partial class LivePage : ContentPage
     }
 #endif
 
+#nullable enable
+    /// <summary>
+    /// Method toggles Full Screen Off
+    /// </summary>
+    public void RestoreScreen()
+    {
+#if WINDOWS
+        var window = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        if (window is not null)
+        {
+            var appWindow = GetAppWindow(window);
+
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
+                    {
+                        overlappedPresenter.SetBorderAndTitleBar(true, true);
+                        overlappedPresenter.Restore();
+                    }
+                    break;
+            }
+        }
+#endif
+
+#if ANDROID
+        var activity = Platform.CurrentActivity;
+
+        if (activity == null || activity.Window == null) return;
+
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+        windowInsetsControllerCompat.Show(types);
+      
+#endif
+    }
+
     /// <summary>
     /// Method toggles Full Screen On
     /// </summary>
 
-#nullable enable
     private void SetFullScreen()
     {
 

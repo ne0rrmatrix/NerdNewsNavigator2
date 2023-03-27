@@ -9,7 +9,6 @@
     x:DataType="viewmodel:TabletPlayPodcastViewModel"
     BackgroundColor="Black"
     Shell.NavBarIsVisible="False"
-    Loaded="ContentPage_Loaded"
     Unloaded="ContentPage_Unloaded">
 
     <Shell.BackButtonBehavior>
@@ -22,6 +21,20 @@
             ShouldAutoPlay="True"
             ShouldShowPlaybackControls="True"
             Source="{Binding Url}" />
+        <ImageButton
+            x:Name="btnFullScreen"
+            Grid.Row="0"
+            Margin="10"
+            Clicked="BtnFullScreen_Clicked"
+            HeightRequest="40"
+            HorizontalOptions="End"
+            Source="iconfullscreen.png"
+            VerticalOptions="Start"
+            WidthRequest="40">
+            <ImageButton.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="White" />
+            </ImageButton.Behaviors>
+        </ImageButton>
     </Grid>
 
 </ContentPage>

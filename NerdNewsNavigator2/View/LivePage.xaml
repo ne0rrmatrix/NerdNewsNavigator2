@@ -7,9 +7,10 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
     x:DataType="viewmodel:LiveViewModel"
+    BackgroundColor="Black"
     Loaded="ContentPage_Loaded"
-    Unloaded="ContentPage_Unloaded"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="False"
+    Unloaded="ContentPage_Unloaded">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
@@ -20,6 +21,20 @@
             x:Name="mediaElement"
             ShouldAutoPlay="True"
             ShouldShowPlaybackControls="True" />
+        <ImageButton
+            x:Name="btnFullScreen"
+            Grid.Row="0"
+            Margin="10"
+            Clicked="BtnFullScreen_Clicked"
+            HeightRequest="40"
+            HorizontalOptions="End"
+            Source="iconfullscreen.png"
+            VerticalOptions="Start"
+            WidthRequest="40">
+            <ImageButton.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="White" />
+            </ImageButton.Behaviors>
+        </ImageButton>
     </Grid>
 
 </ContentPage>

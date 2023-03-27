@@ -25,7 +25,7 @@ namespace NerdNewsNavigator2.View;
 public partial class TabletPlayPodcastPage : ContentPage
 {
     #region Properties
-
+    private bool _fullScreen = false;
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
@@ -113,10 +113,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         }
         switch (e.NewState)
         {
-            case MediaElementState.Playing:
-                SetFullScreen();
-                break;
-
             case MediaElementState.Stopped:
                 _logger.LogInformation("Media has finished playing.");
                 mediaElement.ShouldKeepScreenOn = false;
@@ -237,6 +233,19 @@ public partial class TabletPlayPodcastPage : ContentPage
             }
         }
 #endif
+
+#if ANDROID
+        var activity = Platform.CurrentActivity;
+
+        if (activity == null || activity.Window == null) return;
+
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+        windowInsetsControllerCompat.Show(types);
+      
+#endif
     }
 
     /// <summary>
@@ -275,7 +284,19 @@ public partial class TabletPlayPodcastPage : ContentPage
 #endif
     }
     #endregion
-
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    {
+        if (_fullScreen)
+        {
+            _fullScreen = false;
+            RestoreScreen();
+        }
+        else
+        {
+            SetFullScreen();
+            _fullScreen = true;
+        }
+    }
     #region Load/Unload Events
 #nullable enable
 
@@ -297,14 +318,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         Pos.Title = string.Empty;
         mediaElement.Handler?.DisconnectHandler();
     }
-    private void ContentPage_Loaded(object? sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        SetFullScreen();
-    }
+
 #nullable disable
 
     #endregion
