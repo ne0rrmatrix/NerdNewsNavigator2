@@ -35,32 +35,6 @@ public static class DownloadService
     }
 
     /// <summary>
-    /// Method Adds Auto Download of <see cref="Podcast"/> to Database.
-    /// </summary>
-    /// <param name="download"></param>
-    /// <returns></returns>
-    public static async Task AddAutoDownloadPodcast(Download download)
-    {
-        var result = await App.PositionData.GetAllPodcasts();
-        foreach (var item in result)
-        {
-            if (item.Url == download.Url)
-            {
-                await App.PositionData.DeletePodcast(item);
-                var podcast = new Podcast
-                {
-                    Url = item.Url,
-                    Title = item.Title,
-                    Description = item.Description,
-                    PubDate = item.PubDate,
-                    Download = true
-                };
-                await App.PositionData.AddPodcast(podcast);
-            }
-        }
-    }
-
-    /// <summary>
     /// Method Removes Downloaded <see cref="Download"/> from Database.
     /// </summary>
     /// <param name="download"> is the Download to remove from database.</param>
@@ -89,22 +63,16 @@ public static class DownloadService
     /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
     public static async Task<bool> DownloadFile(string url)
     {
-        var filename = GetFileName(url);
         try
         {
-            using (HttpClient client = new HttpClient())
-            {
-                using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-                using (Stream readFrom = await response.Content.ReadAsStreamAsync())
-                {
-                    string tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-                    using (Stream writeTo = File.Open(tempFile, FileMode.Create))
-                    {
-                        await readFrom.CopyToAsync(writeTo);
-                    }
-                }
-                return true;
-            }
+            var filename = GetFileName(url);
+            var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+            using var client = new HttpClient();
+            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            using var readFrom = await response.Content.ReadAsStreamAsync();
+            using Stream writeTo = File.Open(tempFile, FileMode.Create);
+            await readFrom.CopyToAsync(writeTo);
+            return true;
         }
         catch
         {
