@@ -96,6 +96,18 @@ public partial class BaseViewModel : ObservableObject
         _ = GetMostRecent();
 #endif
     }
+    /// <summary>
+    /// A method that sets whether the <see cref="Page"/> is Full screen or not.
+    /// </summary>
+    /// <returns></returns>
+    public async Task SetIsBusy()
+    {
+#if ANDROID || WINDOWS || MACCATALYST
+        IsBusy = true;
+        await Task.Delay(4000);
+        IsBusy = false;
+#endif
+    }
     public bool InternetConnected()
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)

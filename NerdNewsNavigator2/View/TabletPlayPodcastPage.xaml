@@ -16,6 +16,9 @@
     </Shell.BackButtonBehavior>
 
     <Grid>
+        <Grid.GestureRecognizers>
+            <PointerGestureRecognizer PointerMovedCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletPlayPodcastViewModel}}, Path=MovedCommand}" />
+        </Grid.GestureRecognizers>
         <toolkit:MediaElement
             x:Name="mediaElement"
             ShouldAutoPlay="True"
@@ -28,10 +31,9 @@
             Clicked="BtnFullScreen_Clicked"
             HeightRequest="40"
             HorizontalOptions="End"
-            IsVisible="{OnPlatform Android=true,
-                                   iOS=false,
-                                   WinUI=true,
-                                   MacCatalyst=true}"
+            IsEnabled="{OnPlatform iOS=false,
+                                   Default=true}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
             Source="iconfullscreen.png"
             VerticalOptions="Start"
             WidthRequest="40">
