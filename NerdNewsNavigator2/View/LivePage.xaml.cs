@@ -25,6 +25,7 @@ namespace NerdNewsNavigator2.View;
 public partial class LivePage : ContentPage
 {
     private bool _fullScreen = false;
+    public string PlayPosition { get; set; }
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -33,8 +34,98 @@ public partial class LivePage : ContentPage
     {
         InitializeComponent();
         BindingContext = liveViewModel;
+        PlayPosition = string.Empty;
+
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
+        mediaElement.PositionChanged += ChangedPosition;
     }
 
+#nullable enable
+    private void BtnRewind_Clicked(object sender, EventArgs e)
+    {
+        var time = mediaElement.Position - TimeSpan.FromSeconds(15);
+        mediaElement.Pause();
+        mediaElement.SeekTo(time);
+        mediaElement.Play();
+    }
+
+    private void BtnForward_Clicked(object sender, EventArgs e)
+    {
+        var time = mediaElement.Position + TimeSpan.FromSeconds(15);
+        mediaElement.Pause();
+        mediaElement.SeekTo(time);
+        mediaElement.Play();
+    }
+    void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
+        {
+            positionSlider.Maximum = mediaElement.Duration.TotalSeconds;
+        }
+    }
+    void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
+    {
+        positionSlider.Value = e.Position.TotalSeconds;
+    }
+    private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    {
+        if (e.Direction == SwipeDirection.Up)
+        {
+            SetFullScreen();
+        }
+        if (e.Direction == SwipeDirection.Down)
+        {
+            RestoreScreen();
+        }
+    }
+    private void ChangedPosition(object sender, EventArgs e)
+    {
+        var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
+        var position = BaseViewModel.TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
+    }
+
+    private void BtnPlay_Clicked(object sender, EventArgs e)
+    {
+        if (mediaElement.CurrentState == MediaElementState.Stopped ||
+       mediaElement.CurrentState == MediaElementState.Paused)
+        {
+            mediaElement.Play();
+            BtnPLay.Source = "pause.png";
+        }
+        else if (mediaElement.CurrentState == MediaElementState.Playing)
+        {
+            mediaElement.Pause();
+            BtnPLay.Source = "play.png";
+        }
+    }
+    void OnMuteClicked(object? sender, EventArgs e)
+    {
+        mediaElement.ShouldMute = !mediaElement.ShouldMute;
+        if (mediaElement.ShouldMute)
+        {
+            ImageButtonMute.Source = "mute.png";
+        }
+        else
+        {
+            ImageButtonMute.Source = "muted.png";
+        }
+        OnPropertyChanged(nameof(ImageButtonMute.Source));
+    }
+    void Slider_DragCompleted(object? sender, EventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(sender);
+
+        var newValue = ((Slider)sender).Value;
+        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
+        mediaElement.Play();
+    }
+#nullable disable
+    void Slider_DragStarted(object sender, EventArgs e)
+    {
+        mediaElement.Pause();
+    }
     private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
         if (_fullScreen)
@@ -73,6 +164,7 @@ public partial class LivePage : ContentPage
         }
         mediaElement.Handler?.DisconnectHandler();
     }
+
     /// <summary>
     /// Method Loads Video after page has finished being rendered.
     /// </summary>

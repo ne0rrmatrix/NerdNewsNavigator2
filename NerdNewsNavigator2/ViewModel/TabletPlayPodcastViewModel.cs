@@ -36,21 +36,7 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
     /// </summary>
     public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-
-#if IOS
-        IsBusy = false;
-#endif
+        _ = Moved();
     }
 
-    /// <summary>
-    /// A Method that detects Mouse movement on <see cref="TabletPlayPodcastPage"/>
-    /// </summary>
-    [RelayCommand]
-    public async Task Moved()
-    {
-        if (!IsBusy)
-        {
-            await SetIsBusy();
-        }
-    }
 }

@@ -15,20 +15,6 @@ public partial class LiveViewModel : BaseViewModel
     /// </summary>
     public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-#if IOS
-        IsBusy = false;
-#endif
-    }
-
-    /// <summary>
-    /// A Method that detects mouse movment on <see cref="LivePage"/>
-    /// </summary>
-    [RelayCommand]
-    public async Task Moved()
-    {
-        if (!IsBusy)
-        {
-            await SetIsBusy();
-        }
+        _ = Moved();
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
+using Microsoft.Extensions.Logging;
 #endif
 
 namespace NerdNewsNavigator2.View;
@@ -25,6 +26,8 @@ namespace NerdNewsNavigator2.View;
 public partial class TabletPlayPodcastPage : ContentPage
 {
     #region Properties
+
+    public string PlayPosition { get; set; }
     private bool _fullScreen = false;
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
@@ -50,6 +53,10 @@ public partial class TabletPlayPodcastPage : ContentPage
         BindingContext = viewModel;
         _logger = logger;
 
+        PlayPosition = string.Empty;
+        mediaElement.PositionChanged += ChangedPosition;
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
+
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif
@@ -57,6 +64,106 @@ public partial class TabletPlayPodcastPage : ContentPage
 #if IOS || MACCATALYST
         mediaElement.StateChanged += SeekIOS;
 #endif
+    }
+
+#nullable enable
+    private void BtnRewind_Clicked(object sender, EventArgs e)
+    {
+        var time = mediaElement.Position - TimeSpan.FromSeconds(15);
+        mediaElement.Pause();
+        mediaElement.SeekTo(time);
+        mediaElement.Play();
+    }
+
+    private void BtnForward_Clicked(object sender, EventArgs e)
+    {
+        var time = mediaElement.Position + TimeSpan.FromSeconds(15);
+        mediaElement.Pause();
+        mediaElement.SeekTo(time);
+        mediaElement.Play();
+    }
+    private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    {
+        if (e.Direction == SwipeDirection.Up)
+        {
+            SetFullScreen();
+        }
+        if (e.Direction == SwipeDirection.Down)
+        {
+            RestoreScreen();
+        }
+    }
+    void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
+        {
+            positionSlider.Maximum = mediaElement.Duration.TotalSeconds;
+        }
+    }
+    void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
+    {
+        positionSlider.Value = e.Position.TotalSeconds;
+    }
+    private void ChangedPosition(object sender, EventArgs e)
+    {
+        var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
+        var position = BaseViewModel.TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
+    }
+
+    private void BtnPlay_Clicked(object sender, EventArgs e)
+    {
+        if (mediaElement.CurrentState == MediaElementState.Stopped ||
+       mediaElement.CurrentState == MediaElementState.Paused)
+        {
+            mediaElement.Play();
+            BtnPLay.Source = "pause.png";
+        }
+        else if (mediaElement.CurrentState == MediaElementState.Playing)
+        {
+            mediaElement.Pause();
+            BtnPLay.Source = "play.png";
+        }
+    }
+    void OnMuteClicked(object? sender, EventArgs e)
+    {
+        mediaElement.ShouldMute = !mediaElement.ShouldMute;
+        if (mediaElement.ShouldMute)
+        {
+            ImageButtonMute.Source = "mute.png";
+        }
+        else
+        {
+            ImageButtonMute.Source = "muted.png";
+        }
+        OnPropertyChanged(nameof(ImageButtonMute.Source));
+    }
+    void Slider_DragCompleted(object? sender, EventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(sender);
+
+        var newValue = ((Slider)sender).Value;
+        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
+        mediaElement.Play();
+    }
+#nullable disable
+    void Slider_DragStarted(object sender, EventArgs e)
+    {
+        mediaElement.Pause();
+    }
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    {
+        if (_fullScreen)
+        {
+            _fullScreen = false;
+            RestoreScreen();
+        }
+        else
+        {
+            SetFullScreen();
+            _fullScreen = true;
+        }
     }
 
     /// <summary>
@@ -284,19 +391,7 @@ public partial class TabletPlayPodcastPage : ContentPage
 #endif
     }
     #endregion
-    private void BtnFullScreen_Clicked(object sender, EventArgs e)
-    {
-        if (_fullScreen)
-        {
-            _fullScreen = false;
-            RestoreScreen();
-        }
-        else
-        {
-            SetFullScreen();
-            _fullScreen = true;
-        }
-    }
+
     #region Load/Unload Events
 #nullable enable
 

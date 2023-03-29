@@ -10,7 +10,12 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
-
+    private bool _setFullScreen = false;
+    public bool SetFullScreen
+    {
+        get => _setFullScreen;
+        set => SetProperty(ref _setFullScreen, value);
+    }
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
@@ -96,17 +101,45 @@ public partial class BaseViewModel : ObservableObject
         _ = GetMostRecent();
 #endif
     }
+
+    /// <summary>
+    /// A Method that detects mouse movment on <see cref="LivePage"/>
+    /// </summary>
+    [RelayCommand]
+    public async Task Moved()
+    {
+        if (!IsBusy)
+        {
+            await SetIsBusy();
+        }
+    }
+    public async Task Waiting()
+    {
+        if (!SetFullScreen)
+        {
+            SetFullScreen = true;
+
+            Debug.WriteLine("Timer Started!");
+            await Task.Delay(4000);
+            Debug.WriteLine("Timer ended.");
+            SetFullScreen = false;
+        }
+    }
+    public static string TimeConverter(TimeSpan time)
+    {
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return (interval).ToString();
+    }
+
     /// <summary>
     /// A method that sets whether the <see cref="Page"/> is Full screen or not.
     /// </summary>
     /// <returns></returns>
     public async Task SetIsBusy()
     {
-#if ANDROID || WINDOWS || MACCATALYST
-        IsBusy = true;
+        SetFullScreen = true;
         await Task.Delay(4000);
-        IsBusy = false;
-#endif
+        SetFullScreen = false;
     }
     public bool InternetConnected()
     {
