@@ -3,6 +3,7 @@
     x:Class="NerdNewsNavigator2.View.LivePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:media="clr-namespace:NerdNewsNavigator2.controls"
     xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
@@ -17,121 +18,10 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid>
+    <media:MediaControl
+        x:Name="mediaElement"
+        ShouldAutoPlay="True"
+        ShouldKeepScreenOn="True"
+        ShouldShowPlaybackControls="False" />
 
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=MovedCommand}" />
-            <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
-            <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />
-        </Grid.GestureRecognizers>
-
-        <toolkit:MediaElement
-            x:Name="mediaElement"
-            ShouldAutoPlay="True"
-            ShouldShowPlaybackControls="False" />
-
-        <Frame
-            BackgroundColor="Black"
-            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}"
-            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}"
-            Opacity="0.5" />
-
-        <Grid IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}" IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}">
-
-            <ImageButton
-                x:Name="btnFullScreen"
-                Margin="10"
-                BackgroundColor="Transparent"
-                BindingContext="{x:Reference mediaElement}"
-                Clicked="BtnFullScreen_Clicked"
-                HeightRequest="40"
-                HorizontalOptions="End"
-                Source="whitefs.png"
-                VerticalOptions="Start"
-                WidthRequest="40" />
-
-            <VerticalStackLayout VerticalOptions="End">
-
-                <HorizontalStackLayout HorizontalOptions="Center">
-
-                    <ImageButton
-                        x:Name="BtnRewind"
-                        Margin="10"
-                        BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
-                        Clicked="BtnRewind_Clicked"
-                        HeightRequest="40"
-                        HorizontalOptions="Center"
-                        Source="rewind.png"
-                        VerticalOptions="End"
-                        WidthRequest="40" />
-
-                    <ImageButton
-                        x:Name="BtnPLay"
-                        Margin="10"
-                        BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
-                        Clicked="BtnPlay_Clicked"
-                        HeightRequest="40"
-                        HorizontalOptions="Center"
-                        Source="pause.png"
-                        VerticalOptions="End"
-                        WidthRequest="40" />
-
-                    <ImageButton
-                        x:Name="BtnForward"
-                        Margin="10"
-                        BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
-                        Clicked="BtnForward_Clicked"
-                        HeightRequest="40"
-                        HorizontalOptions="Center"
-                        Source="fastforward.png"
-                        VerticalOptions="End"
-                        WidthRequest="40" />
-
-                    <ImageButton
-                        x:Name="ImageButtonMute"
-                        Margin="10"
-                        BackgroundColor="Transparent"
-                        Clicked="OnMuteClicked"
-                        HeightRequest="40"
-                        Source="muted.png"
-                        WidthRequest="40">
-                        <ImageButton.Triggers>
-                            <DataTrigger
-                                Binding="{Binding ShouldMute, Source={x:Reference mediaElement}}"
-                                TargetType="ImageButton"
-                                Value="True" />
-                            <DataTrigger
-                                Binding="{Binding ShouldMute, Source={x:Reference mediaElement}}"
-                                TargetType="ImageButton"
-                                Value="False" />
-                        </ImageButton.Triggers>
-                    </ImageButton>
-
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout HorizontalOptions="Start" VerticalOptions="End">
-
-                    <Label
-                        Margin="5"
-                        FontSize="12"
-                        HorizontalOptions="Center"
-                        Text="{Binding Source={RelativeSource AncestorType={x:Type page:LivePage}}, Path=PlayPosition}"
-                        TextColor="White" />
-                </HorizontalStackLayout>
-
-                <Slider
-                    x:Name="positionSlider"
-                    Margin="10"
-                    DragCompleted="Slider_DragCompleted"
-                    DragStarted="Slider_DragStarted"
-                    MaximumTrackColor="LightGray"
-                    MinimumTrackColor="Red" />
-
-            </VerticalStackLayout>
-
-        </Grid>
-    </Grid>
 </ContentPage>

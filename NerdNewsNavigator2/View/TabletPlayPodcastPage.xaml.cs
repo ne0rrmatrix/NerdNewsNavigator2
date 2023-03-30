@@ -351,7 +351,6 @@ public partial class TabletPlayPodcastPage : ContentPage
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
         windowInsetsControllerCompat.Show(types);
-      
 #endif
     }
 
@@ -370,9 +369,8 @@ public partial class TabletPlayPodcastPage : ContentPage
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
-        
-            windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-            windowInsetsControllerCompat.Hide(types);
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+        windowInsetsControllerCompat.Hide(types);
 #endif
 
 #if WINDOWS

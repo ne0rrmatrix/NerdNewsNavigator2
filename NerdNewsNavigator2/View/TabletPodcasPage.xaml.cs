@@ -82,7 +82,6 @@ public partial class TabletPodcastPage : ContentPage
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
         windowInsetsControllerCompat.Show(types);
-      
 #endif
     }
 
