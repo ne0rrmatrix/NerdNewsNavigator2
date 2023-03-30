@@ -43,15 +43,6 @@ public partial class MediaControl : ContentView
         var control = (MediaElement)bindableProperty;
         control.Source = (MediaSource)newValue;
     });
-    public static readonly BindableProperty NameProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
-    {
-        var control = (MediaElement)bindableProperty;
-    });
-    public MediaElement Name
-    {
-        get => (MediaElement)GetValue(NameProperty);
-        set => SetValue(NameProperty, value);
-    }
     public MediaSource Source
     {
         get => (MediaSource)GetValue(SourceProperty);
