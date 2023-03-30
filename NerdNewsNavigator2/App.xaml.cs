@@ -18,6 +18,9 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
+#if WINDOWS
+    public static AppWindow CurrentWindow { get; set; }
+#endif
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -80,6 +83,7 @@ public partial class App : Application
             var handle = WinRT.Interop.WindowNative.GetWindowHandle(uiWindow);
             var id = Win32Interop.GetWindowIdFromWindow(handle);
             var appWindow = AppWindow.GetFromWindowId(id);
+            CurrentWindow = AppWindow.GetFromWindowId(id);
             switch (appWindow.Presenter)
             {
                 case OverlappedPresenter overlappedPresenter:

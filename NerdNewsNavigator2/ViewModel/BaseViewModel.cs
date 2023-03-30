@@ -16,6 +16,9 @@ public partial class BaseViewModel : ObservableObject
         get => _setFullScreen;
         set => SetProperty(ref _setFullScreen, value);
     }
+#if WINDOWS
+    public static MauiWinUIWindow CurrentWindow { get; set; }
+#endif
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
@@ -119,9 +122,7 @@ public partial class BaseViewModel : ObservableObject
         {
             SetFullScreen = true;
 
-            Debug.WriteLine("Timer Started!");
             await Task.Delay(4000);
-            Debug.WriteLine("Timer ended.");
             SetFullScreen = false;
         }
     }

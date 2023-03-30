@@ -2,40 +2,75 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Maui.Controls.PlatformConfiguration;
+using NerdNewsNavigator2.controls;
+using Application = Microsoft.Maui.Controls.Application;
+using Platform = Microsoft.Maui.ApplicationModel.Platform;
+
+#if ANDROID
+using Views = AndroidX.Core.View;
+#endif
+
+#if WINDOWS
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using WinRT;
+using Microsoft.Maui.Controls;
+using CommunityToolkit.Maui.Core.Primitives;
+using System.Data;
+#endif
+
 namespace NerdNewsNavigator2.controls;
 
 public partial class MediaControl : ContentView
 {
+    public Page CurrentPage { get; set; }
+
+    private bool _fullScreen = false;
+#if WINDOWS
+    private static MauiWinUIWindow CurrentWindow { get; set; }
+#endif
     public string PlayPosition { get; set; }
-    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaElement), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var control = (MediaControl)bindable;
-            control.Source = newValue as string;
             control.ShouldAutoPlay = (bool)newValue;
             control.ShouldKeepScreenOn = (bool)newValue;
             control.ShouldShowPlaybackControls = (bool)newValue;
         });
-    public static readonly BindableProperty ButtonProperty = BindableProperty.Create(nameof(ButtonName), typeof(ImageButton), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
+    public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
-        var control = (MediaControl)bindable;
-        control.Command = newValue as string;
+        var control = (MediaElement)bindableProperty;
+        control.Source = (MediaSource)newValue;
     });
+    public static readonly BindableProperty NameProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaElement)bindableProperty;
+    });
+    public MediaElement Name
+    {
+        get => (MediaElement)GetValue(NameProperty);
+        set => SetValue(NameProperty, value);
+    }
+    public MediaSource Source
+    {
+        get => (MediaSource)GetValue(SourceProperty);
+        set => SetValue(SourceProperty, value);
+    }
     public MediaControl()
     {
         InitializeComponent();
         PlayPosition = string.Empty;
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += ChangedPosition;
+        CurrentPage = Shell.Current.CurrentPage;
+
     }
-    public ImageButton ButtonName
+    public TimeSpan Position
     {
-        get => (ImageButton)GetValue(ButtonProperty);
-        set => SetValue(ButtonProperty, value);
-    }
-    public string Command
-    {
-        get => (string)GetValue(ButtonProperty);
-        set => SetValue(ButtonProperty, value);
+        get => (TimeSpan)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+
     }
     public MediaElement Name
     {
@@ -57,11 +92,8 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
-    public string Source
-    {
-        get => (string)GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
-    }
+    public Action<object, EventArgs> MediaOpened { get; set; }
+    public Action<object, MediaStateChangedEventArgs> StateChanged { get; set; }
 
     /// <summary>
     /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
@@ -96,16 +128,21 @@ public partial class MediaControl : ContentView
     }
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
-        /*
+#if WINDOWS
+        CurrentWindow = BaseViewModel.CurrentWindow;
+#endif
         if (e.Direction == SwipeDirection.Up)
         {
-            App.SetFullScreen(sender, e);
+            SetFullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
-            App.RestoreScreen(sender, e);
+            RestoreScreen();
         }
-        */
+    }
+    public void SeekTo(TimeSpan position)
+    {
+        mediaElement.SeekTo(position);
     }
     public void Stop()
     {
@@ -188,6 +225,10 @@ public partial class MediaControl : ContentView
     {
         mediaElement.Pause();
     }
+    public void LoadUrl(string url)
+    {
+        mediaElement.Source = url;
+    }
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
@@ -198,4 +239,108 @@ public partial class MediaControl : ContentView
         mediaElement.Source = ParseM3UPLaylist(m3u);
         mediaElement.Play();
     }
+
+#nullable enable
+    /// <summary>
+    /// Method toggles Full Screen Off
+    /// </summary>
+    public void RestoreScreen()
+    {
+#if WINDOWS
+        if (CurrentWindow is not null)
+        {
+            var appWindow = GetAppWindow(CurrentWindow);
+
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
+                    {
+                        overlappedPresenter.SetBorderAndTitleBar(true, true);
+                        overlappedPresenter.Restore();
+                    }
+                    break;
+            }
+        }
+#endif
+
+#if ANDROID
+        var activity = Platform.CurrentActivity;
+
+        if (activity == null || activity.Window == null) return;
+
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+        windowInsetsControllerCompat.Show(types);
+#endif
+    }
+
+    /// <summary>
+    /// Method toggles Full Screen On
+    /// </summary>
+
+    public void SetFullScreen()
+    {
+
+#if ANDROID
+        var activity = Platform.CurrentActivity;
+
+        if (activity == null || activity.Window == null) return;
+
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
+        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
+        var types = Views.WindowInsetsCompat.Type.StatusBars() |
+                    Views.WindowInsetsCompat.Type.NavigationBars();
+
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+        windowInsetsControllerCompat.Hide(types);
+#endif
+
+#if WINDOWS
+        if (CurrentWindow is not null)
+        {
+            var appWindow = GetAppWindow(CurrentWindow);
+            switch (appWindow.Presenter)
+            {
+                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                    overlappedPresenter.SetBorderAndTitleBar(false, false);
+                    overlappedPresenter.Maximize();
+                    break;
+            }
+        }
+#endif
+    }
+
+    private void btnFullScreen_Clicked(object sender, EventArgs e)
+    {
+#if WINDOWS
+        CurrentWindow = BaseViewModel.CurrentWindow;
+#endif
+        if (_fullScreen)
+        {
+            _fullScreen = false;
+            RestoreScreen();
+        }
+        else
+        {
+            SetFullScreen();
+            _fullScreen = true;
+        }
+    }
+
+#if WINDOWS
+    /// <summary>
+    /// Method is required for switching Full Screen Mode for Windows
+    /// </summary>
+    private Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
+    {
+        var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
+        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
+        return appWindow;
+    }
+#endif
+#nullable disable
 }

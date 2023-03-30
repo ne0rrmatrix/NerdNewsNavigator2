@@ -18,10 +18,6 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <media:MediaControl
-        x:Name="mediaElement"
-        ShouldAutoPlay="True"
-        ShouldKeepScreenOn="True"
-        ShouldShowPlaybackControls="False" />
+    <media:MediaControl x:Name="mediaElement" />
 
 </ContentPage>
