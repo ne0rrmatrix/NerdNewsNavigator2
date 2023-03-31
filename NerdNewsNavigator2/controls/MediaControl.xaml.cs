@@ -25,7 +25,6 @@ public partial class MediaControl : ContentView
     #region Properties and Bindable Properties
     public string PlayPosition { get; set; }
     public Page CurrentPage { get; set; }
-    public static TimeSpan CurrentPositon { get; set; }
 
     private static bool s_fullScreen = false;
 
@@ -65,7 +64,7 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
     });
-    public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(MediaControl), TimeSpan.Zero);
+    public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(MediaElement), TimeSpan.Zero);
     public static readonly BindableProperty ShouldAutoPlayProperty = BindableProperty.Create(nameof(ShouldAutoPlay), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
@@ -101,7 +100,7 @@ public partial class MediaControl : ContentView
         get => GetValue(SourceProperty) as MediaSource;
         set => SetValue(SourceProperty, value);
     }
-    public TimeSpan Position => (TimeSpan)GetValue(PositionProperty);
+    public TimeSpan Position => mediaElement.Position;
     public MediaElement Name
     {
         get => GetValue(TitleProperty) as MediaElement;
@@ -130,6 +129,7 @@ public partial class MediaControl : ContentView
         PlayPosition = string.Empty;
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += ChangedPosition;
+        mediaElement.PositionChanged += OnPositionChanged;
         CurrentPage = Shell.Current.CurrentPage;
     }
     public void SeekTo(TimeSpan position)
@@ -194,7 +194,6 @@ public partial class MediaControl : ContentView
         var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
         var position = BaseViewModel.TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";
-        CurrentPositon = mediaElement.Position;
         OnPropertyChanged(nameof(PlayPosition));
     }
     #endregion

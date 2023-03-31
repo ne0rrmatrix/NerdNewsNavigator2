@@ -104,10 +104,10 @@ public partial class TabletPlayPodcastPage : ContentPage
                 break;
 
             case MediaElementState.Paused:
-                if (MediaControl.CurrentPositon > Pos.SavedPosition)
+                if (mediaElement.Position > Pos.SavedPosition)
                 {
-                    Pos.SavedPosition = MediaControl.CurrentPositon;
-                    _logger.LogInformation("Paused: {Position}", MediaControl.CurrentPositon);
+                    Pos.SavedPosition = mediaElement.Position;
+                    _logger.LogInformation("Paused: {Position}", mediaElement.Position);
                     await Save();
                 }
                 break;
@@ -115,10 +115,10 @@ public partial class TabletPlayPodcastPage : ContentPage
         switch (e.PreviousState)
         {
             case MediaElementState.Playing:
-                if (MediaControl.CurrentPositon < Pos.SavedPosition)
+                if (mediaElement.Position < Pos.SavedPosition)
                 {
-                    Pos.SavedPosition = MediaControl.CurrentPositon;
-                    _logger.LogInformation("Finished Seeking: {Position}", MediaControl.CurrentPositon);
+                    Pos.SavedPosition = mediaElement.Position;
+                    _logger.LogInformation("Finished Seeking: {Position}", mediaElement.Position);
                     await Save();
                 }
                 break;
