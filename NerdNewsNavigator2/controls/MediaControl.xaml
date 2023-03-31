@@ -33,7 +33,7 @@
                 x:Name="btnFullScreen"
                 Margin="10"
                 BackgroundColor="Transparent"
-                Clicked="btnFullScreen_Clicked"
+                Clicked="BtnFullScreen_Clicked"
                 HeightRequest="40"
                 HorizontalOptions="End"
                 Source="whitefs.png"
