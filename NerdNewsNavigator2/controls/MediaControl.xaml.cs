@@ -24,7 +24,7 @@ namespace NerdNewsNavigator2.controls;
 
 public partial class MediaControl : ContentView
 {
-
+    #region Properties and Bindable Properties
     /// <summary>
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>
@@ -50,14 +50,6 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.Source = newValue as MediaSource;
     });
-    public MediaControl()
-    {
-        InitializeComponent();
-        PlayPosition = string.Empty;
-        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
-        mediaElement.PositionChanged += ChangedPosition;
-        CurrentPage = Shell.Current.CurrentPage;
-    }
     public TimeSpan Position
     {
         get => (TimeSpan)GetValue(TitleProperty);
@@ -90,38 +82,37 @@ public partial class MediaControl : ContentView
 
     public Action<object, MediaStateChangedEventArgs> StateChanged { get; internal set; }
     public Action<object, EventArgs> MediaOpened { get; internal set; }
-
-    /// <summary>
-    /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
-    /// </summary>
-    /// <param name="m3UString"></param>
-    /// <returns></returns>
-    public static string ParseM3UPLaylist(string m3UString)
+    #endregion
+    public MediaControl()
     {
-        var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
-        var list = masterPlaylist.Streams.ToList();
-        return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
+        InitializeComponent();
+        PlayPosition = string.Empty;
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
+        mediaElement.PositionChanged += ChangedPosition;
+        CurrentPage = Shell.Current.CurrentPage;
     }
-
-    /// <summary>
-    /// Method returns the Live stream M3U Url from youtube ID.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    public static async Task<string> GetM3U_Url(string url)
+    public void SeekTo(TimeSpan position)
     {
-        var content = string.Empty;
-        var client = new HttpClient();
-        var youtube = new YoutubeClient();
-        var result = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
-        var response = await client.GetAsync(result);
-        if (response.IsSuccessStatusCode)
+        mediaElement.SeekTo(position);
+    }
+    public void Stop()
+    {
+        mediaElement.Stop();
+    }
+    #region Events
+#nullable enable
+    private void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
         {
-            content = await response.Content.ReadAsStringAsync();
+            PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
         }
-
-        return content;
     }
+    private void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
+    {
+        PositionSlider.Value = e.Position.TotalSeconds;
+    }
+#nullable disable
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
 #if WINDOWS
@@ -136,27 +127,29 @@ public partial class MediaControl : ContentView
             RestoreScreen();
         }
     }
-    public void SeekTo(TimeSpan position)
+    private void Slider_DragCompleted(object? sender, EventArgs e)
     {
-        mediaElement.SeekTo(position);
-    }
-    public void Stop()
-    {
-        mediaElement.Stop();
-    }
-#nullable enable
-    private void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
-        {
-            PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
-        }
-    }
-    private void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
-    {
-        PositionSlider.Value = e.Position.TotalSeconds;
+        ArgumentNullException.ThrowIfNull(sender);
+
+        var newValue = ((Slider)sender).Value;
+        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
+        mediaElement.Play();
     }
 #nullable disable
+    private void Slider_DragStarted(object sender, EventArgs e)
+    {
+        mediaElement.Pause();
+    }
+    private void ChangedPosition(object sender, EventArgs e)
+    {
+        var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
+        var position = BaseViewModel.TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
+    }
+    #endregion
+
+    #region Buttons
     private void BtnRewind_Clicked(object sender, EventArgs e)
     {
         var time = mediaElement.Position - TimeSpan.FromSeconds(15);
@@ -172,14 +165,6 @@ public partial class MediaControl : ContentView
         mediaElement.SeekTo(time);
         mediaElement.Play();
     }
-    private void ChangedPosition(object sender, EventArgs e)
-    {
-        var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
-        var position = BaseViewModel.TimeConverter(mediaElement.Position);
-        PlayPosition = $"{position}/{playDuration}";
-        OnPropertyChanged(nameof(PlayPosition));
-    }
-
     private void BtnPlay_Clicked(object sender, EventArgs e)
     {
         if (mediaElement.CurrentState == MediaElementState.Stopped ||
@@ -194,8 +179,24 @@ public partial class MediaControl : ContentView
             BtnPLay.Source = "play.png";
         }
     }
-#nullable enable
-    private void OnMuteClicked(object? sender, EventArgs e)
+
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    {
+#if WINDOWS
+        CurrentWindow = BaseViewModel.CurrentWindow;
+#endif
+        if (_fullScreen)
+        {
+            _fullScreen = false;
+            RestoreScreen();
+        }
+        else
+        {
+            SetFullScreen();
+            _fullScreen = true;
+        }
+    }
+    private void OnMuteClicked(object sender, EventArgs e)
     {
         mediaElement.ShouldMute = !mediaElement.ShouldMute;
         if (mediaElement.ShouldMute)
@@ -208,40 +209,9 @@ public partial class MediaControl : ContentView
         }
         OnPropertyChanged(nameof(ImageButtonMute.Source));
     }
-    private void Slider_DragCompleted(object? sender, EventArgs e)
-    {
-        ArgumentNullException.ThrowIfNull(sender);
+    #endregion
 
-        var newValue = ((Slider)sender).Value;
-        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
-        mediaElement.Play();
-    }
-#nullable disable
-    private void Slider_DragStarted(object sender, EventArgs e)
-    {
-        mediaElement.Pause();
-    }
-    public void Load()
-    {
-#if WINDOWS || ANDROID
-        mediaElement.MediaOpened += Seek;
-#endif
-
-#if IOS || MACCATALYST
-        mediaElement.StateChanged += SeekIOS;
-#endif
-    }
-    /// <summary>
-    /// Method Starts <see cref="MediaElement"/> Playback.
-    /// </summary>
-    /// <returns></returns>
-    public async Task LoadVideo()
-    {
-        var m3u = await GetM3U_Url("F2NreNEmMy4");
-        mediaElement.Source = ParseM3UPLaylist(m3u);
-        mediaElement.Play();
-    }
-
+    #region Full Screen Functions
 #nullable enable
     /// <summary>
     /// Method toggles Full Screen Off
@@ -315,23 +285,6 @@ public partial class MediaControl : ContentView
 #endif
     }
 
-    private void BtnFullScreen_Clicked(object sender, EventArgs e)
-    {
-#if WINDOWS
-        CurrentWindow = BaseViewModel.CurrentWindow;
-#endif
-        if (_fullScreen)
-        {
-            _fullScreen = false;
-            RestoreScreen();
-        }
-        else
-        {
-            SetFullScreen();
-            _fullScreen = true;
-        }
-    }
-
 #if WINDOWS
     /// <summary>
     /// Method is required for switching Full Screen Mode for Windows
@@ -343,7 +296,11 @@ public partial class MediaControl : ContentView
         var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
         return appWindow;
     }
+
 #endif
+    #endregion
+
+    #region TabletPlayPodcast functions
     /// <summary>
     /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
     /// </summary>
@@ -466,7 +423,65 @@ public partial class MediaControl : ContentView
         mediaElement.SeekTo(Pos.SavedPosition);
         mediaElement.StateChanged += Media_Stopped;
     }
+    #endregion
 
+    #region Load Functions
+    /// <summary>
+    /// A method that starts <see cref="MediaOpened"/> or <see cref="StateChanged"/> <see cref="MediaElement"/> event for <see cref="TabletPlayPodcastPage"/>
+    /// </summary>
+    public void Load()
+    {
+#if WINDOWS || ANDROID
+        mediaElement.MediaOpened += Seek;
+#endif
+
+#if IOS || MACCATALYST
+        mediaElement.StateChanged += SeekIOS;
+#endif
+    }
+    /// <summary>
+    /// Method Starts <see cref="MediaElement"/> Playback.
+    /// </summary>
+    /// <returns></returns>
+    public async Task LoadVideo()
+    {
+        var m3u = await GetM3U_Url("F2NreNEmMy4");
+        mediaElement.Source = ParseM3UPLaylist(m3u);
+        mediaElement.Play();
+    }
+    #endregion
+
+    /// <summary>
+    /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
+    /// </summary>
+    /// <param name="m3UString"></param>
+    /// <returns></returns>
+    public static string ParseM3UPLaylist(string m3UString)
+    {
+        var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
+        var list = masterPlaylist.Streams.ToList();
+        return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
+    }
+
+    /// <summary>
+    /// Method returns the Live stream M3U Url from youtube ID.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    public static async Task<string> GetM3U_Url(string url)
+    {
+        var content = string.Empty;
+        var client = new HttpClient();
+        var youtube = new YoutubeClient();
+        var result = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
+        var response = await client.GetAsync(result);
+        if (response.IsSuccessStatusCode)
+        {
+            content = await response.Content.ReadAsStringAsync();
+        }
+
+        return content;
+    }
     /// <summary>
     /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
     /// </summary>

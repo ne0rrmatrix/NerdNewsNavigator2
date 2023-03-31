@@ -10,12 +10,21 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
+    /// <summary>
+    /// The <see cref="bool"/> instance managed by this class.
+    /// </summary>
     private bool _setFullScreen = false;
+    /// <summary>
+    /// The <see cref="bool"/> public property managed by this class.
+    /// </summary>
     public bool SetFullScreen
     {
         get => _setFullScreen;
         set => SetProperty(ref _setFullScreen, value);
     }
+    /// <summary>
+    /// The <see cref="MauiWinUIWindow"/> public property managed by this class.
+    /// </summary>
 #if WINDOWS
     public static MauiWinUIWindow CurrentWindow { get; set; }
 #endif
@@ -48,7 +57,7 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     private int _orientation;
     /// <summary>
-    /// An <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     public int Orientation
     {
@@ -62,7 +71,7 @@ public partial class BaseViewModel : ObservableObject
     private bool _isBusy;
 
     /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
+    /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsBusy
     {
@@ -77,7 +86,7 @@ public partial class BaseViewModel : ObservableObject
     }
 
     /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
+    /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
 
@@ -116,6 +125,10 @@ public partial class BaseViewModel : ObservableObject
             await SetIsBusy();
         }
     }
+    /// <summary>
+    /// A method that sets <see cref="SetFullScreen"/> on and off with a timer.
+    /// </summary>
+    /// <returns></returns>
     public async Task Waiting()
     {
         if (!SetFullScreen)
@@ -126,6 +139,11 @@ public partial class BaseViewModel : ObservableObject
             SetFullScreen = false;
         }
     }
+    /// <summary>
+    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
     public static string TimeConverter(TimeSpan time)
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
@@ -142,6 +160,10 @@ public partial class BaseViewModel : ObservableObject
         await Task.Delay(4000);
         SetFullScreen = false;
     }
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
     public bool InternetConnected()
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
@@ -153,6 +175,12 @@ public partial class BaseViewModel : ObservableObject
             return false;
         }
     }
+    /// <summary>
+    /// A method that download a show to device.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="mostRecent"></param>
+    /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
         Logger.LogInformation("Trying to start download of {URL}", url);
@@ -305,6 +333,10 @@ public partial class BaseViewModel : ObservableObject
             }
         }
     }
+    /// <summary>
+    /// A method that sets <see cref="DownloadedShows"/> from the database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
     public async void GetDownloadedShows(object stateinfo)
     {
         DownloadedShows.Clear();
