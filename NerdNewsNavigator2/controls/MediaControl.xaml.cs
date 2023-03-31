@@ -29,13 +29,14 @@ public partial class MediaControl : ContentView
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
+    public string PlayPosition { get; set; }
     public Page CurrentPage { get; set; }
 
     private bool _fullScreen = false;
 #if WINDOWS
     private static MauiWinUIWindow CurrentWindow { get; set; }
 #endif
-    public string PlayPosition { get; set; }
+
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
         {
             var control = (MediaControl)bindable;
@@ -56,6 +57,10 @@ public partial class MediaControl : ContentView
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += ChangedPosition;
         CurrentPage = Shell.Current.CurrentPage;
+    }
+    public TimeSpan Position
+    {
+        get => (TimeSpan)GetValue(TitleProperty);
     }
     public MediaSource Source
     {
@@ -82,7 +87,9 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
+
     public Action<object, MediaStateChangedEventArgs> StateChanged { get; internal set; }
+    public Action<object, EventArgs> MediaOpened { get; internal set; }
 
     /// <summary>
     /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
@@ -216,8 +223,6 @@ public partial class MediaControl : ContentView
     }
     public void Load()
     {
-       // mediaElement.Source = url;
-
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif
@@ -339,7 +344,6 @@ public partial class MediaControl : ContentView
         return appWindow;
     }
 #endif
-
     /// <summary>
     /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
     /// </summary>
@@ -439,6 +443,7 @@ public partial class MediaControl : ContentView
     /// <param name="e"></param>
     public async void Seek(object? sender, EventArgs e)
     {
+        Debug.WriteLine($"Seeking {Pos.SavedPosition}");
         if (sender is null)
         {
             return;
@@ -462,5 +467,18 @@ public partial class MediaControl : ContentView
         mediaElement.StateChanged += Media_Stopped;
     }
 
-#nullable disable
+    /// <summary>
+    /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ContentView_Unloaded(object sender, EventArgs e)
+    {
+        if (sender is null)
+        {
+            return;
+        }
+        // Stop and cleanup MediaElement when we navigate away
+        mediaElement.Handler?.DisconnectHandler();
+    }
 }

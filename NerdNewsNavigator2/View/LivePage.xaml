@@ -4,15 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:media="clr-namespace:NerdNewsNavigator2.controls"
-    xmlns:page="clr-namespace:NerdNewsNavigator2.View"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
-    x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
     Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False"
-    Unloaded="ContentPage_Unloaded">
+    Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
