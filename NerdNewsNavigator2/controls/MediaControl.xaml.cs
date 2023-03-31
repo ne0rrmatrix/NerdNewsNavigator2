@@ -82,6 +82,7 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
+    public Action<object, MediaStateChangedEventArgs> StateChanged { get; internal set; }
 
     /// <summary>
     /// Method returns 720P URL for <see cref="mediaElement"/> to Play.

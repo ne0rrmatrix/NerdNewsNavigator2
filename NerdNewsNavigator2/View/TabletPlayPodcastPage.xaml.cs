@@ -65,7 +65,7 @@ public partial class TabletPlayPodcastPage : ContentPage
         }
         // Stop and cleanup MediaElement when we navigate away
         _logger.LogInformation("Unloaded Media Element from memory.");
-       // mediaElement.StateChanged -= mediaElement.Media_Stopped;
+        mediaElement.StateChanged -= mediaElement.Media_Stopped;
         Pos.SavedPosition = TimeSpan.Zero;
         Pos.Title = string.Empty;
         mediaElement.Handler?.DisconnectHandler();
