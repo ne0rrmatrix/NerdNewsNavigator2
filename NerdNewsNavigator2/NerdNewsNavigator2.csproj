@@ -149,7 +149,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <MauiXaml Update="controls\MediaControl.xaml">
+    <MauiXaml Update="Controls\MediaControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\AddPodcastPage.xaml">

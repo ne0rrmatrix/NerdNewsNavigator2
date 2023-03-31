@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Maui.Controls.PlatformConfiguration;
-using NerdNewsNavigator2.controls;
 using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
@@ -17,10 +15,9 @@ using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
 using CommunityToolkit.Maui.Core.Primitives;
-using System.Data;
 #endif
 
-namespace NerdNewsNavigator2.controls;
+namespace NerdNewsNavigator2.Controls;
 
 public partial class MediaControl : ContentView
 {
@@ -44,7 +41,10 @@ public partial class MediaControl : ContentView
             control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
             control.mediaElement.Source = newValue as MediaSource;
             control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
+            control.mediaElement.StateChanged += (System.EventHandler<MediaStateChangedEventArgs>)newValue;
+            control.mediaElement.MediaOpened += (System.EventHandler)newValue;
         });
+
     public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
@@ -79,9 +79,6 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
-
-    public Action<object, MediaStateChangedEventArgs> StateChanged { get; internal set; }
-    public Action<object, EventArgs> MediaOpened { get; internal set; }
     #endregion
     public MediaControl()
     {
@@ -112,7 +109,6 @@ public partial class MediaControl : ContentView
     {
         PositionSlider.Value = e.Position.TotalSeconds;
     }
-#nullable disable
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
 #if WINDOWS
@@ -427,7 +423,7 @@ public partial class MediaControl : ContentView
 
     #region Load Functions
     /// <summary>
-    /// A method that starts <see cref="MediaOpened"/> or <see cref="StateChanged"/> <see cref="MediaElement"/> event for <see cref="TabletPlayPodcastPage"/>
+    /// A method that starts <see cref="MediaElement"/> event for <see cref="TabletPlayPodcastPage"/>
     /// </summary>
     public void Load()
     {
@@ -437,8 +433,9 @@ public partial class MediaControl : ContentView
 
 #if IOS || MACCATALYST
         mediaElement.StateChanged += SeekIOS;
-#endif
+#endif 
     }
+
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
