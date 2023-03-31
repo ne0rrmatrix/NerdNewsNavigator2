@@ -15,6 +15,7 @@ using Microsoft.UI.Windowing;
 using WinRT;
 using Microsoft.Maui.Controls;
 using CommunityToolkit.Maui.Core.Primitives;
+using CommunityToolkit.Maui.Core;
 #endif
 
 namespace NerdNewsNavigator2.Controls;
@@ -22,14 +23,12 @@ namespace NerdNewsNavigator2.Controls;
 public partial class MediaControl : ContentView
 {
     #region Properties and Bindable Properties
-    /// <summary>
-    /// Initilizes a new instance of the <see cref="Position"/> class
-    /// </summary>
-    private Position Pos { get; set; } = new();
     public string PlayPosition { get; set; }
     public Page CurrentPage { get; set; }
+    public static TimeSpan CurrentPositon { get; set; }
 
-    private bool _fullScreen = false;
+    private static bool s_fullScreen = false;
+
 #if WINDOWS
     private static MauiWinUIWindow CurrentWindow { get; set; }
 #endif
@@ -41,8 +40,9 @@ public partial class MediaControl : ContentView
             control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
             control.mediaElement.Source = newValue as MediaSource;
             control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
-            control.mediaElement.StateChanged += (System.EventHandler<MediaStateChangedEventArgs>)newValue;
-            control.mediaElement.MediaOpened += (System.EventHandler)newValue;
+            control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
+            control.mediaElement.StateChanged += (EventHandler<MediaStateChangedEventArgs>)newValue;
+            control.mediaElement.MediaOpened += (EventHandler)newValue;
         });
 
     public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
@@ -50,15 +50,58 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.Source = newValue as MediaSource;
     });
-    public TimeSpan Position
+    public static readonly BindableProperty StateChangedProperty = BindableProperty.Create(nameof(StateChanged), typeof(EventHandler<MediaStateChangedEventArgs>), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
-        get => (TimeSpan)GetValue(TitleProperty);
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.StateChanged += (EventHandler<MediaStateChangedEventArgs>)newValue;
+    });
+    public static readonly BindableProperty MediaOpenedProperty = BindableProperty.Create(nameof(MediaOpened), typeof(EventHandler), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.MediaOpened += (EventHandler)newValue;
+    });
+    public static readonly BindableProperty ShouldKeepScreenOnProperty = BindableProperty.Create(nameof(ShouldKeepScreenOn), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
+    });
+    public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(MediaControl), TimeSpan.Zero);
+    public static readonly BindableProperty ShouldAutoPlayProperty = BindableProperty.Create(nameof(ShouldAutoPlay), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.ShouldAutoPlay = (bool)newValue;
+    });
+    public static readonly BindableProperty ShouldShowPlaybackControlsProperty = BindableProperty.Create(nameof(ShouldShowPlaybackControls), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
+    });
+    public static readonly BindableProperty PositionChangedProperty = BindableProperty.Create(nameof(PositionChanged), typeof(EventHandler<MediaPositionChangedEventArgs>), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
+    });
+    public EventHandler MediaOpened
+    {
+        get => GetValue(MediaOpenedProperty) as EventHandler;
+        set => SetValue(MediaOpenedProperty, value);
+    }
+    public EventHandler<MediaStateChangedEventArgs> StateChanged
+    {
+        get => GetValue(StateChangedProperty) as EventHandler<MediaStateChangedEventArgs>;
+        set => SetValue(StateChangedProperty, value);
+    }
+    public EventHandler<MediaPositionChangedEventArgs> PositionChanged
+    {
+        get => GetValue(PositionChangedProperty) as EventHandler<MediaPositionChangedEventArgs>;
+        set => SetValue(PositionChangedProperty, value);
     }
     public MediaSource Source
     {
         get => GetValue(SourceProperty) as MediaSource;
         set => SetValue(SourceProperty, value);
     }
+    public TimeSpan Position => (TimeSpan)GetValue(PositionProperty);
     public MediaElement Name
     {
         get => GetValue(TitleProperty) as MediaElement;
@@ -66,19 +109,20 @@ public partial class MediaControl : ContentView
     }
     public bool ShouldShowPlaybackControls
     {
-        get => (bool)GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
+        get => (bool)GetValue(ShouldShowPlaybackControlsProperty);
+        set => SetValue(ShouldShowPlaybackControlsProperty, value);
     }
     public bool ShouldAutoPlay
     {
-        get => (bool)GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
+        get => (bool)GetValue(ShouldAutoPlayProperty);
+        set => SetValue(ShouldAutoPlayProperty, value);
     }
     public bool ShouldKeepScreenOn
     {
-        get => (bool)GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
+        get => (bool)GetValue(ShouldKeepScreenOnProperty);
+        set => SetValue(ShouldKeepScreenOnProperty, value);
     }
+
     #endregion
     public MediaControl()
     {
@@ -90,13 +134,21 @@ public partial class MediaControl : ContentView
     }
     public void SeekTo(TimeSpan position)
     {
+        mediaElement.Pause();
         mediaElement.SeekTo(position);
+        mediaElement.Play();
+    }
+    public void Play()
+    {
+        mediaElement.Play();
     }
     public void Stop()
     {
         mediaElement.Stop();
     }
+
     #region Events
+
 #nullable enable
     private void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -109,7 +161,7 @@ public partial class MediaControl : ContentView
     {
         PositionSlider.Value = e.Position.TotalSeconds;
     }
-    private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
 #if WINDOWS
         CurrentWindow = BaseViewModel.CurrentWindow;
@@ -131,6 +183,7 @@ public partial class MediaControl : ContentView
         mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
         mediaElement.Play();
     }
+
 #nullable disable
     private void Slider_DragStarted(object sender, EventArgs e)
     {
@@ -141,6 +194,7 @@ public partial class MediaControl : ContentView
         var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
         var position = BaseViewModel.TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";
+        CurrentPositon = mediaElement.Position;
         OnPropertyChanged(nameof(PlayPosition));
     }
     #endregion
@@ -176,20 +230,20 @@ public partial class MediaControl : ContentView
         }
     }
 
-    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    private static void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
 #if WINDOWS
         CurrentWindow = BaseViewModel.CurrentWindow;
 #endif
-        if (_fullScreen)
+        if (s_fullScreen)
         {
-            _fullScreen = false;
+            s_fullScreen = false;
             RestoreScreen();
         }
         else
         {
             SetFullScreen();
-            _fullScreen = true;
+            s_fullScreen = true;
         }
     }
     private void OnMuteClicked(object sender, EventArgs e)
@@ -212,7 +266,7 @@ public partial class MediaControl : ContentView
     /// <summary>
     /// Method toggles Full Screen Off
     /// </summary>
-    public void RestoreScreen()
+    public static void RestoreScreen()
     {
 #if WINDOWS
         if (CurrentWindow is not null)
@@ -249,7 +303,7 @@ public partial class MediaControl : ContentView
     /// Method toggles Full Screen On
     /// </summary>
 
-    public void SetFullScreen()
+    public static void SetFullScreen()
     {
 
 #if ANDROID
@@ -285,7 +339,7 @@ public partial class MediaControl : ContentView
     /// <summary>
     /// Method is required for switching Full Screen Mode for Windows
     /// </summary>
-    private Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
+    private static Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
     {
         var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
         var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
@@ -296,189 +350,6 @@ public partial class MediaControl : ContentView
 #endif
     #endregion
 
-    #region TabletPlayPodcast functions
-    /// <summary>
-    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
-    {
-        if (sender == null)
-        {
-            return;
-        }
-        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
-        Pos.SavedPosition = TimeSpan.Zero;
-        var positionList = await App.PositionData.GetAllPositions();
-        foreach (var item in positionList)
-        {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                Debug.WriteLine($"Retrieved Saved position from database is: {item.Title} - {item.SavedPosition}");
-            }
-        }
-        if (e.NewState == MediaElementState.Playing)
-        {
-            mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.ShouldKeepScreenOn = true;
-            Debug.WriteLine("Media playback started. ShouldKeepScreenOn is set to true.");
-        }
-    }
-
-    /// <summary>
-    /// Manages the saving of <see cref="Position"/> data in <see cref="PositionDataBase"/>
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        switch (e.NewState)
-        {
-            case MediaElementState.Stopped:
-                Debug.WriteLine("Media has finished playing.");
-                mediaElement.ShouldKeepScreenOn = false;
-                Debug.WriteLine("ShouldKeepScreenOn set to false.");
-                break;
-
-            case MediaElementState.Paused:
-                if (mediaElement.Position > Pos.SavedPosition)
-                {
-                    Pos.SavedPosition = mediaElement.Position;
-                    Debug.WriteLine($"Paused: {mediaElement.Position}");
-                    await Save();
-                }
-                break;
-        }
-        switch (e.PreviousState)
-        {
-            case MediaElementState.Playing:
-                if (mediaElement.Position < Pos.SavedPosition)
-                {
-                    Pos.SavedPosition = mediaElement.Position;
-                    Debug.WriteLine($"Finished Seeking: {mediaElement.Position}");
-                    await Save();
-                }
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Manages saving of <see cref="Pos"/> to <see cref="PositionDataBase"/> Database.
-    /// </summary>
-    /// <returns></returns>
-    private async Task Save()
-    {
-        var items = await App.PositionData.GetAllPositions();
-        foreach (var item in items)
-        {
-            if (item.Title == Pos.Title)
-            {
-                await App.PositionData.Delete(item);
-            }
-        }
-        await App.PositionData.Add(new Position
-        {
-            Title = Pos.Title,
-            SavedPosition = Pos.SavedPosition,
-        });
-    }
-
-    /// <summary>
-    /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public async void Seek(object? sender, EventArgs e)
-    {
-        Debug.WriteLine($"Seeking {Pos.SavedPosition}");
-        if (sender is null)
-        {
-            return;
-        }
-        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
-        Pos.SavedPosition = TimeSpan.Zero;
-        var positionList = await App.PositionData.GetAllPositions();
-
-        foreach (var item in positionList)
-        {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                Debug.WriteLine($"Retrieved Saved position from database is: {item.Title} - {item.SavedPosition}");
-            }
-        }
-
-        mediaElement.ShouldKeepScreenOn = true;
-        Debug.WriteLine("Media playback started. ShouldKeepScreenOn is set to true.");
-        mediaElement.SeekTo(Pos.SavedPosition);
-        mediaElement.StateChanged += Media_Stopped;
-    }
-    #endregion
-
-    #region Load Functions
-    /// <summary>
-    /// A method that starts <see cref="MediaElement"/> event for <see cref="TabletPlayPodcastPage"/>
-    /// </summary>
-    public void Load()
-    {
-#if WINDOWS || ANDROID
-        mediaElement.MediaOpened += Seek;
-#endif
-
-#if IOS || MACCATALYST
-        mediaElement.StateChanged += SeekIOS;
-#endif 
-    }
-
-    /// <summary>
-    /// Method Starts <see cref="MediaElement"/> Playback.
-    /// </summary>
-    /// <returns></returns>
-    public async Task LoadVideo()
-    {
-        var m3u = await GetM3U_Url("F2NreNEmMy4");
-        mediaElement.Source = ParseM3UPLaylist(m3u);
-        mediaElement.Play();
-    }
-    #endregion
-
-    /// <summary>
-    /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
-    /// </summary>
-    /// <param name="m3UString"></param>
-    /// <returns></returns>
-    public static string ParseM3UPLaylist(string m3UString)
-    {
-        var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
-        var list = masterPlaylist.Streams.ToList();
-        return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
-    }
-
-    /// <summary>
-    /// Method returns the Live stream M3U Url from youtube ID.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    public static async Task<string> GetM3U_Url(string url)
-    {
-        var content = string.Empty;
-        var client = new HttpClient();
-        var youtube = new YoutubeClient();
-        var result = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
-        var response = await client.GetAsync(result);
-        if (response.IsSuccessStatusCode)
-        {
-            content = await response.Content.ReadAsStringAsync();
-        }
-
-        return content;
-    }
     /// <summary>
     /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
     /// </summary>

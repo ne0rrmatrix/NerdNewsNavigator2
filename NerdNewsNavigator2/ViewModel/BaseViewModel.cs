@@ -11,29 +11,6 @@ public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     /// <summary>
-    /// The <see cref="bool"/> instance managed by this class.
-    /// </summary>
-    private bool _setFullScreen = false;
-    /// <summary>
-    /// The <see cref="bool"/> public property managed by this class.
-    /// </summary>
-    public bool SetFullScreen
-    {
-        get => _setFullScreen;
-        set => SetProperty(ref _setFullScreen, value);
-    }
-    /// <summary>
-    /// The <see cref="MauiWinUIWindow"/> public property managed by this class.
-    /// </summary>
-#if WINDOWS
-    public static MauiWinUIWindow CurrentWindow { get; set; }
-#endif
-    /// <summary>
-    /// The <see cref="DisplayInfo"/> instance managed by this class.
-    /// </summary>
-    public DisplayInfo MyMainDisplay { get; set; } = new();
-
-    /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
@@ -52,10 +29,52 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+
+    /// <summary>
+    /// The <see cref="bool"/> instance managed by this class.
+    /// </summary>
+
+    /// <summary>
+    /// The <see cref="DisplayInfo"/> instance managed by this class.
+    /// </summary>
+    public DisplayInfo MyMainDisplay { get; set; } = new();
+
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
+    ILogger<BaseViewModel> Logger { get; set; }
+
+    /// <summary>
+    /// an <see cref="IConnectivity"/> instance managed by this class.
+    /// </summary>
+    private readonly IConnectivity _connectivity;
+
+    /// <summary>
+    /// An <see cref="bool"/> instance managed by this class.
+    /// </summary>
+    private bool _setFullScreen = false;
+
+    /// <summary>
+    /// The <see cref="bool"/> public property managed by this class.
+    /// </summary>
+    public bool SetFullScreen
+    {
+        get => _setFullScreen;
+        set => SetProperty(ref _setFullScreen, value);
+    }
+
+#if WINDOWS
+    /// <summary>
+    /// The <see cref="MauiWinUIWindow"/> public property managed by this class.
+    /// </summary>
+    public static MauiWinUIWindow CurrentWindow { get; set; }
+#endif
+
     /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     private int _orientation;
+
     /// <summary>
     /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
@@ -89,16 +108,6 @@ public partial class BaseViewModel : ObservableObject
     /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
-
-    /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
-    /// </summary>
-    ILogger<BaseViewModel> Logger { get; set; }
-
-    /// <summary>
-    /// an <see cref="IConnectivity"/> instance managed by this class.
-    /// </summary>
-    private readonly IConnectivity _connectivity;
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
@@ -175,6 +184,7 @@ public partial class BaseViewModel : ObservableObject
             return false;
         }
     }
+
     /// <summary>
     /// A method that download a show to device.
     /// </summary>
@@ -249,6 +259,7 @@ public partial class BaseViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+
 #if WINDOWS || ANDROID
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
@@ -333,6 +344,7 @@ public partial class BaseViewModel : ObservableObject
             }
         }
     }
+
     /// <summary>
     /// A method that sets <see cref="DownloadedShows"/> from the database.
     /// </summary>

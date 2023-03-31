@@ -39,10 +39,51 @@ public partial class LivePage : ContentPage
         {
             return;
         }
-
 #if WINDOWS
         BaseViewModel.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
 #endif
-        _ = mediaElement.LoadVideo();
+        _ = LoadVideo();
+    }
+
+    /// <summary>
+    /// Method Starts <see cref="MediaElement"/> Playback.
+    /// </summary>
+    /// <returns></returns>
+    public async Task LoadVideo()
+    {
+        var m3u = await GetM3U_Url("F2NreNEmMy4");
+        mediaElement.Source = ParseM3UPLaylist(m3u);
+        mediaElement.Play();
+    }
+
+    /// <summary>
+    /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
+    /// </summary>
+    /// <param name="m3UString"></param>
+    /// <returns></returns>
+    public static string ParseM3UPLaylist(string m3UString)
+    {
+        var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
+        var list = masterPlaylist.Streams.ToList();
+        return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
+    }
+
+    /// <summary>
+    /// Method returns the Live stream M3U Url from youtube ID.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    public static async Task<string> GetM3U_Url(string url)
+    {
+        var content = string.Empty;
+        var client = new HttpClient();
+        var youtube = new YoutubeClient();
+        var result = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
+        var response = await client.GetAsync(result);
+        if (response.IsSuccessStatusCode)
+        {
+            content = await response.Content.ReadAsStringAsync();
+        }
+        return content;
     }
 }
