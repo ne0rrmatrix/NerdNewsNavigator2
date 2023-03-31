@@ -20,7 +20,7 @@
 
 
 
-    <media:MediaControl x:Name="mediaElement" />
+    <media:MediaControl x:Name="mediaElement" Source="{Binding Url}" />
 
 
 </ContentPage>

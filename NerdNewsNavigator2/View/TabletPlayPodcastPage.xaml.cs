@@ -79,6 +79,7 @@ public partial class TabletPlayPodcastPage : ContentPage
 #if WINDOWS
         BaseViewModel.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
 #endif
-        mediaElement.LoadUrl(Preferences.Default.Get("New_Url", string.Empty));
+        //mediaElement.LoadUrl(Preferences.Default.Get("New_Url", string.Empty));
+        mediaElement.Load();
     }
 }

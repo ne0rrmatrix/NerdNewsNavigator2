@@ -36,17 +36,18 @@ public partial class MediaControl : ContentView
     private static MauiWinUIWindow CurrentWindow { get; set; }
 #endif
     public string PlayPosition { get; set; }
-    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaElement), propertyChanged: (bindable, oldValue, newValue) =>
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
         {
-            var control = (MediaElement)bindable;
-            control.ShouldAutoPlay = (bool)newValue;
-            control.ShouldKeepScreenOn = (bool)newValue;
-            control.ShouldShowPlaybackControls = (bool)newValue;
+            var control = (MediaControl)bindable;
+            control.mediaElement.ShouldAutoPlay = (bool)newValue;
+            control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
+            control.mediaElement.Source = newValue as MediaSource;
+            control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
         });
-    public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
-        var control = (MediaElement)bindableProperty;
-        control.Source = (MediaSource)newValue;
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.Source = newValue as MediaSource;
     });
     public MediaControl()
     {
@@ -58,12 +59,12 @@ public partial class MediaControl : ContentView
     }
     public MediaSource Source
     {
-        get => (MediaSource)GetValue(SourceProperty);
+        get => GetValue(SourceProperty) as MediaSource;
         set => SetValue(SourceProperty, value);
     }
     public MediaElement Name
     {
-        get => (MediaElement)GetValue(TitleProperty);
+        get => GetValue(TitleProperty) as MediaElement;
         set => SetValue(TitleProperty, value);
     }
     public bool ShouldShowPlaybackControls
@@ -212,9 +213,9 @@ public partial class MediaControl : ContentView
     {
         mediaElement.Pause();
     }
-    public void LoadUrl(string url)
+    public void Load()
     {
-        mediaElement.Source = url;
+       // mediaElement.Source = url;
 
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
