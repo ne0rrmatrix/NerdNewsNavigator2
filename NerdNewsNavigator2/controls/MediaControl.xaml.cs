@@ -9,22 +9,12 @@ using Platform = Microsoft.Maui.ApplicationModel.Platform;
 using Views = AndroidX.Core.View;
 #endif
 
-#if WINDOWS
-using Microsoft.UI;
-using Microsoft.UI.Windowing;
-using WinRT;
-using Microsoft.Maui.Controls;
-using CommunityToolkit.Maui.Core.Primitives;
-using CommunityToolkit.Maui.Core;
-#endif
-
 namespace NerdNewsNavigator2.Controls;
 
 public partial class MediaControl : ContentView
 {
     #region Properties and Bindable Properties
     public string PlayPosition { get; set; }
-    public Page CurrentPage { get; set; }
 
     private static bool s_fullScreen = false;
     public bool FullScreen { get; set; } = false;
@@ -131,18 +121,22 @@ public partial class MediaControl : ContentView
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PositionChanged += OnPositionChanged;
-        CurrentPage = Shell.Current.CurrentPage;
         _ = Moved();
     }
     public void SeekTo(TimeSpan position)
     {
         mediaElement.Pause();
         mediaElement.SeekTo(position);
+        Debug.WriteLine("Seeking to position: " + position);
         mediaElement.Play();
     }
     public void Play()
     {
         mediaElement.Play();
+    }
+    public void Pause()
+    {
+        mediaElement.Pause();
     }
     public void Stop()
     {
@@ -262,13 +256,14 @@ public partial class MediaControl : ContentView
 
     #region Full Screen Functions
 #nullable enable
+
     /// <summary>
     /// Method toggles Full Screen Off
     /// </summary>
     public static void RestoreScreen()
     {
 #if WINDOWS
-        if (CurrentWindow is not null)
+         if (CurrentWindow is not null)
         {
             var appWindow = GetAppWindow(CurrentWindow);
 
@@ -347,6 +342,17 @@ public partial class MediaControl : ContentView
     }
 
 #endif
+    private async Task Moved()
+    {
+        if (!FullScreen)
+        {
+            FullScreen = true;
+            OnPropertyChanged(nameof(FullScreen));
+            await Task.Delay(4000);
+            FullScreen = false;
+            OnPropertyChanged(nameof(FullScreen));
+        }
+    }
     #endregion
 
     /// <summary>
@@ -363,17 +369,7 @@ public partial class MediaControl : ContentView
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
     }
-    public async Task Moved()
-    {
-        if (!FullScreen)
-        {
-            FullScreen = true;
-            OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(4000);
-            FullScreen = false;
-            OnPropertyChanged(nameof(FullScreen));
-        }
-    }
+
     /// <summary>
     /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
     /// </summary>

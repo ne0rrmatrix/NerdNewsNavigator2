@@ -2,15 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Application = Microsoft.Maui.Controls.Application;
-using Platform = Microsoft.Maui.ApplicationModel.Platform;
-
-#if WINDOWS
-using Microsoft.UI;
-using Microsoft.UI.Windowing;
-using WinRT;
-using Microsoft.Maui.Controls;
-#endif
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -18,9 +9,6 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
-#if WINDOWS
-    public static AppWindow CurrentWindow { get; set; }
-#endif
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -43,61 +31,5 @@ public partial class App : Application
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
     }
-
-#nullable enable
-
-    /// <summary>
-    /// A method to override the default <see cref="Window"/> behavior.
-    /// </summary>
-    /// <param name="activationState"></param>
-    /// <returns></returns>
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        var window = base.CreateWindow(activationState);
-        window.Created += (s, e) =>
-        {
-            //NOTE: Change this to fetch the value true/false according to your app logic.
-            SetFullScreen(s, e);
-        };
-        window.Resumed += (s, e) =>
-        {
-            SetFullScreen(s, e);
-        };
-
-        return window;
-    }
-
-    /// <summary>
-    /// Method to set Full Screen status.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="eventArgs"></param>
-    private static void SetFullScreen(object? sender, EventArgs eventArgs)
-    {
-        if (sender != null)
-        {
-
-#if WINDOWS
-            var currentWindow = sender.As<Window>();
-            var uiWindow = currentWindow.Handler.PlatformView.As<MauiWinUIWindow>();
-            var handle = WinRT.Interop.WindowNative.GetWindowHandle(uiWindow);
-            var id = Win32Interop.GetWindowIdFromWindow(handle);
-            var appWindow = AppWindow.GetFromWindowId(id);
-            CurrentWindow = AppWindow.GetFromWindowId(id);
-            switch (appWindow.Presenter)
-            {
-                case OverlappedPresenter overlappedPresenter:
-                    uiWindow.ExtendsContentIntoTitleBar = false;
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(true, true);
-                        overlappedPresenter.Restore();
-                    }
-                    break;
-            }
-#endif
-        }
-    }
-
-#nullable disable
 }
 
