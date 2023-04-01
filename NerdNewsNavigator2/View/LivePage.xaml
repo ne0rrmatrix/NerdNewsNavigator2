@@ -3,23 +3,15 @@
     x:Class="NerdNewsNavigator2.View.LivePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     Title=""
-    x:DataType="viewmodel:LiveViewModel"
     Loaded="ContentPage_Loaded"
-    Unloaded="ContentPage_Unloaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid>
-        <toolkit:MediaElement
-            x:Name="mediaElement"
-            ShouldAutoPlay="True"
-            ShouldShowPlaybackControls="True" />
-    </Grid>
+    <media:MediaControl x:Name="mediaElement" />
 
 </ContentPage>

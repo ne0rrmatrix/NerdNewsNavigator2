@@ -47,3 +47,4 @@ global using MetroLog.Maui;
 global using YoutubeExplode;
 global using YoutubeExplode.Videos;
 global using M3U8Parser;
+global using NerdNewsNavigator2.Controls;

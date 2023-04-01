@@ -10,12 +10,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject
 {
     #region Properties
-
-    /// <summary>
-    /// The <see cref="DisplayInfo"/> instance managed by this class.
-    /// </summary>
-    public DisplayInfo MyMainDisplay { get; set; } = new();
-
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
@@ -35,12 +29,33 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+
+    /// <summary>
+    /// The <see cref="bool"/> instance managed by this class.
+    /// </summary>
+
+    /// <summary>
+    /// The <see cref="DisplayInfo"/> instance managed by this class.
+    /// </summary>
+    public DisplayInfo MyMainDisplay { get; set; } = new();
+
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
+    ILogger<BaseViewModel> Logger { get; set; }
+
+    /// <summary>
+    /// an <see cref="IConnectivity"/> instance managed by this class.
+    /// </summary>
+    private readonly IConnectivity _connectivity;
+
     /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     private int _orientation;
+
     /// <summary>
-    /// An <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     public int Orientation
     {
@@ -54,7 +69,7 @@ public partial class BaseViewModel : ObservableObject
     private bool _isBusy;
 
     /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
+    /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsBusy
     {
@@ -69,19 +84,9 @@ public partial class BaseViewModel : ObservableObject
     }
 
     /// <summary>
-    /// A <see cref="bool"/> instance managed by this class.
+    /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
-
-    /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
-    /// </summary>
-    ILogger<BaseViewModel> Logger { get; set; }
-
-    /// <summary>
-    /// an <see cref="IConnectivity"/> instance managed by this class.
-    /// </summary>
-    private readonly IConnectivity _connectivity;
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
@@ -96,6 +101,11 @@ public partial class BaseViewModel : ObservableObject
         _ = GetMostRecent();
 #endif
     }
+
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
     public bool InternetConnected()
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
@@ -107,6 +117,13 @@ public partial class BaseViewModel : ObservableObject
             return false;
         }
     }
+
+    /// <summary>
+    /// A method that download a show to device.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="mostRecent"></param>
+    /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
         Logger.LogInformation("Trying to start download of {URL}", url);
@@ -175,6 +192,7 @@ public partial class BaseViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+
 #if WINDOWS || ANDROID
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
@@ -259,6 +277,11 @@ public partial class BaseViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>
+    /// A method that sets <see cref="DownloadedShows"/> from the database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
     public async void GetDownloadedShows(object stateinfo)
     {
         DownloadedShows.Clear();

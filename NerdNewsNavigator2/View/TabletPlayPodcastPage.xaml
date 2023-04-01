@@ -3,25 +3,20 @@
     x:Class="NerdNewsNavigator2.View.TabletPlayPodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
-    x:DataType="viewmodel:TabletPlayPodcastViewModel"
-    BackgroundColor="Black"
-    Shell.NavBarIsVisible="False"
-    Loaded="ContentPage_Loaded"
-    Unloaded="ContentPage_Unloaded">
+    x:DataType="vm:TabletPlayPodcastViewModel"
+    Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid>
-        <toolkit:MediaElement
-            x:Name="mediaElement"
-            ShouldAutoPlay="True"
-            ShouldShowPlaybackControls="True"
-            Source="{Binding Url}" />
-    </Grid>
+
+
+    <media:MediaControl x:Name="mediaElement" Source="{Binding Url}" />
+
 
 </ContentPage>
