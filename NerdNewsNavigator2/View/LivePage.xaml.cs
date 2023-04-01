@@ -39,9 +39,6 @@ public partial class LivePage : ContentPage
         {
             return;
         }
-#if WINDOWS
-        MediaControl.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-#endif
         _ = LoadVideo();
     }
 
@@ -49,7 +46,7 @@ public partial class LivePage : ContentPage
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
     /// <returns></returns>
-    public async Task LoadVideo()
+    private async Task LoadVideo()
     {
         var m3u = await GetM3U_Url("F2NreNEmMy4");
         mediaElement.Source = ParseM3UPLaylist(m3u);
@@ -61,7 +58,7 @@ public partial class LivePage : ContentPage
     /// </summary>
     /// <param name="m3UString"></param>
     /// <returns></returns>
-    public static string ParseM3UPLaylist(string m3UString)
+    private static string ParseM3UPLaylist(string m3UString)
     {
         var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
         var list = masterPlaylist.Streams.ToList();
@@ -73,7 +70,7 @@ public partial class LivePage : ContentPage
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    public static async Task<string> GetM3U_Url(string url)
+    private static async Task<string> GetM3U_Url(string url)
     {
         var content = string.Empty;
         var client = new HttpClient();

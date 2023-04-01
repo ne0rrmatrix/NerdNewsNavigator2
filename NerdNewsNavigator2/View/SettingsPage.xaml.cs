@@ -18,4 +18,9 @@ public partial class SettingsPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        DeviceService.RestoreScreen();
+    }
 }

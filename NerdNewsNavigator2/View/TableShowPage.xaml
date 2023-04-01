@@ -7,6 +7,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
+    Loaded="ContentPage_Loaded"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:TabletShowViewModel"
     BackgroundColor="#34AAD2"

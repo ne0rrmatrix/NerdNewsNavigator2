@@ -2,13 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Application = Microsoft.Maui.Controls.Application;
-using Platform = Microsoft.Maui.ApplicationModel.Platform;
-
-#if ANDROID
-using Views = AndroidX.Core.View;
-#endif
-
 namespace NerdNewsNavigator2.Controls;
 
 public partial class MediaControl : ContentView
@@ -17,11 +10,7 @@ public partial class MediaControl : ContentView
     public string PlayPosition { get; set; }
 
     private static bool s_fullScreen = false;
-    public bool FullScreen { get; set; } = false;
-
-#if WINDOWS
-    public static MauiWinUIWindow CurrentWindow { get; set; }
-#endif
+    private bool FullScreen { get; set; } = false;
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
         {
@@ -127,7 +116,6 @@ public partial class MediaControl : ContentView
     {
         mediaElement.Pause();
         mediaElement.SeekTo(position);
-        Debug.WriteLine("Seeking to position: " + position);
         mediaElement.Play();
     }
     public void Play()
@@ -262,35 +250,7 @@ public partial class MediaControl : ContentView
     /// </summary>
     public static void RestoreScreen()
     {
-#if WINDOWS
-         if (CurrentWindow is not null)
-        {
-            var appWindow = GetAppWindow(CurrentWindow);
-
-            switch (appWindow.Presenter)
-            {
-                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                    if (overlappedPresenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
-                    {
-                        overlappedPresenter.SetBorderAndTitleBar(true, true);
-                        overlappedPresenter.Restore();
-                    }
-                    break;
-            }
-        }
-#endif
-
-#if ANDROID
-        var activity = Platform.CurrentActivity;
-
-        if (activity == null || activity.Window == null) return;
-
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
-        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
-        var types = Views.WindowInsetsCompat.Type.StatusBars() |
-                    Views.WindowInsetsCompat.Type.NavigationBars();
-        windowInsetsControllerCompat.Show(types);
-#endif
+        DeviceService.RestoreScreen();
     }
 
     /// <summary>
@@ -299,49 +259,9 @@ public partial class MediaControl : ContentView
 
     public static void SetFullScreen()
     {
-
-#if ANDROID
-        var activity = Platform.CurrentActivity;
-
-        if (activity == null || activity.Window == null) return;
-
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
-        var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
-        var types = Views.WindowInsetsCompat.Type.StatusBars() |
-                    Views.WindowInsetsCompat.Type.NavigationBars();
-
-        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
-        windowInsetsControllerCompat.Hide(types);
-#endif
-
-#if WINDOWS
-        if (CurrentWindow is not null)
-        {
-            var appWindow = GetAppWindow(CurrentWindow);
-            switch (appWindow.Presenter)
-            {
-                case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                    overlappedPresenter.SetBorderAndTitleBar(false, false);
-                    overlappedPresenter.Maximize();
-                    break;
-            }
-        }
-#endif
+        DeviceService.FullScreen();
     }
 
-#if WINDOWS
-    /// <summary>
-    /// Method is required for switching Full Screen Mode for Windows
-    /// </summary>
-    private static Microsoft.UI.Windowing.AppWindow GetAppWindow(MauiWinUIWindow window)
-    {
-        var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
-        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
-        return appWindow;
-    }
-
-#endif
     private async Task Moved()
     {
         if (!FullScreen)

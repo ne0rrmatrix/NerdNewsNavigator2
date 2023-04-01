@@ -45,4 +45,9 @@ public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessag
             WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        DeviceService.RestoreScreen();
+    }
 }

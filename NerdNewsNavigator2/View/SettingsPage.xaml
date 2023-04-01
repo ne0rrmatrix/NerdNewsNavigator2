@@ -6,6 +6,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
+    Loaded="ContentPage_Loaded"
     x:DataType="viewmodel:SettingsViewModel"
     Shell.NavBarIsVisible="False">
 

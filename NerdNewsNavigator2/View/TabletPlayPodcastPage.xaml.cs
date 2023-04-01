@@ -47,19 +47,13 @@ public partial class TabletPlayPodcastPage : ContentPage
         mediaElement.Stop();
         mediaElement.ShouldKeepScreenOn = false;
     }
-    public void ContentPage_Loaded(object sender, EventArgs e)
-    {
-#if WINDOWS
-        MediaControl.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
-#endif
-    }
 #nullable enable
     /// <summary>
     /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
+    private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
     {
         if (sender == null)
         {
@@ -89,7 +83,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
+    private async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
     {
         if (sender is null)
         {
@@ -154,7 +148,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void Seek(object? sender, EventArgs e)
+    private async void Seek(object? sender, EventArgs e)
     {
         if (sender is null)
         {
@@ -175,7 +169,7 @@ public partial class TabletPlayPodcastPage : ContentPage
 
         mediaElement.ShouldKeepScreenOn = true;
         mediaElement.SeekTo(Pos.SavedPosition);
-        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
+        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
         mediaElement.StateChanged += Media_Stopped;
     }
 
