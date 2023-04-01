@@ -36,7 +36,5 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
     /// </summary>
     public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        _ = Moved();
     }
-
 }

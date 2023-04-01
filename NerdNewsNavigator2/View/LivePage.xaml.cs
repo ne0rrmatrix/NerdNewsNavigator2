@@ -40,7 +40,7 @@ public partial class LivePage : ContentPage
             return;
         }
 #if WINDOWS
-        BaseViewModel.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        MediaControl.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
 #endif
         _ = LoadVideo();
     }

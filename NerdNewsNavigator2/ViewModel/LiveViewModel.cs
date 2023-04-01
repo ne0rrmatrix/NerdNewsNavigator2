@@ -15,6 +15,5 @@ public partial class LiveViewModel : BaseViewModel
     /// </summary>
     public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        _ = Moved();
     }
 }

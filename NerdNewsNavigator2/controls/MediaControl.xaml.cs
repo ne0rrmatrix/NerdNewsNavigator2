@@ -27,9 +27,10 @@ public partial class MediaControl : ContentView
     public Page CurrentPage { get; set; }
 
     private static bool s_fullScreen = false;
+    public bool FullScreen { get; set; } = false;
 
 #if WINDOWS
-    private static MauiWinUIWindow CurrentWindow { get; set; }
+    public static MauiWinUIWindow CurrentWindow { get; set; }
 #endif
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
@@ -131,6 +132,7 @@ public partial class MediaControl : ContentView
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PositionChanged += OnPositionChanged;
         CurrentPage = Shell.Current.CurrentPage;
+        _ = Moved();
     }
     public void SeekTo(TimeSpan position)
     {
@@ -161,20 +163,6 @@ public partial class MediaControl : ContentView
     {
         PositionSlider.Value = e.Position.TotalSeconds;
     }
-    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
-    {
-#if WINDOWS
-        CurrentWindow = BaseViewModel.CurrentWindow;
-#endif
-        if (e.Direction == SwipeDirection.Up)
-        {
-            SetFullScreen();
-        }
-        if (e.Direction == SwipeDirection.Down)
-        {
-            RestoreScreen();
-        }
-    }
     private void Slider_DragCompleted(object? sender, EventArgs e)
     {
         ArgumentNullException.ThrowIfNull(sender);
@@ -191,8 +179,8 @@ public partial class MediaControl : ContentView
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
-        var playDuration = BaseViewModel.TimeConverter(mediaElement.Duration);
-        var position = BaseViewModel.TimeConverter(mediaElement.Position);
+        var playDuration = TimeConverter(mediaElement.Duration);
+        var position = TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";
         OnPropertyChanged(nameof(PlayPosition));
     }
@@ -231,9 +219,6 @@ public partial class MediaControl : ContentView
 
     private static void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-#if WINDOWS
-        CurrentWindow = BaseViewModel.CurrentWindow;
-#endif
         if (s_fullScreen)
         {
             s_fullScreen = false;
@@ -257,6 +242,21 @@ public partial class MediaControl : ContentView
             ImageButtonMute.Source = "muted.png";
         }
         OnPropertyChanged(nameof(ImageButtonMute.Source));
+    }
+    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        _ = Moved();
+    }
+    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    {
+        if (e.Direction == SwipeDirection.Up)
+        {
+            SetFullScreen();
+        }
+        if (e.Direction == SwipeDirection.Down)
+        {
+            RestoreScreen();
+        }
     }
     #endregion
 
@@ -362,5 +362,26 @@ public partial class MediaControl : ContentView
         }
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
+    }
+    public async Task Moved()
+    {
+        if (!FullScreen)
+        {
+            FullScreen = true;
+            OnPropertyChanged(nameof(FullScreen));
+            await Task.Delay(4000);
+            FullScreen = false;
+            OnPropertyChanged(nameof(FullScreen));
+        }
+    }
+    /// <summary>
+    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    private static string TimeConverter(TimeSpan time)
+    {
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return (interval).ToString();
     }
 }

@@ -50,27 +50,6 @@ public partial class BaseViewModel : ObservableObject
     private readonly IConnectivity _connectivity;
 
     /// <summary>
-    /// An <see cref="bool"/> instance managed by this class.
-    /// </summary>
-    private bool _setFullScreen = false;
-
-    /// <summary>
-    /// The <see cref="bool"/> public property managed by this class.
-    /// </summary>
-    public bool SetFullScreen
-    {
-        get => _setFullScreen;
-        set => SetProperty(ref _setFullScreen, value);
-    }
-
-#if WINDOWS
-    /// <summary>
-    /// The <see cref="MauiWinUIWindow"/> public property managed by this class.
-    /// </summary>
-    public static MauiWinUIWindow CurrentWindow { get; set; }
-#endif
-
-    /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     private int _orientation;
@@ -123,52 +102,6 @@ public partial class BaseViewModel : ObservableObject
 #endif
     }
 
-    /// <summary>
-    /// A Method that detects mouse movment on <see cref="LivePage"/>
-    /// </summary>
-    [RelayCommand]
-    public async Task Moved()
-    {
-        if (!IsBusy)
-        {
-            await SetIsBusy();
-        }
-    }
-    /// <summary>
-    /// A method that sets <see cref="SetFullScreen"/> on and off with a timer.
-    /// </summary>
-    /// <returns></returns>
-    public async Task Waiting()
-    {
-        if (!SetFullScreen)
-        {
-            SetFullScreen = true;
-
-            await Task.Delay(4000);
-            SetFullScreen = false;
-        }
-    }
-    /// <summary>
-    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
-    /// </summary>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    public static string TimeConverter(TimeSpan time)
-    {
-        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
-        return (interval).ToString();
-    }
-
-    /// <summary>
-    /// A method that sets whether the <see cref="Page"/> is Full screen or not.
-    /// </summary>
-    /// <returns></returns>
-    public async Task SetIsBusy()
-    {
-        SetFullScreen = true;
-        await Task.Delay(4000);
-        SetFullScreen = false;
-    }
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>

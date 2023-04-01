@@ -50,7 +50,7 @@ public partial class TabletPlayPodcastPage : ContentPage
     public void ContentPage_Loaded(object sender, EventArgs e)
     {
 #if WINDOWS
-        BaseViewModel.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        MediaControl.CurrentWindow = GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
 #endif
     }
 #nullable enable

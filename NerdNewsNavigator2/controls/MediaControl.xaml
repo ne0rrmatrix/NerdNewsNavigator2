@@ -11,7 +11,8 @@
     <Grid>
 
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=MovedCommand}" />
+            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+
             <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
             <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />
         </Grid.GestureRecognizers>
@@ -23,12 +24,16 @@
             ShouldShowPlaybackControls="False" />
 
         <Frame
+            x:DataType="item:MediaControl"
             BackgroundColor="Black"
-            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}"
-            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}"
+            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
             Opacity="0.5" />
 
-        <Grid IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}" IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:BaseViewModel}}, Path=SetFullScreen}">
+        <Grid
+            x:DataType="item:MediaControl"
+            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}">
 
             <ImageButton
                 x:Name="btnFullScreen"
