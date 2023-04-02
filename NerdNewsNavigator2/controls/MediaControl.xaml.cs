@@ -10,7 +10,8 @@ public partial class MediaControl : ContentView
     public string PlayPosition { get; set; }
 
     private static bool s_fullScreen = false;
-    private bool FullScreen { get; set; } = false;
+
+    public bool FullScreen { get; set; } = false;
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
         {

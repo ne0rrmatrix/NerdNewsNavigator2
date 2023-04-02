@@ -4,9 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
-    xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
+    x:Name="mediaControl"
+    x:DataType="item:MediaControl"
     BackgroundColor="Black"
     Unloaded="ContentView_Unloaded">
     <Grid>
@@ -25,16 +25,12 @@
             ShouldShowPlaybackControls="False" />
 
         <Frame
-            x:DataType="item:MediaControl"
             BackgroundColor="Black"
-            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
-            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
+            IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
+            IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
             Opacity="0.5" />
 
-        <Grid
-            x:DataType="item:MediaControl"
-            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}"
-            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=FullScreen}">
+        <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
                 x:Name="btnFullScreen"
@@ -43,6 +39,10 @@
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="40"
                 HorizontalOptions="End"
+                IsEnabled="{OnPlatform iOS=false,
+                                       Default=true}"
+                IsVisible="{OnPlatform iOS=false,
+                                       Default=true}"
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="40" />
@@ -55,7 +55,6 @@
                         x:Name="BtnRewind"
                         Margin="10"
                         BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
                         Clicked="BtnRewind_Clicked"
                         HeightRequest="40"
                         HorizontalOptions="Center"
@@ -67,7 +66,6 @@
                         x:Name="BtnPLay"
                         Margin="10"
                         BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
                         Clicked="BtnPlay_Clicked"
                         HeightRequest="40"
                         HorizontalOptions="Center"
@@ -79,7 +77,6 @@
                         x:Name="BtnForward"
                         Margin="10"
                         BackgroundColor="Transparent"
-                        BindingContext="{x:Reference mediaElement}"
                         Clicked="BtnForward_Clicked"
                         HeightRequest="40"
                         HorizontalOptions="Center"
@@ -115,7 +112,7 @@
                         Margin="5"
                         FontSize="12"
                         HorizontalOptions="Center"
-                        Text="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=PlayPosition}"
+                        Text="{Binding FullScreen, Source={x:Reference mediaControl}}"
                         TextColor="White" />
                 </HorizontalStackLayout>
 
