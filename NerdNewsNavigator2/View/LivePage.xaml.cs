@@ -73,7 +73,7 @@ public partial class LivePage : ContentPage
     private void Add(M3U8Parser.ExtXType.StreamInf item)
     {
         var temp = new YoutubeResolutions();
-        temp.Title = item.Resolution.Height.ToString();
+        temp.Title = $"{item.Resolution.Height.ToString()}P";
         temp.Url = item.Uri.ToString();
         Items.Add(temp);
     }
