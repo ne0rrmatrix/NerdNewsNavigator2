@@ -143,14 +143,6 @@ public partial class MediaControl : ContentView
         {
             PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
         }
-        if (mediaElement.CurrentState == MediaElementState.Playing && BtnPLay.Source.ToString() != "play.png")
-        {
-            MainThread.BeginInvokeOnMainThread(() => { BtnPLay.Source = "play.png"; });
-        }
-        if (mediaElement.CurrentState == MediaElementState.Paused && BtnPLay.Source.ToString().Contains("play"))
-        {
-            MainThread.BeginInvokeOnMainThread(() => { BtnPLay.Source = "pause.png"; });
-        }
     }
     private void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
     {
