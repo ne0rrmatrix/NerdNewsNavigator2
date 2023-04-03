@@ -9,11 +9,11 @@
     x:DataType="item:MediaControl"
     BackgroundColor="#212121"
     Unloaded="ContentView_Unloaded">
+
     <Grid>
 
         <Grid.GestureRecognizers>
             <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
-
             <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
             <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />
         </Grid.GestureRecognizers>
