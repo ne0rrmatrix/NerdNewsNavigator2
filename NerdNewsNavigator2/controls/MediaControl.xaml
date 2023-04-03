@@ -59,47 +59,50 @@
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="40" />
-
-            <Grid
-                Margin="30"
-                BackgroundColor="Black"
-                HorizontalOptions="End"
-                VerticalOptions="End">
-
-                <CollectionView
-                    IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
-                    IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
-                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
-                    SelectionMode="Single"
+            <VerticalStackLayout Margin="40" VerticalOptions="End">
+                <HorizontalStackLayout
+                    Margin="25"
+                    BackgroundColor="#212121"
+                    HorizontalOptions="End"
+                    Opacity="0.5"
                     VerticalOptions="End">
 
-                    <CollectionView.ItemTemplate>
+                    <CollectionView
+                        IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                        IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
+                        SelectionMode="Single"
+                        VerticalOptions="End">
 
-                        <DataTemplate x:DataType="model:YoutubeResolutions">
+                        <CollectionView.ItemTemplate>
 
-                            <VerticalStackLayout>
+                            <DataTemplate x:DataType="model:YoutubeResolutions">
 
-                                <Label
-                                    BackgroundColor="Transparent"
-                                    HorizontalOptions="Center"
-                                    Text="{Binding Title}"
-                                    TextColor="White">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
-                                        <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                <VerticalStackLayout>
 
-                            </VerticalStackLayout>
+                                    <Label
+                                        BackgroundColor="Transparent"
+                                        HorizontalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        Text="{Binding Title}"
+                                        TextColor="White"
+                                        WidthRequest="60">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
+                                            <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
 
-                        </DataTemplate>
+                                </VerticalStackLayout>
 
-                    </CollectionView.ItemTemplate>
+                            </DataTemplate>
 
-                </CollectionView>
+                        </CollectionView.ItemTemplate>
 
-            </Grid>
+                    </CollectionView>
 
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
             <VerticalStackLayout Padding="10" VerticalOptions="End">
 
                 <HorizontalStackLayout HorizontalOptions="Center">
