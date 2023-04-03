@@ -28,7 +28,7 @@
             BackgroundColor="#212121"
             IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
             IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
-            Opacity="0.5" />
+            Opacity="0.3" />
 
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
