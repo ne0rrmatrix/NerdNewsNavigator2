@@ -335,7 +335,7 @@ public partial class MediaControl : ContentView
 
     private async void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
     {
-        await Task.Delay(3000);
+        await Task.Delay(2000);
         MenuIsVisible = false;
         OnPropertyChanged(nameof(MenuIsVisible));
     }
