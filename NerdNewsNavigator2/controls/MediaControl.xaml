@@ -28,13 +28,13 @@
             BackgroundColor="#212121"
             IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
             IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
-            Opacity="0.3" />
+            Opacity="0.5" />
 
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
                 x:Name="btnFullScreen"
-                Margin="10"
+                Margin="0"
                 BackgroundColor="Transparent"
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="40"
@@ -47,7 +47,7 @@
                 VerticalOptions="Start"
                 WidthRequest="40" />
 
-            <VerticalStackLayout VerticalOptions="End">
+            <VerticalStackLayout Padding="10" VerticalOptions="End">
 
                 <HorizontalStackLayout HorizontalOptions="Center">
 
@@ -109,7 +109,7 @@
                 <HorizontalStackLayout HorizontalOptions="Start" VerticalOptions="End">
 
                     <Label
-                        Margin="5"
+                        Margin="20"
                         FontSize="12"
                         HorizontalOptions="Center"
                         Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
@@ -118,7 +118,7 @@
 
                 <Slider
                     x:Name="PositionSlider"
-                    Margin="10"
+                    Margin="0"
                     DragCompleted="Slider_DragCompleted"
                     DragStarted="Slider_DragStarted"
                     MaximumTrackColor="LightGray"
