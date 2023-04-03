@@ -3,7 +3,9 @@
     x:Class="NerdNewsNavigator2.Controls.MediaControl"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:data="clr-namespace:NerdNewsNavigator2.View"
     xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
+    xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
     x:DataType="item:MediaControl"
@@ -33,6 +35,18 @@
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
+                Margin="40"
+                BackgroundColor="Transparent"
+                HeightRequest="10"
+                HorizontalOptions="End"
+                IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
+                IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
+                Pressed="Button_Pressed"
+                Source="gear.png"
+                VerticalOptions="End"
+                WidthRequest="10" />
+
+            <ImageButton
                 x:Name="btnFullScreen"
                 Margin="0"
                 BackgroundColor="Transparent"
@@ -46,6 +60,45 @@
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="40" />
+
+            <HorizontalStackLayout
+                Margin="20"
+                HorizontalOptions="End"
+                VerticalOptions="End">
+
+                <CollectionView
+                    Margin="50"
+                    IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                    IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
+                    SelectionMode="Single"
+                    VerticalOptions="End">
+
+                    <CollectionView.ItemTemplate>
+
+                        <DataTemplate x:DataType="model:YoutubeResolutions">
+
+                            <VerticalStackLayout>
+
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    Text="{Binding Title}"
+                                    TextColor="White">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
+                                        <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+
+                            </VerticalStackLayout>
+
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            </HorizontalStackLayout>
 
             <VerticalStackLayout Padding="10" VerticalOptions="End">
 
@@ -114,6 +167,7 @@
                         HorizontalOptions="Center"
                         Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                         TextColor="White" />
+
                 </HorizontalStackLayout>
 
                 <Slider

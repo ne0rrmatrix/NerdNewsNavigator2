@@ -8,6 +8,7 @@ public partial class MediaControl : ContentView
 {
     #region Properties and Bindable Properties
     public string PlayPosition { get; set; }
+    public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
 
@@ -112,6 +113,7 @@ public partial class MediaControl : ContentView
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PositionChanged += OnPositionChanged;
         _ = Moved();
+        OnPropertyChanged(nameof(MenuIsVisible));
     }
     public void SeekTo(TimeSpan position)
     {
@@ -241,6 +243,18 @@ public partial class MediaControl : ContentView
             RestoreScreen();
         }
     }
+    private void Button_Pressed(object sender, EventArgs e)
+    {
+        if (MenuIsVisible)
+        {
+            MenuIsVisible = false;
+        }
+        else
+        {
+            MenuIsVisible = true;
+        }
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
     #endregion
 
     #region Full Screen Functions
@@ -269,8 +283,10 @@ public partial class MediaControl : ContentView
         {
             FullScreen = true;
             OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(4000);
+            await Task.Delay(7000);
             FullScreen = false;
+            MenuIsVisible = false;
+            OnPropertyChanged(nameof(MenuIsVisible));
             OnPropertyChanged(nameof(FullScreen));
         }
     }
@@ -302,5 +318,25 @@ public partial class MediaControl : ContentView
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
         return (interval).ToString();
+    }
+
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="LivePage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public void Tapped(string url)
+    {
+        mediaElement.Source = url;
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
+
+    private async void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
+    {
+        await Task.Delay(3000);
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
     }
 }
