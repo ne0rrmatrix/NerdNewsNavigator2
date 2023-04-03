@@ -6,11 +6,10 @@
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title=""
-    Loaded="ContentPage_Loaded"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:TabletShowViewModel"
     BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
@@ -19,10 +18,8 @@
 
     <CollectionView
         Margin="5"
-        BackgroundColor="#34AAD2"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Shows}"
-        SelectionMode="None"
         VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>

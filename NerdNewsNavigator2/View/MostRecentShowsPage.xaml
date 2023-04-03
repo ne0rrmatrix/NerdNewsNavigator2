@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title=""
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
@@ -15,11 +14,7 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView
-        Margin="5"
-        BackgroundColor="#34AAD2"
-        ItemsSource="{Binding MostRecentShows}"
-        SelectionMode="None">
+    <CollectionView Margin="5" ItemsSource="{Binding MostRecentShows}">
 
         <CollectionView.Header>
             <StackLayout>

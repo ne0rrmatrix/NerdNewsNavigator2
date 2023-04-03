@@ -287,6 +287,8 @@ public partial class MediaControl : ContentView
         {
             return;
         }
+        mediaElement.ShouldKeepScreenOn = false;
+        mediaElement.Stop();
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();
     }
