@@ -6,7 +6,6 @@
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title=""
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:TabletPodcastViewModel"
     BackgroundColor="#34AAD2"
@@ -19,10 +18,8 @@
 
     <CollectionView
         Margin="5"
-        BackgroundColor="#34AAD2"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Podcasts}"
-        SelectionMode="None"
         VerticalScrollBarVisibility="Never">
 
         <CollectionView.Header>

@@ -7,12 +7,12 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
     x:DataType="item:MediaControl"
-    BackgroundColor="Black"
+    BackgroundColor="#212121"
     Unloaded="ContentView_Unloaded">
     <Grid>
 
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+            <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
 
             <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
             <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />
@@ -25,10 +25,10 @@
             ShouldShowPlaybackControls="False" />
 
         <Frame
-            BackgroundColor="Black"
+            BackgroundColor="#212121"
             IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
             IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
-            Opacity="0.5" />
+            Opacity="0.3" />
 
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
@@ -112,7 +112,7 @@
                         Margin="5"
                         FontSize="12"
                         HorizontalOptions="Center"
-                        Text="{Binding FullScreen, Source={x:Reference mediaControl}}"
+                        Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                         TextColor="White" />
                 </HorizontalStackLayout>
 

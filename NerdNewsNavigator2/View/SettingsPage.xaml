@@ -5,19 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title=""
-    Loaded="ContentPage_Loaded"
     x:DataType="viewmodel:SettingsViewModel"
+    BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView
-        BackgroundColor="Wheat"
-        ItemsSource="{Binding Podcasts}"
-        SelectionMode="None">
+    <CollectionView ItemsSource="{Binding Podcasts}">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
