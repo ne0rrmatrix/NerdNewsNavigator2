@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class LivePage : ContentPage
 {
+    public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -48,6 +49,7 @@ public partial class LivePage : ContentPage
     /// <returns></returns>
     private async Task LoadVideo()
     {
+        mediaElement.IsYoutube = true;
         var m3u = await GetM3U_Url("F2NreNEmMy4");
         mediaElement.Source = ParseM3UPLaylist(m3u);
         mediaElement.Play();
@@ -58,13 +60,25 @@ public partial class LivePage : ContentPage
     /// </summary>
     /// <param name="m3UString"></param>
     /// <returns></returns>
-    private static string ParseM3UPLaylist(string m3UString)
+    private string ParseM3UPLaylist(string m3UString)
     {
         var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
         var list = masterPlaylist.Streams.ToList();
+        foreach (var item in list)
+        {
+            Add(item);
+        }
         return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
     }
-
+    private void Add(M3U8Parser.ExtXType.StreamInf item)
+    {
+        var temp = new YoutubeResolutions
+        {
+            Title = $"{item.Resolution.Height}P",
+            Url = item.Uri.ToString()
+        };
+        Items.Add(temp);
+    }
     /// <summary>
     /// Method returns the Live stream M3U Url from youtube ID.
     /// </summary>

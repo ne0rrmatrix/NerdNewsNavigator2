@@ -114,6 +114,7 @@
                                            Default=12}"
                         HorizontalTextAlignment="Start"
                         Text="Podcasts"
+                        TextColor="Black"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Default=140,
                                                Tablet=170}" />

@@ -8,6 +8,7 @@ public partial class MediaControl : ContentView
 {
     #region Properties and Bindable Properties
     public string PlayPosition { get; set; }
+    public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
 
@@ -61,6 +62,18 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
     });
+    public static readonly BindableProperty IsYoutubeProperty = BindableProperty.Create(nameof(IsYoutube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.IsEnabled = (bool)newValue;
+        control.IsVisible = (bool)newValue;
+    });
+    public bool IsYoutube
+    {
+        get => (bool)GetValue(IsYoutubeProperty);
+        set => SetValue(IsYoutubeProperty, value);
+    }
+
     public EventHandler MediaOpened
     {
         get => GetValue(MediaOpenedProperty) as EventHandler;
@@ -162,6 +175,8 @@ public partial class MediaControl : ContentView
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsVisible = IsYoutube; });
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsEnabled = IsYoutube; });
         var playDuration = TimeConverter(mediaElement.Duration);
         var position = TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";
@@ -241,6 +256,18 @@ public partial class MediaControl : ContentView
             RestoreScreen();
         }
     }
+    private void Button_Pressed(object sender, EventArgs e)
+    {
+        if (MenuIsVisible)
+        {
+            MenuIsVisible = false;
+        }
+        else
+        {
+            MenuIsVisible = true;
+        }
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
     #endregion
 
     #region Full Screen Functions
@@ -268,9 +295,26 @@ public partial class MediaControl : ContentView
         if (!FullScreen)
         {
             FullScreen = true;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = true;
+                ImageSettings.IsVisible = true;
+            }
+            else
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
             OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(4000);
+            await Task.Delay(7000);
             FullScreen = false;
+            MenuIsVisible = false;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
+            OnPropertyChanged(nameof(MenuIsVisible));
             OnPropertyChanged(nameof(FullScreen));
         }
     }
@@ -302,5 +346,26 @@ public partial class MediaControl : ContentView
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
         return (interval).ToString();
+    }
+
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="LivePage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public void Tapped(string url)
+    {
+        mediaElement.Stop();
+        mediaElement.Source = url;
+        MenuIsVisible = false;
+        mediaElement.Play();
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
+
+    private void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
+    {
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
     }
 }

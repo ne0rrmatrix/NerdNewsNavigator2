@@ -3,17 +3,19 @@
     x:Class="NerdNewsNavigator2.Controls.MediaControl"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:data="clr-namespace:NerdNewsNavigator2.View"
     xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
+    xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
     x:DataType="item:MediaControl"
     BackgroundColor="#212121"
     Unloaded="ContentView_Unloaded">
+
     <Grid>
 
         <Grid.GestureRecognizers>
             <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
-
             <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
             <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />
         </Grid.GestureRecognizers>
@@ -33,8 +35,19 @@
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
+                x:Name="ImageSettings"
+                Margin="40"
+                BackgroundColor="Transparent"
+                HeightRequest="40"
+                HorizontalOptions="End"
+                Pressed="Button_Pressed"
+                Source="gear.png"
+                VerticalOptions="End"
+                WidthRequest="40" />
+
+            <ImageButton
                 x:Name="btnFullScreen"
-                Margin="0"
+                Margin="10"
                 BackgroundColor="Transparent"
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="40"
@@ -47,13 +60,61 @@
                 VerticalOptions="Start"
                 WidthRequest="40" />
 
-            <VerticalStackLayout Padding="10" VerticalOptions="End">
+            <VerticalStackLayout Margin="40" VerticalOptions="End">
+                <HorizontalStackLayout
+                    Margin="30"
+                    HorizontalOptions="End"
+                    VerticalOptions="End">
+
+                    <CollectionView
+                        IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                        IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
+                        SelectionMode="Single"
+                        VerticalOptions="End">
+
+                        <CollectionView.GestureRecognizers>
+                            <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
+                        </CollectionView.GestureRecognizers>
+
+                        <CollectionView.ItemTemplate>
+
+                            <DataTemplate x:DataType="model:YoutubeResolutions">
+
+                                <VerticalStackLayout>
+
+                                    <Label
+                                        FontSize="26"
+                                        HorizontalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        Text="{Binding Title}"
+                                        TextColor="White"
+                                        WidthRequest="90">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
+
+                                        </Label.GestureRecognizers>
+                                    </Label>
+
+                                </VerticalStackLayout>
+
+                            </DataTemplate>
+
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Margin="{OnIdiom Default=35, Phone=5}" VerticalOptions="{OnIdiom Phone=Center, Default=End}">
 
                 <HorizontalStackLayout HorizontalOptions="Center">
 
                     <ImageButton
                         x:Name="BtnRewind"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnRewind_Clicked"
                         HeightRequest="40"
@@ -64,7 +125,8 @@
 
                     <ImageButton
                         x:Name="BtnPLay"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnPlay_Clicked"
                         HeightRequest="40"
@@ -75,7 +137,8 @@
 
                     <ImageButton
                         x:Name="BtnForward"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnForward_Clicked"
                         HeightRequest="40"
@@ -86,12 +149,14 @@
 
                     <ImageButton
                         x:Name="ImageButtonMute"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="OnMuteClicked"
                         HeightRequest="40"
                         Source="muted.png"
                         WidthRequest="40">
+
                         <ImageButton.Triggers>
                             <DataTrigger
                                 Binding="{Binding ShouldMute, Source={x:Reference mediaElement}}"
@@ -102,31 +167,34 @@
                                 TargetType="ImageButton"
                                 Value="False" />
                         </ImageButton.Triggers>
+
                     </ImageButton>
 
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout HorizontalOptions="Start" VerticalOptions="End">
 
-                    <Label
-                        Margin="20"
-                        FontSize="12"
-                        HorizontalOptions="Center"
-                        Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
-                        TextColor="White" />
-                </HorizontalStackLayout>
-
-                <Slider
-                    x:Name="PositionSlider"
-                    Margin="0"
-                    DragCompleted="Slider_DragCompleted"
-                    DragStarted="Slider_DragStarted"
-                    MaximumTrackColor="LightGray"
-                    MinimumTrackColor="Red" />
 
             </VerticalStackLayout>
 
+            <Label
+                Margin="30"
+                FontSize="12"
+                HorizontalOptions="Start"
+                Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
+                TextColor="White"
+                VerticalOptions="End" />
+
+            <Slider
+                x:Name="PositionSlider"
+                Margin="10"
+                DragCompleted="Slider_DragCompleted"
+                DragStarted="Slider_DragStarted"
+                MaximumTrackColor="LightGray"
+                MinimumTrackColor="Red"
+                VerticalOptions="End" />
+
         </Grid>
+
     </Grid>
 
 </ContentView>
