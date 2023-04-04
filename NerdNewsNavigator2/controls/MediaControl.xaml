@@ -35,16 +35,17 @@
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
+                x:Name="ImageSettings"
                 Margin="40"
                 BackgroundColor="Transparent"
-                HeightRequest="30"
+                HeightRequest="40"
                 HorizontalOptions="End"
                 IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
                 IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
                 Pressed="Button_Pressed"
                 Source="gear.png"
                 VerticalOptions="End"
-                WidthRequest="30" />
+                WidthRequest="40" />
 
             <ImageButton
                 x:Name="btnFullScreen"
@@ -64,9 +65,7 @@
             <VerticalStackLayout Margin="40" VerticalOptions="End">
                 <HorizontalStackLayout
                     Margin="30"
-                    BackgroundColor="#212121"
                     HorizontalOptions="End"
-                    Opacity="0.5"
                     VerticalOptions="End">
 
                     <CollectionView
@@ -83,12 +82,12 @@
                                 <VerticalStackLayout>
 
                                     <Label
-                                        BackgroundColor="Transparent"
+                                        FontSize="26"
                                         HorizontalOptions="Center"
                                         HorizontalTextAlignment="Center"
                                         Text="{Binding Title}"
                                         TextColor="White"
-                                        WidthRequest="60">
+                                        WidthRequest="90">
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
                                             <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
@@ -106,12 +105,13 @@
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Margin="5" VerticalOptions="End">
+            <VerticalStackLayout Margin="{OnIdiom Default=35, Phone=5}" VerticalOptions="{OnIdiom Phone=Center, Default=End}">
                 <HorizontalStackLayout HorizontalOptions="Center">
 
                     <ImageButton
                         x:Name="BtnRewind"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnRewind_Clicked"
                         HeightRequest="40"
@@ -122,7 +122,8 @@
 
                     <ImageButton
                         x:Name="BtnPLay"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnPlay_Clicked"
                         HeightRequest="40"
@@ -133,7 +134,8 @@
 
                     <ImageButton
                         x:Name="BtnForward"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnForward_Clicked"
                         HeightRequest="40"
@@ -144,7 +146,8 @@
 
                     <ImageButton
                         x:Name="ImageButtonMute"
-                        Margin="10"
+                        Margin="{OnIdiom Phone=15,
+                                         Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="OnMuteClicked"
                         HeightRequest="40"
@@ -164,13 +167,7 @@
 
                 </HorizontalStackLayout>
 
-                <Slider
-                    x:Name="PositionSlider"
-                    DragCompleted="Slider_DragCompleted"
-                    DragStarted="Slider_DragStarted"
-                    MaximumTrackColor="LightGray"
-                    MinimumTrackColor="Red"
-                    VerticalOptions="End" />
+
 
             </VerticalStackLayout>
 
@@ -180,6 +177,14 @@
                 HorizontalOptions="Start"
                 Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
+                VerticalOptions="End" />
+            <Slider
+                x:Name="PositionSlider"
+                Margin="10"
+                DragCompleted="Slider_DragCompleted"
+                DragStarted="Slider_DragStarted"
+                MaximumTrackColor="LightGray"
+                MinimumTrackColor="Red"
                 VerticalOptions="End" />
 
         </Grid>
