@@ -74,7 +74,9 @@
                         ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
                         SelectionMode="Single"
                         VerticalOptions="End">
-
+                        <CollectionView.GestureRecognizers>
+                            <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
+                        </CollectionView.GestureRecognizers>
                         <CollectionView.ItemTemplate>
 
                             <DataTemplate x:DataType="model:YoutubeResolutions">
@@ -90,7 +92,7 @@
                                         WidthRequest="90">
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
-                                            <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
+
                                         </Label.GestureRecognizers>
                                     </Label>
 
