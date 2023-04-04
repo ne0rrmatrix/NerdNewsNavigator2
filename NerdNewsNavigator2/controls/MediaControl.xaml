@@ -40,8 +40,6 @@
                 BackgroundColor="Transparent"
                 HeightRequest="40"
                 HorizontalOptions="End"
-                IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
-                IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
                 Pressed="Button_Pressed"
                 Source="gear.png"
                 VerticalOptions="End"

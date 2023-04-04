@@ -62,6 +62,18 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
     });
+    public static readonly BindableProperty IsYoutubeProperty = BindableProperty.Create(nameof(IsYoutube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.IsEnabled = (bool)newValue;
+        control.IsVisible = (bool)newValue;
+    });
+    public bool IsYoutube
+    {
+        get => (bool)GetValue(IsYoutubeProperty);
+        set => SetValue(IsYoutubeProperty, value);
+    }
+
     public EventHandler MediaOpened
     {
         get => GetValue(MediaOpenedProperty) as EventHandler;
@@ -113,7 +125,6 @@ public partial class MediaControl : ContentView
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PositionChanged += OnPositionChanged;
         _ = Moved();
-        OnPropertyChanged(nameof(MenuIsVisible));
     }
     public void SeekTo(TimeSpan position)
     {
@@ -164,6 +175,8 @@ public partial class MediaControl : ContentView
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsVisible = IsYoutube; });
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsEnabled = IsYoutube; });
         var playDuration = TimeConverter(mediaElement.Duration);
         var position = TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";
@@ -282,10 +295,25 @@ public partial class MediaControl : ContentView
         if (!FullScreen)
         {
             FullScreen = true;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = true;
+                ImageSettings.IsVisible = true;
+            }
+            else
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
             OnPropertyChanged(nameof(FullScreen));
             await Task.Delay(7000);
             FullScreen = false;
             MenuIsVisible = false;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
             OnPropertyChanged(nameof(MenuIsVisible));
             OnPropertyChanged(nameof(FullScreen));
         }

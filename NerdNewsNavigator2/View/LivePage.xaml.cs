@@ -49,6 +49,7 @@ public partial class LivePage : ContentPage
     /// <returns></returns>
     private async Task LoadVideo()
     {
+        mediaElement.IsYoutube = true;
         var m3u = await GetM3U_Url("F2NreNEmMy4");
         mediaElement.Source = ParseM3UPLaylist(m3u);
         mediaElement.Play();
@@ -67,7 +68,6 @@ public partial class LivePage : ContentPage
         {
             Add(item);
         }
-        OnPropertyChanged(nameof(Items));
         return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
     }
     private void Add(M3U8Parser.ExtXType.StreamInf item)
