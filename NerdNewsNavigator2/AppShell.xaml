@@ -35,7 +35,7 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <ShellContent ContentTemplate="{DataTemplate local:TabletPodcastPage}" />
+    <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
 
     <MenuItem
         Clicked="GotoFirstPage"

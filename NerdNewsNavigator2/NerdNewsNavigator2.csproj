@@ -124,6 +124,12 @@
     <Compile Update="View\RemovePage.xaml.cs">
       <DependentUpon>RemovePage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="View\PodcastPage.xaml.cs">
+      <DependentUpon>PodcastPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="View\Showpage.xaml.cs">
+      <DependentUpon>Showpage.xaml</DependentUpon>
+    </Compile>
       <Compile Update="View\TabletPodcastPage.xaml.cs">
         <DependentUpon>TabletPodcastPage.xaml</DependentUpon>
       </Compile>
@@ -133,8 +139,8 @@
       <Compile Update="View\TabletShowPage.xaml.cs">
         <DependentUpon>TabletShowPage.xaml</DependentUpon>
       </Compile>
-      <Compile Update="View\TabletPlayPodcastPage.xaml.cs">
-        <DependentUpon>TabletPlayPodcastPage.xaml</DependentUpon>
+      <Compile Update="View\VideoPlayerPage.xaml.cs">
+        <DependentUpon>VideoPlayerPage.xaml</DependentUpon>
       </Compile>
       <Compile Update="View\UpdateSettingsPage.xaml.cs">
         <DependentUpon>UpdateSettingsPage.xaml</DependentUpon>
@@ -170,13 +176,13 @@
     <MauiXaml Update="View\TabletLivePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="View\TableShowPage.xaml">
+    <MauiXaml Update="View\Showpage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="View\TabletPlayPodcastPage.xaml">
+    <MauiXaml Update="View\VideoPlayerPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="View\TabletPodcasPage.xaml">
+    <MauiXaml Update="View\PodcastPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\UpdateSettingsPage.xaml">

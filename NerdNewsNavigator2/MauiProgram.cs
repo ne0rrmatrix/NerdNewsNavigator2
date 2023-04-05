@@ -54,19 +54,19 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<BaseViewModel>();
 
-        builder.Services.AddTransient<TabletPodcastPage>();
-        builder.Services.AddTransient<TabletPodcastViewModel>();
+        builder.Services.AddTransient<PodcastPage>();
+        builder.Services.AddTransient<PodcastViewModel>();
 
-        builder.Services.AddTransient<TabletShowPage>();
-        builder.Services.AddTransient<TabletShowViewModel>();
+        builder.Services.AddTransient<ShowPage>();
+        builder.Services.AddTransient<ShowViewModel>();
 
 #if WINDOWS
-        builder.Services.AddSingleton<TabletPlayPodcastPage>();
+        builder.Services.AddSingleton<VideoPlayerPage>();
 #endif
 #if IOS || ANDROID || MACCATALYST
-        builder.Services.AddTransient<TabletPlayPodcastPage>();
+        builder.Services.AddTransient<VideoPlayerPage>();
 #endif
-        builder.Services.AddTransient<TabletPlayPodcastViewModel>();
+        builder.Services.AddTransient<VideoPlayerViewModel>();
 
         builder.Services.AddTransient<LivePage>();
         builder.Services.AddTransient<LiveViewModel>();

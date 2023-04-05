@@ -203,7 +203,7 @@ public partial class BaseViewModel : ObservableObject
     {
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if (InternetConnected())
+        if (InternetConnected() || Podcasts is not null)
         {
             foreach (var show in Podcasts.ToList())
             {
