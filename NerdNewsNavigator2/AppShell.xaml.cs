@@ -14,9 +14,9 @@ public partial class AppShell : Shell
     public AppShell()
     {
         InitializeComponent();
-        Routing.RegisterRoute(nameof(TabletPodcastPage), typeof(TabletPodcastPage));
-        Routing.RegisterRoute(nameof(TabletShowPage), typeof(TabletShowPage));
-        Routing.RegisterRoute(nameof(TabletPlayPodcastPage), typeof(TabletPlayPodcastPage));
+        Routing.RegisterRoute(nameof(PodcastPage), typeof(PodcastPage));
+        Routing.RegisterRoute(nameof(ShowPage), typeof(ShowPage));
+        Routing.RegisterRoute(nameof(VideoPlayerPage), typeof(VideoPlayerPage));
         Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
         Routing.RegisterRoute(nameof(RemovePage), typeof(RemovePage));
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
@@ -24,6 +24,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
+
     /// <summary>
     /// Method quits application
     /// </summary>
@@ -39,7 +40,7 @@ public partial class AppShell : Shell
     private async void GotoFirstPage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
-        await Shell.Current.GoToAsync($"{nameof(TabletPodcastPage)}");
+        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
     }
 
     /// <summary>

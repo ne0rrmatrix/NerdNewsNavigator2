@@ -8,23 +8,26 @@ namespace NerdNewsNavigator2.View;
 /// A class that Displays a Video from twit.tv.
 /// </summary>
 /// 
-public partial class TabletPlayPodcastPage : ContentPage
+public partial class VideoPlayerPage : ContentPage
 {
+    public static bool IsYoutube { get; set; } = false;
+    public static string Url { get; set; } = string.Empty;
+    public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
-    private readonly ILogger<TabletPlayPodcastPage> _logger;
+    private readonly ILogger<VideoPlayerPage> _logger;
     /// <summary>
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
 
     /// <summary>
-    /// Class Constructor that initilizes <see cref="TabletPlayPodcastPage"/>
+    /// Class Constructor that initilizes <see cref="VideoPlayerPage"/>
     /// </summary>
-    /// <param name="viewModel">This Applications <see cref="TabletPlayPodcastPage"/> instance is managed through this class.</param>
+    /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 
-    public TabletPlayPodcastPage(ILogger<TabletPlayPodcastPage> logger, TabletPlayPodcastViewModel viewModel)
+    public VideoPlayerPage(ILogger<VideoPlayerPage> logger, VideoPlayerViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
@@ -36,7 +39,7 @@ public partial class TabletPlayPodcastPage : ContentPage
 
 #if IOS || MACCATALYST
         mediaElement.StateChanged += SeekIOS;
-#endif 
+#endif
     }
 
     /// <summary>
@@ -59,7 +62,8 @@ public partial class TabletPlayPodcastPage : ContentPage
         {
             return;
         }
-        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
+        Pos.Title = Url;
+        Preferences.Default.Remove("New_Url", null);
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
         foreach (var item in positionList)
@@ -155,6 +159,7 @@ public partial class TabletPlayPodcastPage : ContentPage
             return;
         }
         Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
+        Preferences.Default.Remove("New_Url", null);
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
 
@@ -175,4 +180,11 @@ public partial class TabletPlayPodcastPage : ContentPage
 
 #nullable disable
 
+    private void ContentPage_Unloaded(object sender, EventArgs e)
+    {
+        mediaElement.SeekTo(Pos.SavedPosition);
+        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+        mediaElement.StateChanged -= Media_Stopped;
+        mediaElement.MediaOpened -= Seek;
+    }
 }

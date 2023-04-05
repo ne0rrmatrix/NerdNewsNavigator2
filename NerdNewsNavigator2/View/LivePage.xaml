@@ -13,8 +13,6 @@
     </Shell.BackButtonBehavior>
     <Grid>
         <media:MediaControl x:Name="mediaElement" />
-       
-
     </Grid>
 
 

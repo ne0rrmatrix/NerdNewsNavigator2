@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// A class that inherits form <see cref="BaseViewModel"/> and manages showing <see cref="Show"/> information.
 /// </summary>
 [QueryProperty("Url", "Url")]
-public partial class TabletShowViewModel : BaseViewModel
+public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
     private string _url;
@@ -30,24 +30,27 @@ public partial class TabletShowViewModel : BaseViewModel
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TabletShowViewModel"/> class.
+    /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
     /// </summary>
-    public TabletShowViewModel(ILogger<TabletShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="TabletPlayPodcastPage"/>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={url}");
+    public async Task Tap(string url)
+    {
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
+    }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="TabletShowPage"/>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>

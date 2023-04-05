@@ -28,7 +28,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="TabletPlayPodcastPage"/>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
@@ -38,12 +38,12 @@ public partial class DownloadedShowViewModel : BaseViewModel
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
         _logger.LogInformation("Url being passed is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={item}");
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
 #if WINDOWS
         var item = "ms-appdata:///LocalCache/Local/" + url;
         _logger.LogInformation("Url being passed is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(TabletPlayPodcastPage)}?Url={item}");
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
 

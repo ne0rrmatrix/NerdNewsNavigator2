@@ -7,13 +7,13 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages showing a <see cref="List{T}"/> of <see cref="Show"/> to users.
 /// </summary>
-public partial class TabletShowPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class ShowPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="TabletShowPage"/> class.
+    /// Initializes a new instance of the <see cref="ShowPage"/> class.
     /// </summary>
-    /// <param name="viewModel">This pages <see cref="ViewModel"/> from <see cref="TabletShowViewModel"/></param>
-    public TabletShowPage(TabletShowViewModel viewModel)
+    /// <param name="viewModel">This pages <see cref="ViewModel"/> from <see cref="ShowViewModel"/></param>
+    public ShowPage(ShowViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

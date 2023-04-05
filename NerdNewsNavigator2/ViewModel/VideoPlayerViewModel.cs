@@ -3,12 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.ViewModel;
-
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages displaying video's from <see cref="Show"/> class.
 /// </summary>
 [QueryProperty("Url", "Url")]
-public partial class TabletPlayPodcastViewModel : BaseViewModel
+public partial class VideoPlayerViewModel : BaseViewModel
 {
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
@@ -25,16 +24,15 @@ public partial class TabletPlayPodcastViewModel : BaseViewModel
         set
         {
             SetProperty(ref _url, value);
-            Preferences.Default.Remove("New_Url", null);
-            Preferences.Default.Set("New_Url", value);
+            VideoPlayerPage.Url = value;
         }
     }
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TabletPlayPodcastViewModel"/> class.
+    /// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.
     /// </summary>
-    public TabletPlayPodcastViewModel(ILogger<TabletPlayPodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public VideoPlayerViewModel(ILogger<VideoPlayerViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
     }
 }

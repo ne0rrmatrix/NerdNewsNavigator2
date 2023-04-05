@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.TabletShowPage"
+    x:Class="NerdNewsNavigator2.View.PodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     ios:Page.UseSafeArea="True"
-    x:DataType="viewmodel:TabletShowViewModel"
+    x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
     <CollectionView
         Margin="5"
         HorizontalScrollBarVisibility="Never"
-        ItemsSource="{Binding Shows}"
+        ItemsSource="{Binding Podcasts}"
         VerticalScrollBarVisibility="Never">
-
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
-        </CollectionView.ItemsLayout>
 
         <CollectionView.Header>
             <StackLayout>
@@ -35,7 +31,7 @@
                     HorizontalTextAlignment="Center"
                     IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    Text="Downloading..."
+                    Text="Loading..."
                     TextColor="Black"
                     VerticalOptions="Center" />
                 <ActivityIndicator
@@ -45,93 +41,80 @@
             </StackLayout>
         </CollectionView.Header>
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Show">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
+        </CollectionView.ItemsLayout>
 
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="model:Podcast">
                 <Frame
                     Margin="{OnPlatform WinUI=90,
                                         MacCatalyst=90,
                                         Android=90,
                                         iOS=90}"
+                    Padding="{OnPlatform Default=20,
+                                         iOS=10}"
                     BackgroundColor="White"
                     WidthRequest="{OnPlatform WinUI=370,
                                               MacCatalyst=370,
                                               Android=370,
-                                              iOS=320}">
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
+                                              iOS=340}">
+                    <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375}" />
 
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto, MacCatalyst=Auto}" />
+                            <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350, MacCatalyst=350}" />
+                            <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=350}" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                        </Grid.GestureRecognizers>
                         <Label
                             Grid.Row="0"
+                            Margin="5"
+                            Padding="10"
                             FontAttributes="Bold"
                             FontSize="10"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
-                            TextColor="Black"
-                            WidthRequest="300" />
+                            TextColor="Black" />
                         <Image
                             Grid.Row="1"
                             Margin="10"
                             Aspect="AspectFit"
-                            HeightRequest="320"
-                            WidthRequest="320">
-
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                            </Image.GestureRecognizers>
-
+                            HorizontalOptions="Center"
+                            WidthRequest="{OnIdiom Phone=350,
+                                                   Tablet=340,
+                                                   Desktop=350}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:0:00"
-                                    CachingEnabled="True"
+                                    CachingEnabled="true"
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
 
-                        <HorizontalStackLayout Grid.Row="2" Padding="10">
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="Published: "
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="{Binding PubDate}"
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Button
-                                Margin="5"
-                                BackgroundColor="Green"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
-                                Text="Download"
-                                TextColor="Black">
-
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TabletShowViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-
-                            </Button>
-                        </HorizontalStackLayout>
-
                         <Label
-                            Grid.Row="3"
+                            Grid.Row="2"
+                            Margin="10"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"
-                            TextType="Html"
-                            WidthRequest="300" />
+                            WidthRequest="{OnIdiom Phone=290,
+                                                   Tablet=300,
+                                                   Default=290,
+                                                   Desktop=340}" />
                     </Grid>
-
                 </Frame>
-
             </DataTemplate>
         </CollectionView.ItemTemplate>
 
     </CollectionView>
-
 </ContentPage>
