@@ -12,7 +12,6 @@ on:
   
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
-  NUGETCONFIG_PATH: "nuget.config"
  
 jobs:
 
@@ -50,7 +49,7 @@ jobs:
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }} 
 
     - name: Build Maui Android project
       shell: pwsh
@@ -89,7 +88,7 @@ jobs:
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }} 
 
     - name: Build Maui WinUI project
       shell: pwsh
@@ -133,7 +132,7 @@ jobs:
 
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }} 
 
     - name: Build MAUI iOS project
       shell: bash
@@ -176,7 +175,7 @@ jobs:
 
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}
     
     - name: Build MAUI MacCatalyst project
       shell: bash
