@@ -190,8 +190,4 @@
     </MauiXaml>
   </ItemGroup>
   
-  <ItemGroup>
-    <Folder Include="NugetPackages\" />
-  </ItemGroup>
-  
 </Project>
