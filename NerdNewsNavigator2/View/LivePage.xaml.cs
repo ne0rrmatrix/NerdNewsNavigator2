@@ -26,6 +26,7 @@ public partial class LivePage : ContentPage
     protected override void OnDisappearing()
     {
         mediaElement.ShouldKeepScreenOn = false;
+        mediaElement.RestoreScreen();
         mediaElement.Stop();
     }
 

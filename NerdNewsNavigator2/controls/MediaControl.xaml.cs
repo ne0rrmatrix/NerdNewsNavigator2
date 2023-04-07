@@ -10,9 +10,9 @@ public partial class MediaControl : ContentView
     public string PlayPosition { get; set; }
     public bool MenuIsVisible { get; set; } = false;
 
-    private static bool s_fullScreen = false;
+    private bool _fullScreen = false;
 
-    public bool FullScreen { get; set; } = false;
+    public bool SetFullScreen { get; set; } = false;
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
         {
@@ -115,7 +115,22 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(ShouldKeepScreenOnProperty);
         set => SetValue(ShouldKeepScreenOnProperty, value);
     }
+    /// <summary>
+    /// Method toggles Full Screen Off
+    /// </summary>
+    public void RestoreScreen()
+    {
+        mediaElement.RestoreScreen();
+    }
 
+    /// <summary>
+    /// Method toggles Full Screen On
+    /// </summary>
+
+    public void FullScreen()
+    {
+        mediaElement.FullScreen();
+    }
     #endregion
     public MediaControl()
     {
@@ -144,7 +159,6 @@ public partial class MediaControl : ContentView
     {
         mediaElement.Stop();
     }
-
     #region Events
 
 #nullable enable
@@ -215,17 +229,17 @@ public partial class MediaControl : ContentView
         }
     }
 
-    private static void BtnFullScreen_Clicked(object sender, EventArgs e)
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-        if (s_fullScreen)
+        if (_fullScreen)
         {
-            s_fullScreen = false;
+            _fullScreen = false;
             RestoreScreen();
         }
         else
         {
-            SetFullScreen();
-            s_fullScreen = true;
+            FullScreen();
+            _fullScreen = true;
         }
     }
     private void OnMuteClicked(object sender, EventArgs e)
@@ -245,11 +259,11 @@ public partial class MediaControl : ContentView
     {
         _ = Moved();
     }
-    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
         if (e.Direction == SwipeDirection.Up)
         {
-            SetFullScreen();
+            FullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
@@ -273,28 +287,11 @@ public partial class MediaControl : ContentView
     #region Full Screen Functions
 #nullable enable
 
-    /// <summary>
-    /// Method toggles Full Screen Off
-    /// </summary>
-    public static void RestoreScreen()
-    {
-        DeviceService.RestoreScreen();
-    }
-
-    /// <summary>
-    /// Method toggles Full Screen On
-    /// </summary>
-
-    public static void SetFullScreen()
-    {
-        DeviceService.FullScreen();
-    }
-
     private async Task Moved()
     {
-        if (!FullScreen)
+        if (!SetFullScreen)
         {
-            FullScreen = true;
+            SetFullScreen = true;
             if (IsYoutube)
             {
                 ImageSettings.IsEnabled = true;
@@ -305,9 +302,9 @@ public partial class MediaControl : ContentView
                 ImageSettings.IsEnabled = false;
                 ImageSettings.IsVisible = false;
             }
-            OnPropertyChanged(nameof(FullScreen));
+            OnPropertyChanged(nameof(SetFullScreen));
             await Task.Delay(7000);
-            FullScreen = false;
+            SetFullScreen = false;
             MenuIsVisible = false;
             if (IsYoutube)
             {
@@ -315,7 +312,7 @@ public partial class MediaControl : ContentView
                 ImageSettings.IsVisible = false;
             }
             OnPropertyChanged(nameof(MenuIsVisible));
-            OnPropertyChanged(nameof(FullScreen));
+            OnPropertyChanged(nameof(SetFullScreen));
         }
     }
     #endregion
@@ -332,6 +329,7 @@ public partial class MediaControl : ContentView
             return;
         }
         mediaElement.ShouldKeepScreenOn = false;
+        mediaElement.RestoreScreen();
         mediaElement.Stop();
         // Stop and cleanup MediaElement when we navigate away
         mediaElement.Handler?.DisconnectHandler();

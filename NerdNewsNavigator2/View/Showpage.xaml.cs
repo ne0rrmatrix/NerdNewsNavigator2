@@ -45,9 +45,4 @@ public partial class ShowPage : ContentPage, IRecipient<InternetItemMessage>, IR
             WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         });
     }
-
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        DeviceService.RestoreScreen();
-    }
 }

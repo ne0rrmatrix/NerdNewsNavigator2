@@ -45,14 +45,4 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
             await MessagingService.RecievedInternetMessage(message.Value);
         });
     }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        DeviceService.RestoreScreen();
-    }
 }

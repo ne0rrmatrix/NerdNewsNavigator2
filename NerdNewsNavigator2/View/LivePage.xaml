@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:data="clr-namespace:NerdNewsNavigator2.View"
     xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />

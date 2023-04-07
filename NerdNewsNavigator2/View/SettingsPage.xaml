@@ -6,9 +6,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     x:DataType="viewmodel:SettingsViewModel"
-    BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    BackgroundColor="#34AAD2">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />

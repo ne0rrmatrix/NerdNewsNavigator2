@@ -8,9 +8,7 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:PodcastViewModel"
-    BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    BackgroundColor="#34AAD2">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />

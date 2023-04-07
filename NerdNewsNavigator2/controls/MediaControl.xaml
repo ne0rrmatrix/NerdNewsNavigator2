@@ -28,11 +28,11 @@
 
         <Frame
             BackgroundColor="#212121"
-            IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
-            IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
+            IsEnabled="{Binding _fullScreen, Source={x:Reference mediaControl}}"
+            IsVisible="{Binding _fullScreen, Source={x:Reference mediaControl}}"
             Opacity="0.3" />
 
-        <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
+        <Grid IsEnabled="{Binding _fullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding _fullScreen, Source={x:Reference mediaControl}}">
 
             <ImageButton
                 x:Name="ImageSettings"

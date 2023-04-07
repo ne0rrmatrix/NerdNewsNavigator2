@@ -18,9 +18,4 @@ public partial class RemovePage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        DeviceService.RestoreScreen();
-    }
 }

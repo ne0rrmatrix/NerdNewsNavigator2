@@ -105,16 +105,7 @@ public partial class AddPodcastPage : ContentPage
     /// <param name="e"></param>
     private async void OpenUrlForDonation(object sender, EventArgs e)
     {
-        await Browser.OpenAsync("https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD");
-    }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        DeviceService.RestoreScreen();
+        var donation = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
+        await Browser.OpenAsync(donation);
     }
 }
