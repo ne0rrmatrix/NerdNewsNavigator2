@@ -36,7 +36,7 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Method Auto downloads <see cref="Favorites"/> from Database.
+    /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
     /// <param name="stateinfo"></param>
     public static async void AutoDownload(object stateinfo)
@@ -49,7 +49,11 @@ public partial class App : Application
         {
             return;
         }
-
+        while (IsDownloading)
+        {
+            Thread.Sleep(5000);
+            Debug.WriteLine("Waiting for download to finish");
+        }
         favoriteShows.ForEach(async x =>
         {
             if (!x.IsDownloaded)

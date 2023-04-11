@@ -11,7 +11,7 @@ public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of <see cref="Favorites"/> managed by this class.
+    /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> FavoriteShows { get; set; } = new();
     /// <summary>

@@ -58,7 +58,7 @@ public partial class RemoveViewModel : BaseViewModel
         else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
         {
             var item = Podcasts.First(x => x.Url == url);
-            var show = new Favorites
+            var show = new Show
             {
                 Url = item.Url,
                 Title = item.Title,

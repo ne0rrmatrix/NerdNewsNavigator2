@@ -12,11 +12,11 @@ public static class FavoriteService
     public static bool IsDownloading { get; set; } = false;
 
     /// <summary>
-    /// Method Adds Favorites <see cref="Favorites"/> to Database.
+    /// Method Adds Favorites <see cref="Show"/> to Database.
     /// </summary>
-    /// <param name="favorites">Is the Url of <see cref="Favorites.Url"/> to Add to datbase.</param> 
+    /// <param name="favorites">Is the Url of <see cref="Show.Url"/> to Add to datbase.</param> 
     /// <returns>nothing</returns>
-    public static async Task<bool> AddFavoriteToDatabase(Favorites favorites)
+    public static async Task<bool> AddFavoriteToDatabase(Show favorites)
     {
         var items = await App.PositionData.GetAllFavorites();
         foreach (var item in items)
@@ -31,7 +31,7 @@ public static class FavoriteService
     }
 
     /// <summary>
-    /// Method Removes Favorites <see cref="Favorites"/> from Database.
+    /// Method Removes Favorites <see cref="Show"/> from Database.
     /// </summary>
     /// <param name="url"> is the Favorite to remove from database.</param>
     /// <returns>nothing</returns>
