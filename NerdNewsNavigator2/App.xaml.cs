@@ -75,6 +75,10 @@ public partial class App : Application
                         await PositionData.UpdateFavorite(x);
                         IsDownloading = false;
                     }
+                    if (!result)
+                    {
+                        IsDownloading = false;
+                    }
                 }
             }
         });

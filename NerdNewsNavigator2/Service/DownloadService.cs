@@ -67,6 +67,11 @@ public static class DownloadService
         {
             var filename = GetFileName(url);
             var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+            if (File.Exists(tempFile))
+            {
+                Debug.WriteLine("File exists stopping download");
+                return false;
+            }
             using var client = new HttpClient();
             using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
             using var readFrom = await response.Content.ReadAsStreamAsync();
