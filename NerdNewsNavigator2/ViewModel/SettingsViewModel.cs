@@ -9,11 +9,13 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class SettingsViewModel : BaseViewModel
 {
+    ILogger<SettingsViewModel> Logger { get; set; }
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
     /// </summary>
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
@@ -29,13 +31,13 @@ public partial class SettingsViewModel : BaseViewModel
     public async Task Tap(string url)
     {
         await PodcastServices.Delete(url);
-        foreach (var item in Podcasts)
+        var item = Podcasts.First(x => x.Url == url);
+        if (item is null)
         {
-            if (item.Url == url)
-            {
-                if (Podcasts.Contains(item)) { Podcasts.Remove(item); }
-                break;
-            }
+            Logger.LogInformation("Podcast {Item} could not be deleted. It was not found in list of Podcasts", url);
+            return;
         }
+        Podcasts.Remove(item);
+        Logger.LogInformation("Podcast {Item} was removed form List of Podcasts", item.Url);
     }
 }

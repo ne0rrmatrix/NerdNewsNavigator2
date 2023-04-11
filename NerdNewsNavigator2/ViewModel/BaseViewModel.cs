@@ -11,6 +11,10 @@ public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     /// <summary>
+    /// An <see cref="ObservableCollection{T}"/> of <see cref="Favorites"/> managed by this class.
+    /// </summary>
+    public ObservableCollection<Show> FavoriteShows { get; set; } = new();
+    /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Show> Shows { get; set; } = new();
@@ -94,6 +98,7 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         this._connectivity = connectivity;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        ThreadPool.QueueUserWorkItem(GetFavoriteShows);
 #if WINDOWS || ANDROID
         ThreadPool.QueueUserWorkItem(GetMostRecent);
 #endif
@@ -147,13 +152,7 @@ public partial class BaseViewModel : ObservableObject
                 FileName = DownloadService.GetFileName(url)
             };
             var downloaded = await DownloadService.DownloadShow(download);
-            if (!downloaded)
-            {
-                IsBusy = false;
-                WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false));
-
-            }
-            else if (downloaded)
+            if (downloaded)
             {
                 Logger.LogInformation("Downloaded file: {file}", download.FileName);
                 var result = await App.PositionData.GetAllDownloads();
@@ -166,12 +165,38 @@ public partial class BaseViewModel : ObservableObject
                 }
                 await DownloadService.AddDownloadDatabase(download);
                 WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
-                IsBusy = false;
             }
+            IsBusy = false;
         }
     }
 
     #region Podcast data functions
+
+    /// <summary>
+    /// Method gets the <see cref="ObservableCollection{T}"/> of <see cref="Show"/> from the database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    public async void GetFavoriteShows(object stateinfo)
+    {
+        var shows = new ObservableCollection<Show>();
+        var temp = await App.PositionData.GetAllFavorites();
+        if (temp is null)
+        {
+            return;
+        }
+        foreach (var item in temp)
+        {
+            var show = await FeedService.GetShows(item.Url, true);
+            if (show is null || show.Count == 0)
+            {
+                return;
+            }
+            shows.Add(show[0]);
+        }
+        FavoriteShows.Clear();
+        FavoriteShows = new ObservableCollection<Show>(shows);
+        OnPropertyChanged(nameof(FavoriteShows));
+    }
 
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for <see cref="Show.Url"/> and returns a <see cref="Show"/>
@@ -186,10 +211,7 @@ public partial class BaseViewModel : ObservableObject
         {
             var temp = await FeedService.GetShows(url, getFirstOnly);
             Shows = new ObservableCollection<Show>(temp);
-        }
-        else
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+            OnPropertyChanged(nameof(Shows));
         }
     }
 
@@ -203,18 +225,13 @@ public partial class BaseViewModel : ObservableObject
     {
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if (InternetConnected() || Podcasts is not null)
+        if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
             foreach (var show in Podcasts.ToList())
             {
                 var item = await FeedService.GetShows(show.Url, true);
                 MostRecentShows.Add(item.First());
             }
-        }
-        else if (!InternetConnected())
-        {
-
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
 #endif
@@ -228,18 +245,13 @@ public partial class BaseViewModel : ObservableObject
     {
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if (InternetConnected())
+        if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
             foreach (var show in Podcasts.ToList())
             {
                 var item = await FeedService.GetShows(show.Url, true);
                 MostRecentShows.Add(item.First());
             }
-        }
-        else if (!InternetConnected())
-        {
-
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
 #endif
@@ -271,10 +283,6 @@ public partial class BaseViewModel : ObservableObject
                 Podcasts.Add(item);
             }
             IsBusy = false;
-            if (!InternetConnected())
-            {
-                WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-            }
         }
     }
 

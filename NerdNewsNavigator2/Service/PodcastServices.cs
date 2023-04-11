@@ -190,4 +190,13 @@ public static class PodcastServices
         }
         return true;
     }
+    /// <summary>
+    /// Method Updates a <see cref="Podcast"/> to Database.
+    /// </summary>
+    /// <param name="podcast"><see cref="string"/> Url of <see cref="Podcast"/></param>
+    /// <returns>nothing</returns>
+    public static async Task UpdatePodcast(Podcast podcast)
+    {
+        await App.PositionData.UpdatePodcast(podcast);
+    }
 }

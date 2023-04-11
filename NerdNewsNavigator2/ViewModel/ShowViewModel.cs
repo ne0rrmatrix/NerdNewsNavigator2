@@ -36,6 +36,10 @@ public partial class ShowViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
     }
 
     /// <summary>
@@ -57,7 +61,19 @@ public partial class ShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Download(string url)
     {
+        var download = DownloadedShows.Any(x => x.Url == url);
+        if (download)
+        {
+            return;
+        }
         await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         await Downloading(url, false);
+
+#if WINDOWS || ANDROID
+        ThreadPool.QueueUserWorkItem(GetMostRecent);
+#endif
+#if IOS || MACCATALYST
+        _ = GetMostRecent();
+#endif
     }
 }

@@ -15,5 +15,9 @@ public partial class LiveViewModel : BaseViewModel
     /// </summary>
     public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
     }
 }

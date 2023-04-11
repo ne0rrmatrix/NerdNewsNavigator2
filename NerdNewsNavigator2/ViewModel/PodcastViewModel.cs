@@ -17,6 +17,10 @@ public partial class PodcastViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
     }
 
     /// <summary>

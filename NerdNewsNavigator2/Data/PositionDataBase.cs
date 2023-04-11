@@ -19,6 +19,7 @@ public class PositionDataBase
     /// A variable to manage <see cref="SQLiteAsyncConnection"/>
     /// </summary>
     private SQLiteAsyncConnection _connection;
+
     #endregion
     /// <summary>
     /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
@@ -57,31 +58,14 @@ public class PositionDataBase
             _logger.LogInformation("Podcast Init {DataBasePath}", databasePath);
             await _connection.CreateTableAsync<Download>();
             _logger.LogInformation("Download Init {DatabasePath}", databasePath);
+            await _connection.CreateTableAsync<Favorites>();
+            _logger.LogInformation("Favorites Init {DatabasePath}", databasePath);
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to start Position Database: {Message}", ex.Message);
         }
         return true;
-    }
-
-    /// <summary>
-    /// Method Deletes all <see cref="Position"/> from database.
-    /// </summary>
-    /// <returns><see cref="bool"/></returns>
-    public async Task<bool> DeleteAll()
-    {
-        try
-        {
-            await _connection.DeleteAllAsync<Position>();
-            _logger.LogInformation($"Deleted All Position data.");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to delete Position data from database: {Message}", ex.Message);
-            return false;
-        }
     }
 
     /// <summary>
@@ -121,7 +105,24 @@ public class PositionDataBase
             return null;
         }
     }
-
+    /// <summary>
+    /// Method Retrieves a <see cref="List{T}"/> of <see cref="Favorites"/> from database.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Favorites"/></returns>
+    public async Task<List<Favorites>> GetAllFavorites()
+    {
+        try
+        {
+            var temp = await _connection.Table<Favorites>().ToListAsync();
+            _logger.LogInformation("Got all Favorites from Database.");
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to get Favorites from Database: {Message}", ex.Message);
+            return null;
+        }
+    }
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Download"/> from database.
     /// </summary>
@@ -142,6 +143,25 @@ public class PositionDataBase
     }
 
     /// <summary>
+    /// Method Deletes all <see cref="Position"/> from database.
+    /// </summary>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteAll()
+    {
+        try
+        {
+            await _connection.DeleteAllAsync<Position>();
+            _logger.LogInformation($"Deleted All Position data.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to delete Position data from database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Method deletes all <see cref="Podcast"/> from database.
     /// </summary>
     /// <returns><see cref="bool"/></returns>
@@ -157,6 +177,26 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.LogError("Failed to delete all Podcasts. {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method deletes all <see cref="Favorites"/> from database.
+    /// </summary>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteAllFavorites()
+    {
+        try
+        {
+
+            await _connection.DeleteAllAsync<Favorites>();
+            _logger.LogInformation("Succesfully Deleted all Favorites.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to delete all Favorites. {Message}", ex.Message);
             return false;
         }
     }
@@ -221,6 +261,144 @@ public class PositionDataBase
     }
 
     /// <summary>
+    /// Method add a <see cref="Podcast"/> to Database.
+    /// </summary>
+    /// <param name="podcast">an instance of <see cref="Podcast"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> AddPodcast(Podcast podcast)
+    {
+        try
+        {
+            await _connection.InsertAsync(podcast);
+            _logger.LogInformation("Saved to Database Podcast: {Title}", podcast.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation("Failed to save Podcast to Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method add a <see cref="Download"/> to Database.
+    /// </summary>
+    /// <param name="download">an instance of <see cref="Download"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> AddDownload(Download download)
+    {
+        try
+        {
+            await _connection.InsertAsync(download);
+            _logger.LogInformation("Saved to Database Download: {Title}", download.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation("Failed to save Download to Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method add a <see cref="Favorites"/> to Database.
+    /// </summary>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> AddFavorites(Favorites favorites)
+    {
+        try
+        {
+            await _connection.InsertAsync(favorites);
+            _logger.LogInformation("Saved to Database Favorites: {Title}", favorites.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation("Failed to save Favorites to Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+    /// <summary>
+    /// Method Updates a <see cref="Position"/> from Database
+    /// </summary>
+    /// <param name="position">an instance of <see cref="Position"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> UpdatePosition(Position position)
+    {
+        try
+        {
+            await _connection.UpdateAsync(position);
+            _logger.LogInformation("Updated Database: {Title} {Position}", position.Title, position.SavedPosition);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Update Position from Database {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Update a <see cref="Podcast"/> from Database
+    /// </summary>
+    /// <param name="podcast">an instance of <see cref="Podcast"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> UpdatePodcast(Podcast podcast)
+    {
+        try
+        {
+            await _connection.UpdateAsync(podcast);
+            _logger.LogInformation("Updated Podcast: {Title}", podcast.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Update Podcast from Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Updates a <see cref="Favorites"/> from Database
+    /// </summary>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> UpdateFavorite(Favorites favorites)
+    {
+        try
+        {
+            await _connection.UpdateAsync(favorites);
+            _logger.LogInformation("Updated Favorite: {Title}", favorites.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Update favorite from Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Updates a <see cref="Download"/> from Database
+    /// </summary>
+    /// <param name="download">an instance of <see cref="Download"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> UpdateDownload(Download download)
+    {
+        try
+        {
+            await _connection.UpdateAsync(download);
+            _logger.LogInformation("Updated Download: {Title}", download.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Download favorite from Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+    /// <summary>
     /// Method deletes a <see cref="Position"/> from Database
     /// </summary>
     /// <param name="position">an instance of <see cref="Position"/></param>
@@ -236,26 +414,6 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.LogError("Failed to Delete Position from Database {Message}", ex.Message);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Method add a <see cref="Podcast"/> to Database.
-    /// </summary>
-    /// <param name="podcast">an instance of <see cref="Position"/></param>
-    /// <returns><see cref="bool"/></returns>
-    public async Task<bool> AddPodcast(Podcast podcast)
-    {
-        try
-        {
-            await _connection.InsertAsync(podcast);
-            _logger.LogInformation("Saved to Database Podcast: {Title}", podcast.Title);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogInformation("Failed to save Podcast to Database: {Message}", ex.Message);
             return false;
         }
     }
@@ -281,21 +439,21 @@ public class PositionDataBase
     }
 
     /// <summary>
-    /// Method add a <see cref="Download"/> to Database.
+    /// Method Deletes a <see cref="Favorites"/> from Database
     /// </summary>
-    /// <param name="download">an instance of <see cref="Download"/></param>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> AddDownload(Download download)
+    public async Task<bool> DeleteFavorite(Favorites favorites)
     {
         try
         {
-            await _connection.InsertAsync(download);
-            _logger.LogInformation("Saved to Database Download: {Title}", download.Title);
+            await _connection.DeleteAsync(favorites);
+            _logger.LogInformation("Deleted Favorite: {Title}", favorites.Title);
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("Failed to save Download to Database: {Message}", ex.Message);
+            _logger.LogError("Failed to Delete favorite from Database: {Message}", ex.Message);
             return false;
         }
     }

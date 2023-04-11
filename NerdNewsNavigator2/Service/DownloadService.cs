@@ -79,4 +79,30 @@ public static class DownloadService
             return false;
         }
     }
+    /// <summary>
+    /// A method that download a show to device.
+    /// </summary>
+    /// <param name="show"></param>
+    /// <returns></returns>
+    public static async Task<bool> Downloading(Show show)
+    {
+        Debug.WriteLine($"Found Match {show.Url}");
+        Download download = new()
+        {
+            Title = show.Title,
+            Url = show.Url,
+            Image = show.Image,
+            PubDate = show.PubDate,
+            Description = show.Description,
+            FileName = GetFileName(show.Url)
+        };
+        var downloaded = await DownloadFile(download.Url);
+        if (downloaded)
+        {
+            Debug.WriteLine($"Downloaded file: {download.FileName}");
+            await AddDownloadDatabase(download);
+            return true;
+        }
+        return false;
+    }
 }

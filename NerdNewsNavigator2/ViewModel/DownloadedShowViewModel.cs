@@ -56,35 +56,24 @@ public partial class DownloadedShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Delete(string url)
     {
-        foreach (var item in DownloadedShows.ToList())
+        var item = DownloadedShows.First(x => x.Url == url);
+        if (item is not null)
         {
-            if (item.Url == url)
+            var filename = DownloadService.GetFileName(item.Url);
+            var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+            if (File.Exists(tempFile))
             {
-                var filename = DownloadService.GetFileName(url);
-                var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-                try
-                {
-                    if (File.Exists(tempFile))
-                    {
-                        File.Delete(tempFile);
-                        _logger.LogInformation("Deleted file {file}", tempFile);
-                        WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
-                    }
-                    else
-                    {
-                        _logger.LogInformation("File {file} was not found in file system.", tempFile);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    WeakReferenceMessenger.Default.Send(new DeletedItemMessage(false));
-                    _logger.LogError("Failed to delete file: {file} {Message}", tempFile, ex.Message);
-                }
-                await App.PositionData.DeleteDownload(item);
-                DownloadedShows.Remove(item);
-                _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
-                return;
+                File.Delete(tempFile);
+                _logger.LogInformation("Deleted file {file}", tempFile);
+                WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
             }
+            else
+            {
+                _logger.LogInformation("File {file} was not found in file system.", tempFile);
+            }
+            await App.PositionData.DeleteDownload(item);
+            DownloadedShows.Remove(item);
+            _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
         }
     }
 }

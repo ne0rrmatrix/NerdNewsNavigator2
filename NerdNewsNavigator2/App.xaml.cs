@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
+    private static bool IsDownloading { get; set; } = false;
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -30,6 +31,49 @@ public partial class App : Application
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
+
+        ThreadPool.QueueUserWorkItem(AutoDownload);
+    }
+
+    /// <summary>
+    /// Method Auto downloads <see cref="Favorites"/> from Database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    public static async void AutoDownload(object stateinfo)
+    {
+        Debug.WriteLine("Trying to start Auto Download");
+        var favoriteShows = await PositionData.GetAllFavorites();
+        var downloadedShows = await PositionData.GetAllDownloads();
+
+        if (favoriteShows is null || downloadedShows is null)
+        {
+            return;
+        }
+
+        favoriteShows.ForEach(async x =>
+        {
+            if (!x.IsDownloaded)
+            {
+                var show = await FeedService.GetShows(x.Url, true);
+                while (IsDownloading)
+                {
+                    Thread.Sleep(5000);
+                    Debug.WriteLine("Waiting for download to finish");
+                }
+                if (!downloadedShows.Any(y => y.Url == x.Url))
+                {
+                    Debug.WriteLine("Downloading ", show.First().Url);
+                    IsDownloading = true;
+                    var result = await DownloadService.Downloading(show.First());
+                    if (result)
+                    {
+                        x.IsDownloaded = true;
+                        await PositionData.UpdateFavorite(x);
+                        IsDownloading = false;
+                    }
+                }
+            }
+        });
     }
 }
 

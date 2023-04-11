@@ -27,40 +27,35 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     /// </summary>
     private async Task DeleteAllPodcasts()
     {
-        try
+        IsBusy = true;
+        while (IsBusy)
         {
-            IsBusy = true;
-            while (IsBusy)
+            var temp = await App.PositionData.GetAllDownloads();
+            if (temp is null || temp.Count == 0)
             {
-                var temp = await App.PositionData.GetAllDownloads();
-                if (temp is null)
+                _logger.LogInformation("Did not find any files to delete.");
+            }
+            else
+            {
+                temp.ToList().ForEach(item =>
                 {
-                    _logger.LogInformation("Did not find any files to delete.");
-                }
-                else
-                {
-                    foreach (var (item, tempFile) in from item in temp
-                                                     let tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName)
-                                                     where File.Exists(tempFile)
-                                                     select (item, tempFile))
+                    var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName);
+                    if (File.Exists(tempFile))
                     {
                         File.Delete(tempFile);
                         _logger.LogInformation("Deleted {file}", item.FileName);
                     }
-                }
-
-                await App.PositionData.DeleteAll();
-                await App.PositionData.DeleteAllPodcasts();
-                await App.PositionData.DeleteAllDownloads();
-                Shows.Clear();
-                Podcasts.Clear();
-                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-                IsBusy = false;
+                });
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Delete podcasts failed. {Message}", ex.Message);
+            await App.PositionData.DeleteAll();
+            await App.PositionData.DeleteAllPodcasts();
+            await App.PositionData.DeleteAllDownloads();
+            await App.PositionData.DeleteAllFavorites();
+            FavoriteShows.Clear();
+            Shows.Clear();
+            Podcasts.Clear();
+            IsBusy = false;
+            await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
         }
     }
 }
