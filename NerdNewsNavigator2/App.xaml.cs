@@ -61,31 +61,28 @@ public partial class App : Application
     }
     public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
     {
-        favoriteShows.ForEach(async x =>
+        favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
         {
-            if (!x.IsDownloaded)
+            var show = await FeedService.GetShows(x.Url, true);
+            while (IsDownloading)
             {
-                var show = await FeedService.GetShows(x.Url, true);
-                while (IsDownloading)
+                Thread.Sleep(5000);
+                Debug.WriteLine("Waiting for download to finish");
+            }
+            if (!downloadedShows.Any(y => y.Url == x.Url))
+            {
+                Debug.WriteLine("Downloading ", show.First().Url);
+                IsDownloading = true;
+                var result = await DownloadService.Downloading(show.First());
+                if (result)
                 {
-                    Thread.Sleep(5000);
-                    Debug.WriteLine("Waiting for download to finish");
+                    x.IsDownloaded = true;
+                    await PositionData.UpdateFavorite(x);
+                    IsDownloading = false;
                 }
-                if (!downloadedShows.Any(y => y.Url == x.Url))
+                else
                 {
-                    Debug.WriteLine("Downloading ", show.First().Url);
-                    IsDownloading = true;
-                    var result = await DownloadService.Downloading(show.First());
-                    if (result)
-                    {
-                        x.IsDownloaded = true;
-                        await PositionData.UpdateFavorite(x);
-                        IsDownloading = false;
-                    }
-                    if (!result)
-                    {
-                        IsDownloading = false;
-                    }
+                    IsDownloading = false;
                 }
             }
         });
