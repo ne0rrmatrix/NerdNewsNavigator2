@@ -54,6 +54,13 @@ public partial class App : Application
             Thread.Sleep(5000);
             Debug.WriteLine("Waiting for download to finish");
         }
+        if (!IsDownloading)
+        {
+            ProccessShow(favoriteShows, downloadedShows);
+        }
+    }
+    public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
+    {
         favoriteShows.ForEach(async x =>
         {
             if (!x.IsDownloaded)
