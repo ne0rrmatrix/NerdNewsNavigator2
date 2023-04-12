@@ -54,5 +54,9 @@ public partial class MostRecentShowsPage : ContentPage, IRecipient<DownloadItemM
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
+        if (App.IsDownloading)
+        {
+            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        }
     }
 }

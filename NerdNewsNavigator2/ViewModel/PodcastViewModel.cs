@@ -21,6 +21,10 @@ public partial class PodcastViewModel : BaseViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+        if (App.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
     }
 
     /// <summary>

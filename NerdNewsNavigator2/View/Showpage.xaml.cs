@@ -49,5 +49,9 @@ public partial class ShowPage : ContentPage, IRecipient<InternetItemMessage>, IR
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
+        if (App.IsDownloading)
+        {
+            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        }
     }
 }

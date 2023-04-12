@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    Title="{Binding Title}"
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
@@ -15,25 +16,6 @@
     </Shell.BackButtonBehavior>
 
     <CollectionView Margin="5" ItemsSource="{Binding MostRecentShows}">
-
-        <CollectionView.Header>
-            <StackLayout>
-                <Label
-                    Padding="20"
-                    FontSize="Large"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    Text="Loading..."
-                    TextColor="Black"
-                    VerticalOptions="Center" />
-                <ActivityIndicator
-                    IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    Color="Red" />
-            </StackLayout>
-        </CollectionView.Header>
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
@@ -98,7 +80,7 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotDownloading}"
                                 Text="Download"
                                 TextColor="Black">
                                 <Button.GestureRecognizers>

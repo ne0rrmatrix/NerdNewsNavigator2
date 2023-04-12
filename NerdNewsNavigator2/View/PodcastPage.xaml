@@ -8,6 +8,7 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:PodcastViewModel"
+     Title="{Binding Title}"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">

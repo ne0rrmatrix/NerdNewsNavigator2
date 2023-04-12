@@ -8,6 +8,7 @@ namespace NerdNewsNavigator2.Service;
 /// </summary>
 public static class DownloadService
 {
+    public static string Status { get; set; } = string.Empty;
     /// <summary>
     /// Method Download a show to local file system.
     /// </summary>
@@ -66,17 +67,22 @@ public static class DownloadService
         try
         {
             var filename = GetFileName(url);
+            var downloadFileUrl = url;
             var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
             if (File.Exists(tempFile))
             {
                 Debug.WriteLine("File exists stopping download");
                 return false;
             }
-            using var client = new HttpClient();
-            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-            using var readFrom = await response.Content.ReadAsStreamAsync();
-            using Stream writeTo = File.Open(tempFile, FileMode.Create);
-            await readFrom.CopyToAsync(writeTo);
+            var destinationFilePath = tempFile;
+
+            using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
+            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+            {
+                Status = ($"Download Progress: {progressPercentage}%");
+            };
+
+            await client.StartDownload();
             return true;
         }
         catch

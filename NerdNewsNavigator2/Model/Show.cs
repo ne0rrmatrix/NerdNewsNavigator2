@@ -50,5 +50,14 @@ namespace NerdNewsNavigator2.Model
         /// the <c>IsDownloaded</c> is a <see cref="bool"/> of <see cref="Show"/> Class.
         /// </summary>
         public bool IsDownloaded { get; set; }
+
+        /// <summary>
+        /// the <c>IsDownloading</c> is a <see cref="bool"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public bool IsDownloading { get; set; } = false;
+        /// <summary>
+        /// the <c>Status</c> is a <see cref="string"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public string Status { get; set; } = string.Empty;
     }
 }

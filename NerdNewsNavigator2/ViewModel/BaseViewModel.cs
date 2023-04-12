@@ -59,12 +59,59 @@ public partial class BaseViewModel : ObservableObject
     private int _orientation;
 
     /// <summary>
+    /// an <see cref="int"/> instance managed by this class.
+    /// </summary>
+    private bool _isDownloading;
+
+    /// <summary>
+    /// an <see cref="int"/> instance managed by this class.
+    /// </summary>
+    public bool IsDownloading
+    {
+        get => _isDownloading;
+        set
+        {
+            if (SetProperty(ref _isDownloading, value))
+            {
+                OnPropertyChanged(nameof(IsNotDownloading));
+            }
+
+        }
+    }
+    public bool IsNotDownloading => !IsDownloading;
+
+    /// <summary>
     /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     public int Orientation
     {
         get => _orientation;
         set => SetProperty(ref _orientation, value);
+    }
+
+    /// <summary>
+    /// an <see cref="int"/> instance managed by this class.
+    /// </summary>
+    private string _downloadProgress;
+
+    private string _title;
+    public string Title
+    {
+        get { return _title; }
+        set
+        {
+            _title = value;
+            OnPropertyChanged(nameof(Title));
+        }
+    }
+
+    /// <summary>
+    /// an <see cref="int"/> instance managed by this class.
+    /// </summary>
+    public string DownloadProgress
+    {
+        get => _downloadProgress;
+        set => SetProperty(ref _downloadProgress, value);
     }
 
     /// <summary>
@@ -97,6 +144,7 @@ public partial class BaseViewModel : ObservableObject
     {
         Logger = logger;
         this._connectivity = connectivity;
+        _downloadProgress = string.Empty;
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
 #if WINDOWS || ANDROID
@@ -131,43 +179,83 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
-        Logger.LogInformation("Trying to start download of {URL}", url);
-        IsBusy = true;
-        List<Show> list;
-        if (mostRecent) { list = MostRecentShows.ToList(); }
-        else { list = Shows.ToList(); }
-
-        foreach (var item in from item in list
-                             where item.Url == url
-                             select item)
+        var downloadTemp = DownloadedShows.Any(x => x.Url == url);
+        if (downloadTemp)
         {
-            Logger.LogInformation("Found match!");
-            Download download = new()
-            {
-                Title = item.Title,
-                Url = url,
-                Image = item.Image,
-                PubDate = item.PubDate,
-                Description = item.Description,
-                FileName = DownloadService.GetFileName(url)
-            };
-            var downloaded = await DownloadService.DownloadShow(download);
-            if (downloaded)
-            {
-                Logger.LogInformation("Downloaded file: {file}", download.FileName);
-                var result = await App.PositionData.GetAllDownloads();
-                foreach (var show in result)
-                {
-                    if (show.Title == download.Title)
-                    {
-                        await App.PositionData.DeleteDownload(show);
-                    }
-                }
-                await DownloadService.AddDownloadDatabase(download);
-                WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
-            }
-            IsBusy = false;
+            return;
         }
+
+        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        //App.IsDownloading = true;
+        //IsDownloading = true;
+        IsBusy = true;
+        ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        Logger.LogInformation("Trying to start download of {URL}", url);
+
+        List<Show> list;
+        if (mostRecent)
+        {
+            list = MostRecentShows.ToList();
+        }
+        else
+        {
+            list = Shows.ToList();
+        }
+
+        var item = list.ToList().First(x => x.Url == url);
+        await ProcessDownloads(item, url);
+    }
+
+    public async Task ProcessDownloads(Show item, string url)
+    {
+        if (item == null)
+        {
+            return;
+        }
+        Logger.LogInformation("Found match!");
+        Download download = new()
+        {
+            Title = item.Title,
+            Url = url,
+            Image = item.Image,
+            PubDate = item.PubDate,
+            Description = item.Description,
+            FileName = DownloadService.GetFileName(url)
+        };
+        var downloaded = await DownloadService.DownloadShow(download);
+        if (downloaded)
+        {
+            await DownloadSuccess(download);
+        }
+        IsBusy = false;
+    }
+    public void UpdatingDownload()
+    {
+        App.IsDownloading = true;
+        IsDownloading = true;
+        OnPropertyChanged(nameof(IsDownloading));
+        while (App.IsDownloading)
+        {
+            DownloadProgress = DownloadService.Status;
+            Title = DownloadProgress;
+            OnPropertyChanged(nameof(Title));
+            Thread.Sleep(1000);
+        }
+        OnPropertyChanged(nameof(IsDownloading));
+        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+    }
+    public async Task DownloadSuccess(Download download)
+    {
+        Logger.LogInformation("Downloaded file: {file}", download.FileName);
+        var result = await App.PositionData.GetAllDownloads();
+        var item = result.Find(result => result.Title == download.Title);
+        if (item != null)
+        {
+            await App.PositionData.DeleteDownload(item);
+        }
+        await DownloadService.AddDownloadDatabase(download);
+        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
     }
 
     #region Podcast data functions

@@ -9,7 +9,8 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
-    private static bool IsDownloading { get; set; } = false;
+    public static bool IsDownloading { get; set; } = false;
+    public static bool NotDownloading { get; set; } = !IsDownloading;
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>

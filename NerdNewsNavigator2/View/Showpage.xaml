@@ -4,8 +4,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:local="clr-namespace:NerdNewsNavigator2"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+    xmlns:service="clr-namespace:NerdNewsNavigator2.Service"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    Title="{Binding Title}"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:ShowViewModel"
     BackgroundColor="#34AAD2"
@@ -26,24 +29,7 @@
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
-        <CollectionView.Header>
-            <StackLayout>
-                <Label
-                    Padding="20"
-                    FontSize="Large"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    Text="Downloading..."
-                    TextColor="Black"
-                    VerticalOptions="Center" />
-                <ActivityIndicator
-                    IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    Color="Red" />
-            </StackLayout>
-        </CollectionView.Header>
+
 
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
@@ -100,13 +86,15 @@
                                 Text="{Binding PubDate}"
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
+
                             <Button
+                                x:Name="Btn"
                                 Margin="5"
                                 BackgroundColor="Green"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotDownloading}"
                                 Text="Download"
                                 TextColor="Black">
 
@@ -116,7 +104,6 @@
 
                             </Button>
                         </HorizontalStackLayout>
-
                         <Label
                             Grid.Row="3"
                             FontSize="10"
