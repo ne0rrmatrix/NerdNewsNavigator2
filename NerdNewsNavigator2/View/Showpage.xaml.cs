@@ -22,19 +22,7 @@ public partial class ShowPage : ContentPage, IRecipient<InternetItemMessage>, IR
     }
 
     /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for display a <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(DownloadItemMessage message)
@@ -46,6 +34,17 @@ public partial class ShowPage : ContentPage, IRecipient<InternetItemMessage>, IR
         });
     }
 
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(InternetItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingService.RecievedInternetMessage(message.Value);
+        });
+    }
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();

@@ -187,8 +187,6 @@ public partial class BaseViewModel : ObservableObject
 
         await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        //App.IsDownloading = true;
-        //IsDownloading = true;
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         Logger.LogInformation("Trying to start download of {URL}", url);
@@ -203,7 +201,7 @@ public partial class BaseViewModel : ObservableObject
             list = Shows.ToList();
         }
 
-        var item = list.ToList().First(x => x.Url == url);
+        var item = list.AsEnumerable().First(x => x.Url == url);
         await ProcessDownloads(item, url);
     }
 

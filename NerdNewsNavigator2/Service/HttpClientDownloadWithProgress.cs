@@ -90,13 +90,10 @@ namespace NerdNewsNavigator2.Service
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && _httpClient != null)
             {
-                if (_httpClient != null)
-                {
-                    _httpClient.Dispose();
-                    _httpClient = null;
-                }
+                _httpClient.Dispose();
+                _httpClient = null;
             }
         }
     }
