@@ -37,17 +37,6 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     public async Task Download(string url)
     {
         await Downloading(url, true);
-        App.IsDownloading = false;
-        IsDownloading = false;
-        OnPropertyChanged(nameof(IsDownloading));
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
-
-#if WINDOWS || ANDROID
-        ThreadPool.QueueUserWorkItem(GetMostRecent);
-#endif
-#if IOS || MACCATALYST
-        _ = GetMostRecent();
-#endif
     }
 
     /// <summary>

@@ -10,6 +10,9 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
     #region Properties
+    public delegate void DownloadChangedHandler();
+
+    public event DownloadChangedHandler DownloadChanged;
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
@@ -145,9 +148,14 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         Logger = logger;
         this._connectivity = connectivity;
         _downloadProgress = string.Empty;
+        DownloadChanged += () =>
+        {
+            Debug.WriteLine("NavBar closed");
+        };
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
+
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
 #if WINDOWS || ANDROID
@@ -199,6 +207,19 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             return false;
         }
     }
+    #region Download Tasks
+    private void TriggerProgressChanged()
+    {
+        DownloadChanged();
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsDownloading = false;
+            App.IsDownloading = false;
+            OnPropertyChanged(nameof(IsDownloading));
+            OnPropertyChanged(nameof(IsNotDownloading));
+            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+        });
+    }
 
     /// <summary>
     /// A method that download a show to device.
@@ -213,7 +234,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return;
         }
-
+        while (IsDownloading)
+        {
+            Thread.Sleep(5000);
+            Debug.WriteLine("Waiting for download to finish");
+        }
+        await Downloader(url, mostRecent);
+    }
+    public async Task Downloader(string url, bool mostRecent)
+    {
         await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         IsBusy = true;
@@ -232,8 +261,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
 
         var item = list.AsEnumerable().First(x => x.Url == url);
         await ProcessDownloads(item, url);
+        TriggerProgressChanged();
     }
-
     public async Task ProcessDownloads(Show item, string url)
     {
         if (item == null)
@@ -269,8 +298,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             OnPropertyChanged(nameof(Title));
             Thread.Sleep(1000);
         }
-        OnPropertyChanged(nameof(IsDownloading));
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+        TriggerProgressChanged();
     }
     public async Task DownloadSuccess(Download download)
     {
@@ -282,8 +310,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             await App.PositionData.DeleteDownload(item);
         }
         await DownloadService.AddDownloadDatabase(download);
+        IsDownloading = false;
+        App.IsDownloading = false;
+        OnPropertyChanged(nameof(IsDownloading));
+        OnPropertyChanged(nameof(IsNotDownloading));
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
     }
+    #endregion
 
     #region Podcast data functions
 

@@ -25,6 +25,14 @@ public partial class DownloadedShowViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(DownloadedShows));
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+        if (App.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
     }
 
     /// <summary>
