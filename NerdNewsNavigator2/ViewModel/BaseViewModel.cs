@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject
+public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
     #region Properties
     /// <summary>
@@ -145,6 +145,9 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         this._connectivity = connectivity;
         _downloadProgress = string.Empty;
+        WeakReferenceMessenger.Default.Reset();
+        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
 #if WINDOWS || ANDROID
@@ -155,6 +158,32 @@ public partial class BaseViewModel : ObservableObject
 #endif
     }
 
+    #region Messaging Service
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DownloadItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingService.RecievedDownloadMessage(message.Value);
+        });
+    }
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(InternetItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingService.RecievedInternetMessage(message.Value);
+        });
+    }
+    #endregion
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>

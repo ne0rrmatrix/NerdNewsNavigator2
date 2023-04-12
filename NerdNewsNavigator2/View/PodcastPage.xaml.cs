@@ -9,7 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that displays a <see cref="List{T}"/> of <see cref="Podcast"/> from twit.tv network.
 /// </summary>
-public partial class PodcastPage : ContentPage, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class PodcastPage : ContentPage
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PodcastPage"/> class.
@@ -19,33 +19,6 @@ public partial class PodcastPage : ContentPage, IRecipient<InternetItemMessage>,
     {
         InitializeComponent();
         BindingContext = viewModel;
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DownloadItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDownloadMessage(message.Value);
-            WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        });
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
     }
 
     /// <summary>
