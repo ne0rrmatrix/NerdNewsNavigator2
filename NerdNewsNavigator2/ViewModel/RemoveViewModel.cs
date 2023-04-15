@@ -69,9 +69,7 @@ public partial class RemoveViewModel : BaseViewModel
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
             Logger.LogInformation("Added {item} to database", item.Url);
-            await GetUpdatedPodcasts();
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            ThreadPool.QueueUserWorkItem(App.AutoDownload);
             return true;
         }
         return false;

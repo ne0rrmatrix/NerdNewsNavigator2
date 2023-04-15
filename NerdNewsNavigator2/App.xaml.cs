@@ -34,8 +34,18 @@ public partial class App : Application
             () => MainPage!.Navigation.PopModalAsync());
 
         ThreadPool.QueueUserWorkItem(AutoDownload);
+        var timer = new System.Timers.Timer
+        {
+            Interval = 1000 * 60 * 60
+        };
+        timer.Elapsed += new ElapsedEventHandler(Timer_Elapsed);
+        timer.Start();
     }
-
+    void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        Debug.WriteLine("Starting Scheduled Auto Download");
+        ThreadPool.QueueUserWorkItem(AutoDownload);
+    }
     /// <summary>
     /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
@@ -49,11 +59,6 @@ public partial class App : Application
         if (favoriteShows is null || downloadedShows is null)
         {
             return;
-        }
-        while (IsDownloading)
-        {
-            Thread.Sleep(5000);
-            Debug.WriteLine("Waiting for download to finish");
         }
         if (!IsDownloading)
         {
