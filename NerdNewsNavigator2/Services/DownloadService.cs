@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.Service;
+namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>

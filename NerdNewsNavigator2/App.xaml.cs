@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Mvvm.Messaging;
+
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -16,15 +18,18 @@ public partial class App : Application
     /// </summary>
     public static PositionDataBase PositionData { get; private set; }
 
+    private readonly IMessenger _messenger;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
     /// <param name="positionDataBase"></param>
-    public App(PositionDataBase positionDataBase)
+    public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
         MainPage = new AppShell();
 
+        _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
@@ -32,25 +37,34 @@ public partial class App : Application
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
-
-        ThreadPool.QueueUserWorkItem(AutoDownload);
-        var timer = new System.Timers.Timer
+        _ = ThreadPool.QueueUserWorkItem(state =>
         {
-            Interval = 1000 * 60 * 60
-        };
-        timer.Elapsed += new ElapsedEventHandler(Timer_Elapsed);
-        timer.Start();
+            Test();
+#if WINDOWS
+            _ = Task.Run(() =>
+            {
+                while (true)
+                {
+                    _ = ThreadPool.QueueUserWorkItem(state =>
+                    {
+                        _ = AutoDownload();
+                    });
+                    Thread.Sleep(1000 * 60 * 60);
+                }
+            });
+#endif
+        });
     }
-    void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    private void Test()
     {
-        Debug.WriteLine("Starting Scheduled Auto Download");
-        ThreadPool.QueueUserWorkItem(AutoDownload);
+        Thread.Sleep(5000);
+        _messenger.Send(new MessageData(true));
     }
+
     /// <summary>
     /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
-    /// <param name="stateinfo"></param>
-    public static async void AutoDownload(object stateinfo)
+    public static async Task AutoDownload()
     {
         Debug.WriteLine("Trying to start Auto Download");
         var favoriteShows = await PositionData.GetAllFavorites();
