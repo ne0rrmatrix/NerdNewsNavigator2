@@ -40,19 +40,6 @@ public partial class App : Application
         _ = ThreadPool.QueueUserWorkItem(state =>
         {
             Test();
-#if WINDOWS
-            _ = Task.Run(() =>
-            {
-                while (true)
-                {
-                    _ = ThreadPool.QueueUserWorkItem(state =>
-                    {
-                        _ = AutoDownload();
-                    });
-                    Thread.Sleep(1000 * 60 * 60);
-                }
-            });
-#endif
         });
     }
     private void Test()

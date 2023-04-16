@@ -77,6 +77,9 @@ internal class AutoStartService : Service
         return StartCommandResult.Sticky;
     }
 
+    /// <summary>
+    /// A method that Auto starts <see cref="Service"/> for Auto downloads.
+    /// </summary>
     public void Start()
     {
         var intent = new Intent(this, typeof(AutoStartService));
@@ -86,14 +89,17 @@ internal class AutoStartService : Service
         }
 
     }
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        Running = false;
-    }
+    /// <summary>
+    /// A method that stops <see cref="Service"/> for Auto downloads
+    /// </summary>
     public void Stop()
     {
         var intent = new Intent(this, typeof(AutoStartService));
         this.StopService(intent);
+    }
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Running = false;
     }
 }

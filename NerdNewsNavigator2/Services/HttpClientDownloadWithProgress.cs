@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
 namespace NerdNewsNavigator2.Services;
 
 public class HttpClientDownloadWithProgress : IDisposable
@@ -25,7 +23,7 @@ public class HttpClientDownloadWithProgress : IDisposable
 
     public async Task StartDownload()
     {
-        _httpClient = new HttpClient { Timeout = TimeSpan.FromDays(1) };
+        _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
 
         using var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead);
         await DownloadFileFromHttpResponseMessage(response);
