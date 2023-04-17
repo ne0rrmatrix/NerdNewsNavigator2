@@ -51,11 +51,7 @@ public partial class VideoPlayerPage : ContentPage
         {
             mediaElement.Stop();
             _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-           // mediaElement.StateChanged -= Media_Stopped;
-            //mediaElement.MediaOpened -= Seek;
-           // mediaElement.ShouldKeepScreenOn = false;
         }
-       
     }
 #nullable enable
     /// <summary>
