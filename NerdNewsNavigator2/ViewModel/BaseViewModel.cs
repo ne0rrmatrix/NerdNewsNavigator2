@@ -150,7 +150,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         _downloadProgress = string.Empty;
         DownloadChanged += () =>
         {
-            Debug.WriteLine("NavBar closed");
+            Logger.LogInformation("NavBar closed");
         };
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
@@ -237,13 +237,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         while (IsDownloading)
         {
             Thread.Sleep(5000);
-            Debug.WriteLine("Waiting for download to finish");
+            Logger.LogInformation("Waiting for download to finish");
         }
         await Downloader(url, mostRecent);
     }
     public async Task Downloader(string url, bool mostRecent)
     {
-        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
@@ -332,15 +331,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return;
         }
-        foreach (var item in temp)
+        temp.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
             if (show is null || show.Count == 0)
             {
                 return;
             }
-            shows.Add(show[0]);
-        }
+            shows.Add(show.First());
+        });
         FavoriteShows.Clear();
         FavoriteShows = new ObservableCollection<Show>(shows);
         OnPropertyChanged(nameof(FavoriteShows));
@@ -375,11 +374,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         await GetUpdatedPodcasts();
         if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
-            foreach (var show in Podcasts.ToList())
+            Podcasts.ToList().ForEach(async show =>
             {
                 var item = await FeedService.GetShows(show.Url, true);
                 MostRecentShows.Add(item.First());
-            }
+            });
         }
     }
 #endif
@@ -395,11 +394,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         await GetUpdatedPodcasts();
         if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
-            foreach (var show in Podcasts.ToList())
+            Podcasts.ToList().ForEach(async show =>
             {
                 var item = await FeedService.GetShows(show.Url, true);
                 MostRecentShows.Add(item.First());
-            }
+            });
         }
     }
 #endif
@@ -418,18 +417,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             var items = await PodcastServices.GetFromUrl();
             await PodcastServices.AddToDatabase(items);
-            foreach (var item in items)
-            {
-                Podcasts.Add(item);
-            }
+            items.ForEach(Podcasts.Add);
             IsBusy = false;
         }
         else if (temp is not null)
         {
-            foreach (var item in temp)
-            {
-                Podcasts.Add(item);
-            }
+            temp.ForEach(Podcasts.Add);
             IsBusy = false;
         }
     }
@@ -442,13 +435,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        if (temp is not null)
-        {
-            foreach (var item in temp)
-            {
-                DownloadedShows.Add(item);
-            }
-        }
+        temp?.ForEach(DownloadedShows.Add);
     }
 
     #endregion

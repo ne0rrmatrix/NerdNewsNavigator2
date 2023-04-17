@@ -68,6 +68,9 @@ public partial class RemoveViewModel : BaseViewModel
             await FavoriteService.AddFavoriteToDatabase(show);
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
+            await PodcastServices.GetUpdatedPodcasts();
+            Podcasts = new ObservableCollection<Podcast>(Podcasts);
+            OnPropertyChanged(nameof(Podcasts));
             Logger.LogInformation("Added {item} to database", item.Url);
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
             return true;

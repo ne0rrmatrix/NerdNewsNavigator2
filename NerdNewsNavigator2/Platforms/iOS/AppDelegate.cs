@@ -4,7 +4,7 @@
 
 using BackgroundTasks;
 using Foundation;
-using Microsoft.Maui.Handlers;
+using Microsoft.Maui;
 using SQLitePCL;
 using UIKit;
 
@@ -13,8 +13,8 @@ namespace NerdNewsNavigator2;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
+    IConnectivity _connectivity;
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
-
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
     // Next line is for SqlLite
     protected override MauiApp CreateMauiApp()
@@ -24,9 +24,30 @@ public class AppDelegate : MauiUIApplicationDelegate
         BGTaskScheduler.Shared.Register(RefreshTaskId, null, task => HandleAppRefresh(task as BGAppRefreshTask));
         return MauiProgram.CreateMauiApp();
     }
+
+    public override void OnActivated(UIApplication application)
+    {
+        base.OnActivated(application);
+        _connectivity = MauiUIApplicationDelegate.Current.Services.GetService<IConnectivity>();
+    }
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private void HandleDownload(BGTask task)
     {
-        _ = NerdNewsNavigator2.App.AutoDownload();
+        AutoDownload();
         task.SetTaskCompleted(true);
     }
     private void HandleAppRefresh(BGAppRefreshTask task)
@@ -46,13 +67,25 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void DidEnterBackground(UIApplication application)
     {
         Console.WriteLine("App entering background state.");
+        AutoDownload();
     }
 
     public override void WillEnterForeground(UIApplication application)
     {
         Console.WriteLine("App will enter foreground");
+        AutoDownload();
     }
     public AppDelegate() : base()
     {
+    }
+    public void AutoDownload()
+    {
+        if (InternetConnected())
+        {
+            ThreadPool.QueueUserWorkItem(async state =>
+            {
+                await NerdNewsNavigator2.App.AutoDownload();
+            });
+        }
     }
 }

@@ -19,12 +19,9 @@ public static class FavoriteService
     public static async Task<bool> AddFavoriteToDatabase(Show favorites)
     {
         var items = await App.PositionData.GetAllFavorites();
-        foreach (var item in items)
+        if (items.AsEnumerable().Any(x => x.Url == favorites.Url))
         {
-            if (item.Url == favorites.Url)
-            {
-                return false;
-            }
+            return false;
         }
         await App.PositionData.AddFavorites(favorites);
         return true;
@@ -38,13 +35,11 @@ public static class FavoriteService
     public static async Task<bool> RemoveFavoriteFromDatabase(string url)
     {
         var temp = await App.PositionData.GetAllFavorites();
-        foreach (var podcast in temp)
+        var result = temp.AsEnumerable().First(temp => temp.Url == url);
+        if (result != null)
         {
-            if (podcast.Url == url)
-            {
-                await App.PositionData.DeleteFavorite(podcast);
-                return true;
-            }
+            await App.PositionData.DeleteFavorite(result);
+            return true;
         }
         return false;
     }

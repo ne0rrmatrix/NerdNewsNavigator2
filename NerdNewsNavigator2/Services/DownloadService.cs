@@ -27,9 +27,9 @@ public static class DownloadService
     public static async Task<bool> AddDownloadDatabase(Download download)
     {
         var items = await App.PositionData.GetAllDownloads();
-        foreach (var item in items)
+        if (items.AsEnumerable().Any(x => x.Url == download.Url))
         {
-            if (item.Url == download.Url) { return false; }
+            return false;
         }
         await App.PositionData.AddDownload(download);
         return true;
@@ -68,12 +68,23 @@ public static class DownloadService
         {
             var filename = GetFileName(url);
             var downloadFileUrl = url;
+            var favorites = await App.PositionData.GetAllDownloads();
             var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
             if (File.Exists(tempFile))
             {
-                Debug.WriteLine("File exists stopping download");
-                return false;
+                if (favorites?.Find(x => x.Url == url) is null)
+                {
+                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {url}");
+                    File.Delete(tempFile);
+                }
+                else
+                {
+
+                    Debug.WriteLine("File exists stopping download");
+                    return false;
+                }
             }
+            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
             var destinationFilePath = tempFile;
 
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);

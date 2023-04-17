@@ -131,18 +131,22 @@ public partial class MediaControl : ContentView
         mediaElement.Pause();
         mediaElement.SeekTo(position);
         mediaElement.Play();
+        BtnPLay.Source = "pause.png";
     }
     public void Play()
     {
         mediaElement.Play();
+        BtnPLay.Source = "pause.png";
     }
     public void Pause()
     {
         mediaElement.Pause();
+        BtnPLay.Source = "play.png";
     }
     public void Stop()
     {
         mediaElement.Stop();
+        BtnPLay.Source = "play.png";
     }
 
     #region Events
@@ -166,12 +170,14 @@ public partial class MediaControl : ContentView
         var newValue = ((Slider)sender).Value;
         mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
         mediaElement.Play();
+        BtnPLay.Source = "pause.png";
     }
 
 #nullable disable
     private void Slider_DragStarted(object sender, EventArgs e)
     {
         mediaElement.Pause();
+        BtnPLay.Source = "play.png";
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
@@ -191,6 +197,7 @@ public partial class MediaControl : ContentView
         mediaElement.Pause();
         mediaElement.SeekTo(time);
         mediaElement.Play();
+        BtnPLay.Source = "pause.png";
     }
 
     private void BtnForward_Clicked(object sender, EventArgs e)
@@ -199,6 +206,7 @@ public partial class MediaControl : ContentView
         mediaElement.Pause();
         mediaElement.SeekTo(time);
         mediaElement.Play();
+        BtnPLay.Source = "pause.png";
     }
     private void BtnPlay_Clicked(object sender, EventArgs e)
     {
