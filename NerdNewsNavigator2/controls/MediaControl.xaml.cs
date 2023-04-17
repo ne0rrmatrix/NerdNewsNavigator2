@@ -329,23 +329,6 @@ public partial class MediaControl : ContentView
     #endregion
 
     /// <summary>
-    /// Manages unload event from <see cref="mediaElement"/> after it is unloaded.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentView_Unloaded(object sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        mediaElement.ShouldKeepScreenOn = false;
-        mediaElement.Stop();
-        // Stop and cleanup MediaElement when we navigate away
-        mediaElement.Handler?.DisconnectHandler();
-    }
-
-    /// <summary>
     /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
     /// </summary>
     /// <param name="time"></param>
