@@ -74,11 +74,12 @@ public partial class VideoPlayerPage : ContentPage
                 _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
             }
         }
-        if (e.NewState == MediaElementState.Playing)
+        if (e.NewState == MediaElementState.Opening)
         {
             mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.ShouldKeepScreenOn = true;
             _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
+            mediaElement.StateChanged += Media_Stopped;
         }
     }
 
@@ -182,9 +183,12 @@ public partial class VideoPlayerPage : ContentPage
 
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
+#if WINDOWS || ANDROID
         mediaElement.SeekTo(Pos.SavedPosition);
-        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+        _logger.LogInformation("Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
         mediaElement.StateChanged -= Media_Stopped;
         mediaElement.MediaOpened -= Seek;
+#endif
+        mediaElement.Handler?.DisconnectHandler();
     }
 }

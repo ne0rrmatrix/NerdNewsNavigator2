@@ -62,6 +62,7 @@ public partial class App : MauiWinUIApplication
             }
         });
     }
+
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>
@@ -77,6 +78,7 @@ public partial class App : MauiWinUIApplication
             return false;
         }
     }
+
     /// <summary>
     /// A method that Auto starts Downloads
     /// </summary>
