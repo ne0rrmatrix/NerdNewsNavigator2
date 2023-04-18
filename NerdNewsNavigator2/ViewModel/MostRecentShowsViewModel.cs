@@ -34,7 +34,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         });
 #endif
 #if IOS || MACCATALYST
-       _ = GetMostRecent();
+        _ = GetMostRecent();
 #endif
     }
 
