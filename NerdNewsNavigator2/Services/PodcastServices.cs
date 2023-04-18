@@ -33,11 +33,14 @@ public static class PodcastServices
             "https://feeds.twit.tv/events_video_hd.xml",
             "https://feeds.twit.tv/specials_video_hd.xml",
             "https://feeds.twit.tv/bits_video_hd.xml",
-            "https://feeds.twit.tv/throwback_video_large.xml",
             "https://feeds.twit.tv/leo_video_hd.xml",
             "https://feeds.twit.tv/ant_video_hd.xml",
             "https://feeds.twit.tv/jason_video_hd.xml",
-            "https://feeds.twit.tv/mikah_video_hd.xml"
+            "https://feeds.twit.tv/mikah_video_hd.xml",
+            "https://feeds.twit.tv/twis_video_hd.xml",
+            "https://feeds.twit.tv/uls_video_hd.xml",
+            "https://feeds.twit.tv/htg_video_hd.xml",
+            "https://feeds.twit.tv/floss_video_hd.xml"
         };
     #endregion
 
