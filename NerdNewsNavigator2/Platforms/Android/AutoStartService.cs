@@ -62,14 +62,12 @@ internal class AutoStartService : Service
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
         StartForegroundService();
-        _ = Task.Run(() =>
+        _ = Task.Run(async () =>
         {
             while (Running)
             {
-                _ = ThreadPool.QueueUserWorkItem(state =>
-                {
-                    _ = App.AutoDownload();
-                });
+                Thread.Sleep(5000);
+                await NerdNewsNavigator2.App.AutoDownload();
                 Thread.Sleep(1000 * 60 * 60);
             }
         });

@@ -30,22 +30,15 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         IsBusy = true;
         while (IsBusy)
         {
-            var temp = await App.PositionData.GetAllDownloads();
-            if (temp is null || temp.Count == 0)
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var files = System.IO.Directory.GetFiles(path, "*.mp4");
+            if (files.Any())
             {
-                _logger.LogInformation("Did not find any files to delete.");
-            }
-            else
-            {
-                temp.ToList().ForEach(item =>
+                foreach (var file in files)
                 {
-                    var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName);
-                    if (File.Exists(tempFile))
-                    {
-                        File.Delete(tempFile);
-                        _logger.LogInformation("Deleted {file}", item.FileName);
-                    }
-                });
+                    System.IO.File.Delete(file);
+                    _logger.LogInformation("Deleted file {file}", file);
+                }
             }
             await App.PositionData.DeleteAll();
             await App.PositionData.DeleteAllPodcasts();

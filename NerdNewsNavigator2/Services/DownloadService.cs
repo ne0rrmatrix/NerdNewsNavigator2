@@ -84,7 +84,10 @@ public static class DownloadService
                     return false;
                 }
             }
-            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            });
             var destinationFilePath = tempFile;
 
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);

@@ -47,7 +47,7 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     protected override void OnDisappearing()
     {
-        if(mediaElement is not null)
+        if (mediaElement is not null)
         {
             mediaElement.Stop();
             _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
