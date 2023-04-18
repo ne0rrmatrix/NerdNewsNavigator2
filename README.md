@@ -14,6 +14,7 @@ Or download them for offline watching.
 8. List of most recent show from each podcast now has a dedicated page.
 9. Full screen toggle, with the ability to toggle always on/off for fullscreen or choose at any time whether fullscreen or not. It is your choice.
 10. Downloader implemented on Show page. Shows can be accessed through downloads in flyout menu.
+11. Automatic download of most recent favorite shows is now implemented.
 
 ## Current known issues
 1. Requires internet access all the time in order to function in any way.
@@ -25,9 +26,7 @@ Or download them for offline watching.
 3. Release on Apple store
 4. Respond to feedback
 5. Optimize UI from feedback
-6. Add the ability to download podcasts automatically. Right now it is on an individual show basis as user clicks to download an episode.
-7. Create list of most recent list of episodes from favorite podcasts.
-8. Create list of favorites that users can create.
+6. Add video controls and show download notifications to notifications menu in Android
 
 ## Suggestions/Bugs?
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
