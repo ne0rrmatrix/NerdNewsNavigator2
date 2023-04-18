@@ -3,10 +3,8 @@
 // See the LICENSE file in the project root for more information.
 using Android.App;
 using Android.Content;
-using Android.Content.PM;
 using Android.OS;
 using AndroidX.Core.App;
-using NerdNewsNavigator2;
 
 namespace NerdNewsNavigator2.Platforms.Android;
 
@@ -67,7 +65,7 @@ internal class AutoStartService : Service
             while (Running)
             {
                 Thread.Sleep(5000);
-                await NerdNewsNavigator2.App.AutoDownload();
+                await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
                 Thread.Sleep(1000 * 60 * 60);
             }
         });

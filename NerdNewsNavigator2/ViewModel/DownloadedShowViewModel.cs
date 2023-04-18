@@ -29,7 +29,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
-        if (App.IsDownloading)
+        if (IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }

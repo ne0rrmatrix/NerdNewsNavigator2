@@ -155,7 +155,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
 #if WINDOWS || ANDROID
@@ -214,7 +213,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsDownloading = false;
-            App.IsDownloading = false;
+            DownloadService.IsDownloading = false;
             OnPropertyChanged(nameof(IsDownloading));
             OnPropertyChanged(nameof(IsNotDownloading));
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
@@ -287,10 +286,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     }
     public void UpdatingDownload()
     {
-        App.IsDownloading = true;
+        DownloadService.IsDownloading = true;
         IsDownloading = true;
         OnPropertyChanged(nameof(IsDownloading));
-        while (App.IsDownloading)
+        while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
             Title = DownloadProgress;
@@ -310,7 +309,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         }
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
-        App.IsDownloading = false;
+        DownloadService.IsDownloading = false;
         OnPropertyChanged(nameof(IsDownloading));
         OnPropertyChanged(nameof(IsNotDownloading));
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
@@ -370,7 +369,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns></returns>
     public async void GetMostRecent(object stateinfo)
     {
-        MostRecentShows.Clear();
         await GetUpdatedPodcasts();
         if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
@@ -410,8 +408,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        OnPropertyChanged(nameof(IsBusy));
         IsBusy = true;
+        OnPropertyChanged(nameof(IsBusy));
         var temp = await PodcastServices.GetUpdatedPodcasts();
         if ((temp is null || temp.Count == 0) && InternetConnected())
         {
@@ -424,6 +422,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             temp.ForEach(Podcasts.Add);
             IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
         }
     }
 

@@ -84,7 +84,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         {
             ThreadPool.QueueUserWorkItem(async state =>
             {
-                await NerdNewsNavigator2.App.AutoDownload();
+                await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
             });
         }
     }

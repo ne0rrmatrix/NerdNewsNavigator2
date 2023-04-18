@@ -32,7 +32,7 @@ public partial class UpdateSettingsViewModel : BaseViewModel
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var files = System.IO.Directory.GetFiles(path, "*.mp4");
-            if (files.Any())
+            if (files.Any() && files is not null)
             {
                 foreach (var file in files)
                 {
@@ -47,8 +47,12 @@ public partial class UpdateSettingsViewModel : BaseViewModel
             FavoriteShows.Clear();
             Shows.Clear();
             Podcasts.Clear();
+            await Task.Run(async () =>
+            {
+                await GetUpdatedPodcasts();
+            });
             IsBusy = false;
-            await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
         }
+        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
     }
 }

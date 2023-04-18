@@ -8,6 +8,8 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class DownloadService
 {
+    public static bool IsDownloading { get; set; } = false;
+    public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
     /// <summary>
     /// Method Download a show to local file system.
@@ -129,5 +131,52 @@ public static class DownloadService
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// Method Auto downloads <see cref="Show"/> from Database.
+    /// </summary>
+    public static async Task AutoDownload()
+    {
+        Debug.WriteLine("Trying to start Auto Download");
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+        var downloadedShows = await App.PositionData.GetAllDownloads();
+
+        if (favoriteShows is null || downloadedShows is null)
+        {
+            return;
+        }
+        if (!IsDownloading)
+        {
+            ProccessShow(favoriteShows, downloadedShows);
+        }
+    }
+    public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
+    {
+        favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
+        {
+            var show = await FeedService.GetShows(x.Url, true);
+            while (IsDownloading)
+            {
+                Thread.Sleep(5000);
+                Debug.WriteLine("Waiting for download to finish");
+            }
+            if (!downloadedShows.Any(y => y.Url == x.Url))
+            {
+                Debug.WriteLine("Downloading ", show.First().Url);
+                IsDownloading = true;
+                var result = await DownloadService.Downloading(show.First());
+                if (result)
+                {
+                    x.IsDownloaded = true;
+                    await App.PositionData.UpdateFavorite(x);
+                    IsDownloading = false;
+                }
+                else
+                {
+                    IsDownloading = false;
+                }
+            }
+        });
     }
 }

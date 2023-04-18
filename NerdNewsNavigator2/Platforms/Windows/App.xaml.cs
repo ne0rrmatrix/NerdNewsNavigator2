@@ -88,7 +88,7 @@ public partial class App : MauiWinUIApplication
         {
             ThreadPool.QueueUserWorkItem(async state =>
             {
-                await NerdNewsNavigator2.App.AutoDownload();
+                await DownloadService.AutoDownload();
             });
             Thread.Sleep(1000 * 60 * 60);
         }

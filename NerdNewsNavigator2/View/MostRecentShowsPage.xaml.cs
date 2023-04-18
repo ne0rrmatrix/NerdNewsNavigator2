@@ -27,7 +27,7 @@ public partial class MostRecentShowsPage : ContentPage
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-        if (App.IsDownloading)
+        if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
