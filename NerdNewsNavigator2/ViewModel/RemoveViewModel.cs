@@ -29,18 +29,28 @@ public partial class RemoveViewModel : BaseViewModel
     [RelayCommand]
     public async Task DeletePodcast(string url)
     {
-        if (Podcasts.AsEnumerable().Any(x => x.Url == url))
+        var result = await PodcastServices.Delete(url);
+        if (!result)
         {
-            var item = Podcasts.First(x => x.Url == url);
-
-            await FavoriteService.RemoveFavoriteFromDatabase(url);
-            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-
-            await PodcastServices.Delete(url);
-            Podcasts.Remove(item);
-            Logger.LogInformation("Removed show {item} from database", item.Url);
-            await GetUpdatedPodcasts();
+            return;
         }
+        var podcast = Podcasts.First(x => x.Url == url);
+        Podcasts.Remove(podcast);
+        Logger.LogInformation("Removed show {item} from database", podcast.Url);
+        var favoriteShow = await App.PositionData.GetAllFavorites();
+        if (favoriteShow is null)
+        {
+            return;
+        }
+        var item = favoriteShow.First(x => x.Url == url);
+        if (item is null)
+        {
+            return;
+        }
+        await FavoriteService.RemoveFavoriteFromDatabase(url);
+        FavoriteShows.Remove(item);
+        Logger.LogInformation("Removed Favorite {item} from database", podcast.Url);
+        await GetUpdatedPodcasts();
     }
 
     /// <summary>
@@ -69,6 +79,7 @@ public partial class RemoveViewModel : BaseViewModel
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
             await PodcastServices.GetUpdatedPodcasts();
+            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
             Podcasts = new ObservableCollection<Podcast>(Podcasts);
             OnPropertyChanged(nameof(Podcasts));
             Logger.LogInformation("Added {item} to database", item.Url);
