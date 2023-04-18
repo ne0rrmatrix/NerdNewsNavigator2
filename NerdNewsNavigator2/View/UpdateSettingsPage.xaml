@@ -26,6 +26,7 @@
             VerticalOptions="Center" />
         <ActivityIndicator
             IsEnabled="true"
+            IsRunning="True"
             IsVisible="true"
             Color="Red" />
     </StackLayout>

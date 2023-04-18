@@ -25,9 +25,19 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         }
         if (DownloadService.IsDownloading)
         {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+            _ = ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#if WINDOWS || ANDROID
+        Task.Run(async () =>
+        {
+            await GetMostRecent();
+        });
+#endif
+#if IOS || MACCATALYST
+       _ = GetMostRecent();
+#endif
     }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
     /// </summary>

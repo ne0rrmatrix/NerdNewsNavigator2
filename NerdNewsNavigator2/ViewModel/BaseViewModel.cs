@@ -157,12 +157,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-#if WINDOWS || ANDROID
-        ThreadPool.QueueUserWorkItem(GetMostRecent);
-#endif
-#if IOS || MACCATALYST
-        _ = GetMostRecent();
-#endif
     }
 
     #region Messaging Service
@@ -282,7 +276,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             await DownloadSuccess(download);
         }
-        IsBusy = false;
     }
     public void UpdatingDownload()
     {
@@ -361,35 +354,14 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         }
     }
 
-#if WINDOWS || ANDROID
-    /// <summary>
-    /// Method gets most recent episode from each podcast on twit.tv
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    /// <returns></returns>
-    public async void GetMostRecent(object stateinfo)
-    {
-        await GetUpdatedPodcasts();
-        if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
-        {
-            Podcasts.ToList().ForEach(async show =>
-            {
-                var item = await FeedService.GetShows(show.Url, true);
-                MostRecentShows.Add(item.First());
-            });
-        }
-    }
-#endif
-
-#if IOS || MACCATALYST
     /// <summary>
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        MostRecentShows.Clear();
         await GetUpdatedPodcasts();
+        MostRecentShows.Clear();
         if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
         {
             Podcasts.ToList().ForEach(async show =>
@@ -399,7 +371,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             });
         }
     }
-#endif
 
     /// <summary>
     /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
@@ -408,7 +379,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        IsBusy = true;
         OnPropertyChanged(nameof(IsBusy));
         var temp = await PodcastServices.GetUpdatedPodcasts();
         if ((temp is null || temp.Count == 0) && InternetConnected())
@@ -416,13 +386,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             var items = await PodcastServices.GetFromUrl();
             await PodcastServices.AddToDatabase(items);
             items.ForEach(Podcasts.Add);
-            IsBusy = false;
         }
-        else if (temp is not null)
+        else
         {
-            temp.ForEach(Podcasts.Add);
-            IsBusy = false;
-            OnPropertyChanged(nameof(IsBusy));
+            temp?.ForEach(Podcasts.Add);
         }
     }
 

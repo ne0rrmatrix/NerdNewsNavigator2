@@ -6,9 +6,9 @@
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    Title="{Binding Title}"
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:PodcastViewModel"
-     Title="{Binding Title}"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
@@ -30,14 +30,14 @@
                     FontSize="Large"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
-                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsVisible="{Binding IsBusy}"
                     Text="Loading..."
                     TextColor="Black"
                     VerticalOptions="Center" />
                 <ActivityIndicator
-                    IsRunning="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
-                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsBusy}"
+                    IsEnabled="True"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
                     Color="Red" />
             </StackLayout>
         </CollectionView.Header>
