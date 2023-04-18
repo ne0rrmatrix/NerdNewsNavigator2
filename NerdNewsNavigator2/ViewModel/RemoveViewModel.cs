@@ -38,7 +38,7 @@ public partial class RemoveViewModel : BaseViewModel
         Podcasts.Remove(podcast);
         Logger.LogInformation("Removed show {item} from database", podcast.Url);
         var favoriteShow = await App.PositionData.GetAllFavorites();
-        if (favoriteShow is null)
+        if (favoriteShow is null || favoriteShow.Count == 0)
         {
             return;
         }
