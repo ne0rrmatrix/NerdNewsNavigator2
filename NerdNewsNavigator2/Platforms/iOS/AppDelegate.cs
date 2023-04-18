@@ -2,8 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using BackgroundTasks;
 using Foundation;
-using Microsoft.Maui.Handlers;
+using Microsoft.Maui;
 using SQLitePCL;
 using UIKit;
 
@@ -12,16 +13,79 @@ namespace NerdNewsNavigator2;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
+    IConnectivity _connectivity;
+    public static string DownloadTaskId { get; } = "com.yourappname.upload";
+    public static string RefreshTaskId { get; } = "com.yourappname.refresh";
     // Next line is for SqlLite
     protected override MauiApp CreateMauiApp()
     {
         raw.SetProvider(new SQLite3Provider_sqlite3());
+        BGTaskScheduler.Shared.Register(DownloadTaskId, null, task => HandleDownload(task as BGProcessingTask));
+        BGTaskScheduler.Shared.Register(RefreshTaskId, null, task => HandleAppRefresh(task as BGAppRefreshTask));
         return MauiProgram.CreateMauiApp();
     }
 
-    // iOS Bug fix START
+    public override void OnActivated(UIApplication application)
+    {
+        base.OnActivated(application);
+        _connectivity = MauiUIApplicationDelegate.Current.Services.GetService<IConnectivity>();
+    }
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private void HandleDownload(BGTask task)
+    {
+        AutoDownload();
+        task.SetTaskCompleted(true);
+    }
+    private void HandleAppRefresh(BGAppRefreshTask task)
+    {
+        task.ExpirationHandler = () =>
+        {
+            var refresh = new BGAppRefreshTaskRequest(RefreshTaskId);
+            BGTaskScheduler.Shared.Submit(refresh, out var refreshError);
 
+            if (refreshError != null)
+            {
+                Debug.WriteLine(refreshError);
+            }
+        };
+        HandleDownload(task);
+    }
+    public override void DidEnterBackground(UIApplication application)
+    {
+        Console.WriteLine("App entering background state.");
+        AutoDownload();
+    }
+
+    public override void WillEnterForeground(UIApplication application)
+    {
+        Console.WriteLine("App will enter foreground");
+        AutoDownload();
+    }
     public AppDelegate() : base()
     {
+    }
+    public void AutoDownload()
+    {
+        if (InternetConnected())
+        {
+            ThreadPool.QueueUserWorkItem(async state =>
+            {
+                await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+            });
+        }
     }
 }

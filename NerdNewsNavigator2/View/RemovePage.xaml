@@ -27,7 +27,7 @@
                                         MacCatalyst=90,
                                         Android=90,
                                         iOS=90}"
-                    Padding="{OnPlatform Default=20,
+                    Padding="{OnPlatform Default=10,
                                          iOS=10}"
                     BackgroundColor="White"
                     WidthRequest="{OnPlatform WinUI=370,
@@ -37,20 +37,22 @@
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{OnPlatform WinUI=310, MacCatalyst=310, Android=310, iOS=375}" />
-
+                            <ColumnDefinition Width="{OnPlatform WinUI=350, MacCatalyst=350, Android=310, iOS=375}" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
+
                             <RowDefinition Height="{OnPlatform WinUI=350, Android=350, MacCatalyst=350, iOS=350}" />
+                            <RowDefinition Height="{OnPlatform WinUI=130, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
                             <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=280}" />
                         </Grid.RowDefinitions>
+
                         <Label
                             Grid.Row="0"
                             Margin="5"
                             FontAttributes="Bold"
                             FontSize="10"
-                            HorizontalTextAlignment="Start"
+                            HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
@@ -65,7 +67,7 @@
                                                    Tablet=340,
                                                    Desktop=350}" />
                         <Label
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Margin="10"
                             FontSize="10"
                             LineBreakMode="WordWrap"
@@ -76,23 +78,56 @@
                                                    Default=290,
                                                    Desktop=340}" />
                         <Button
-                            Grid.Column="1"
-                            Margin="10"
+                            Grid.Row="2"
+                            Margin="30"
                             BackgroundColor="Red"
                             FontAttributes="Bold"
                             FontSize="Micro"
                             HeightRequest="35"
-                            HorizontalOptions="End"
+                            HorizontalOptions="Start"
                             Text="Delete"
                             TextColor="White"
-                            VerticalOptions="Center"
                             WidthRequest="{OnIdiom Default=70,
                                                    Tablet=80}">
-
                             <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
+                        </Button>
 
+                        <Button
+                            Grid.Row="2"
+                            Margin="0"
+                            BackgroundColor="Blue"
+                            FontAttributes="Bold"
+                            FontSize="Micro"
+                            HeightRequest="35"
+                            HorizontalOptions="Center"
+                            IsVisible="{Binding IsNotDownloaded}"
+                            Text="Add"
+                            TextColor="White"
+                            WidthRequest="{OnIdiom Default=70,
+                                                   Tablet=80}">
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
+                            </Button.GestureRecognizers>
+                        </Button>
+
+                        <Button
+                            Grid.Row="2"
+                            Margin="30"
+                            BackgroundColor="Blue"
+                            FontAttributes="Bold"
+                            FontSize="Micro"
+                            HeightRequest="35"
+                            HorizontalOptions="End"
+                            IsVisible="{Binding Download}"
+                            Text="Remove"
+                            TextColor="White"
+                            WidthRequest="{OnIdiom Default=90,
+                                                   Tablet=90}">
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
+                            </Button.GestureRecognizers>
                         </Button>
 
                     </Grid>

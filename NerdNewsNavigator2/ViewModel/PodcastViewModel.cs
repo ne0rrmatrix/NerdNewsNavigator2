@@ -13,10 +13,27 @@ public partial class PodcastViewModel : BaseViewModel
     /// </summary>
     public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
+        IsBusy = true;
+        OnPropertyChanged(nameof(IsBusy));
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+        if (DownloadService.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
+        Task.Run(async () =>
+        {
+            OnPropertyChanged(nameof(IsBusy));
+
+            await GetUpdatedPodcasts();
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
+        });
     }
 
     /// <summary>

@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.Service;
+namespace NerdNewsNavigator2.Services;
 
 /// <summary>
 /// A Class for managing Podcasts.
@@ -189,5 +189,14 @@ public static class PodcastServices
             }
         }
         return true;
+    }
+    /// <summary>
+    /// Method Updates a <see cref="Podcast"/> to Database.
+    /// </summary>
+    /// <param name="podcast"><see cref="string"/> Url of <see cref="Podcast"/></param>
+    /// <returns>nothing</returns>
+    public static async Task UpdatePodcast(Podcast podcast)
+    {
+        await App.PositionData.UpdatePodcast(podcast);
     }
 }

@@ -9,7 +9,7 @@ using Platform = Microsoft.Maui.ApplicationModel.Platform;
 using Views = AndroidX.Core.View;
 #endif
 
-namespace NerdNewsNavigator2.Service;
+namespace NerdNewsNavigator2.Services;
 internal static partial class DeviceService
 {
     public static partial void RestoreScreen()

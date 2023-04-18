@@ -19,7 +19,25 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+        if (DownloadService.IsDownloading)
+        {
+            _ = ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
+#if WINDOWS || ANDROID
+        Task.Run(async () =>
+        {
+            await GetMostRecent();
+        });
+#endif
+#if IOS || MACCATALYST
+        _ = GetMostRecent();
+#endif
     }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
     /// </summary>
@@ -28,8 +46,6 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Download(string url)
     {
-
-        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         await Downloading(url, true);
     }
 

@@ -14,15 +14,18 @@ public partial class App : Application
     /// </summary>
     public static PositionDataBase PositionData { get; private set; }
 
+    private readonly IMessenger _messenger;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
     /// <param name="positionDataBase"></param>
-    public App(PositionDataBase positionDataBase)
+    public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
         MainPage = new AppShell();
 
+        _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
@@ -30,6 +33,15 @@ public partial class App : Application
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
+        _ = ThreadPool.QueueUserWorkItem(state =>
+        {
+            StartAutoDownloadService();
+        });
+    }
+    private void StartAutoDownloadService()
+    {
+        Thread.Sleep(5000);
+        _messenger.Send(new MessageData(true));
     }
 }
 

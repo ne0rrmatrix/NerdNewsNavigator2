@@ -10,7 +10,7 @@ global using System.Collections.ObjectModel;
 global using System.Diagnostics;
 global using CommunityToolkit.Mvvm.Input;
 global using NerdNewsNavigator2.Model;
-global using NerdNewsNavigator2.Service;
+global using NerdNewsNavigator2.Services;
 global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.Data;
 global using Microsoft.Extensions.Logging;

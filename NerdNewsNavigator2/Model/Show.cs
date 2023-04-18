@@ -7,8 +7,16 @@ namespace NerdNewsNavigator2.Model
     /// <summary>
     /// <c>Show</c> is a Class for storing Shows
     /// </summary>
+    /// 
+    [Table("Show")]
     public class Show
     {
+        /// <summary>
+        /// The <c>Id</c>  is a <see cref="int"/> and <see cref="PrimaryKeyAttribute"/> of <see cref="Podcast"/> Class.
+        /// </summary>
+        [PrimaryKey, AutoIncrement, Column("Id")]
+        public int Id { get; set; }
+
         /// <summary>
         /// The <c>Title</c> is a <see cref="string"/> of <see cref="Show"/> Class
         /// </summary>
@@ -31,8 +39,25 @@ namespace NerdNewsNavigator2.Model
         public string Url { get; set; }
 
         /// <summary>
-        /// The <c>PubDate</c> is a <see cref="DateTime"/> of <see cref="Podcast"/> Class.
+        /// The <c>PubDate</c> is a <see cref="DateTime"/> of <see cref="Show"/> Class.
         /// </summary>
         public DateTime PubDate { get; set; }
+        /// <summary>
+        /// the <c>Download</c> is a <see cref="bool"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public bool Download { get; set; }
+        /// <summary>
+        /// the <c>IsDownloaded</c> is a <see cref="bool"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public bool IsDownloaded { get; set; }
+
+        /// <summary>
+        /// the <c>IsDownloading</c> is a <see cref="bool"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public bool IsDownloading { get; set; } = false;
+        /// <summary>
+        /// the <c>Status</c> is a <see cref="string"/> of <see cref="Show"/> Class.
+        /// </summary>
+        public string Status { get; set; } = string.Empty;
     }
 }

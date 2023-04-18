@@ -27,40 +27,32 @@ public partial class UpdateSettingsViewModel : BaseViewModel
     /// </summary>
     private async Task DeleteAllPodcasts()
     {
-        try
+        IsBusy = true;
+        while (IsBusy)
         {
-            IsBusy = true;
-            while (IsBusy)
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var files = System.IO.Directory.GetFiles(path, "*.mp4");
+            if (files.Any() && files is not null)
             {
-                var temp = await App.PositionData.GetAllDownloads();
-                if (temp is null)
+                foreach (var file in files)
                 {
-                    _logger.LogInformation("Did not find any files to delete.");
+                    System.IO.File.Delete(file);
+                    _logger.LogInformation("Deleted file {file}", file);
                 }
-                else
-                {
-                    foreach (var (item, tempFile) in from item in temp
-                                                     let tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), item.FileName)
-                                                     where File.Exists(tempFile)
-                                                     select (item, tempFile))
-                    {
-                        File.Delete(tempFile);
-                        _logger.LogInformation("Deleted {file}", item.FileName);
-                    }
-                }
-
-                await App.PositionData.DeleteAll();
-                await App.PositionData.DeleteAllPodcasts();
-                await App.PositionData.DeleteAllDownloads();
-                Shows.Clear();
-                Podcasts.Clear();
-                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-                IsBusy = false;
             }
+            await App.PositionData.DeleteAll();
+            await App.PositionData.DeleteAllPodcasts();
+            await App.PositionData.DeleteAllDownloads();
+            await App.PositionData.DeleteAllFavorites();
+            FavoriteShows.Clear();
+            Shows.Clear();
+            Podcasts.Clear();
+            await Task.Run(async () =>
+            {
+                await GetUpdatedPodcasts();
+            });
+            IsBusy = false;
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Delete podcasts failed. {Message}", ex.Message);
-        }
+        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
     }
 }

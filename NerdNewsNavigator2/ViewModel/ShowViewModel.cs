@@ -11,6 +11,7 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
+
     private string _url;
     /// <summary>
     /// A Url <see cref="string"/> containing the <see cref="Show"/>
@@ -36,6 +37,14 @@ public partial class ShowViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+        if (DownloadService.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
     }
 
     /// <summary>
@@ -57,7 +66,7 @@ public partial class ShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Download(string url)
     {
-        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         await Downloading(url, false);
     }
+
 }

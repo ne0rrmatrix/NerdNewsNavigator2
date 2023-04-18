@@ -6,7 +6,7 @@
 using Microsoft.UI.Windowing;
 #endif
 
-namespace NerdNewsNavigator2.Service;
+namespace NerdNewsNavigator2.Services;
 internal static partial class DeviceService
 {
 

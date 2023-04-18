@@ -105,7 +105,8 @@ public partial class AddPodcastPage : ContentPage
     /// <param name="e"></param>
     private async void OpenUrlForDonation(object sender, EventArgs e)
     {
-        await Browser.OpenAsync("https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD");
+        var item = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
+        await Browser.OpenAsync(item);
     }
 
     /// <summary>

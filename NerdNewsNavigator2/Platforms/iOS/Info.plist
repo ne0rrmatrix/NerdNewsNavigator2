@@ -38,5 +38,10 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+  <array>
+    <string>com.yourappname.upload</string>
+    <string>com.yourappname.refresh</string>
+  </array>
 </dict>
 </plist>

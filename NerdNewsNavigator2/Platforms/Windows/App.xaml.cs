@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+
 using Microsoft.UI.Windowing;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -13,6 +14,8 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
+    private bool IsRunning { get; set; } = true;
+    private IConnectivity _connectivity;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -42,7 +45,64 @@ public partial class App : MauiWinUIApplication
             }
         });
     }
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    {
+        base.OnLaunched(args);
+        _connectivity = MauiWinUIApplication.Current.Services.GetService<IConnectivity>();
+        var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
+        messenger.Register<MessageData>(this, (recipient, message) =>
+        {
+            if (message.Start)
+            {
+                Start();
+            }
+            else
+            {
+                Stop();
+            }
+        });
+    }
 
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// A method that Auto starts Downloads
+    /// </summary>
+    public void Start()
+    {
+        while (IsRunning)
+        {
+            ThreadPool.QueueUserWorkItem(async state =>
+            {
+                if (InternetConnected())
+                {
+                    await DownloadService.AutoDownload();
+                }
+            });
+            Thread.Sleep(1000 * 60 * 60);
+        }
+    }
+    /// <summary>
+    /// A method that Stops auto downloads
+    /// </summary>
+    public void Stop()
+    {
+        IsRunning = false;
+    }
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
 
