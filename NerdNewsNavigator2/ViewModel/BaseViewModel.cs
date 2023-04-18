@@ -222,6 +222,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+            return;
+        }
         var downloadTemp = DownloadedShows.Any(x => x.Url == url);
         if (downloadTemp)
         {
@@ -360,9 +365,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        await GetUpdatedPodcasts();
         MostRecentShows.Clear();
-        if (InternetConnected() || Podcasts is not null || Podcasts.Count > 0)
+        await GetUpdatedPodcasts();
+        if (InternetConnected() && Podcasts is not null && Podcasts.Count > 0)
         {
             Podcasts.ToList().ForEach(async show =>
             {
@@ -381,13 +386,14 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         Podcasts.Clear();
         OnPropertyChanged(nameof(IsBusy));
         var temp = await PodcastServices.GetUpdatedPodcasts();
-        if ((temp is null || temp.Count == 0) && InternetConnected())
+        if (InternetConnected() && (temp is null || temp.Count == 0))
         {
             var items = await PodcastServices.GetFromUrl();
             await PodcastServices.AddToDatabase(items);
             items.ForEach(Podcasts.Add);
+            return;
         }
-        else
+        if (temp is not null)
         {
             temp?.ForEach(Podcasts.Add);
         }

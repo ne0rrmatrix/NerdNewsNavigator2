@@ -52,7 +52,7 @@ public partial class App : MauiWinUIApplication
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            if (message.Start && InternetConnected())
+            if (message.Start)
             {
                 Start();
             }
@@ -88,7 +88,10 @@ public partial class App : MauiWinUIApplication
         {
             ThreadPool.QueueUserWorkItem(async state =>
             {
-                await DownloadService.AutoDownload();
+                if (InternetConnected())
+                {
+                    await DownloadService.AutoDownload();
+                }
             });
             Thread.Sleep(1000 * 60 * 60);
         }

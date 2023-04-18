@@ -15,7 +15,26 @@ internal class AutoStartService : Service
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
-
+    private readonly IConnectivity _connectivity;
+    public AutoStartService()
+    {
+        _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
+    }
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private void StartForegroundService()
     {
         var intent = new Intent(this, typeof(MainActivity));
@@ -65,7 +84,10 @@ internal class AutoStartService : Service
             while (Running)
             {
                 Thread.Sleep(5000);
-                await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+                if (InternetConnected())
+                {
+                    await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+                }
                 Thread.Sleep(1000 * 60 * 60);
             }
         });
