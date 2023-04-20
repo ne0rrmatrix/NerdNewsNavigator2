@@ -13,12 +13,12 @@ public static class MessagingService
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static async Task RecievedDownloadMessage(bool value)
+    public static async Task RecievedDownloadMessage(bool value, string title)
     {
         if (value)
         {
 
-            await Toast.Make("Download is completed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make($"Download {title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         }
         else
         {

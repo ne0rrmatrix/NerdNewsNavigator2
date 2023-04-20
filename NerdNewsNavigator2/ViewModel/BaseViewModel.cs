@@ -162,14 +162,14 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     #region Messaging Service
 
     /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
     /// </summary>
     /// <param name="message"></param>
     public void Receive(DownloadItemMessage message)
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await MessagingService.RecievedDownloadMessage(message.Value);
+            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
         });
     }
 
@@ -310,7 +310,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         DownloadService.IsDownloading = false;
         OnPropertyChanged(nameof(IsDownloading));
         OnPropertyChanged(nameof(IsNotDownloading));
-        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true));
+        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
     #endregion
 
