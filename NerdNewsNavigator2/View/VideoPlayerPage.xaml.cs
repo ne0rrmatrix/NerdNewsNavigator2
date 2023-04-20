@@ -62,7 +62,6 @@ public partial class VideoPlayerPage : ContentPage
     private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
     {
         Pos.Title = Url;
-        Preferences.Default.Remove("New_Url", null);
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
         foreach (var item in positionList)
@@ -150,11 +149,9 @@ public partial class VideoPlayerPage : ContentPage
     /// <param name="e"></param>
     private async void Seek(object? sender, EventArgs e)
     {
-        Pos.Title = Preferences.Default.Get("New_Url", string.Empty);
-        Preferences.Default.Remove("New_Url", null);
         Pos.SavedPosition = TimeSpan.Zero;
+        Pos.Title = Url;
         var positionList = await App.PositionData.GetAllPositions();
-
         foreach (var item in positionList)
         {
             if (Pos.Title == item.Title)
@@ -163,7 +160,6 @@ public partial class VideoPlayerPage : ContentPage
                 _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
             }
         }
-
         mediaElement.ShouldKeepScreenOn = true;
         mediaElement.SeekTo(Pos.SavedPosition);
         _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);

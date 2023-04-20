@@ -57,9 +57,5 @@
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
         Text="Settings" />
-    <MenuItem
-        Clicked="Quit"
-        IconImageSource="logout.png"
-        Text="Exit" />
-
+    
 </Shell>

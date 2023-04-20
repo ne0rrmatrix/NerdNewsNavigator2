@@ -21,10 +21,8 @@ public partial class AddPodcastPage : ContentPage
     /// <param name="viewModel">The <see cref="ViewModel"/> instance that is managed through this class.</param> 
     public AddPodcastPage(AddPodcastViewModel viewModel)
     {
-
         InitializeComponent();
         BindingContext = viewModel;
-        //NOTE: Change this to fetch the value true/false according to your app logic.
     }
 
     /// <summary>
@@ -36,6 +34,7 @@ public partial class AddPodcastPage : ContentPage
     {
         await PodcastServices.AddPodcast(Url.Text.ToString());
         await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        await Shell.Current.GoToAsync($"{nameof(AddPodcastPage)}");
     }
 
     /// <summary>
@@ -56,24 +55,15 @@ public partial class AddPodcastPage : ContentPage
     /// <param name="e"></param>
     private async void RemoveDefault(object sender, EventArgs e)
     {
-        var unique = false;
         var item = await App.PositionData.GetAllPodcasts();
-        foreach (var podcast in item)
-        {
-            if (!podcast.Url.Contains("feeds.twit.tv"))
-            {
-                unique = true;
-            }
-        }
-        if (!unique)
-        {
-            await DisplayAlert("", "At least one podcast needs to be added", "Ok");
-        }
-        else
+        if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
         {
             await PodcastServices.RemoveDefaultPodcasts();
             await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-
+        }
+        else
+        {
+            await DisplayAlert("", "At least one podcast needs to be added", "Ok");
         }
     }
 
