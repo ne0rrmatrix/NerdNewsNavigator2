@@ -56,7 +56,7 @@ jobs:
       shell: pwsh
       run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
     
-    # ********************************* #
+# ********************************* #
 # >>>>>>> Upload Artifacts <<<<<<< #
 # ********************************* #
 
@@ -65,7 +65,20 @@ jobs:
           name: artifacts-android
           path: |
             NerdNewsNavigator2/bin/Release/*/**/*.apk
-            
+
+# ********************************* #
+# >>>>>>> Build Release <<<<<<< #
+# ********************************* #
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            NerdNewsNavigator2/bin/Release/net7.0-android-33.0/**/*.apk
+
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
 # ***************************** #
@@ -115,6 +128,19 @@ jobs:
           name: artifacts-windows
           path: |
             NerdNewsNavigator2/bin/Release/*/**/*.msix
+
+# ********************************* #
+# >>>>>>> Build Release <<<<<<< #
+# ********************************* #
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            NerdNewsNavigator2/bin/Release/net7.0-windows10.0.19041.0/**/*.msix
             
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -221,7 +247,7 @@ jobs:
           name: artifacts-mac
           path: |
             NerdNewsNavigator2/bin/Release/net7.0-maccatalyst/**/*.pkg
-    # ********************************* #
+# ********************************* #
 # >>>>>>> Build Release <<<<<<< #
 # ********************************* #
 
@@ -232,6 +258,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            NerdNewsNavigator2/bin/Release/*/**/*.pkg
-            NerdNewsNavigator2/bin/Release/*/**/*.msix
-            NerdNewsNavigator2/bin/Release/*/**/*.apk
+            NerdNewsNavigator2/bin/Release/net7.0-maccatalyst/**/*.pkg
