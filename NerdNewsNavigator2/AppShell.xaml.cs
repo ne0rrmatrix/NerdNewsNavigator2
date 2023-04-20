@@ -26,13 +26,6 @@ public partial class AppShell : Shell
     }
 
     /// <summary>
-    /// Method quits application
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void Quit(object sender, EventArgs e) => Application.Current.Quit();
-
-    /// <summary>
     /// Method navigates user to Main Page.
     /// </summary>
     /// <param name="sender"></param>
