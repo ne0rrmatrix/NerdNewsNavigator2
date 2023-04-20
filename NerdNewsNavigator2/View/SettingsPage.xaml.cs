@@ -36,9 +36,14 @@ public partial class SettingsPage : ContentPage
         {
             return;
         }
-        await PodcastServices.AddPodcast(Url.Text.ToString());
-        await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+        if (Url.Text.Contains("twit") && Url.Text.Contains("https"))
+        {
+            await PodcastServices.AddPodcast(Url.Text.ToString());
+            await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+            return;
+        }
+        await Toast.Make("Error: Not a twit Podcast!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
     }
 
     /// <summary>
