@@ -5,15 +5,15 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="RemovePage"/>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="EditPage"/>
 /// </summary>
-public partial class RemoveViewModel : BaseViewModel
+public partial class EditViewModel : BaseViewModel
 {
-    ILogger<RemoveViewModel> Logger { get; set; }
+    ILogger<EditViewModel> Logger { get; set; }
     /// <summary>
-    /// Initializes a new instance of the <see cref="RemoveViewModel"/> instance.
+    /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public RemoveViewModel(ILogger<RemoveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.RemovePage"
+    x:Class="NerdNewsNavigator2.View.EditPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    x:DataType="viewmodel:RemoveViewModel"
+    x:DataType="viewmodel:EditViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.NavBarIsVisible="False">
@@ -90,7 +90,7 @@
                             WidthRequest="{OnIdiom Default=70,
                                                    Tablet=80}">
                             <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
 
@@ -108,7 +108,7 @@
                             WidthRequest="{OnIdiom Default=70,
                                                    Tablet=80}">
                             <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
 
@@ -126,7 +126,7 @@
                             WidthRequest="{OnIdiom Default=90,
                                                    Tablet=90}">
                             <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RemoveViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
 

@@ -18,9 +18,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ShowPage), typeof(ShowPage));
         Routing.RegisterRoute(nameof(VideoPlayerPage), typeof(VideoPlayerPage));
         Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
-        Routing.RegisterRoute(nameof(RemovePage), typeof(RemovePage));
+        Routing.RegisterRoute(nameof(EditPage), typeof(EditPage));
         Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
-        Routing.RegisterRoute(nameof(AddPodcastPage), typeof(AddPodcastPage));
+        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
@@ -76,7 +76,7 @@ public partial class AppShell : Shell
     private async void GotoAddPage(object sender, EventArgs e)
     {
         FlyoutIsPresented = false;
-        await Shell.Current.GoToAsync($"{nameof(AddPodcastPage)}");
+        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
     }
     /// <summary>
     /// Method navigates user to Page that allows you to add a podcast.

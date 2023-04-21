@@ -71,11 +71,11 @@ public static class MauiProgram
         builder.Services.AddTransient<LivePage>();
         builder.Services.AddTransient<LiveViewModel>();
 
-        builder.Services.AddTransient<AddPodcastPage>();
-        builder.Services.AddTransient<AddPodcastViewModel>();
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<SettingsViewModel>();
 
-        builder.Services.AddTransient<RemovePage>();
-        builder.Services.AddTransient<RemoveViewModel>();
+        builder.Services.AddTransient<EditPage>();
+        builder.Services.AddTransient<EditViewModel>();
 
         builder.Services.AddTransient<UpdateSettingsPage>();
         builder.Services.AddTransient<UpdateSettingsViewModel>();

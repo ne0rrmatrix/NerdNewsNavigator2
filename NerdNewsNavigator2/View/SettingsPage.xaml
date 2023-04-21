@@ -14,71 +14,180 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView ItemsSource="{Binding Podcasts}">
+    <Grid
+        ColumnDefinitions="{OnIdiom Default=375,
+                                    Tablet=600}"
+        HorizontalOptions="Center"
+        RowDefinitions="*"
+        VerticalOptions="Center">
 
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
-        </CollectionView.ItemsLayout>
+        <ScrollView
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            VerticalOptions="FillAndExpand"
+            VerticalScrollBarVisibility="Never">
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Podcast">
-                <Frame
-                    Margin="55"
-                    BackgroundColor="White"
-                    WidthRequest="375">
-                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto">
-                        <Label
-                            Grid.Row="0"
-                            Margin="10"
-                            Padding="5"
-                            FontAttributes="Bold"
-                            FontSize="10"
-                            HorizontalOptions="Start"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Title}"
-                            TextColor="Black"
-                            VerticalOptions="Center" />
-                        <Image
-                            Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Aspect="AspectFit"
-                            HeightRequest="300"
-                            WidthRequest="300">
-                            <Image.Source>
-                                <UriImageSource
-                                    CacheValidity="40"
-                                    CachingEnabled="True"
-                                    Uri="{Binding Image}" />
-                            </Image.Source>
-                        </Image>
-                        <Label
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Padding="10"
-                            FontSize="10"
-                            HeightRequest="240"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Description}"
-                            TextColor="Black"
-                            WidthRequest="320" />
-                        <Button
-                            Grid.Column="1"
-                            Margin="20"
-                            BackgroundColor="DarkRed"
-                            FontAttributes="Bold"
-                            FontSize="Micro"
-                            HeightRequest="35"
-                            Text="Delete"
-                            TextColor="White"
-                            WidthRequest="90">
-                            <Button.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                            </Button.GestureRecognizers>
-                        </Button>
-                    </Grid>
-                </Frame>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
+            <VerticalStackLayout Margin="10">
 
-    </CollectionView>
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalOptions="Start"
+                        Text="Donate"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=240,
+                                               Tablet=360}" />
+                    <Button
+                        Margin="10"
+                        Clicked="OpenUrlForDonation"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Click Me"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalOptions="Start"
+                        Text="Reset"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=240,
+                                               Tablet=360}" />
+                    <Button
+                        Margin="10"
+                        Clicked="ResetPodcasts"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Reset"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalOptions="Start"
+                        Text="Edit Item"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=240,
+                                               Tablet=360}" />
+                    <Button
+                        Margin="10"
+                        Clicked="EditPodcasts"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Edit"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalTextAlignment="Start"
+                        Text="Podcasts"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=140,
+                                               Tablet=170}" />
+                    <Button
+                        Margin="10"
+                        Clicked="AddDefault"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Enable"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                    <Button
+                        Margin="10"
+                        Clicked="RemoveDefault"
+                        FontAttributes="Bold"
+                        FontAutoScalingEnabled="True"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Disable"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalOptions="Start"
+                        Text="Add Item:"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=100,
+                                               Tablet=170}" />
+                    <Entry
+                        x:Name="Url"
+                        BackgroundColor="White"
+                        FontSize="Micro"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        SelectionLength="1400"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=140,
+                                               Tablet=190}" />
+                    <Button
+                        Margin="10"
+                        Clicked="Button_Clicked"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        Text="Add"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+
+        </ScrollView>
+
+    </Grid>
 </ContentPage>

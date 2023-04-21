@@ -7,13 +7,13 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages removing a <see cref="Podcast"/> from <see cref="List{T}"/> of <see cref="Podcast"/>
 /// </summary>
-public partial class RemovePage : ContentPage
+public partial class EditPage : ContentPage
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="RemovePage"/>
+    /// Initializes a new instance of <see cref="EditPage"/>
     /// </summary>
-    /// <param name="viewModel">This Pages <see cref="ViewModel"/> from <see cref="RemoveViewModel"/></param>
-    public RemovePage(RemoveViewModel viewModel)
+    /// <param name="viewModel">This Pages <see cref="ViewModel"/> from <see cref="EditViewModel"/></param>
+    public EditPage(EditViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
