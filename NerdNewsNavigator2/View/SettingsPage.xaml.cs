@@ -25,12 +25,13 @@ public partial class SettingsPage : ContentPage
         BindingContext = viewModel;
     }
 
+    #region Buttons
     /// <summary>
     /// The Method controls Adding a <see cref="Podcast"/> to <see cref="List{T}"/> of class <see cref="Podcast"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void Button_Clicked(object sender, EventArgs e)
+    private async void AddPodcast(object sender, EventArgs e)
     {
         if (sender is null || Url.Text is null)
         {
@@ -107,6 +108,7 @@ public partial class SettingsPage : ContentPage
         var item = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
         await Browser.OpenAsync(item);
     }
+    #endregion
 
     /// <summary>
     /// Method sets screen to normal screen size.

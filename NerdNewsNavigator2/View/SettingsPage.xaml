@@ -172,7 +172,7 @@
                                                Tablet=190}" />
                     <Button
                         Margin="10"
-                        Clicked="Button_Clicked"
+                        Clicked="AddPodcast"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
