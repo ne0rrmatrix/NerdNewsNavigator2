@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="NerdNewsNavigator2.View.UpdateSettingsPage"
+    x:Class="NerdNewsNavigator2.View.ResetAllSettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    x:DataType="viewmodel:UpdateSettingsViewModel"
     BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="False">
 

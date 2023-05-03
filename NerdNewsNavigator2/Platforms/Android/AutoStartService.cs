@@ -86,7 +86,7 @@ internal class AutoStartService : Service
                 Thread.Sleep(5000);
                 if (InternetConnected())
                 {
-                    await NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+                    await Services.DownloadService.AutoDownload();
                 }
                 Thread.Sleep(1000 * 60 * 60);
             }

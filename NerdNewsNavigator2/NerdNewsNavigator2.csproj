@@ -145,8 +145,8 @@
       <Compile Update="View\VideoPlayerPage.xaml.cs">
         <DependentUpon>VideoPlayerPage.xaml</DependentUpon>
       </Compile>
-      <Compile Update="View\UpdateSettingsPage.xaml.cs">
-        <DependentUpon>UpdateSettingsPage.xaml</DependentUpon>
+      <Compile Update="View\ResetAllSettingsPage.xaml.cs">
+        <DependentUpon>ResetAllSettingsPage.xaml</DependentUpon>
       </Compile>
   </ItemGroup>
 
@@ -188,7 +188,7 @@
     <MauiXaml Update="View\PodcastPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="View\UpdateSettingsPage.xaml">
+    <MauiXaml Update="View\ResetAllSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

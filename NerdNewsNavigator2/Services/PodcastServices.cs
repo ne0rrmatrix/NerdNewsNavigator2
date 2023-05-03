@@ -45,28 +45,18 @@ public static class PodcastServices
     #endregion
 
     /// <summary>
-    /// Method Gets updated <see cref="List{T}"/> <see cref="Podcast"/> from Database.
-    /// </summary>
-    /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
-    public static async Task<List<Podcast>> GetUpdatedPodcasts()
-    {
-        var temp = await App.PositionData.GetAllPodcasts();
-        return temp;
-    }
-
-    /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
-    public static async Task<List<Podcast>> GetFromUrl()
+    public static Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        foreach (var item in s_twit)
+        s_twit.ForEach(async podcast =>
         {
-            var temp = await FeedService.GetFeed(item);
+            var temp = await FeedService.GetFeed(podcast);
             podcasts.Add(temp);
-        }
-        return podcasts;
+        });
+        return Task.FromResult(podcasts);
     }
 
     /// <summary>
@@ -90,16 +80,17 @@ public static class PodcastServices
     public static async Task AddPodcast(string url)
     {
         var podcast = await Task.FromResult(FeedService.GetFeed(url)).Result;
-        if (podcast != null)
+        if (podcast == null)
         {
-            await App.PositionData.AddPodcast(new Podcast
-            {
-                Title = podcast.Title,
-                Url = podcast.Url,
-                Description = podcast.Description,
-                Image = podcast.Image,
-            });
+            return;
         }
+        await App.PositionData.AddPodcast(new Podcast
+        {
+            Title = podcast.Title,
+            Url = podcast.Url,
+            Description = podcast.Description,
+            Image = podcast.Image,
+        });
     }
 
     /// <summary>
@@ -109,15 +100,15 @@ public static class PodcastServices
     public static async Task AddDefaultPodcasts()
     {
         await RemoveDefaultPodcasts();
-
         var items = GetFromUrl().Result;
-        if (items is not null)
+        if (items is null || items.Count == 0)
         {
-            foreach (var item in items)
-            {
-                await App.PositionData.AddPodcast(item);
-            }
+            return;
         }
+        items.ForEach(async podcast =>
+        {
+            await App.PositionData.AddPodcast(podcast);
+        });
     }
 
     /// <summary>
@@ -126,46 +117,15 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static async Task RemoveDefaultPodcasts()
     {
-        var current = await App.PositionData.GetAllPodcasts();
-        foreach (var item in from item in current
-                             where item.Url.Contains("feeds.twit.tv")
-                             select item)
+        var items = await App.PositionData.GetAllPodcasts();
+        if (items is null || items.Count == 0)
+        {
+            return;
+        }
+        items.Where(x => x.Url.Contains("feeds.twit.tv")).ToList().ForEach(async item =>
         {
             await App.PositionData.DeletePodcast(item);
-        }
-    }
-
-    /// <summary>
-    /// Method Removes <see cref="List{T}"/> <see cref="Podcast"/> from Database.
-    /// </summary>
-    /// <returns>nothing</returns>
-    public static async Task DeleteAll()
-    {
-        await App.PositionData.DeleteAllPodcasts();
-    }
-
-    /// <summary>
-    /// Method Returns a <see cref="Show"/> from RSS Feed.
-    /// </summary>
-    /// <param name="url">The <see cref="string"/> URL of the Show.</param> 
-    /// <param name="getFirstOnly">The <see cref="bool"/> Get First value only.</param>
-    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public static Task<List<Show>> GetShow(string url, bool getFirstOnly)
-    {
-        return FeedService.GetShows(url, getFirstOnly);
-    }
-
-    /// <summary>
-    /// Method Saves <see cref="List{T}"/> of <see cref="Podcast"/> to database.
-    /// </summary>
-    /// <param name="podcasts">the <see cref="List{T}"/>List of Podcasts.</param>
-    /// <returns>nothing</returns>
-    public static async Task SaveAll(List<Podcast> podcasts)
-    {
-        foreach (var item in podcasts)
-        {
-            await AddPodcast(item.Url);
-        }
+        });
     }
 
     /// <summary>
@@ -175,22 +135,15 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static async Task<bool> Delete(string url)
     {
-        var current = await App.PositionData.GetAllPodcasts();
-        foreach (var item in current)
+        var items = await App.PositionData.GetAllPodcasts();
+        if (items == null || items.Count == 0)
         {
-            if (item.Url == url)
-            {
-                try
-                {
-                    await App.PositionData.DeletePodcast(item);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
+            return false;
         }
+        items.Where(x => x.Url == url).ToList().ForEach(async item =>
+        {
+            await App.PositionData.DeletePodcast(item);
+        });
         return true;
     }
 

@@ -19,7 +19,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(VideoPlayerPage), typeof(VideoPlayerPage));
         Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
         Routing.RegisterRoute(nameof(EditPage), typeof(EditPage));
-        Routing.RegisterRoute(nameof(UpdateSettingsPage), typeof(UpdateSettingsPage));
+        Routing.RegisterRoute(nameof(ResetAllSettingsPage), typeof(ResetAllSettingsPage));
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(MostRecentShowsPage), typeof(MostRecentShowsPage));
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
@@ -54,7 +54,7 @@ public partial class AppShell : Shell
     /// <param name="e"></param>
     private async void Reset(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
+        await Shell.Current.GoToAsync($"{nameof(ResetAllSettingsPage)}");
     }
 
     /// <summary>

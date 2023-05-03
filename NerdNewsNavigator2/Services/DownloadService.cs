@@ -38,16 +38,6 @@ public static class DownloadService
     }
 
     /// <summary>
-    /// Method Removes Downloaded <see cref="Download"/> from Database.
-    /// </summary>
-    /// <param name="download"> is the Download to remove from database.</param>
-    /// <returns>nothing</returns>
-    public static async Task RemoveDownloadFromDatabase(Download download)
-    {
-        await App.PositionData.DeleteDownload(download);
-    }
-
-    /// <summary>
     /// Get file name from Url <see cref="string"/>
     /// </summary>
     /// <param name="url">A URL <see cref="string"/></param>
@@ -113,7 +103,6 @@ public static class DownloadService
     /// <returns></returns>
     public static async Task<bool> Downloading(Show show)
     {
-        Debug.WriteLine($"Found Match {show.Url}");
         Download download = new()
         {
             Title = show.Title,
@@ -165,7 +154,7 @@ public static class DownloadService
             {
                 Debug.WriteLine("Downloading ", show.First().Url);
                 IsDownloading = true;
-                var result = await DownloadService.Downloading(show.First());
+                var result = await Downloading(show.First());
                 if (result)
                 {
                     x.IsDownloaded = true;
