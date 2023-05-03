@@ -454,8 +454,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             case true:
                 return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
+            default:
+                return 1;
         }
-        return 1;
     }
     #endregion
 }
