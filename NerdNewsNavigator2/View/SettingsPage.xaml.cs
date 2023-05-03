@@ -58,7 +58,7 @@ public partial class SettingsPage : ContentPage
             return false;
         }
         var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
         return rgx.IsMatch(url);
     }
 
