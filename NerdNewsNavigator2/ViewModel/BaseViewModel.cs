@@ -436,7 +436,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns><see cref="int"/></returns>
     public static int OnDeviceOrientationChange()
     {
-        if (DeviceDisplay.Current.MainDisplayInfo.Width < 1920 && DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
         {
             return 2;
         }
@@ -455,7 +455,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             case true:
                 return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
             default:
-                return 1;
+                return 2;
         }
     }
     #endregion
