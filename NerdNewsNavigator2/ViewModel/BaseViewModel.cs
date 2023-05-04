@@ -440,19 +440,23 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return 2;
         }
-        return (DeviceInfo.Current.Idiom == DeviceIdiom.Phone) switch
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
         {
-            true => DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 1 : 2,
-            _ => (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet) switch
-            {
-                true => DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3,
-                _ => (DeviceInfo.Current.Platform == DevicePlatform.iOS) switch
-                {
-                    true => DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3,
-                    _ => 1,
-                },
-            },
-        };
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 1 : 2;
+        }
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet)
+        {
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
+        }
+        switch (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+        {
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
+            default:
+                return 1;
+        }
     }
     #endregion
 }
