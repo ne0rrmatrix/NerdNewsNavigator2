@@ -11,6 +11,7 @@ public partial class MediaControl : ContentView
     public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
+    Aspect aspect { get; set; } = new();
 
     public bool FullScreen { get; set; } = false;
 
@@ -21,11 +22,16 @@ public partial class MediaControl : ContentView
             control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
             control.mediaElement.Source = newValue as MediaSource;
             control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
+            control.mediaElement.Aspect = (Aspect)newValue;
             control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
             control.mediaElement.StateChanged += (EventHandler<MediaStateChangedEventArgs>)newValue;
             control.mediaElement.MediaOpened += (EventHandler)newValue;
         });
-
+    public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.Aspect = (Aspect)newValue;
+    });
     public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
@@ -275,6 +281,17 @@ public partial class MediaControl : ContentView
             MenuIsVisible = true;
         }
         OnPropertyChanged(nameof(MenuIsVisible));
+    }
+    private void AspectButton(object sender, EventArgs e)
+    {
+        if (mediaElement.Aspect == Aspect.AspectFit)
+        {
+            mediaElement.Aspect = Aspect.Fill;
+        }
+        else
+        {
+            mediaElement.Aspect = Aspect.AspectFit;
+        }
     }
     #endregion
 
