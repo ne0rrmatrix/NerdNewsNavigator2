@@ -11,7 +11,6 @@ public partial class MediaControl : ContentView
     public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
-    Aspect aspect { get; set; } = new();
 
     public bool FullScreen { get; set; } = false;
 
@@ -121,7 +120,11 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(ShouldKeepScreenOnProperty);
         set => SetValue(ShouldKeepScreenOnProperty, value);
     }
-
+    public Aspect Aspect
+    {
+        get => (Aspect)GetValue(AspectProperty);
+        set => SetValue(AspectProperty, value);
+    }
     #endregion
     public MediaControl()
     {
