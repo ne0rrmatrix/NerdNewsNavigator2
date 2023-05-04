@@ -23,7 +23,7 @@ public static class MessagingService
         else
         {
 
-            await Toast.Make("Download Failed!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make($"Download {title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         }
         WeakReferenceMessenger.Default.Reset();
     }

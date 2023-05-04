@@ -10,6 +10,7 @@ namespace NerdNewsNavigator2.View;
 /// 
 public partial class VideoPlayerPage : ContentPage
 {
+    #region Properties
     public static bool IsYoutube { get; set; } = false;
     public static string Url { get; set; } = string.Empty;
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
@@ -22,6 +23,7 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     private Position Pos { get; set; } = new();
 
+    #endregion
     /// <summary>
     /// Class Constructor that initilizes <see cref="VideoPlayerPage"/>
     /// </summary>
@@ -42,18 +44,33 @@ public partial class VideoPlayerPage : ContentPage
 #endif
     }
 
-    /// <summary>
-    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
-    /// </summary>
-    protected override void OnDisappearing()
-    {
-        if (mediaElement is not null)
-        {
-            mediaElement.Stop();
-            _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-        }
-    }
+    #region Events
 #nullable enable
+
+    /// <summary>
+    /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void Seek(object? sender, EventArgs e)
+    {
+        Pos.SavedPosition = TimeSpan.Zero;
+        Pos.Title = Url;
+        var positionList = await App.PositionData.GetAllPositions();
+        foreach (var item in positionList)
+        {
+            if (Pos.Title == item.Title)
+            {
+                Pos.SavedPosition = item.SavedPosition;
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
+            }
+        }
+        mediaElement.ShouldKeepScreenOn = true;
+        mediaElement.SeekTo(Pos.SavedPosition);
+        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+        mediaElement.StateChanged += Media_Stopped;
+    }
+
     /// <summary>
     /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
     /// </summary>
@@ -117,7 +134,18 @@ public partial class VideoPlayerPage : ContentPage
                 break;
         }
     }
+
 #nullable disable
+    private void ContentPage_Unloaded(object sender, EventArgs e)
+    {
+        if (mediaElement is not null)
+        {
+            _logger.LogInformation("Page unloaded. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+            mediaElement.Handler?.DisconnectHandler();
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// Manages saving of <see cref="Pos"/> to <see cref="PositionDataBase"/> Database.
@@ -140,40 +168,15 @@ public partial class VideoPlayerPage : ContentPage
         });
     }
 
-#nullable enable
-
     /// <summary>
-    /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
+    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void Seek(object? sender, EventArgs e)
-    {
-        Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = Url;
-        var positionList = await App.PositionData.GetAllPositions();
-        foreach (var item in positionList)
-        {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
-            }
-        }
-        mediaElement.ShouldKeepScreenOn = true;
-        mediaElement.SeekTo(Pos.SavedPosition);
-        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-        mediaElement.StateChanged += Media_Stopped;
-    }
-
-#nullable disable
-
-    private void ContentPage_Unloaded(object sender, EventArgs e)
+    protected override void OnDisappearing()
     {
         if (mediaElement is not null)
         {
-            _logger.LogInformation("Page unloaded. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-            mediaElement.Handler?.DisconnectHandler();
+            mediaElement.Stop();
+            _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
         }
     }
 }

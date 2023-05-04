@@ -25,18 +25,19 @@ public partial class SettingsPage : ContentPage
         BindingContext = viewModel;
     }
 
+    #region Buttons
     /// <summary>
     /// The Method controls Adding a <see cref="Podcast"/> to <see cref="List{T}"/> of class <see cref="Podcast"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void Button_Clicked(object sender, EventArgs e)
+    private async void AddPodcast(object sender, EventArgs e)
     {
         if (sender is null || Url.Text is null)
         {
             return;
         }
-        if (Url.Text.Contains("twit") && Url.Text.Contains("https"))
+        if (ValidateUrl(Url.Text) && Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute) && Url.Text.Contains("twit"))
         {
             await PodcastServices.AddPodcast(Url.Text.ToString());
             await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
@@ -44,6 +45,21 @@ public partial class SettingsPage : ContentPage
             return;
         }
         await Toast.Make("Error: Not a twit Podcast!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+    }
+    /// <summary>
+    /// Method validates URL <see cref="Uri"/> <see cref="string"/>
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private static bool ValidateUrl(string url)
+    {
+        if (url.Trim() == string.Empty)
+        {
+            return false;
+        }
+        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
+        return rgx.IsMatch(url);
     }
 
     /// <summary>
@@ -94,7 +110,7 @@ public partial class SettingsPage : ContentPage
 
     private async void ResetPodcasts(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"{nameof(UpdateSettingsPage)}");
+        await Shell.Current.GoToAsync($"{nameof(ResetAllSettingsPage)}");
     }
 
     /// <summary>
@@ -107,6 +123,7 @@ public partial class SettingsPage : ContentPage
         var item = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
         await Browser.OpenAsync(item);
     }
+    #endregion
 
     /// <summary>
     /// Method sets screen to normal screen size.

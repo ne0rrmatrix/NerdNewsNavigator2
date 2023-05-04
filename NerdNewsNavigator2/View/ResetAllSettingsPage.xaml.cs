@@ -7,13 +7,13 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// a class that manages Updating settings.
 /// </summary>
-public partial class UpdateSettingsPage : ContentPage
+public partial class ResetAllSettingsPage : ContentPage
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="UpdateSettingsPage"/> class.
+    /// Initializes a new instance of <see cref="ResetAllSettingsPage"/> class.
     /// </summary>
-    /// <param name="viewModel">This pages <see cref="ViewModel"/> from <see cref="UpdateSettingsViewModel"/></param>
-    public UpdateSettingsPage(UpdateSettingsViewModel viewModel)
+    /// <param name="viewModel">This pages <see cref="ViewModel"/> from <see cref="ResetAllSettingsViewModel"/></param>
+    public ResetAllSettingsPage(ResetAllSettingsViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

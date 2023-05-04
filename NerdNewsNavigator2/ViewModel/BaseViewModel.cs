@@ -208,8 +208,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             IsDownloading = false;
             DownloadService.IsDownloading = false;
-            OnPropertyChanged(nameof(IsDownloading));
-            OnPropertyChanged(nameof(IsNotDownloading));
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
         });
     }
@@ -237,9 +235,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Thread.Sleep(5000);
             Logger.LogInformation("Waiting for download to finish");
         }
-        await Downloader(url, mostRecent);
+        await StartDownload(url, mostRecent);
     }
-    public async Task Downloader(string url, bool mostRecent)
+    public async Task StartDownload(string url, bool mostRecent)
     {
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         IsBusy = true;
@@ -286,12 +284,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadService.IsDownloading = true;
         IsDownloading = true;
-        OnPropertyChanged(nameof(IsDownloading));
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
             Title = DownloadProgress;
-            OnPropertyChanged(nameof(Title));
             Thread.Sleep(1000);
         }
         TriggerProgressChanged();
@@ -308,8 +304,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
         DownloadService.IsDownloading = false;
-        OnPropertyChanged(nameof(IsDownloading));
-        OnPropertyChanged(nameof(IsNotDownloading));
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
     #endregion
@@ -384,8 +378,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        OnPropertyChanged(nameof(IsBusy));
-        var temp = await PodcastServices.GetUpdatedPodcasts();
+        var temp = await App.PositionData.GetAllPodcasts();
         if (InternetConnected() && (temp is null || temp.Count == 0))
         {
             var items = await PodcastServices.GetFromUrl();
@@ -443,21 +436,27 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns><see cref="int"/></returns>
     public static int OnDeviceOrientationChange()
     {
-        if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-            return 3;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
-            return 1;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Phone && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape)
+        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+        {
             return 2;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
-            return 2;
-        else if (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape)
-            return 3;
-        else if (DeviceInfo.Current.Platform == DevicePlatform.iOS && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait)
-            return 2;
-        else if (DeviceInfo.Current.Platform == DevicePlatform.iOS && DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Landscape)
-            return 3;
-        else return 1;
+        }
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
+        {
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 1 : 2;
+        }
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet)
+        {
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
+        }
+        switch (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+        {
+            case true:
+                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
+            default:
+                return 2;
+        }
     }
     #endregion
 }

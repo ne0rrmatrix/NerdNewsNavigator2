@@ -77,8 +77,8 @@ public static class MauiProgram
         builder.Services.AddTransient<EditPage>();
         builder.Services.AddTransient<EditViewModel>();
 
-        builder.Services.AddTransient<UpdateSettingsPage>();
-        builder.Services.AddTransient<UpdateSettingsViewModel>();
+        builder.Services.AddTransient<ResetAllSettingsPage>();
+        builder.Services.AddTransient<ResetAllSettingsViewModel>();
 
         builder.Services.AddTransient<MostRecentShowsPage>();
         builder.Services.AddTransient<MostRecentShowsViewModel>();

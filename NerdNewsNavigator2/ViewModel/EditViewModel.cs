@@ -78,7 +78,7 @@ public partial class EditViewModel : BaseViewModel
             await FavoriteService.AddFavoriteToDatabase(show);
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
-            await PodcastServices.GetUpdatedPodcasts();
+            await GetUpdatedPodcasts();
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
             Podcasts = new ObservableCollection<Podcast>(Podcasts);
             OnPropertyChanged(nameof(Podcasts));
@@ -105,7 +105,7 @@ public partial class EditViewModel : BaseViewModel
         var item = Podcasts.First(x => x.Url == url);
         item.Download = false;
         await PodcastServices.UpdatePodcast(item);
-        await PodcastServices.GetUpdatedPodcasts();
+        await GetUpdatedPodcasts();
         Logger.LogInformation("Removed {item} from database", item.Url);
         Podcasts = new ObservableCollection<Podcast>(Podcasts);
         OnPropertyChanged(nameof(Podcasts));
