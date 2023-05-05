@@ -20,6 +20,10 @@ public partial class EditViewModel : BaseViewModel
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
         _ = GetUpdatedPodcasts();
+        if (DownloadService.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
     }
     /// <summary>
     /// Method Deletes a Podcast from the database.
