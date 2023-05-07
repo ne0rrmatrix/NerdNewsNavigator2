@@ -15,5 +15,9 @@ public partial class SettingsViewModel : BaseViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
+        if (DownloadService.IsDownloading)
+        {
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        }
     }
 }
