@@ -28,10 +28,8 @@
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>CFBundleIdentifier</key>
 	<string></string>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>UIStatusBarHidden</key>
-	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

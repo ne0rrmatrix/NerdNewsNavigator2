@@ -56,12 +56,6 @@
     <RunAOTCompilation>True</RunAOTCompilation>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
-	  <ProvisioningType>automatic</ProvisioningType>
-	  <CodesignKey>Apple Development: Created via API (MX4QCQ2742)</CodesignKey>
-	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
-	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <BuildIpa>False</BuildIpa>
 	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
@@ -74,7 +68,12 @@
 <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
     <RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
 </PropertyGroup>
-  
+<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+  <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
+  <CodesignProvision>VS: WildCard Development</CodesignProvision>
+  <ProvisioningType>automatic</ProvisioningType>
+</PropertyGroup>
+
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 

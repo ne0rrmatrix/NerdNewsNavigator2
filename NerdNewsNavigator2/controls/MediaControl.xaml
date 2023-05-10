@@ -51,10 +51,6 @@
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="40"
                 HorizontalOptions="End"
-                IsEnabled="{OnPlatform iOS=false,
-                                       Default=true}"
-                IsVisible="{OnPlatform iOS=false,
-                                       Default=true}"
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="40" />
