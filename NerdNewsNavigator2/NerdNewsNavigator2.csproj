@@ -26,7 +26,7 @@
 		<ApplicationVersion>6</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.3</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">33.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
@@ -59,12 +59,16 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <BuildIpa>False</BuildIpa>
 	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
-	  <MtouchLink>SdkOnly</MtouchLink>
+	  <MtouchLink>None</MtouchLink>
+	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <BuildIpa>False</BuildIpa>
 	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	  <MtouchUseLlvm>False</MtouchUseLlvm>
+	  <MtouchLink>None</MtouchLink>
+	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 	</PropertyGroup>
 <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
     <RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
