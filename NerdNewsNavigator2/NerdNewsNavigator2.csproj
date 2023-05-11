@@ -59,6 +59,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <BuildIpa>False</BuildIpa>
 	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
+	  <MtouchLink>SdkOnly</MtouchLink>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
