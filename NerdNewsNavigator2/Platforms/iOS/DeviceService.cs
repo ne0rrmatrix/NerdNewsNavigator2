@@ -9,14 +9,18 @@ internal static partial class DeviceService
     {
 
 #if IOS || MACCATALYST
+#pragma warning disable CA1422 // Validate platform compatibility
         UIKit.UIApplication.SharedApplication.SetStatusBarHidden(true, UIKit.UIStatusBarAnimation.Fade);
+#pragma warning restore CA1422 // Validate platform compatibility
 #endif
     }
     public static partial void RestoreScreen()
     {
 
 #if IOS || MACCATALYST
+#pragma warning disable CA1422 // Validate platform compatibility
         UIKit.UIApplication.SharedApplication.SetStatusBarHidden(false, UIKit.UIStatusBarAnimation.None);
+#pragma warning restore CA1422 // Validate platform compatibility
 #endif
     }
 }
