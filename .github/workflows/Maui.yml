@@ -129,7 +129,7 @@ jobs:
         echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+      run: dotnet workload install maui-ios maui-maccatalyst --from-rollback-file rollback.json
 
     - name: Restore NuGet packages
       shell: bash
@@ -172,7 +172,7 @@ jobs:
         echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
-      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+      run: dotnet workload install maui-ios maui-maccatalyst --from-rollback-file rollback.json
 
     - name: Restore NuGet packages
       shell: bash
