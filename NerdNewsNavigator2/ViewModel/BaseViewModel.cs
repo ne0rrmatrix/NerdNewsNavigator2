@@ -327,7 +327,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
-            if (show is not null || show.Count == 1)
+            if (show is not null)
             {
                 shows.Add(show.First());
             }
