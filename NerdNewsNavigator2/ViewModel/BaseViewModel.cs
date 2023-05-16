@@ -62,6 +62,26 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     private int _orientation;
 
     /// <summary>
+    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
+    /// </summary>
+    public int Orientation
+    {
+        get => _orientation;
+        set => SetProperty(ref _orientation, value);
+    }
+
+    private string _title;
+    public string Title
+    {
+        get { return _title; }
+        set
+        {
+            _title = value;
+            OnPropertyChanged(nameof(Title));
+        }
+    }
+
+    /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
     private bool _isDownloading;
@@ -84,29 +104,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public bool IsNotDownloading => !IsDownloading;
 
     /// <summary>
-    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
-    /// </summary>
-    public int Orientation
-    {
-        get => _orientation;
-        set => SetProperty(ref _orientation, value);
-    }
-
-    /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
     private string _downloadProgress;
-
-    private string _title;
-    public string Title
-    {
-        get { return _title; }
-        set
-        {
-            _title = value;
-            OnPropertyChanged(nameof(Title));
-        }
-    }
 
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
@@ -275,7 +275,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Description = item.Description,
             FileName = DownloadService.GetFileName(url)
         };
-        var downloaded = await DownloadService.DownloadShow(download);
+        DownloadService.IsDownloading = true;
+        var downloaded = await DownloadService.DownloadFile(download.Url);
         if (downloaded)
         {
             await DownloadSuccess(download);
@@ -326,11 +327,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
-            if (show is null || show.Count == 0)
+            if (show is not null || show.Count == 1)
             {
-                return;
+                shows.Add(show.First());
             }
-            shows.Add(show.First());
         });
         FavoriteShows.Clear();
         FavoriteShows = new ObservableCollection<Show>(shows);
@@ -446,12 +446,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             case true:
                 return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 1 : 2;
         }
-        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet)
-        {
-            case true:
-                return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
-        }
-        switch (DeviceInfo.Current.Platform == DevicePlatform.iOS)
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Tablet || DeviceInfo.Current.Platform == DevicePlatform.iOS)
         {
             case true:
                 return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;

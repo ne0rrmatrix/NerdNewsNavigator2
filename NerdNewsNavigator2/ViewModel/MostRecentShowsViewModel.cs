@@ -46,6 +46,10 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Download(string url)
     {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        });
         await Downloading(url, true);
     }
 
