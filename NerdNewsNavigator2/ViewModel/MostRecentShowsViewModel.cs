@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that manages the 
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="MostRecentShowsViewModel"/>
 /// </summary>
 public partial class MostRecentShowsViewModel : BaseViewModel
 {

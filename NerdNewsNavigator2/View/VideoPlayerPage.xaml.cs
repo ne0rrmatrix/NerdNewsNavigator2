@@ -14,10 +14,12 @@ public partial class VideoPlayerPage : ContentPage
     public static bool IsYoutube { get; set; } = false;
     public static string Url { get; set; } = string.Empty;
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
+
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
     private readonly ILogger<VideoPlayerPage> _logger;
+
     /// <summary>
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>

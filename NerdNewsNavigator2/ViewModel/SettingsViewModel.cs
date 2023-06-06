@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A Class that extends <see cref="BaseViewModel"/> for <see cref="SettingsPage"/>
+/// A Class that extends <see cref="BaseViewModel"/> for <see cref="SettingsViewModel"/>
 /// </summary>
 public partial class SettingsViewModel : BaseViewModel
 {
