@@ -26,7 +26,7 @@
 		<ApplicationVersion>6</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">33.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
@@ -56,25 +56,26 @@
     <RunAOTCompilation>True</RunAOTCompilation>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
-	  <ProvisioningType>automatic</ProvisioningType>
-	  <CodesignKey>Apple Development: Created via API (MX4QCQ2742)</CodesignKey>
-	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+    <BuildIpa>False</BuildIpa>
+    <IpaIncludeArtwork>True</IpaIncludeArtwork>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-	  <BuildIpa>False</BuildIpa>
-	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
-	  <BuildIpa>False</BuildIpa>
-	  <IpaIncludeArtwork>True</IpaIncludeArtwork>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+    <BuildIpa>False</BuildIpa>
+    <IpaIncludeArtwork>True</IpaIncludeArtwork>
+  </PropertyGroup>
+  
 <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
     <RuntimeIdentifier>maccatalyst-arm64</RuntimeIdentifier>
 </PropertyGroup>
   
+<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+  <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
+  <CodesignProvision>VS: WildCard Development</CodesignProvision>
+  <ProvisioningType>automatic</ProvisioningType>
+</PropertyGroup>
+
   	<!-- App Icon -->
   <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
@@ -109,7 +110,7 @@
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.4" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.4" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.13" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.14" />
 	</ItemGroup>
   
   <ItemGroup>

@@ -9,17 +9,9 @@ namespace NerdNewsNavigator2.Services;
 public static class DownloadService
 {
     public static bool IsDownloading { get; set; } = false;
+    public static bool Autodownloading { get; set; } = false;
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
-    /// <summary>
-    /// Method Download a show to local file system.
-    /// </summary>
-    /// <param name="download">Show to be downloaded.</param>
-    /// <returns>A <see cref="bool"/> Return true if succesfull, false otherwise.</returns>
-    public static async Task<bool> DownloadShow(Download download)
-    {
-        return await DownloadFile(download.Url);
-    }
 
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.
@@ -29,7 +21,7 @@ public static class DownloadService
     public static async Task<bool> AddDownloadDatabase(Download download)
     {
         var items = await App.PositionData.GetAllDownloads();
-        if (items.AsEnumerable().Any(x => x.Url == download.Url))
+        if (items.Exists(x => x.Url == download.Url))
         {
             return false;
         }
@@ -76,10 +68,6 @@ public static class DownloadService
                     return false;
                 }
             }
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            });
             var destinationFilePath = tempFile;
 
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
@@ -96,6 +84,7 @@ public static class DownloadService
             return false;
         }
     }
+
     /// <summary>
     /// A method that download a show to device.
     /// </summary>
@@ -135,35 +124,32 @@ public static class DownloadService
         {
             return;
         }
-        if (!IsDownloading)
-        {
-            ProccessShow(favoriteShows, downloadedShows);
-        }
+        ProccessShow(favoriteShows, downloadedShows);
     }
     public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
     {
         favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
         {
             var show = await FeedService.GetShows(x.Url, true);
-            while (IsDownloading)
+            while (Autodownloading)
             {
                 Thread.Sleep(5000);
                 Debug.WriteLine("Waiting for download to finish");
             }
-            if (!downloadedShows.Any(y => y.Url == x.Url))
+            if (!downloadedShows.Exists(y => y.Url == x.Url))
             {
-                Debug.WriteLine("Downloading ", show.First().Url);
-                IsDownloading = true;
-                var result = await Downloading(show.First());
+                Debug.WriteLine("Downloading ", show[0].Url);
+                Autodownloading = true;
+                var result = await Downloading(show[0]);
                 if (result)
                 {
                     x.IsDownloaded = true;
                     await App.PositionData.UpdateFavorite(x);
-                    IsDownloading = false;
+                    Autodownloading = false;
                 }
                 else
                 {
-                    IsDownloading = false;
+                    Autodownloading = false;
                 }
             }
         });

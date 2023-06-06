@@ -7,10 +7,20 @@ internal static partial class DeviceService
 {
     public static partial void FullScreen()
     {
-        // Not Implemented
+
+#if IOS || MACCATALYST
+#pragma warning disable CA1422 // Validate platform compatibility
+        UIKit.UIApplication.SharedApplication.SetStatusBarHidden(true, UIKit.UIStatusBarAnimation.Fade);
+#pragma warning restore CA1422 // Validate platform compatibility
+#endif
     }
     public static partial void RestoreScreen()
     {
-        // Not implemented
+
+#if IOS || MACCATALYST
+#pragma warning disable CA1422 // Validate platform compatibility
+        UIKit.UIApplication.SharedApplication.SetStatusBarHidden(false, UIKit.UIStatusBarAnimation.None);
+#pragma warning restore CA1422 // Validate platform compatibility
+#endif
     }
 }

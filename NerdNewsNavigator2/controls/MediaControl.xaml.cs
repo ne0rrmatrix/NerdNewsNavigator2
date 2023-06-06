@@ -11,7 +11,6 @@ public partial class MediaControl : ContentView
     public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
-    Aspect aspect { get; set; } = new();
 
     public bool FullScreen { get; set; } = false;
 

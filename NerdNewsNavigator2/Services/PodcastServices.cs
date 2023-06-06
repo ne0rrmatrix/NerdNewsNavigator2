@@ -132,7 +132,7 @@ public static class PodcastServices
     /// Method Deletes a <see cref="Podcast"/> from Database.
     /// </summary>
     /// <param name="url"><see cref="string"/> URL of <see cref="Podcast"/> to delete</param>
-    /// <returns>nothing</returns>
+    /// <returns><see cref="bool"/> Return True if <see cref="Podcast"/> is Deleted. False Otherwise.</returns>
     public static async Task<bool> Delete(string url)
     {
         var items = await App.PositionData.GetAllPodcasts();

@@ -15,7 +15,7 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView ItemsSource="{Binding Podcasts}">
+    <CollectionView ItemsSource="{Binding Podcasts}" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
