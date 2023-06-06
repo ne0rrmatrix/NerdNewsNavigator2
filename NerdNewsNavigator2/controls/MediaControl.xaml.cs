@@ -14,18 +14,7 @@ public partial class MediaControl : ContentView
 
     public bool FullScreen { get; set; } = false;
 
-    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl), propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            var control = (MediaControl)bindable;
-            control.mediaElement.ShouldAutoPlay = (bool)newValue;
-            control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
-            control.mediaElement.Source = newValue as MediaSource;
-            control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
-            control.mediaElement.Aspect = (Aspect)newValue;
-            control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
-            control.mediaElement.StateChanged += (EventHandler<MediaStateChangedEventArgs>)newValue;
-            control.mediaElement.MediaOpened += (EventHandler)newValue;
-        });
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl));
     public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;

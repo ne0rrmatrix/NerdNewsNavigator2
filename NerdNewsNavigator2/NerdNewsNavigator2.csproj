@@ -111,7 +111,7 @@
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.4" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.4" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.14" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.15" />
 	</ItemGroup>
   
   <ItemGroup>
