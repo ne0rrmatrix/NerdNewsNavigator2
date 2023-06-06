@@ -21,7 +21,7 @@ public static class DownloadService
     public static async Task<bool> AddDownloadDatabase(Download download)
     {
         var items = await App.PositionData.GetAllDownloads();
-        if (items.AsEnumerable().Any(x => x.Url == download.Url))
+        if (items.Exists(x => x.Url == download.Url))
         {
             return false;
         }
@@ -136,11 +136,11 @@ public static class DownloadService
                 Thread.Sleep(5000);
                 Debug.WriteLine("Waiting for download to finish");
             }
-            if (!downloadedShows.Any(y => y.Url == x.Url))
+            if (!downloadedShows.Exists(y => y.Url == x.Url))
             {
-                Debug.WriteLine("Downloading ", show.First().Url);
+                Debug.WriteLine("Downloading ", show[0].Url);
                 Autodownloading = true;
-                var result = await Downloading(show.First());
+                var result = await Downloading(show[0]);
                 if (result)
                 {
                     x.IsDownloaded = true;

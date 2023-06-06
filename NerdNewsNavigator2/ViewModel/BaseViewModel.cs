@@ -328,7 +328,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
-            shows?.Add(show.First());
+            shows?.Add(show[0]);
         });
         FavoriteShows.Clear();
         FavoriteShows = new ObservableCollection<Show>(shows);
@@ -365,7 +365,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Podcasts.ToList().ForEach(async show =>
             {
                 var item = await FeedService.GetShows(show.Url, true);
-                MostRecentShows.Add(item.First());
+                MostRecentShows.Add(item[0]);
             });
         }
     }
