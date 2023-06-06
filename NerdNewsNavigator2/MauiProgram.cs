@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Platforms.Android;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace NerdNewsNavigator2;
@@ -52,6 +53,7 @@ public static class MauiProgram
                     options.MaxLevel = LogLevel.Critical;
                 }); // Will write to the Console Output (logcat for android)
 
+        builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton<BaseViewModel>();
 
         builder.Services.AddTransient<PodcastPage>();

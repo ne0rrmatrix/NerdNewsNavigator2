@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Platforms.Android;
+
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -9,6 +11,8 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
+    private AndroidPermissions AndroidPermissions { get; set; } = new();
+
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
@@ -29,6 +33,31 @@ public partial class EditViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
     }
+
+    public async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
+    {
+        var status = await AndroidPermissions.RequestAsync();
+
+        if (status == PermissionStatus.Granted)
+            return status;
+
+        if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.Android)
+        {
+            // Prompt the user to turn on in settings
+            // On iOS once a permission has been denied it may not be requested again from the application
+            return status;
+        }
+
+        if (AndroidPermissions.ShouldShowRationale())
+        {
+            // Prompt the user with additional information as to why the permission is needed
+        }
+
+        status = await Permissions.RequestAsync<AndroidPermissions>();
+
+        return status;
+    }
+
     /// <summary>
     /// Method Deletes a Podcast from the database.
     /// </summary>
@@ -69,6 +98,17 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task<bool> AddToFavorite(string url)
     {
+#if ANDROID
+        var status = await CheckAndRequestForeGroundPermission();
+        if (PermissionStatus.Granted == status)
+        {
+            Logger.LogInformation("Background service working!");
+        }
+        else if (PermissionStatus.Denied == status)
+        {
+            Logger.LogInformation("Failed to add background service");
+        }
+#endif
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;

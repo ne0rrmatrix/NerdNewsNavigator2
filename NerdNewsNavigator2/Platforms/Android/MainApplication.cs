@@ -12,7 +12,7 @@ namespace NerdNewsNavigator2;
 public class MainApplication : MauiApplication
 {
 
-    public static readonly string ChannelId = "exampleServiceChannel";
+    public static readonly string ChannelId = "autoDownloadServiceChannel";
     public MainApplication(IntPtr handle, JniHandleOwnership ownership)
         : base(handle, ownership)
     {
@@ -26,7 +26,7 @@ public class MainApplication : MauiApplication
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             var serviceChannel =
-               new NotificationChannel(ChannelId, "Example Service Channel", NotificationImportance.High);
+               new NotificationChannel(ChannelId, "AutoDownload Service Channel", NotificationImportance.None);
 
             if (GetSystemService(NotificationService) is NotificationManager manager)
             {

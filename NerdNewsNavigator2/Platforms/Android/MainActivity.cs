@@ -13,12 +13,15 @@ namespace NerdNewsNavigator2;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
+    public static bool SetAutoDownload { get; set; }
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
+        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
+        System.Diagnostics.Debug.WriteLine($"SetAutoDownload = {SetAutoDownload}");
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            if (message.Start)
+            if (message.Start && SetAutoDownload)
             {
                 StartService();
             }
@@ -38,12 +41,14 @@ public class MainActivity : MauiAppCompatActivity
 
     private void StartService()
     {
+        System.Diagnostics.Debug.WriteLine("Starting Auto Download Service");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         this.StartForegroundService(serviceIntent);
     }
 
     private void StopService()
     {
+        System.Diagnostics.Debug.WriteLine("Stopping Auto Download Service");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }

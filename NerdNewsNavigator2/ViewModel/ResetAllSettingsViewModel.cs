@@ -31,6 +31,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     private async Task ResetAll()
     {
         IsBusy = true;
+        Preferences.Default.Remove("AutoDownload");
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var files = System.IO.Directory.GetFiles(path, "*.mp4");
         if (files.Any() && files is not null)
