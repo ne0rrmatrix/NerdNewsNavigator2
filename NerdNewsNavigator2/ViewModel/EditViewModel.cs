@@ -11,6 +11,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
+    private readonly IMessenger _messenger;
     private AndroidPermissions AndroidPermissions { get; set; } = new();
 
     /// <summary>
@@ -21,7 +22,7 @@ public partial class EditViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
     {
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
@@ -32,6 +33,7 @@ public partial class EditViewModel : BaseViewModel
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+        _messenger = messenger;
     }
 
     public async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
@@ -89,7 +91,11 @@ public partial class EditViewModel : BaseViewModel
         Logger.LogInformation("Removed Favorite {item} from database", podcast.Url);
         await GetUpdatedPodcasts();
     }
-
+    public void SetData(object stateinfo)
+    {
+        Preferences.Default.Set("AutoDownload", true);
+        _messenger?.Send(new MessageData(true));
+    }
     /// <summary>
     /// A Method that adds a favourite to the database.
     /// </summary>
@@ -132,6 +138,7 @@ public partial class EditViewModel : BaseViewModel
             OnPropertyChanged(nameof(Podcasts));
             Logger.LogInformation("Added {item} to database", item.Url);
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
+            ThreadPool.QueueUserWorkItem(SetData);
             return true;
         }
         return false;

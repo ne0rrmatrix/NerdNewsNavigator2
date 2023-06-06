@@ -14,8 +14,7 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    private static bool SetAutoDownload { get; set; }
-    private bool IsRunning { get; set; } = true;
+    private bool IsRunning { get; set; }
     private IConnectivity _connectivity;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -24,6 +23,7 @@ public partial class App : MauiWinUIApplication
     public App()
     {
         this.InitializeComponent();
+        IsRunning = Preferences.Default.Get("AutoDownload", true);
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
             var nativeWindow = handler.PlatformView;
@@ -51,10 +51,10 @@ public partial class App : MauiWinUIApplication
         base.OnLaunched(args);
         _connectivity = MauiWinUIApplication.Current.Services.GetService<IConnectivity>();
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
-        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            if (message.Start && SetAutoDownload)
+            IsRunning = Preferences.Default.Get("AutoDownload", true);
+            if (message.Start && IsRunning)
             {
                 Start();
             }
@@ -104,6 +104,7 @@ public partial class App : MauiWinUIApplication
     public void Stop()
     {
         IsRunning = false;
+        Debug.WriteLine("Stopping AutoDownload");
     }
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

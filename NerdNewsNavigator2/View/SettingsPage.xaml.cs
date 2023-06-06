@@ -65,20 +65,20 @@ public partial class SettingsPage : ContentPage
             SetAutoDownload = false;
             OnPropertyChanged(nameof(SetAutoDownload));
             Preferences.Default.Set("AutoDownload", false);
+            _messenger?.Send(new MessageData(false));
 #if ANDROID
             MainActivity.SetAutoDownload = false;
-            _messenger?.Send(new MessageData(false));
 #endif
         }
         else
         {
             SetAutoDownload = true;
             OnPropertyChanged(nameof(SetAutoDownload));
+            Preferences.Default.Set("AutoDownload", true);
+            _messenger?.Send(new MessageData(true));
 #if ANDROID
             MainActivity.SetAutoDownload = true;
-            _messenger?.Send(new MessageData(true));
 #endif
-            Preferences.Default.Set("AutoDownload", true);
         }
     }
     /// <summary>
