@@ -12,7 +12,7 @@ public static class DownloadService
     public static bool Autodownloading { get; set; } = false;
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
-   
+
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.
     /// </summary>

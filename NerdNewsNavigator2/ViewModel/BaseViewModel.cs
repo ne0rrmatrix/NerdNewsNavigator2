@@ -306,6 +306,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
         DownloadService.IsDownloading = false;
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
     #endregion
@@ -327,10 +328,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
-            if (show is not null)
-            {
-                shows.Add(show.First());
-            }
+            shows?.Add(show.First());
         });
         FavoriteShows.Clear();
         FavoriteShows = new ObservableCollection<Show>(shows);
