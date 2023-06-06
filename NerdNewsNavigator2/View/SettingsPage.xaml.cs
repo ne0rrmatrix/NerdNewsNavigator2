@@ -9,7 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class SettingsPage : ContentPage
 {
-    public IMessenger _messenger;
+    private readonly IMessenger _messenger;
     /// <summary>
     /// Private <see cref="bool"/> which sets AutoDownload off/on.
     /// </summary>

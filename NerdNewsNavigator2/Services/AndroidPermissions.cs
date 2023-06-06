@@ -10,7 +10,6 @@ public class AndroidPermissions : Permissions.BasePermission
 {
     public override async Task<PermissionStatus> CheckStatusAsync()
     {
-        //throw new NotImplementedException();
         var status = await Permissions.CheckStatusAsync<ForegroundService>();
         return status;
     }
@@ -22,14 +21,12 @@ public class AndroidPermissions : Permissions.BasePermission
 
     public override async Task<PermissionStatus> RequestAsync()
     {
-        //throw new NotImplementedException();
         var status = await Permissions.RequestAsync<ForegroundService>();
         return status;
     }
 
     public override bool ShouldShowRationale()
     {
-        //throw new NotImplementedException();
         return Permissions.ShouldShowRationale<ForegroundService>();
     }
 }
