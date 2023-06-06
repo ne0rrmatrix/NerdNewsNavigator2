@@ -50,7 +50,7 @@ public partial class LivePage : ContentPage
     private async Task LoadVideo()
     {
         mediaElement.IsYoutube = true;
-        var m3u = await GetM3U_Url("F2NreNEmMy4");
+        var m3u = await GetM3U_Url("L27zdUmeTAQ");
         mediaElement.Source = ParseM3UPLaylist(m3u);
         mediaElement.Play();
     }

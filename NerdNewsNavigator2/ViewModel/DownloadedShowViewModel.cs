@@ -4,6 +4,9 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 
+/// <summary>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
+/// </summary>
 public partial class DownloadedShowViewModel : BaseViewModel
 {
     #region Properties

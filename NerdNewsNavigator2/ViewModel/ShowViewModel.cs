@@ -5,16 +5,20 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that inherits form <see cref="BaseViewModel"/> and manages showing <see cref="Show"/> information.
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ShowViewModel"/>
 /// </summary>
 [QueryProperty("Url", "Url")]
 public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
 
-    private string _url;
     /// <summary>
-    /// A Url <see cref="string"/> containing the <see cref="Show"/>
+    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
+    /// </summary>
+    private string _url;
+
+    /// <summary>
+    /// A public <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
     public string Url
     {

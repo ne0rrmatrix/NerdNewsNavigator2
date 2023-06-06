@@ -4,10 +4,13 @@
 
 namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
-/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ResetAllSettingsPage"/>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ResetAllSettingsViewModel"/>
 /// </summary>
 public partial class ResetAllSettingsViewModel : BaseViewModel
 {
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
     private readonly ILogger<ResetAllSettingsViewModel> _logger;
 
     /// <summary>
