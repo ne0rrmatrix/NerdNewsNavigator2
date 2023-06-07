@@ -52,7 +52,7 @@
                             WidthRequest="320">
                             <Image.Source>
                                 <UriImageSource
-                                    CacheValidity="10:00:0:00"
+                                    CacheValidity="10:00:00:00"
                                     CachingEnabled="true"
                                     Uri="{Binding Image}" />
                             </Image.Source>

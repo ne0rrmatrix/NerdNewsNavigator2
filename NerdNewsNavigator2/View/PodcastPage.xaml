@@ -23,25 +23,6 @@
         ItemsSource="{Binding Podcasts}"
         VerticalScrollBarVisibility="Never">
 
-        <CollectionView.Header>
-            <StackLayout>
-                <Label
-                    Padding="20"
-                    FontSize="Large"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsBusy}"
-                    Text="Loading..."
-                    TextColor="Black"
-                    VerticalOptions="Center" />
-                <ActivityIndicator
-                    IsEnabled="True"
-                    IsRunning="{Binding IsBusy}"
-                    IsVisible="{Binding IsBusy}"
-                    Color="Red" />
-            </StackLayout>
-        </CollectionView.Header>
-
         <CollectionView.ItemsLayout>
             <GridItemsLayout
                 x:Name="ItemLayout"
@@ -98,7 +79,7 @@
                                                    Desktop=350}">
                             <Image.Source>
                                 <UriImageSource
-                                    CacheValidity="10:00:0:00"
+                                    CacheValidity="10:00:00:00"
                                     CachingEnabled="true"
                                     Uri="{Binding Image}" />
                             </Image.Source>
@@ -119,6 +100,28 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
-
+        
+        <CollectionView.EmptyView>
+            <ContentView>
+                <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand">
+                    <Label
+                    Padding="20"
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsBusy}"
+                    Text="Loading..."
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                    <ActivityIndicator
+                    IsEnabled="True"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
+                    Color="Red" />
+                </StackLayout>
+            </ContentView>
+        </CollectionView.EmptyView>
+        
     </CollectionView>
 </ContentPage>
