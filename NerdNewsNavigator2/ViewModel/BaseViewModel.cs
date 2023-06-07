@@ -321,7 +321,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         var shows = new ObservableCollection<Show>();
         var temp = await App.PositionData.GetAllFavorites();
-        if (temp is null)
+        if (temp is null || !InternetConnected())
         {
             return;
         }

@@ -9,7 +9,11 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class SettingsPage : ContentPage
 {
-
+    private readonly IMessenger _messenger;
+    /// <summary>
+    /// Private <see cref="bool"/> which sets AutoDownload off/on.
+    /// </summary>
+    public bool SetAutoDownload { get; set; }
     /// <summary>
     /// Private <see cref="bool"/> which sets Full Screen Mode.
     /// </summary>
@@ -19,10 +23,13 @@ public partial class SettingsPage : ContentPage
     /// Initializes a new instance of <see cref="SettingsPage"/>
     /// </summary>
     /// <param name="viewModel">The <see cref="ViewModel"/> instance that is managed through this class.</param> 
-    public SettingsPage(SettingsViewModel viewModel)
+    public SettingsPage(SettingsViewModel viewModel, IMessenger messenger)
     {
         InitializeComponent();
         BindingContext = viewModel;
+        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
+        OnPropertyChanged(nameof(SetAutoDownload));
+        _messenger = messenger;
     }
 
     #region Buttons
@@ -45,6 +52,34 @@ public partial class SettingsPage : ContentPage
             return;
         }
         await Toast.Make("Error: Not a twit Podcast!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+    }
+    private void AutoDownload(object sender, EventArgs e)
+    {
+        if (sender is null)
+        {
+            return;
+        }
+        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
+        if (SetAutoDownload)
+        {
+            SetAutoDownload = false;
+            OnPropertyChanged(nameof(SetAutoDownload));
+            Preferences.Default.Set("AutoDownload", false);
+            _messenger?.Send(new MessageData(false));
+#if ANDROID
+            MainActivity.SetAutoDownload = false;
+#endif
+        }
+        else
+        {
+            SetAutoDownload = true;
+            OnPropertyChanged(nameof(SetAutoDownload));
+            Preferences.Default.Set("AutoDownload", true);
+            _messenger?.Send(new MessageData(true));
+#if ANDROID
+            MainActivity.SetAutoDownload = true;
+#endif
+        }
     }
     /// <summary>
     /// Method validates URL <see cref="Uri"/> <see cref="string"/>

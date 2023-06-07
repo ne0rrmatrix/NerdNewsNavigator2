@@ -63,10 +63,16 @@
                             Margin="10"
                             Aspect="AspectFit"
                             HorizontalOptions="Center"
-                            Source="{Binding Image}"
                             WidthRequest="{OnIdiom Phone=350,
                                                    Tablet=340,
-                                                   Desktop=350}" />
+                                                   Desktop=350}" >
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="true"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
+                        </Image>
                         <Label
                             Grid.Row="3"
                             Margin="10"

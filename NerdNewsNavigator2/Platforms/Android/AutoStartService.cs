@@ -20,6 +20,7 @@ internal class AutoStartService : Service
     {
         _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
     }
+
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>
@@ -55,7 +56,6 @@ internal class AutoStartService : Service
         var notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notification.SetContentIntent(pendingIntent);
         notification.SetAutoCancel(false);
-        notification.SetOngoing(true);
         notification.SetSilent(true);
 
         this.StartForeground(NOTIFICATION_ID, notification.Build());
@@ -78,16 +78,18 @@ internal class AutoStartService : Service
     }
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
+        Running = true;
         StartForegroundService();
+        if (!InternetConnected())
+        {
+            Running = false;
+        }
         _ = Task.Run(async () =>
         {
             while (Running)
             {
                 Thread.Sleep(5000);
-                if (InternetConnected())
-                {
-                    await Services.DownloadService.AutoDownload();
-                }
+                await Services.DownloadService.AutoDownload();
                 Thread.Sleep(1000 * 60 * 60);
             }
         });
@@ -113,6 +115,7 @@ internal class AutoStartService : Service
     public void Stop()
     {
         var intent = new Intent(this, typeof(AutoStartService));
+        Running = false;
         this.StopService(intent);
     }
     public override void OnDestroy()

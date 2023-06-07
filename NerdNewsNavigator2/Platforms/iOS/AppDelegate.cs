@@ -13,6 +13,7 @@ namespace NerdNewsNavigator2;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
+    private bool IsRunning { get; set; }
     IConnectivity _connectivity;
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
@@ -30,6 +31,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         base.OnActivated(application);
         _connectivity = MauiUIApplicationDelegate.Current.Services.GetService<IConnectivity>();
     }
+
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>
@@ -80,7 +82,8 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     public void AutoDownload()
     {
-        if (InternetConnected())
+        IsRunning = Preferences.Default.Get("AutoDownload", true);
+        if (InternetConnected() && IsRunning)
         {
             ThreadPool.QueueUserWorkItem(async state =>
             {
