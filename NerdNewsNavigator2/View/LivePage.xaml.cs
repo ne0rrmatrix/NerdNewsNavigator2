@@ -68,7 +68,7 @@ public partial class LivePage : ContentPage
         {
             Add(item);
         }
-        return list.ElementAt(list.FindIndex(x => x.Resolution.Height == 720)).Uri;
+        return list[list.FindIndex(x => x.Resolution.Height == 720)].Uri;
     }
     private void Add(M3U8Parser.ExtXType.StreamInf item)
     {
