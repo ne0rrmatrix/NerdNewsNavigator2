@@ -17,10 +17,9 @@ public class MainActivity : MauiAppCompatActivity
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
-        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
-        System.Diagnostics.Debug.WriteLine($"SetAutoDownload = {SetAutoDownload}");
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
+            SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
             if (message.Start && SetAutoDownload)
             {
                 StartService();
