@@ -162,6 +162,7 @@ public static class DownloadService
                     };
                     if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
                     {
+                    await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
                         await LocalNotificationCenter.Current.RequestNotificationPermission();
                     }
 

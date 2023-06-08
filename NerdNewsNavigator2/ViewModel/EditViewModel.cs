@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using NerdNewsNavigator2.Platforms.Android;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -37,18 +35,12 @@ public partial class EditViewModel : BaseViewModel
 
     public async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
     {
-        var status = PermissionStatus.Unknown;
-        status = await Permissions.CheckStatusAsync<AndroidPermissions>();
+        var status = await Permissions.CheckStatusAsync<AndroidPermissions>();
         if (status == PermissionStatus.Granted)
         {
             return status;
         }
-        if (Permissions.ShouldShowRationale<AndroidPermissions>())
-        {
-            await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
-            // Prompt the user with additional information as to why the permission is needed
-        }
-        if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.Android)
+        else
         {
             // Prompt the user to turn on in settings
             // On iOS once a permission has been denied it may not be requested again from the application
