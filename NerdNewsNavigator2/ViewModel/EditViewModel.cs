@@ -33,7 +33,7 @@ public partial class EditViewModel : BaseViewModel
         _messenger = messenger;
     }
 
-    public async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
+    public static async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
     {
         var status = await Permissions.CheckStatusAsync<AndroidPermissions>();
         if (status == PermissionStatus.Granted)
@@ -42,8 +42,6 @@ public partial class EditViewModel : BaseViewModel
         }
         else
         {
-            // Prompt the user to turn on in settings
-            // On iOS once a permission has been denied it may not be requested again from the application
             await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
         }
         status = await Permissions.RequestAsync<AndroidPermissions>();
