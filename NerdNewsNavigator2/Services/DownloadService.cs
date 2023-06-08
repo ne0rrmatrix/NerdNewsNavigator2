@@ -149,18 +149,20 @@ public static class DownloadService
                     x.IsDownloaded = true;
                     await App.PositionData.UpdateFavorite(x);
                     Autodownloading = false;
+#if ANDROID || IOS
                     var downloaded = new NotificationRequest
                     {
                         NotificationId = x.Id,
                         Title = show[0].Title,
                         Description = "New Episode Downloaded",
                     };
-                    if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+                    if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
                     {
                         await LocalNotificationCenter.Current.RequestNotificationPermission();
                     }
 
                     await LocalNotificationCenter.Current.Show(downloaded);
+#endif
                 }
                 else
                 {

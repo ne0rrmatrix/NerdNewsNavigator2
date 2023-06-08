@@ -56,6 +56,7 @@ internal class AutoStartService : Service
         var notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notification.SetContentIntent(pendingIntent);
         notification.SetAutoCancel(false);
+        notification.SetOngoing(true);
         notification.SetSmallIcon(Resource.Drawable.exo_notification_small_icon);
         notification.SetSilent(true);
 

@@ -26,8 +26,10 @@ public partial class App : Application
     public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
+#if ANDROID || IOS
         // Local Notification tap event listener
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
+#endif
         MainPage = new AppShell();
 
         _messenger = messenger;
@@ -43,14 +45,15 @@ public partial class App : Application
             StartAutoDownloadService();
         });
     }
+#if IOS || ANDROID
     private async void OnNotificationActionTapped(NotificationActionEventArgs e)
     {
         if (e.IsTapped)
         {
             await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
-            return;
         }
     }
+#endif
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);
