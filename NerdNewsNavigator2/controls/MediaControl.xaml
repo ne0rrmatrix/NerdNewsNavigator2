@@ -14,6 +14,7 @@
     <Grid>
 
         <Grid.GestureRecognizers>
+            <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_DoubleTapped" />
             <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
             <SwipeGestureRecognizer Direction="Up" Swiped="SwipeGestureRecognizer_Swiped" />
             <SwipeGestureRecognizer Direction="Down" Swiped="SwipeGestureRecognizer_Swiped" />

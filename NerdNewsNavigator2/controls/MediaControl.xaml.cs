@@ -221,18 +221,9 @@ public partial class MediaControl : ContentView
         }
     }
 
-    private static void BtnFullScreen_Clicked(object sender, EventArgs e)
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-        if (s_fullScreen)
-        {
-            s_fullScreen = false;
-            RestoreScreen();
-        }
-        else
-        {
-            SetFullScreen();
-            s_fullScreen = true;
-        }
+        SetVideoSize();
     }
     private void OnMuteClicked(object sender, EventArgs e)
     {
@@ -250,17 +241,6 @@ public partial class MediaControl : ContentView
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
         _ = Moved();
-    }
-    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
-    {
-        if (e.Direction == SwipeDirection.Up)
-        {
-            SetFullScreen();
-        }
-        if (e.Direction == SwipeDirection.Down)
-        {
-            RestoreScreen();
-        }
     }
     private void Button_Pressed(object sender, EventArgs e)
     {
@@ -289,22 +269,35 @@ public partial class MediaControl : ContentView
 
     #region Full Screen Functions
 #nullable enable
-
-    /// <summary>
-    /// Method toggles Full Screen Off
-    /// </summary>
-    public static void RestoreScreen()
+    private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
-        DeviceService.RestoreScreen();
+#if WINDOWS
+        SetVideoSize();
+#endif
     }
-
-    /// <summary>
-    /// Method toggles Full Screen On
-    /// </summary>
-
-    public static void SetFullScreen()
+    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
-        DeviceService.FullScreen();
+        if (e.Direction == SwipeDirection.Up)
+        {
+            DeviceService.FullScreen();
+        }
+        if (e.Direction == SwipeDirection.Down)
+        {
+            DeviceService.RestoreScreen();
+        }
+    }
+    private static void SetVideoSize()
+    {
+        if (s_fullScreen)
+        {
+            DeviceService.RestoreScreen();
+            s_fullScreen = false;
+        }
+        else
+        {
+            DeviceService.FullScreen();
+            s_fullScreen = true;
+        }
     }
 
     private async Task Moved()
