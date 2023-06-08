@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.AndroidOption;
+
 namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
@@ -146,6 +149,18 @@ public static class DownloadService
                     x.IsDownloaded = true;
                     await App.PositionData.UpdateFavorite(x);
                     Autodownloading = false;
+                    var downloaded = new NotificationRequest
+                    {
+                        NotificationId = x.Id,
+                        Title = show[0].Title,
+                        Description = "New Episode Downloaded",
+                    };
+                    if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+                    {
+                        await LocalNotificationCenter.Current.RequestNotificationPermission();
+                    }
+
+                    await LocalNotificationCenter.Current.Show(downloaded);
                 }
                 else
                 {

@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.EventArgs;
+
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -23,6 +26,8 @@ public partial class App : Application
     public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
+        // Local Notification tap event listener
+        LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
         MainPage = new AppShell();
 
         _messenger = messenger;
@@ -37,6 +42,14 @@ public partial class App : Application
         {
             StartAutoDownloadService();
         });
+    }
+    private async void OnNotificationActionTapped(NotificationActionEventArgs e)
+    {
+        if (e.IsTapped)
+        {
+            await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
+            return;
+        }
     }
     private void StartAutoDownloadService()
     {
