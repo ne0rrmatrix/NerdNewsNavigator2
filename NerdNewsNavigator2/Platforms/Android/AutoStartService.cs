@@ -57,7 +57,8 @@ internal class AutoStartService : Service
         notification.SetContentIntent(pendingIntent);
         notification.SetAutoCancel(false);
         notification.SetOngoing(true);
-        notification.SetSmallIcon(Resource.Drawable.exo_notification_small_icon);
+        notification.SetContentTitle("AutoDownloader On");
+        notification.SetSmallIcon(Resource.Drawable.ic_stat_alarm);
         notification.SetSilent(true);
 
         this.StartForeground(NOTIFICATION_ID, notification.Build());

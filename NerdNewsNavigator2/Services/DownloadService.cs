@@ -155,6 +155,10 @@ public static class DownloadService
                         NotificationId = x.Id,
                         Title = show[0].Title,
                         Description = "New Episode Downloaded",
+                        Android = new AndroidOptions()
+                        {
+                            IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
+                        },
                     };
                     if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
                     {
