@@ -12,7 +12,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class EditViewModel : BaseViewModel
 {
     private readonly IMessenger _messenger;
-    private AndroidPermissions AndroidPermissions { get; set; } = new();
 
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
@@ -38,25 +37,24 @@ public partial class EditViewModel : BaseViewModel
 
     public async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
     {
-        var status = await AndroidPermissions.RequestAsync();
-
+        var status = PermissionStatus.Unknown;
+        status = await Permissions.CheckStatusAsync<AndroidPermissions>();
         if (status == PermissionStatus.Granted)
+        {
             return status;
-
+        }
+        if (Permissions.ShouldShowRationale<AndroidPermissions>())
+        {
+            await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
+            // Prompt the user with additional information as to why the permission is needed
+        }
         if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.Android)
         {
             // Prompt the user to turn on in settings
             // On iOS once a permission has been denied it may not be requested again from the application
-            return status;
+            await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
         }
-
-        if (AndroidPermissions.ShouldShowRationale())
-        {
-            // Prompt the user with additional information as to why the permission is needed
-        }
-
         status = await Permissions.RequestAsync<AndroidPermissions>();
-
         return status;
     }
 
