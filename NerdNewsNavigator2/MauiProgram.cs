@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using NerdNewsNavigator2.Platforms.Android;
+using Plugin.LocalNotification;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace NerdNewsNavigator2;
@@ -15,8 +15,12 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement();
-
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement()
+#if ANDROID || IOS
+        .UseLocalNotification();
+#else
+        ;
+#endif
         builder.Logging
 
 #if DEBUG
