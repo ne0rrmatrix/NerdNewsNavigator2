@@ -120,12 +120,9 @@ public partial class EditViewModel : BaseViewModel
             await FavoriteService.AddFavoriteToDatabase(show);
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
-            await GetUpdatedPodcasts();
+            Podcasts[Podcasts.IndexOf(item)] = item;
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            Podcasts = new ObservableCollection<Podcast>(Podcasts);
-            OnPropertyChanged(nameof(Podcasts));
             Logger.LogInformation("Added {item} to database", item.Url);
-            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
             ThreadPool.QueueUserWorkItem(SetData);
             return true;
         }
@@ -148,10 +145,8 @@ public partial class EditViewModel : BaseViewModel
         var item = Podcasts.First(x => x.Url == url);
         item.Download = false;
         await PodcastServices.UpdatePodcast(item);
-        await GetUpdatedPodcasts();
         Logger.LogInformation("Removed {item} from database", item.Url);
-        Podcasts = new ObservableCollection<Podcast>(Podcasts);
-        OnPropertyChanged(nameof(Podcasts));
+        Podcasts.Remove(item);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
         return true;
     }

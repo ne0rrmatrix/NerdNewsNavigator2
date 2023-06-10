@@ -319,20 +319,19 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <param name="stateinfo"></param>
     public async void GetFavoriteShows(object stateinfo)
     {
-        var shows = new ObservableCollection<Show>();
+        FavoriteShows.Clear();
+        var shows = new List<Show>();
         var temp = await App.PositionData.GetAllFavorites();
         if (temp is null || !InternetConnected())
         {
             return;
         }
-        temp.ForEach(async item =>
+        temp?.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
             shows?.Add(show[0]);
         });
-        FavoriteShows.Clear();
-        FavoriteShows = new ObservableCollection<Show>(shows);
-        OnPropertyChanged(nameof(FavoriteShows));
+        temp?.ForEach(shows.Add);
     }
 
     /// <summary>
@@ -347,8 +346,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         if (InternetConnected())
         {
             var temp = await FeedService.GetShows(url, getFirstOnly);
-            Shows = new ObservableCollection<Show>(temp);
-            OnPropertyChanged(nameof(Shows));
+            temp?.ForEach(Shows.Add);
         }
     }
 
@@ -381,8 +379,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         if (InternetConnected() && (temp is null || temp.Count == 0))
         {
             var items = await PodcastServices.GetFromUrl();
-            await PodcastServices.AddToDatabase(items);
-            items.ForEach(Podcasts.Add);
+            var res = items.OrderBy(x => x.Title).ToList();
+            await PodcastServices.AddToDatabase(res);
+            res?.ForEach(Podcasts.Add);
             return;
         }
         if (temp is not null)
