@@ -12,7 +12,7 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <StackLayout>
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Label
             Padding="20"
             FontSize="Large"
