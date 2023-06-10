@@ -122,7 +122,6 @@ public partial class EditViewModel : BaseViewModel
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            Podcasts = new ObservableCollection<Podcast>(Podcasts);
             Logger.LogInformation("Added {item} to database", item.Url);
             ThreadPool.QueueUserWorkItem(SetData);
             return true;
@@ -146,7 +145,6 @@ public partial class EditViewModel : BaseViewModel
         var item = Podcasts.First(x => x.Url == url);
         item.Download = false;
         await PodcastServices.UpdatePodcast(item);
-        await GetUpdatedPodcasts();
         Logger.LogInformation("Removed {item} from database", item.Url);
         Podcasts.Remove(item);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
