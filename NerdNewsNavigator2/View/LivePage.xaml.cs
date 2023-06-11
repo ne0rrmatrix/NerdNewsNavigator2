@@ -42,17 +42,18 @@ public partial class LivePage : ContentPage
         {
             return;
         }
-        _ = LoadVideo();
+        var item = "https://www.youtube.com/user/twit";
+        _ = LoadVideo(item);
     }
 
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
     /// <returns></returns>
-    private async Task LoadVideo()
+    private async Task LoadVideo(string url)
     {
         mediaElement.IsYoutube = true;
-        var m3u = await ParseVideoIdAsync("https://www.youtube.com/user/twit");
+        var m3u = await ParseVideoIdAsync(url);
         if (m3u != string.Empty)
         {
             mediaElement.Source = ParseM3UPLaylist(await GetM3U_Url(m3u));
