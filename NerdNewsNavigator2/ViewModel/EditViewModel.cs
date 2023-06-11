@@ -149,7 +149,6 @@ public partial class EditViewModel : BaseViewModel
         await PodcastServices.UpdatePodcast(item);
         Podcasts[Podcasts.IndexOf(item)] = item;
         Logger.LogInformation("Removed {item} from database", item.Url);
-        //ThreadPool.QueueUserWorkItem(GetFavoriteShows);
         return true;
     }
 }
