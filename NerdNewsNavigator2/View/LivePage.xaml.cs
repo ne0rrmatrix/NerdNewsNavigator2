@@ -60,6 +60,7 @@ public partial class LivePage : ContentPage
             mediaElement.Play();
         }
     }
+
     /// <summary>
     /// Method returns Video ID from Youtube <see cref="string"/>, by way of Username/live.
     /// </summary>
@@ -76,6 +77,7 @@ public partial class LivePage : ContentPage
         }
         return result.Substring(result.IndexOf("watch?v=") + 8, 11);
     }
+
     /// <summary>
     /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
     /// </summary>
@@ -105,6 +107,7 @@ public partial class LivePage : ContentPage
             Items.Add(temp);
         });
     }
+
     /// <summary>
     /// Method returns the Live stream M3U Url from Youtube ID.
     /// </summary>
