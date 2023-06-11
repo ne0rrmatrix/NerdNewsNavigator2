@@ -331,7 +331,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             var show = await FeedService.GetShows(item.Url, true);
             shows?.Add(show[0]);
         });
-        temp?.ForEach(shows.Add);
+        temp?.ForEach(FavoriteShows.Add);
     }
 
     /// <summary>
