@@ -137,17 +137,18 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task<bool> RemoveFavorite(string url)
     {
-        if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
+        if (!FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;
         }
         await FavoriteService.RemoveFavoriteFromDatabase(url);
         var item = Podcasts.First(x => x.Url == url);
         item.Download = false;
+        var fav = FavoriteShows.First(x => x.Url == url);
+        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
         await PodcastServices.UpdatePodcast(item);
+        Podcasts[Podcasts.IndexOf(item)] = item;
         Logger.LogInformation("Removed {item} from database", item.Url);
-        Podcasts.Remove(item);
-        ThreadPool.QueueUserWorkItem(GetFavoriteShows);
         return true;
     }
 }
