@@ -85,10 +85,7 @@ public partial class LivePage : ContentPage
     {
         var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
         var list = masterPlaylist.Streams.ToList();
-        foreach (var item in list)
-        {
-            Add(item);
-        }
+        Add(list);
         return list[list.FindIndex(x => x.Resolution.Height == 720)].Uri;
     }
 
@@ -96,14 +93,17 @@ public partial class LivePage : ContentPage
     /// Method creates <see cref="List{T}"/> of URL's from <see cref="M3U8Parser.ExtXType.StreamInf"/>
     /// </summary>
     /// <param name="item"></param>
-    private void Add(M3U8Parser.ExtXType.StreamInf item)
+    private void Add(List<M3U8Parser.ExtXType.StreamInf> item)
     {
-        var temp = new YoutubeResolutions
+        item?.ForEach(x =>
         {
-            Title = $"{item.Resolution.Height}P",
-            Url = item.Uri.ToString()
-        };
-        Items.Add(temp);
+            var temp = new YoutubeResolutions
+            {
+                Title = $"{x.Resolution.Height}P",
+                Url = x.Uri.ToString()
+            };
+            Items.Add(temp);
+        });
     }
     /// <summary>
     /// Method returns the Live stream M3U Url from Youtube ID.
