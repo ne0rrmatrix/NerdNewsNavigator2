@@ -9,6 +9,8 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class LivePage : ContentPage
 {
+    private YoutubeClient Youtube { get; set; } = new();
+    private HttpClient Client { get; set; } = new();
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
@@ -40,21 +42,40 @@ public partial class LivePage : ContentPage
         {
             return;
         }
-        _ = LoadVideo();
+        var item = "https://www.youtube.com/user/twit";
+        _ = LoadVideo(item);
     }
 
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
     /// <returns></returns>
-    private async Task LoadVideo()
+    private async Task LoadVideo(string url)
     {
         mediaElement.IsYoutube = true;
-        var m3u = await GetM3U_Url("E4Wz6PH7WNM");
-        mediaElement.Source = ParseM3UPLaylist(m3u);
-        mediaElement.Play();
+        var m3u = await ParseVideoIdAsync(url);
+        if (m3u != string.Empty)
+        {
+            mediaElement.Source = ParseM3UPLaylist(await GetM3U_Url(m3u));
+            mediaElement.Play();
+        }
     }
-
+    /// <summary>
+    /// Method returns Video ID from Youtube <see cref="string"/>, by way of Username/live.
+    /// </summary>
+    ///  <param name="url"></param>
+    /// <returns></returns>
+    private async Task<string> ParseVideoIdAsync(string url)
+    {
+        var userId = (await Youtube.Channels.GetByUserAsync(url)).Id;
+        var page = await Client.GetAsync("https://www.youtube.com/channel/" + $"{userId}/live");
+        var result = await page.Content.ReadAsStringAsync();
+        if (result is null)
+        {
+            return string.Empty;
+        }
+        return result.Substring(result.IndexOf("watch?v=") + 8, 11);
+    }
     /// <summary>
     /// Method returns 720P URL for <see cref="mediaElement"/> to Play.
     /// </summary>
@@ -64,33 +85,36 @@ public partial class LivePage : ContentPage
     {
         var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
         var list = masterPlaylist.Streams.ToList();
-        foreach (var item in list)
-        {
-            Add(item);
-        }
+        Add(list);
         return list[list.FindIndex(x => x.Resolution.Height == 720)].Uri;
     }
-    private void Add(M3U8Parser.ExtXType.StreamInf item)
+
+    /// <summary>
+    /// Method creates <see cref="List{T}"/> of URL's from <see cref="M3U8Parser.ExtXType.StreamInf"/>
+    /// </summary>
+    /// <param name="item"></param>
+    private void Add(List<M3U8Parser.ExtXType.StreamInf> item)
     {
-        var temp = new YoutubeResolutions
+        item?.ForEach(x =>
         {
-            Title = $"{item.Resolution.Height}P",
-            Url = item.Uri.ToString()
-        };
-        Items.Add(temp);
+            var temp = new YoutubeResolutions
+            {
+                Title = $"{x.Resolution.Height}P",
+                Url = x.Uri.ToString()
+            };
+            Items.Add(temp);
+        });
     }
     /// <summary>
-    /// Method returns the Live stream M3U Url from youtube ID.
+    /// Method returns the Live stream M3U Url from Youtube ID.
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    private static async Task<string> GetM3U_Url(string url)
+    private async Task<string> GetM3U_Url(string url)
     {
         var content = string.Empty;
-        var client = new HttpClient();
-        var youtube = new YoutubeClient();
-        var result = await youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
-        var response = await client.GetAsync(result);
+        var result = await Youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
+        var response = await Client.GetAsync(result);
         if (response.IsSuccessStatusCode)
         {
             content = await response.Content.ReadAsStringAsync();
