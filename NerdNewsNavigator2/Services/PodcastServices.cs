@@ -100,15 +100,9 @@ public static class PodcastServices
     public static async Task AddDefaultPodcasts()
     {
         await RemoveDefaultPodcasts();
-        var items = GetFromUrl().Result;
-        if (items is null || items.Count == 0)
-        {
-            return;
-        }
-        items.ForEach(async podcast =>
-        {
-            await App.PositionData.AddPodcast(podcast);
-        });
+        var items = await GetFromUrl();
+        var res = items.OrderBy(x => x.Title).ToList();
+        await AddToDatabase(res);
     }
 
     /// <summary>
