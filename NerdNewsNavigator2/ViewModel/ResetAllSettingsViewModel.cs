@@ -55,7 +55,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            _logger.LogInformation(ex.Message);
+            _logger.LogInformation("{data}", ex.Message);
         }
 
         IsBusy = false;
