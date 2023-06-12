@@ -47,10 +47,9 @@ public static class DownloadService
 
     public static void DeleteFile(string url)
     {
-        DownloadService.CancelDownload = true;
-        var filename = DownloadService.GetFileName(url);
+        CancelDownload = true;
+        var filename = GetFileName(url);
         var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        Debug.WriteLine(tempFile);
         if (File.Exists(tempFile))
         {
             File.Delete(tempFile);
@@ -94,8 +93,10 @@ public static class DownloadService
             await client.StartDownload();
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"{ex.Message}, Deleting file");
+            DeleteFile(url);
             return false;
         }
     }

@@ -22,16 +22,9 @@ public class HttpClientDownloadWithProgress : IDisposable
     }
     public async Task StartDownload()
     {
-        try
-        {
-            _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
-            using var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead);
-            await DownloadFileFromHttpResponseMessage(response);
-        }
-        catch (TaskCanceledException)
-        {
-            Debug.WriteLine("Download Cancelled.");
-        }
+        _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
+        using var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead);
+        await DownloadFileFromHttpResponseMessage(response);
     }
 
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
