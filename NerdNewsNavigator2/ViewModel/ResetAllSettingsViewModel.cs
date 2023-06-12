@@ -53,7 +53,10 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
                 }
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogInformation(ex.Message);
+        }
 
         IsBusy = false;
         await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
