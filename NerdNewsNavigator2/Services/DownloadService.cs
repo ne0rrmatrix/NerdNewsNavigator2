@@ -11,6 +11,7 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class DownloadService
 {
+    public static bool CancelDownload { get; set; } = false;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static bool NotDownloading { get; set; } = !IsDownloading;
@@ -42,6 +43,18 @@ public static class DownloadService
         var result = new Uri(url).LocalPath;
         return System.IO.Path.GetFileName(result);
 
+    }
+
+    public static void DeleteFile(string url)
+    {
+        DownloadService.CancelDownload = true;
+        var filename = DownloadService.GetFileName(url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        Debug.WriteLine(tempFile);
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+        }
     }
 
     /// <summary>
@@ -78,7 +91,6 @@ public static class DownloadService
             {
                 Status = ($"Download Progress: {progressPercentage}%");
             };
-
             await client.StartDownload();
             return true;
         }
@@ -111,6 +123,12 @@ public static class DownloadService
             await AddDownloadDatabase(download);
             return true;
         }
+        if (CancelDownload)
+        {
+            Debug.WriteLine($"Download cancelled");
+            DeleteFile(download.Url);
+            return false;
+        }
         return false;
     }
 
@@ -119,7 +137,7 @@ public static class DownloadService
     /// </summary>
     public static async Task AutoDownload()
     {
-        Debug.WriteLine("Trying to start Auto Download");
+        CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
         var downloadedShows = await App.PositionData.GetAllDownloads();
 
@@ -133,18 +151,27 @@ public static class DownloadService
     {
         favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
         {
+            if (CancelDownload)
+            {
+                return;
+            }
             var show = await FeedService.GetShows(x.Url, true);
             while (Autodownloading)
             {
                 Thread.Sleep(5000);
+                if (CancelDownload)
+                {
+                    Autodownloading = false;
+                    break;
+                }
                 Debug.WriteLine("Waiting for download to finish");
             }
-            if (!downloadedShows.Exists(y => y.Url == x.Url))
+            if (!downloadedShows.Exists(y => y.Url == x.Url) && !CancelDownload)
             {
-                Debug.WriteLine("Downloading ", show[0].Url);
                 Autodownloading = true;
+                Debug.WriteLine("Downloading ", show[0].Url);
                 var result = await Downloading(show[0]);
-                if (result)
+                if (result && !CancelDownload)
                 {
                     x.IsDownloaded = true;
                     await App.PositionData.UpdateFavorite(x);

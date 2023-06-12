@@ -30,18 +30,9 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     /// </summary>
     private async Task ResetAll()
     {
+        DownloadService.CancelDownload = true;
         IsBusy = true;
         Preferences.Default.Remove("AutoDownload");
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var files = System.IO.Directory.GetFiles(path, "*.mp4");
-        if (files.Any() && files is not null)
-        {
-            foreach (var file in files)
-            {
-                System.IO.File.Delete(file);
-                _logger.LogInformation("Deleted file {file}", file);
-            }
-        }
         await App.PositionData.DeleteAll();
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
@@ -49,7 +40,21 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
-        await Task.Run(GetUpdatedPodcasts);
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var files = System.IO.Directory.GetFiles(path, "*.mp4");
+        try
+        {
+            if (files.Any() && files is not null)
+            {
+                foreach (var file in files)
+                {
+                    System.IO.File.Delete(file);
+                    _logger.LogInformation("Deleted file {file}", file);
+                }
+            }
+        }
+        catch { }
+
         IsBusy = false;
         await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
     }

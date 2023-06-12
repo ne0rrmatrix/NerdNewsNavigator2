@@ -29,10 +29,12 @@ internal class AutoStartService : Service
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
+            PodcastServices.IsConnected = true;
             return true;
         }
         else
         {
+            PodcastServices.IsConnected = false;
             return false;
         }
     }

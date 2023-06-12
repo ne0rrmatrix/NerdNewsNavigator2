@@ -10,7 +10,7 @@ namespace NerdNewsNavigator2.Services;
 public static class PodcastServices
 {
     #region Properties
-
+    public static bool IsConnected { get; set; } = true;
     /// <summary>
     /// Default URL <see cref="List{T}"/> <see cref="string"/> for Twit podcasts.
     /// </summary>

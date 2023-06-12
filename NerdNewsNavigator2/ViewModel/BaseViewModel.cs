@@ -80,7 +80,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             OnPropertyChanged(nameof(Title));
         }
     }
-
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
@@ -194,10 +193,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         if (_connectivity.NetworkAccess == NetworkAccess.Internet)
         {
+            PodcastServices.IsConnected = true;
             return true;
         }
         else
         {
+            PodcastServices.IsConnected = false;
             return false;
         }
     }
@@ -236,6 +237,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Thread.Sleep(5000);
             Logger.LogInformation("Waiting for download to finish");
         }
+        DownloadService.CancelDownload = false;
         await StartDownload(url, mostRecent);
     }
     public async Task StartDownload(string url, bool mostRecent)
@@ -286,6 +288,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadService.IsDownloading = true;
         IsDownloading = true;
+
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
@@ -302,6 +305,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         if (item != null)
         {
             await App.PositionData.DeleteDownload(item);
+        }
+        if (DownloadService.CancelDownload)
+        {
+            File.Delete(download.FileName);
+            return;
         }
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
@@ -329,7 +337,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp?.ForEach(async item =>
         {
             var show = await FeedService.GetShows(item.Url, true);
-            shows?.Add(show[0]);
+            shows?.Add(show?[0]);
         });
         temp?.ForEach(FavoriteShows.Add);
     }
