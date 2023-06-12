@@ -9,13 +9,16 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
+    /// <summary>
+    /// An <see cref="IMessenger"/> instance managed by this class.
+    /// </summary>
     private readonly IMessenger _messenger;
-
+#pragma warning disable IDE0052
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<EditViewModel> Logger { get; set; }
-
+#pragma warning restore IDE0052
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
@@ -63,7 +66,6 @@ public partial class EditViewModel : BaseViewModel
         }
         var podcast = Podcasts.First(x => x.Url == url);
         Podcasts.Remove(podcast);
-        Logger.LogInformation("Removed show {item} from database", podcast.Url);
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
@@ -76,9 +78,9 @@ public partial class EditViewModel : BaseViewModel
         }
         await FavoriteService.RemoveFavoriteFromDatabase(url);
         FavoriteShows.Remove(item);
-        Logger.LogInformation("Removed Favorite {item} from database", podcast.Url);
         await GetUpdatedPodcasts();
     }
+
     public void SetData(object stateinfo)
     {
         Preferences.Default.Set("AutoDownload", true);
@@ -122,7 +124,6 @@ public partial class EditViewModel : BaseViewModel
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            Logger.LogInformation("Added {item} to database", item.Url);
             ThreadPool.QueueUserWorkItem(SetData);
             return true;
         }
@@ -148,7 +149,6 @@ public partial class EditViewModel : BaseViewModel
         FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
         await PodcastServices.UpdatePodcast(item);
         Podcasts[Podcasts.IndexOf(item)] = item;
-        Logger.LogInformation("Removed {item} from database", item.Url);
         return true;
     }
 }
