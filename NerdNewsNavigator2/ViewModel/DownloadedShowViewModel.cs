@@ -48,7 +48,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     {
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
-        _logger.LogInformation("Url being passed is: {name}", item);
+        _logger.LogInformation("Url for file is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
 #if WINDOWS
@@ -80,11 +80,11 @@ public partial class DownloadedShowViewModel : BaseViewModel
             }
             else
             {
-                _logger.LogInformation("File {file} was not found in file system.", tempFile);
+                _logger.LogInformation("File {file} was not found in file system", tempFile);
             }
             await App.PositionData.DeleteDownload(item);
             DownloadedShows.Remove(item);
-            _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+            _logger.LogInformation("Removed {file} from Downloaded Shows: {show}", tempFile, url);
         }
     }
 }

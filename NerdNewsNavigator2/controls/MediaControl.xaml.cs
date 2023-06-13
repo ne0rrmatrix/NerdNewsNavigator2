@@ -62,6 +62,16 @@ public partial class MediaControl : ContentView
         control.IsEnabled = (bool)newValue;
         control.IsVisible = (bool)newValue;
     });
+    public static readonly BindableProperty ShouldMuteProperty = BindableProperty.Create(nameof(ShouldMute), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    {
+        var control = (MediaControl)bindableProperty;
+        control.mediaElement.ShouldMute = (bool)newValue;
+    });
+    public bool ShouldMute
+    {
+        get => (bool)GetValue(ShouldMuteProperty);
+        set => SetValue(ShouldMuteProperty, value);
+    }
     public bool IsYoutube
     {
         get => (bool)GetValue(IsYoutubeProperty);
@@ -258,7 +268,7 @@ public partial class MediaControl : ContentView
     {
         if (mediaElement.Aspect == Aspect.AspectFit)
         {
-            mediaElement.Aspect = Aspect.Fill;
+            mediaElement.Aspect = Aspect.AspectFill;
         }
         else
         {
