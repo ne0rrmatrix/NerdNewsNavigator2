@@ -13,12 +13,10 @@ public partial class EditViewModel : BaseViewModel
     /// An <see cref="IMessenger"/> instance managed by this class.
     /// </summary>
     private readonly IMessenger _messenger;
-#pragma warning disable IDE0052
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<EditViewModel> Logger { get; set; }
-#pragma warning restore IDE0052
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
