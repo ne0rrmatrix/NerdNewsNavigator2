@@ -64,20 +64,22 @@ public partial class EditViewModel : BaseViewModel
         {
             return;
         }
-        var podcast = Podcasts.First(x => x.Url == url);
-        Podcasts.Remove(podcast);
+        var podcast = Podcasts?.First(x => x.Url == url);
+        Podcasts?.Remove(podcast);
         var favoriteShow = await App.PositionData.GetAllFavorites();
+        /*
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
             return;
         }
-        var item = favoriteShow.First(x => x.Url == url);
+        */
+        var item = favoriteShow?.First(x => x.Url == url);
         if (item is null)
         {
             return;
         }
         await FavoriteService.RemoveFavoriteFromDatabase(url);
-        FavoriteShows.Remove(item);
+        favoriteShow?.Remove(item);
         await GetUpdatedPodcasts();
     }
 
@@ -105,21 +107,24 @@ public partial class EditViewModel : BaseViewModel
             Logger.LogInformation("Failed to add background service");
         }
 #endif
+        /*
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;
         }
-        else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
+        */
+        if (Podcasts.AsEnumerable().Any(x => x.Url == url))
         {
             var item = Podcasts.First(x => x.Url == url);
-            var show = new Show
+            Favorites favorite = new()
             {
-                Url = item.Url,
                 Title = item.Title,
+                Url = item.Url,
                 Description = item.Description,
                 Image = item.Image,
+                PubDate = item.PubDate,
             };
-            await FavoriteService.AddFavoriteToDatabase(show);
+            await FavoriteService.AddFavoriteToDatabase(favorite);
             item.Download = true;
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
@@ -143,10 +148,10 @@ public partial class EditViewModel : BaseViewModel
             return false;
         }
         await FavoriteService.RemoveFavoriteFromDatabase(url);
-        var item = Podcasts.First(x => x.Url == url);
+        var item = Podcasts?.First(x => x.Url == url);
         item.Download = false;
-        var fav = FavoriteShows.First(x => x.Url == url);
-        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
+        var fav = FavoriteShows?.First(x => x.Url == url);
+        FavoriteShows?.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
         await PodcastServices.UpdatePodcast(item);
         Podcasts[Podcasts.IndexOf(item)] = item;
         return true;

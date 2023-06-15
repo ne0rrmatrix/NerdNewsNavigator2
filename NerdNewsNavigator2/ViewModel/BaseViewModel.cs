@@ -16,7 +16,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Show> FavoriteShows { get; set; } = new();
+    public ObservableCollection<Favorites> FavoriteShows { get; set; } = new();
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
@@ -330,20 +330,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         FavoriteShows.Clear();
         var shows = new List<Show>();
         var temp = await App.PositionData.GetAllFavorites();
-        if (temp is null || !InternetConnected())
+        if (!InternetConnected() && temp is null)
         {
             return;
         }
-        temp?.ForEach(async item =>
-        {
-            var show = await FeedService.GetShows(item.Url, true);
-            shows?.Add(show?[0]);
-        });
         temp?.ForEach(FavoriteShows.Add);
     }
 
     /// <summary>
-    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for <see cref="Show.Url"/> and returns a <see cref="Show"/>
+    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
     /// </summary>
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
@@ -351,11 +346,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        if (InternetConnected())
+        if (!InternetConnected())
         {
-            var temp = await FeedService.GetShows(url, getFirstOnly);
-            temp?.ForEach(Shows.Add);
+            return;
         }
+        var temp = await FeedService.GetShows(url, getFirstOnly);
+        temp?.ForEach(Shows.Add);
     }
 
     /// <summary>
@@ -366,14 +362,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         MostRecentShows.Clear();
         await GetUpdatedPodcasts();
-        if (InternetConnected() && Podcasts is not null && Podcasts.Count > 0)
+        if (!InternetConnected())
         {
-            Podcasts.ToList().ForEach(async show =>
-            {
-                var item = await FeedService.GetShows(show.Url, true);
-                MostRecentShows.Add(item[0]);
-            });
+            return;
         }
+        Podcasts?.ToList().ForEach(async show =>
+        {
+            var item = await FeedService.GetShows(show.Url, true);
+            MostRecentShows.Add(item[0]);
+        });
     }
 
     /// <summary>

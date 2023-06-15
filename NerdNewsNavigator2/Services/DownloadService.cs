@@ -11,6 +11,7 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class DownloadService
 {
+    private static int s_count = 0;
     public static bool CancelDownload { get; set; } = false;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
@@ -20,7 +21,7 @@ public static class DownloadService
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.
     /// </summary>
-    /// <param name="download">Is the Url of <see cref="Download.Url"/> to Add to datbase.</param> 
+    /// <param name="download">Is the Url of <see cref="Download"/> to Add to datbase.</param> 
     /// <returns>nothing</returns>
     public static async Task<bool> AddDownloadDatabase(Download download)
     {
@@ -78,7 +79,6 @@ public static class DownloadService
                 }
                 else
                 {
-
                     Debug.WriteLine("File exists stopping download");
                     return false;
                 }
@@ -146,17 +146,27 @@ public static class DownloadService
         {
             return;
         }
-        ProccessShow(favoriteShows, downloadedShows);
-    }
-    public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
-    {
-        favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
+        var shows = new List<Show>();
+        favoriteShows.ForEach(async x =>
         {
+            var show = await FeedService.GetShows(x.Url, true);
+            if (!show[0].IsDownloaded)
+            {
+                shows.Add(show[0]);
+            }
+        });
+        ProccessShow(shows, downloadedShows);
+    }
+    public static void ProccessShow(List<Show> favs, List<Download> downloadedShows)
+    {
+        favs.ForEach(async favoriteShow =>
+        {
+            s_count++;
             if (CancelDownload)
             {
                 return;
             }
-            var show = await FeedService.GetShows(x.Url, true);
+            Debug.WriteLine(favoriteShow.Url);
             while (Autodownloading)
             {
                 Thread.Sleep(5000);
@@ -167,40 +177,39 @@ public static class DownloadService
                 }
                 Debug.WriteLine("Waiting for download to finish");
             }
-            if (!downloadedShows.Exists(y => y.Url == x.Url) && !CancelDownload)
+            Autodownloading = true;
+            var result = await Downloading(favoriteShow);
+            if (result && !CancelDownload)
             {
-                Autodownloading = true;
-                Debug.WriteLine("Downloading ", show[0].Url);
-                var result = await Downloading(show[0]);
-                if (result && !CancelDownload)
-                {
-                    x.IsDownloaded = true;
-                    await App.PositionData.UpdateFavorite(x);
-                    Autodownloading = false;
+                var fav = await App.PositionData.GetAllFavorites();
+                var test = fav.First(result => result.Url == result.Url);
+                test.IsDownloaded = true;
+                await App.PositionData.UpdateFavorite(test);
+                Autodownloading = false;
 #if ANDROID
-                    var downloaded = new NotificationRequest
-                    {
-                        NotificationId = x.Id,
-                        Title = show[0].Title,
-                        Description = "New Episode Downloaded",
-                        Android = new AndroidOptions()
-                        {
-                            IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
-                        },
-                    };
-                    if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
-                    {
-                        await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
-                        await LocalNotificationCenter.Current.RequestNotificationPermission();
-                    }
 
-                    await LocalNotificationCenter.Current.Show(downloaded);
-#endif
-                }
-                else
+                var downloaded = new NotificationRequest
                 {
-                    Autodownloading = false;
+                    NotificationId = s_count,
+                    Title = favoriteShow.Title,
+                    Description = "New Episode Downloaded",
+                    Android = new AndroidOptions()
+                    {
+                        IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
+                    },
+                };
+                if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
+                {
+                    await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
+                    await LocalNotificationCenter.Current.RequestNotificationPermission();
                 }
+
+                await LocalNotificationCenter.Current.Show(downloaded);
+#endif
+            }
+            else
+            {
+                Autodownloading = false;
             }
         });
     }

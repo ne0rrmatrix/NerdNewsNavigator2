@@ -58,7 +58,7 @@ public class PositionDataBase
             _logger.LogInformation("Podcast Init {DataBasePath}", databasePath);
             await _connection.CreateTableAsync<Download>();
             _logger.LogInformation("Download Init {DatabasePath}", databasePath);
-            await _connection.CreateTableAsync<Show>();
+            await _connection.CreateTableAsync<Favorites>();
             _logger.LogInformation("Favorites Init {DatabasePath}", databasePath);
         }
         catch (Exception ex)
@@ -106,14 +106,14 @@ public class PositionDataBase
         }
     }
     /// <summary>
-    /// Method Retrieves a <see cref="List{T}"/> of <see cref="Show"/> from database.
+    /// Method Retrieves a <see cref="List{T}"/> of <see cref="Favorites"/> from database.
     /// </summary>
-    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public async Task<List<Show>> GetAllFavorites()
+    /// <returns><see cref="List{T}"/> <see cref="Favorites"/></returns>
+    public async Task<List<Favorites>> GetAllFavorites()
     {
         try
         {
-            var temp = await _connection.Table<Show>().ToListAsync();
+            var temp = await _connection.Table<Favorites>().ToListAsync();
             _logger.LogInformation("Got all Favorites from Database.");
             return temp;
         }
@@ -182,7 +182,7 @@ public class PositionDataBase
     }
 
     /// <summary>
-    /// Method deletes all <see cref="Show"/> from database.
+    /// Method deletes all <see cref="Favorites"/> from database.
     /// </summary>
     /// <returns><see cref="bool"/></returns>
     public async Task<bool> DeleteAllFavorites()
@@ -190,7 +190,7 @@ public class PositionDataBase
         try
         {
 
-            await _connection.DeleteAllAsync<Show>();
+            await _connection.DeleteAllAsync<Favorites>();
             _logger.LogInformation("Succesfully Deleted all Favorites.");
             return true;
         }
@@ -301,11 +301,11 @@ public class PositionDataBase
     }
 
     /// <summary>
-    /// Method add a <see cref="Show"/> to Database.
+    /// Method add a <see cref="Favorites"/> to Database.
     /// </summary>
-    /// <param name="favorites">an instance of <see cref="Show"/></param>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> AddFavorites(Show favorites)
+    public async Task<bool> AddFavorites(Favorites favorites)
     {
         try
         {
@@ -360,11 +360,11 @@ public class PositionDataBase
     }
 
     /// <summary>
-    /// Method Updates a <see cref="Show"/> from Database
+    /// Method Updates a <see cref="Favorites"/> from Database
     /// </summary>
-    /// <param name="favorites">an instance of <see cref="Show"/></param>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> UpdateFavorite(Show favorites)
+    public async Task<bool> UpdateFavorite(Favorites favorites)
     {
         try
         {
@@ -439,11 +439,11 @@ public class PositionDataBase
     }
 
     /// <summary>
-    /// Method Deletes a <see cref="Show"/> from Database
+    /// Method Deletes a <see cref="Favorites"/> from Database
     /// </summary>
-    /// <param name="favorites">an instance of <see cref="Show"/></param>
+    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> DeleteFavorite(Show favorites)
+    public async Task<bool> DeleteFavorite(Favorites favorites)
     {
         try
         {

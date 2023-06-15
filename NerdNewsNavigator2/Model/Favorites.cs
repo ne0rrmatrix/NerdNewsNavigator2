@@ -5,9 +5,9 @@
 namespace NerdNewsNavigator2.Model;
 
 /// <summary>
-/// A class for storing <see cref="Podcast"/> in a Database.
+/// A class for storing <see cref="Favorites"/> in a Database.
 /// </summary>
-[Table("Podcasts")]
-public class Podcast : Shared
+[Table("Favorites")]
+public class Favorites : Shared
 {
 }

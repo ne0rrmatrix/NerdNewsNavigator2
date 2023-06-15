@@ -7,17 +7,8 @@ namespace NerdNewsNavigator2.Model;
 /// a Class for Storing <see cref="Position"/> in Database
 /// </summary>
 [Table("Positions")]
-public class Position
+public class Position : Shared
 {
-    /// <summary>
-    /// The <c>Id</c>  is a <see cref="int"/> and <see cref="PrimaryKeyAttribute"/> of <see cref="Podcast"/> Class.
-    /// </summary>
-    [PrimaryKey, AutoIncrement, Column("Id")]
-    public int Id { get; set; }
-    /// <summary>
-    /// The <c>Title</c> is a <see cref="string"/> of <see cref="Position"/> Class.
-    /// </summary>
-    public string Title { get; set; }
     /// <summary>
     /// The <c>SavedPosition</c> is a <see cref="TimeSpan"/> of <see cref="Position"/> Class.
     /// </summary>

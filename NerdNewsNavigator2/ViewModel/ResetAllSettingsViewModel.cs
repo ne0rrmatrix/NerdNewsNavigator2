@@ -44,13 +44,10 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         var files = System.IO.Directory.GetFiles(path, "*.mp4");
         try
         {
-            if (files.Any() && files is not null)
+            foreach (var file in files)
             {
-                foreach (var file in files)
-                {
-                    System.IO.File.Delete(file);
-                    _logger.LogInformation("Deleted file {file}", file);
-                }
+                System.IO.File.Delete(file);
+                _logger.LogInformation("Deleted file {file}", file);
             }
         }
         catch (Exception ex)
