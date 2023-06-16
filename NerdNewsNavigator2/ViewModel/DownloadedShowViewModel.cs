@@ -48,7 +48,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     {
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
-        _logger.LogInformation("Url being passed is: {name}", item);
+        _logger.LogInformation("Url for file is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
 #if WINDOWS
@@ -64,7 +64,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     /// <param name="url"></param>
     /// <returns></returns>
 
-    [RelayCommand]
+ [RelayCommand]
     public async Task Delete(string url)
     {
         var item = DownloadedShows.First(x => x.Url == url);

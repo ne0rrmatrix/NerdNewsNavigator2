@@ -155,11 +155,11 @@
 
                         <ImageButton.Triggers>
                             <DataTrigger
-                                Binding="{Binding ShouldMute, Source={x:Reference mediaElement}}"
+                                Binding="{Binding ShouldMute, Source={x:Reference mediaControl}}"
                                 TargetType="ImageButton"
                                 Value="True" />
                             <DataTrigger
-                                Binding="{Binding ShouldMute, Source={x:Reference mediaElement}}"
+                                Binding="{Binding ShouldMute, Source={x:Reference mediaControl}}"
                                 TargetType="ImageButton"
                                 Value="False" />
                         </ImageButton.Triggers>
