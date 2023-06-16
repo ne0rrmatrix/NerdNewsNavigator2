@@ -84,8 +84,11 @@ public partial class DownloadedShowViewModel : BaseViewModel
         {
             _logger.LogInformation("File {file} was not found in file system.", tempFile);
         }
-        await App.PositionData.DeleteDownload(item);
-        DownloadedShows?.Remove(item);
+        item.IsDownloaded = false;
+        item.Deleted = true;
+        item.IsNotDownloaded = true;
+        await App.PositionData.UpdateDownload(item);
+        DownloadedShows.Remove(item);
         _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
 }

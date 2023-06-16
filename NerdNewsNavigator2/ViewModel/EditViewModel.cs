@@ -13,12 +13,10 @@ public partial class EditViewModel : BaseViewModel
     /// An <see cref="IMessenger"/> instance managed by this class.
     /// </summary>
     private readonly IMessenger _messenger;
-#pragma warning disable IDE0052
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<EditViewModel> Logger { get; set; }
-#pragma warning restore IDE0052
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
@@ -67,12 +65,10 @@ public partial class EditViewModel : BaseViewModel
         var podcast = Podcasts?.First(x => x.Url == url);
         Podcasts?.Remove(podcast);
         var favoriteShow = await App.PositionData.GetAllFavorites();
-        /*
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
             return;
         }
-        */
         var item = favoriteShow?.First(x => x.Url == url);
         if (item is null)
         {
@@ -83,11 +79,6 @@ public partial class EditViewModel : BaseViewModel
         await GetUpdatedPodcasts();
     }
 
-    public void SetData(object stateinfo)
-    {
-        Preferences.Default.Set("AutoDownload", true);
-        _messenger?.Send(new MessageData(true));
-    }
     /// <summary>
     /// A Method that adds a favourite to the database.
     /// </summary>
@@ -107,13 +98,11 @@ public partial class EditViewModel : BaseViewModel
             Logger.LogInformation("Failed to add background service");
         }
 #endif
-        /*
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;
         }
-        */
-        if (Podcasts.AsEnumerable().Any(x => x.Url == url))
+        else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
         {
             var item = Podcasts.First(x => x.Url == url);
             Favorites favorite = new()
@@ -126,10 +115,10 @@ public partial class EditViewModel : BaseViewModel
             };
             await FavoriteService.AddFavoriteToDatabase(favorite);
             item.Download = true;
+            item.IsNotDownloaded = false;
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
             ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            ThreadPool.QueueUserWorkItem(SetData);
             return true;
         }
         return false;
@@ -148,10 +137,11 @@ public partial class EditViewModel : BaseViewModel
             return false;
         }
         await FavoriteService.RemoveFavoriteFromDatabase(url);
-        var item = Podcasts?.First(x => x.Url == url);
+        var item = Podcasts.First(x => x.Url == url);
         item.Download = false;
-        var fav = FavoriteShows?.First(x => x.Url == url);
-        FavoriteShows?.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
+        item.IsNotDownloaded = true;
+        var fav = FavoriteShows.First(x => x.Url == url);
+        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
         await PodcastServices.UpdatePodcast(item);
         Podcasts[Podcasts.IndexOf(item)] = item;
         return true;

@@ -77,4 +77,22 @@ public partial class ShowViewModel : BaseViewModel
         await Downloading(url, false);
     }
 
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task Play(string url)
+    {
+        url = DownloadService.GetFileName(url);
+#if ANDROID || IOS || MACCATALYST
+        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
+#endif
+#if WINDOWS
+        var item = "ms-appdata:///LocalCache/Local/" + url;
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
+#endif
+    }
 }

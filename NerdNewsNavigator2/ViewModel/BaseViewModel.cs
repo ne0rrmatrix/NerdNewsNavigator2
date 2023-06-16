@@ -151,6 +151,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             Logger.LogInformation("NavBar closed");
             ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+            //ThreadPool.QueueUserWorkItem(async (state) => { await GetMostRecent(); });
         };
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
@@ -273,6 +274,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Title = item.Title,
             Url = url,
             Image = item.Image,
+            IsDownloaded = true,
+            IsNotDownloaded = false,
+            Deleted = false,
             PubDate = item.PubDate,
             Description = item.Description,
             FileName = DownloadService.GetFileName(url)
@@ -311,10 +315,26 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             File.Delete(download.FileName);
             return;
         }
+        if (Shows.ToList().Exists(x => x.Title == download.Title))
+        {
+            Debug.WriteLine("Updated Shows");
+            var show = Shows.First(x => x.Url == download.Url);
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            Shows[Shows.IndexOf(show)] = show;
+        }
+        if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
+        {
+            Debug.WriteLine("Updated MostRecent Shows");
+            var show = MostRecentShows.First(x => x.Url == download.Url);
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            MostRecentShows[MostRecentShows.IndexOf(show)] = show;
+        }
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
         DownloadService.IsDownloading = false;
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        DownloadedShows.Add(download);
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
     #endregion
@@ -328,7 +348,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async void GetFavoriteShows(object stateinfo)
     {
         FavoriteShows.Clear();
-        var shows = new List<Show>();
         var temp = await App.PositionData.GetAllFavorites();
         if (!InternetConnected() && temp is null)
         {
@@ -351,7 +370,21 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             return;
         }
         var temp = await FeedService.GetShows(url, getFirstOnly);
-        temp?.ForEach(Shows.Add);
+        temp.ForEach(x =>
+        {
+            var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
+            if (downloaded)
+            {
+                x.IsDownloaded = true;
+                x.IsNotDownloaded = false;
+            }
+            else
+            {
+                x.IsDownloaded = false;
+                x.IsNotDownloaded = true;
+            }
+            Shows.Add(x);
+        });
     }
 
     /// <summary>
@@ -369,6 +402,17 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         Podcasts?.ToList().ForEach(async show =>
         {
             var item = await FeedService.GetShows(show.Url, true);
+            var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
+            if (downloaded)
+            {
+                item[0].IsDownloaded = true;
+                item[0].IsNotDownloaded = false;
+            }
+            else
+            {
+                item[0].IsNotDownloaded = true;
+                item[0].IsDownloaded = false;
+            }
             MostRecentShows.Add(item[0]);
         });
     }
@@ -403,7 +447,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.ForEach(DownloadedShows.Add);
+        temp?.ForEach((item) =>
+        {
+            if (!item.Deleted)
+            {
+                DownloadedShows?.Add(item);
+            }
+        });
     }
 
     #endregion

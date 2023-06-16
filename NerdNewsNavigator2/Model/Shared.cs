@@ -94,9 +94,6 @@ public class Shared
     /// <summary>
     /// the <c>IsNotDownloaded</c> is a <see cref="bool"/> of <see cref="Podcast"/> Class.
     /// </summary>
-    public bool IsNotDownloaded
-    {
-        get => !Download;
-    }
+    public bool IsNotDownloaded { get; set; }
 }
 

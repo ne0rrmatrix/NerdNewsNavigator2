@@ -18,4 +18,5 @@ public class Download : Shared
     /// the <c>FileName</c> is a <see cref="string"/> of <see cref="Download"/> Class.
     /// </summary>
     public string FileName { get; set; }
+    public bool Deleted { get; set; }
 }

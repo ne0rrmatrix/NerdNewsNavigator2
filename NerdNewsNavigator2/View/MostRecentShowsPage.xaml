@@ -49,6 +49,25 @@
                             Margin="10"
                             Aspect="AspectFit"
                             HeightRequest="320"
+                            IsVisible="{Binding IsDownloaded}"
+                            WidthRequest="320">
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="true"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        
+                        <Image
+                            Grid.Row="1"
+                            Margin="10"
+                        IsVisible="{Binding IsNotDownloaded}"
+                            Aspect="AspectFit"
+                            HeightRequest="320"
                             WidthRequest="320">
                             <Image.Source>
                                 <UriImageSource
@@ -60,7 +79,7 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Image.GestureRecognizers>
                         </Image>
-
+                        
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
                             <Label
                                 FontAttributes="Bold"
@@ -80,7 +99,7 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotDownloading}"
+                                IsVisible="{Binding IsNotDownloaded}"
                                 Text="Download"
                                 TextColor="Black">
                                 <Button.GestureRecognizers>
