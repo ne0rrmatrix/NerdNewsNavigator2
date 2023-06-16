@@ -151,7 +151,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             Logger.LogInformation("NavBar closed");
             ThreadPool.QueueUserWorkItem(GetDownloadedShows);
-            //ThreadPool.QueueUserWorkItem(async (state) => { await GetMostRecent(); });
         };
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);

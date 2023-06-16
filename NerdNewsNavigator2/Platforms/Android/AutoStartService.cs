@@ -93,7 +93,6 @@ internal class AutoStartService : Service
         {
             while (Running)
             {
-                Thread.Sleep(5000);
                 await Services.DownloadService.AutoDownload();
                 Thread.Sleep(1000 * 60 * 60);
             }

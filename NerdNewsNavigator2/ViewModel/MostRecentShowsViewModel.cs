@@ -69,13 +69,12 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Play(string url)
     {
-        url = DownloadService.GetFileName(url);
 #if ANDROID || IOS || MACCATALYST
-        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
+        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
 #if WINDOWS
-        var item = "ms-appdata:///LocalCache/Local/" + url;
+        var item = "ms-appdata:///LocalCache/Local/" + DownloadService.GetFileName(url);
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }

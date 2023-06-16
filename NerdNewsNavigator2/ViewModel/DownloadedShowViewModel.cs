@@ -64,7 +64,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     /// <param name="url"></param>
     /// <returns></returns>
 
- [RelayCommand]
+    [RelayCommand]
     public async Task Delete(string url)
     {
         var item = DownloadedShows.First(x => x.Url == url);

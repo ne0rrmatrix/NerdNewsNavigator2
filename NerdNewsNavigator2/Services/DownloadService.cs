@@ -151,7 +151,6 @@ public static class DownloadService
     {
         favoriteShows.ForEach(async x =>
         {
-            Count++;
             if (CancelDownload)
             {
                 Autodownloading = false;
@@ -178,6 +177,7 @@ public static class DownloadService
                 {
                     Debug.WriteLine("Download completed");
                     Autodownloading = false;
+                    Count++;
 #if ANDROID
                     var downloaded = new NotificationRequest
                     {

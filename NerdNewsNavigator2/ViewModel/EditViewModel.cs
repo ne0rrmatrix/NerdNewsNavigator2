@@ -10,17 +10,13 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class EditViewModel : BaseViewModel
 {
     /// <summary>
-    /// An <see cref="IMessenger"/> instance managed by this class.
-    /// </summary>
-    private readonly IMessenger _messenger;
-    /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     ILogger<EditViewModel> Logger { get; set; }
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
+    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
@@ -31,7 +27,6 @@ public partial class EditViewModel : BaseViewModel
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
-        _messenger = messenger;
     }
 
     public static async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
@@ -91,11 +86,11 @@ public partial class EditViewModel : BaseViewModel
         var status = await CheckAndRequestForeGroundPermission();
         if (PermissionStatus.Granted == status)
         {
-            Logger.LogInformation("Background service working!");
+            Logger.LogInformation("Notification Permission Granted");
         }
         else if (PermissionStatus.Denied == status)
         {
-            Logger.LogInformation("Failed to add background service");
+            Logger.LogInformation("Notification Permission Denied");
         }
 #endif
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
