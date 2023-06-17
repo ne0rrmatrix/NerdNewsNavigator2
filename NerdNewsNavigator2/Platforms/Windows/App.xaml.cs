@@ -17,6 +17,7 @@ public partial class App : MauiWinUIApplication
     private IConnectivity _connectivity;
     private readonly System.Timers.Timer _aTimer = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().

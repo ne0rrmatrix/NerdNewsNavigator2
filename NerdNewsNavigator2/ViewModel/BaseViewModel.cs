@@ -286,6 +286,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             await DownloadSuccess(download);
         }
+        else
+        {
+            FailedDownload(download);
+        }
     }
     public void UpdatingDownload()
     {
@@ -314,9 +318,18 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             File.Delete(download.FileName);
             return;
         }
+
+        await DownloadService.AddDownloadDatabase(download);
+        IsDownloading = false;
+        DownloadService.IsDownloading = false;
+        DownloadedShows.Add(download);
+        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
+    }
+    public void FailedDownload(Download download)
+    {
         if (Shows.ToList().Exists(x => x.Title == download.Title))
         {
-            Debug.WriteLine("Updated Shows");
+            Logger.LogInformation("Updated Shows");
             var show = Shows.First(x => x.Url == download.Url);
             show.IsDownloaded = true;
             show.IsNotDownloaded = false;
@@ -324,17 +337,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         }
         if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
         {
-            Debug.WriteLine("Updated MostRecent Shows");
+            Logger.LogInformation("Updated MostRecent Shows");
             var show = MostRecentShows.First(x => x.Url == download.Url);
             show.IsDownloaded = true;
             show.IsNotDownloaded = false;
             MostRecentShows[MostRecentShows.IndexOf(show)] = show;
         }
-        await DownloadService.AddDownloadDatabase(download);
-        IsDownloading = false;
-        DownloadService.IsDownloading = false;
-        DownloadedShows.Add(download);
-        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
     #endregion
 
@@ -393,12 +401,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetMostRecent()
     {
         MostRecentShows.Clear();
-        await GetUpdatedPodcasts();
+        var temp = await App.PositionData.GetAllPodcasts();
         if (!InternetConnected())
         {
             return;
         }
-        Podcasts?.ToList().ForEach(async show =>
+        temp.ForEach(async show =>
         {
             var item = await FeedService.GetShows(show.Url, true);
             var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);

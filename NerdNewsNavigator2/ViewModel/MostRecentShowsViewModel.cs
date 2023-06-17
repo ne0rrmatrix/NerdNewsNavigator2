@@ -50,6 +50,13 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
+        var item = MostRecentShows.First(x => x.Url == url);
+        if (item != null)
+        {
+            item.IsDownloaded = true;
+            item.IsNotDownloaded = false;
+            MostRecentShows[MostRecentShows.IndexOf(item)] = item;
+        }
         await Downloading(url, true);
     }
 

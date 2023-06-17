@@ -30,7 +30,10 @@ public partial class EditViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
     }
-
+    /// <summary>
+    /// Method checks for required Permission for Android Notifications and requests them if needed
+    /// </summary>
+    /// <returns></returns>
     public static async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
     {
         var status = await Permissions.CheckStatusAsync<AndroidPermissions>();
