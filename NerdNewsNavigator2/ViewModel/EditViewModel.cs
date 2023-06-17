@@ -57,26 +57,26 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task DeletePodcast(string url)
     {
-        var result = await PodcastServices.Delete(url);
-        if (!result)
+        var exists = Podcasts.ToList().Exists(x => x.Url == url);
+        if (exists)
         {
-            return;
+            var podcast = Podcasts.First(x => x.Url == url);
+            Podcasts?.Remove(podcast);
         }
-        var podcast = Podcasts?.First(x => x.Url == url);
-        Podcasts?.Remove(podcast);
+
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
             return;
         }
-        var item = favoriteShow?.First(x => x.Url == url);
-        if (item is null)
+
+        var item = favoriteShow.ToList().Exists(x => x.Url == url);
+        if (item)
         {
-            return;
+            await FavoriteService.RemoveFavoriteFromDatabase(url);
+            var fav = FavoriteShows.First(x => x.Url == url);
+            favoriteShow?.Remove(fav);
         }
-        await FavoriteService.RemoveFavoriteFromDatabase(url);
-        favoriteShow?.Remove(item);
-        await GetUpdatedPodcasts();
     }
 
     /// <summary>
@@ -114,11 +114,13 @@ public partial class EditViewModel : BaseViewModel
                 PubDate = item.PubDate,
             };
             await FavoriteService.AddFavoriteToDatabase(favorite);
+            FavoriteShows.Add(favorite);
+
             item.Download = true;
             item.IsNotDownloaded = false;
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
-            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
+
             var start = Preferences.Default.Get("start", false);
             if (start)
             {
@@ -126,8 +128,10 @@ public partial class EditViewModel : BaseViewModel
                 return true;
             }
             Preferences.Default.Set("start", true);
+
             Logger.LogInformation("Setting Auto Download to start Automatically");
             _messenger.Send(new MessageData(true));
+
             return true;
         }
         return false;
@@ -145,14 +149,21 @@ public partial class EditViewModel : BaseViewModel
         {
             return false;
         }
+
         await FavoriteService.RemoveFavoriteFromDatabase(url);
+
         var item = Podcasts.First(x => x.Url == url);
-        item.Download = false;
-        item.IsNotDownloaded = true;
+        if (item is not null)
+        {
+            item.Download = false;
+            item.IsNotDownloaded = true;
+            await PodcastServices.UpdatePodcast(item);
+            Podcasts[Podcasts.IndexOf(item)] = item;
+        }
+
         var fav = FavoriteShows.First(x => x.Url == url);
         FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
-        await PodcastServices.UpdatePodcast(item);
-        Podcasts[Podcasts.IndexOf(item)] = item;
+
         return true;
     }
 }
