@@ -15,8 +15,7 @@ namespace NerdNewsNavigator2.WinUI;
 public partial class App : MauiWinUIApplication
 {
     private IConnectivity _connectivity;
-    //private System.Timers.Timer aTimer = new(60 * 60 * 1000);
-    private static readonly System.Timers.Timer s_aTimer = new(5000);
+    private static readonly System.Timers.Timer s_aTimer = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -52,7 +51,7 @@ public partial class App : MauiWinUIApplication
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            if (message.Start)
+            if (message.Start && InternetConnected())
             {
                 Start();
             }
@@ -105,7 +104,6 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public static void Stop()
     {
-        Debug.WriteLine("Stopping AutoDownload");
         CancellationTokenSource.Cancel();
         LongTask(CancellationTokenSource.Token);
         CancellationTokenSource?.Dispose();
@@ -116,20 +114,18 @@ public partial class App : MauiWinUIApplication
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            System.Diagnostics.Debug.WriteLine("Cancellation Requested");
             s_aTimer.Stop();
             s_aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
             return;
         }
         s_aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
         s_aTimer.Start();
-        System.Diagnostics.Debug.WriteLine("Starting Task");
     }
 
     private static void OnTimedEvent(object source, ElapsedEventArgs e)
     {
         Debug.WriteLine($"Timed event: {e} Started");
-        //_ = DownloadService.AutoDownload();
+        _ = DownloadService.AutoDownload();
     }
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

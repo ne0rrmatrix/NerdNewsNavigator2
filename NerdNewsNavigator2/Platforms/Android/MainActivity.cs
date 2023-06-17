@@ -18,8 +18,7 @@ public class MainActivity : MauiAppCompatActivity
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
-            if (message.Start && SetAutoDownload)
+            if (message.Start)
             {
                 StartService();
             }
@@ -40,14 +39,17 @@ public class MainActivity : MauiAppCompatActivity
 
     private void StartService()
     {
-        System.Diagnostics.Debug.WriteLine("Starting Auto Download Service");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         this.StartForegroundService(serviceIntent);
     }
 
     private void StopService()
     {
-        System.Diagnostics.Debug.WriteLine("Stopping Auto Download Service");
+        AutoStartService.CancellationTokenSource.Cancel();
+        AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
+        AutoStartService.CancellationTokenSource?.Dispose();
+        AutoStartService.CancellationTokenSource = null;
+        System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }

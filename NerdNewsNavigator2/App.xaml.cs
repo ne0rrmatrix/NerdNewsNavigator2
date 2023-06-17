@@ -59,34 +59,22 @@ public partial class App : Application
         window.Destroying += (s, e) =>
         {
 #if WINDOWS
-            if (WinUI.App.CancellationTokenSource is null)
+            if (WinUI.App.CancellationTokenSource is not null)
             {
-                Debug.WriteLine("Cancellation Token already disposed");
-            }
-            else if (WinUI.App.CancellationTokenSource is not null)
-            {
-                Debug.WriteLine("Stopping AutoDownload");
                 WinUI.App.CancellationTokenSource.Cancel();
                 WinUI.App.LongTask(WinUI.App.CancellationTokenSource.Token);
                 WinUI.App.CancellationTokenSource?.Dispose();
                 WinUI.App.CancellationTokenSource = null;
-                Debug.WriteLine("Disposed of Cancellation Token");
             }
 #endif
 #if ANDROID
 
-            if (AutoStartService.CancellationTokenSource is null)
+            if (AutoStartService.CancellationTokenSource is not null)
             {
-                Debug.WriteLine("Cancellation Token already disposed");
-            }
-            else if (AutoStartService.CancellationTokenSource is not null)
-            {
-                Debug.WriteLine("Stopping AutoDownload");
                 AutoStartService.CancellationTokenSource.Cancel();
                 AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
                 AutoStartService.CancellationTokenSource?.Dispose();
                 AutoStartService.CancellationTokenSource = null;
-                Debug.WriteLine("Disposed of Cancellation Token");
             }
 #endif
         };
@@ -111,10 +99,6 @@ public partial class App : Application
         if (start)
         {
             _messenger.Send(new MessageData(true));
-        }
-        else
-        {
-            Debug.WriteLine("error");
         }
     }
 }
