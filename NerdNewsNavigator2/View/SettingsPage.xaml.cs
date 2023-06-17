@@ -77,9 +77,6 @@ public partial class SettingsPage : ContentPage
                 Preferences.Default.Set("start", false);
                 _messenger.Send(new MessageData(false));
             });
-#if ANDROID
-            //MainActivity.SetAutoDownload = false;
-#endif
         }
         else
         {
@@ -92,9 +89,6 @@ public partial class SettingsPage : ContentPage
                 Preferences.Default.Set("start", true);
                 _messenger.Send(new MessageData(true));
             });
-#if ANDROID
-            //MainActivity.SetAutoDownload = true;
-#endif
         }
     }
     /// <summary>
