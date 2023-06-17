@@ -11,8 +11,8 @@ namespace NerdNewsNavigator2.Platforms.Android;
 [Service]
 internal class AutoStartService : Service
 {
-    private static readonly System.Timers.Timer s_aTimer = new(60 * 60 * 1000);
-    public static CancellationTokenSource CancellationTokenSource = null;
+    public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
+    public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
@@ -85,7 +85,7 @@ internal class AutoStartService : Service
         this.StartForeground(NOTIFICATION_ID, notification.Build());
     }
 
-    private static void CreateNotificationChannel(NotificationManager notificationMnaManager)
+    private void CreateNotificationChannel(NotificationManager notificationMnaManager)
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
@@ -102,6 +102,7 @@ internal class AutoStartService : Service
     }
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
+        System.Diagnostics.Debug.WriteLine("Staring Auto Download");
         StartForegroundService();
         return StartCommandResult.Sticky;
     }
@@ -109,12 +110,12 @@ internal class AutoStartService : Service
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            s_aTimer.Stop();
-            s_aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            ATimer.Stop();
+            ATimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
             return;
         }
-        s_aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-        s_aTimer.Start();
+        ATimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        ATimer.Start();
     }
 
     private static void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -139,6 +140,11 @@ internal class AutoStartService : Service
     /// </summary>
     public void Stop()
     {
+        System.Diagnostics.Debug.WriteLine("Stopping Auto Download");
+        CancellationTokenSource.Cancel();
+        LongTask(CancellationTokenSource.Token);
+        CancellationTokenSource?.Dispose();
+        CancellationTokenSource = null;
         var intent = new Intent(this, typeof(AutoStartService));
         this.StopService(intent);
     }

@@ -70,7 +70,6 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "No";
             OnPropertyChanged(nameof(SetAutoDownload));
-            //Preferences.Default.Remove("SetAutoDownload");
             _ = Task.Run(() =>
             {
                 Preferences.Default.Remove("start");
@@ -86,10 +85,9 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "Yes";
             OnPropertyChanged(nameof(SetAutoDownload));
-            //Preferences.Default.Remove("SetAutoDownload");
             _ = Task.Run(() =>
             {
-                Preferences.Remove("start");
+                Preferences.Default.Remove("start");
                 Thread.Sleep(1000);
                 Preferences.Default.Set("start", true);
                 _messenger.Send(new MessageData(true));
@@ -185,7 +183,7 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        var start = Preferences.Default.Get("start", true);
+        var start = Preferences.Default.Get("start", false);
         if (start)
         {
             SetAutoDownload = "Yes";

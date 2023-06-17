@@ -15,7 +15,7 @@ namespace NerdNewsNavigator2.WinUI;
 public partial class App : MauiWinUIApplication
 {
     private IConnectivity _connectivity;
-    private static readonly System.Timers.Timer s_aTimer = new(60 * 60 * 1000);
+    private readonly System.Timers.Timer _aTimer = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -83,7 +83,7 @@ public partial class App : MauiWinUIApplication
     /// <summary>
     /// A method that Auto starts Downloads
     /// </summary>
-    public static void Start()
+    public void Start()
     {
         if (CancellationTokenSource is null)
         {
@@ -97,29 +97,31 @@ public partial class App : MauiWinUIApplication
             var cts = new CancellationTokenSource();
             CancellationTokenSource = cts;
         }
+        Debug.WriteLine("Start Auto downloads");
         LongTask(CancellationTokenSource.Token);
     }
     /// <summary>
     /// A method that Stops auto downloads
     /// </summary>
-    public static void Stop()
+    public void Stop()
     {
         CancellationTokenSource.Cancel();
         LongTask(CancellationTokenSource.Token);
         CancellationTokenSource?.Dispose();
         CancellationTokenSource = null;
+        Debug.WriteLine("Stopped Auto Downloder");
     }
 
-    public static void LongTask(CancellationToken cancellationToken)
+    public void LongTask(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            s_aTimer.Stop();
-            s_aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            _aTimer.Stop();
+            _aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
             return;
         }
-        s_aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-        s_aTimer.Start();
+        _aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        _aTimer.Start();
     }
 
     private static void OnTimedEvent(object source, ElapsedEventArgs e)

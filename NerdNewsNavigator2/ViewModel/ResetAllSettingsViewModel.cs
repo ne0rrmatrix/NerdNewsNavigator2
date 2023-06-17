@@ -37,6 +37,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
+        Preferences.Default.Clear();
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();

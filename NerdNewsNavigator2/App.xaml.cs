@@ -52,36 +52,6 @@ public partial class App : Application
             StartAutoDownloadService();
         });
     }
-#nullable enable
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        var window = base.CreateWindow(activationState);
-        window.Destroying += (s, e) =>
-        {
-#if WINDOWS
-            if (WinUI.App.CancellationTokenSource is not null)
-            {
-                WinUI.App.CancellationTokenSource.Cancel();
-                WinUI.App.LongTask(WinUI.App.CancellationTokenSource.Token);
-                WinUI.App.CancellationTokenSource?.Dispose();
-                WinUI.App.CancellationTokenSource = null;
-            }
-#endif
-#if ANDROID
-
-            if (AutoStartService.CancellationTokenSource is not null)
-            {
-                AutoStartService.CancellationTokenSource.Cancel();
-                AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
-                AutoStartService.CancellationTokenSource?.Dispose();
-                AutoStartService.CancellationTokenSource = null;
-            }
-#endif
-        };
-
-        return window;
-    }
-#nullable disable
 
 #if ANDROID
     private async void OnNotificationActionTapped(NotificationActionEventArgs e)
@@ -95,7 +65,7 @@ public partial class App : Application
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);
-        var start = Preferences.Default.Get("start", true);
+        var start = Preferences.Default.Get("start", false);
         if (start)
         {
             _messenger.Send(new MessageData(true));
