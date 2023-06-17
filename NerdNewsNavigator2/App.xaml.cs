@@ -2,9 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Maui;
 using Plugin.LocalNotification;
 using Plugin.LocalNotification.EventArgs;
-
+using System.Threading;
+#if WINDOWS
+using NerdNewsNavigator2.WinUI;
+#endif
+#if ANDROID
+using NerdNewsNavigator2.Platforms.Android;
+#endif
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -45,6 +52,49 @@ public partial class App : Application
             StartAutoDownloadService();
         });
     }
+#nullable enable
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        var window = base.CreateWindow(activationState);
+        window.Destroying += (s, e) =>
+        {
+#if WINDOWS
+            if (WinUI.App.CancellationTokenSource is null)
+            {
+                Debug.WriteLine("Cancellation Token already disposed");
+            }
+            else if (WinUI.App.CancellationTokenSource is not null)
+            {
+                Debug.WriteLine("Stopping AutoDownload");
+                WinUI.App.CancellationTokenSource.Cancel();
+                WinUI.App.LongTask(WinUI.App.CancellationTokenSource.Token);
+                WinUI.App.CancellationTokenSource?.Dispose();
+                WinUI.App.CancellationTokenSource = null;
+                Debug.WriteLine("Disposed of Cancellation Token");
+            }
+#endif
+#if ANDROID
+
+            if (AutoStartService.CancellationTokenSource is null)
+            {
+                Debug.WriteLine("Cancellation Token already disposed");
+            }
+            else if (AutoStartService.CancellationTokenSource is not null)
+            {
+                Debug.WriteLine("Stopping AutoDownload");
+                AutoStartService.CancellationTokenSource.Cancel();
+                AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
+                AutoStartService.CancellationTokenSource?.Dispose();
+                AutoStartService.CancellationTokenSource = null;
+                Debug.WriteLine("Disposed of Cancellation Token");
+            }
+#endif
+        };
+
+        return window;
+    }
+#nullable disable
+
 #if ANDROID
     private async void OnNotificationActionTapped(NotificationActionEventArgs e)
     {
@@ -57,7 +107,15 @@ public partial class App : Application
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);
-        _messenger.Send(new MessageData(true));
+        var start = Preferences.Default.Get("start", true);
+        if (start)
+        {
+            _messenger.Send(new MessageData(true));
+        }
+        else
+        {
+            Debug.WriteLine("error");
+        }
     }
 }
 

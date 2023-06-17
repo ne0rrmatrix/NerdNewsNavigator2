@@ -14,8 +14,10 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    private bool IsRunning { get; set; }
     private IConnectivity _connectivity;
+    //private System.Timers.Timer aTimer = new(60 * 60 * 1000);
+    private static readonly System.Timers.Timer s_aTimer = new(5000);
+    public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -23,19 +25,16 @@ public partial class App : MauiWinUIApplication
     public App()
     {
         this.InitializeComponent();
-        IsRunning = Preferences.Default.Get("AutoDownload", true);
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
             var nativeWindow = handler.PlatformView;
             nativeWindow.Activate();
-
             // allow Windows to draw a native titlebar which respects IsMaximizable/IsMinimizable
             nativeWindow.ExtendsContentIntoTitleBar = false;
 
             var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
             var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
             var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
             // set a specific window size
             if (appWindow.Presenter is OverlappedPresenter p)
             {
@@ -53,8 +52,7 @@ public partial class App : MauiWinUIApplication
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            IsRunning = Preferences.Default.Get("AutoDownload", true);
-            if (message.Start && IsRunning)
+            if (message.Start)
             {
                 Start();
             }
@@ -86,27 +84,52 @@ public partial class App : MauiWinUIApplication
     /// <summary>
     /// A method that Auto starts Downloads
     /// </summary>
-    public void Start()
+    public static void Start()
     {
-        while (IsRunning)
+        if (CancellationTokenSource is null)
         {
-            ThreadPool.QueueUserWorkItem(async state =>
-            {
-                if (InternetConnected())
-                {
-                    await DownloadService.AutoDownload();
-                }
-            });
-            Thread.Sleep(1000 * 60 * 60);
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
         }
+        else if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        LongTask(CancellationTokenSource.Token);
     }
     /// <summary>
     /// A method that Stops auto downloads
     /// </summary>
-    public void Stop()
+    public static void Stop()
     {
-        IsRunning = false;
         Debug.WriteLine("Stopping AutoDownload");
+        CancellationTokenSource.Cancel();
+        LongTask(CancellationTokenSource.Token);
+        CancellationTokenSource?.Dispose();
+        CancellationTokenSource = null;
+    }
+
+    public static void LongTask(CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            System.Diagnostics.Debug.WriteLine("Cancellation Requested");
+            s_aTimer.Stop();
+            s_aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            return;
+        }
+        s_aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        s_aTimer.Start();
+        System.Diagnostics.Debug.WriteLine("Starting Task");
+    }
+
+    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    {
+        Debug.WriteLine($"Timed event: {e} Started");
+        //_ = DownloadService.AutoDownload();
     }
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

@@ -11,7 +11,10 @@ namespace NerdNewsNavigator2.Platforms.Android;
 [Service]
 internal class AutoStartService : Service
 {
-    public bool Running { get; set; } = true;
+    //private System.Timers.Timer aTimer = new(60 * 60 * 1000);
+    private static readonly System.Timers.Timer s_aTimer = new(5000);
+    public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
+
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
@@ -83,22 +86,40 @@ internal class AutoStartService : Service
     }
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
-        Running = true;
         StartForegroundService();
-        if (!InternetConnected())
+        if (CancellationTokenSource is null)
         {
-            Running = false;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
         }
-        _ = Task.Run(async () =>
+        else if (CancellationTokenSource is not null)
         {
-            while (Running)
-            {
-                await Services.DownloadService.AutoDownload();
-                Thread.Sleep(1000 * 60 * 60);
-            }
-        });
-
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        LongTask(CancellationTokenSource.Token);
         return StartCommandResult.Sticky;
+    }
+    public static void LongTask(CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            System.Diagnostics.Debug.WriteLine("Cancellation Requested");
+            s_aTimer.Stop();
+            s_aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            return;
+        }
+        s_aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        s_aTimer.Start();
+        System.Diagnostics.Debug.WriteLine("Starting Task");
+    }
+
+    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+        //_ = Services.DownloadService.AutoDownload();
     }
 
     /// <summary>
@@ -106,6 +127,10 @@ internal class AutoStartService : Service
     /// </summary>
     public void Start()
     {
+        if (!InternetConnected())
+        {
+            return;
+        }
         var intent = new Intent(this, typeof(AutoStartService));
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
@@ -119,12 +144,15 @@ internal class AutoStartService : Service
     public void Stop()
     {
         var intent = new Intent(this, typeof(AutoStartService));
-        Running = false;
+        System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");
+        CancellationTokenSource.Cancel();
+        LongTask(CancellationTokenSource.Token);
+        CancellationTokenSource?.Dispose();
+        CancellationTokenSource = null;
         this.StopService(intent);
     }
     public override void OnDestroy()
     {
         base.OnDestroy();
-        Running = false;
     }
 }
