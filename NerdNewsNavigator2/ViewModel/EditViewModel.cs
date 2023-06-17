@@ -62,6 +62,7 @@ public partial class EditViewModel : BaseViewModel
         {
             var podcast = Podcasts.First(x => x.Url == url);
             Podcasts?.Remove(podcast);
+            await App.PositionData.DeletePodcast(podcast);
         }
 
         var favoriteShow = await App.PositionData.GetAllFavorites();
