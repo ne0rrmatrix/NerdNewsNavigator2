@@ -5,12 +5,14 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using AndroidX.Core.App;
+using static Android.OS.PowerManager;
 
 namespace NerdNewsNavigator2.Platforms.Android;
 
 [Service]
 internal class AutoStartService : Service
 {
+    private WakeLock _wakeLock;
     public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
@@ -21,6 +23,7 @@ internal class AutoStartService : Service
     public AutoStartService()
     {
         _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
+        AcquireWakeLock();
     }
 
     /// <summary>
@@ -95,7 +98,19 @@ internal class AutoStartService : Service
         }
 
     }
+    private void AcquireWakeLock()
+    {
+        _wakeLock?.Release();
 
+        WakeLockFlags wakeFlags = WakeLockFlags.Partial;
+
+        PowerManager pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
+        _wakeLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
+        _wakeLock.Acquire();
+        var item = _wakeLock.IsHeld;
+        System.Diagnostics.Debug.WriteLine($"Wake Lock On: {item}");
+
+    }
     public override IBinder OnBind(Intent intent)
     {
         return null;
@@ -148,8 +163,20 @@ internal class AutoStartService : Service
         var intent = new Intent(this, typeof(AutoStartService));
         this.StopService(intent);
     }
+
     public override void OnDestroy()
     {
+        if (_wakeLock != null)
+        {
+            _wakeLock.Release();
+            _wakeLock = null;
+        }
         base.OnDestroy();
+    }
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        _wakeLock?.Release();
     }
 }
