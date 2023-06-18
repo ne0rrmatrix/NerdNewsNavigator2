@@ -23,7 +23,6 @@ internal class AutoStartService : Service
     public AutoStartService()
     {
         _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
-        AcquireWakeLock();
     }
 
     /// <summary>
@@ -47,6 +46,7 @@ internal class AutoStartService : Service
     {
         if (InternetConnected())
         {
+            AcquireWakeLock();
             if (CancellationTokenSource is null)
             {
                 var cts = new CancellationTokenSource();
@@ -106,7 +106,10 @@ internal class AutoStartService : Service
 
         PowerManager pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
         _wakeLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
-        _wakeLock.Acquire();
+        if (!_wakeLock.IsHeld)
+        {
+            _wakeLock.Acquire();
+        }
         var item = _wakeLock.IsHeld;
         System.Diagnostics.Debug.WriteLine($"Wake Lock On: {item}");
 
@@ -166,17 +169,20 @@ internal class AutoStartService : Service
 
     public override void OnDestroy()
     {
-        if (_wakeLock != null)
+        if (_wakeLock.IsHeld)
         {
             _wakeLock.Release();
-            _wakeLock = null;
         }
+        System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {_wakeLock.IsHeld}");
         base.OnDestroy();
     }
     protected override void Dispose(bool disposing)
     {
+        if (_wakeLock.IsHeld)
+        {
+            _wakeLock.Release();
+            System.Diagnostics.Debug.WriteLine($"Wake lock status: {_wakeLock.IsHeld}");
+        }
         base.Dispose(disposing);
-
-        _wakeLock?.Release();
     }
 }
