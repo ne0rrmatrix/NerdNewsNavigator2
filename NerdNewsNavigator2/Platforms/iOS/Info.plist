@@ -15,7 +15,10 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -29,7 +32,7 @@
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
+	<false/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -37,9 +40,11 @@
 		<string>processing</string>
 	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
-  <array>
-    <string>com.yourappname.upload</string>
-    <string>com.yourappname.refresh</string>
-  </array>
+	<array>
+		<string>com.yourappname.upload</string>
+		<string>com.yourappname.refresh</string>
+	</array>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.7</string>
 </dict>
 </plist>
