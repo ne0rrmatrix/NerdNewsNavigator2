@@ -48,3 +48,6 @@ global using YoutubeExplode;
 global using YoutubeExplode.Videos;
 global using M3U8Parser;
 global using NerdNewsNavigator2.Controls;
+global using Plugin.LocalNotification;
+global using Plugin.LocalNotification.AndroidOption;
+global using LogLevel = Microsoft.Extensions.Logging.LogLevel;

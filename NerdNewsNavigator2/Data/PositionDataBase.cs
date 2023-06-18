@@ -67,7 +67,7 @@ public class PositionDataBase
         }
         return true;
     }
-
+    #region Get Data
     /// <summary>
     /// Method retrieves a <see cref="List{T}"/> of <see cref="Position"/> from database.
     /// </summary>
@@ -141,7 +141,9 @@ public class PositionDataBase
             return null;
         }
     }
+    #endregion
 
+    #region Delete by Table
     /// <summary>
     /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
@@ -220,7 +222,9 @@ public class PositionDataBase
             return false;
         }
     }
+    #endregion
 
+    #region Add Data
     /// <summary>
     /// Method Adds a <see cref="Position"/> to Database
     /// </summary>
@@ -319,6 +323,9 @@ public class PositionDataBase
             return false;
         }
     }
+    #endregion
+
+    #region Update Data
     /// <summary>
     /// Method Updates a <see cref="Position"/> from Database
     /// </summary>
@@ -398,6 +405,9 @@ public class PositionDataBase
             return false;
         }
     }
+    #endregion
+
+    #region Delete Individual Items
     /// <summary>
     /// Method deletes a <see cref="Position"/> from Database
     /// </summary>
@@ -477,4 +487,5 @@ public class PositionDataBase
             return false;
         }
     }
+    #endregion
 }

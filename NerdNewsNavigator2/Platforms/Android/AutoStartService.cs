@@ -12,6 +12,7 @@ namespace NerdNewsNavigator2.Platforms.Android;
 [Service]
 internal class AutoStartService : Service
 {
+    #region Properties
     private WakeLock _wakeLock;
     public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
@@ -20,6 +21,8 @@ internal class AutoStartService : Service
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
     private readonly IConnectivity _connectivity;
+    #endregion
+
     public AutoStartService()
     {
         _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
@@ -88,7 +91,7 @@ internal class AutoStartService : Service
         this.StartForeground(NOTIFICATION_ID, notification.Build());
     }
 
-    private void CreateNotificationChannel(NotificationManager notificationMnaManager)
+    private static void CreateNotificationChannel(NotificationManager notificationMnaManager)
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
@@ -102,9 +105,9 @@ internal class AutoStartService : Service
     {
         _wakeLock?.Release();
 
-        WakeLockFlags wakeFlags = WakeLockFlags.Partial;
+        var wakeFlags = WakeLockFlags.Partial;
 
-        PowerManager pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
+        var pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
         _wakeLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
         if (!_wakeLock.IsHeld)
         {
@@ -175,14 +178,5 @@ internal class AutoStartService : Service
         }
         System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {_wakeLock.IsHeld}");
         base.OnDestroy();
-    }
-    protected override void Dispose(bool disposing)
-    {
-        if (_wakeLock.IsHeld)
-        {
-            _wakeLock.Release();
-            System.Diagnostics.Debug.WriteLine($"Wake lock status: {_wakeLock.IsHeld}");
-        }
-        base.Dispose(disposing);
     }
 }

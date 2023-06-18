@@ -500,6 +500,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return 2;
         }
+#pragma warning disable IDE0066
         switch (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
         {
             case true:
@@ -512,6 +513,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             default:
                 return 2;
         }
+#pragma warning restore IDE0066
     }
     #endregion
 }

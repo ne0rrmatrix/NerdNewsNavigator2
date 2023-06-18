@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Plugin.LocalNotification;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -21,6 +18,7 @@ public static class MauiProgram
 #else
         ;
 #endif
+        #region Logging
         builder.Logging
 
 #if DEBUG
@@ -56,6 +54,8 @@ public static class MauiProgram
                     options.MinLevel = LogLevel.Information;
                     options.MaxLevel = LogLevel.Critical;
                 }); // Will write to the Console Output (logcat for android)
+        #endregion
+        #region Services
 
         builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton<BaseViewModel>();
@@ -98,5 +98,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         return builder.Build();
+        #endregion
     }
 }
