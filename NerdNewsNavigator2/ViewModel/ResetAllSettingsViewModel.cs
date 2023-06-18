@@ -8,6 +8,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class ResetAllSettingsViewModel : BaseViewModel
 {
+    private readonly IMessenger _messenger;
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
@@ -16,12 +17,13 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
-    public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
     {
         _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         OnPropertyChanged(nameof(IsBusy));
         _ = ResetAll();
+        _messenger = messenger;
     }
 
     /// <summary>
@@ -37,20 +39,26 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
+
+        var start = Preferences.Default.Get("start", false);
+        if (start)
+        {
+            _messenger.Send(new MessageData(false));
+        }
+
+        Preferences.Default.Clear();
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
+
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var files = System.IO.Directory.GetFiles(path, "*.mp4");
         try
         {
-            if (files.Any() && files is not null)
+            foreach (var file in files)
             {
-                foreach (var file in files)
-                {
-                    System.IO.File.Delete(file);
-                    _logger.LogInformation("Deleted file {file}", file);
-                }
+                System.IO.File.Delete(file);
+                _logger.LogInformation("Deleted file {file}", file);
             }
         }
         catch (Exception ex)

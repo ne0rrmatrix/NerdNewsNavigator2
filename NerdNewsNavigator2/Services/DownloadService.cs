@@ -16,11 +16,12 @@ public static class DownloadService
     public static bool Autodownloading { get; set; } = false;
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
+    public static int Count { get; set; } = 0;
 
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.
     /// </summary>
-    /// <param name="download">Is the Url of <see cref="Download.Url"/> to Add to datbase.</param> 
+    /// <param name="download">Is the Url of <see cref="Download"/> to Add to datbase.</param> 
     /// <returns>nothing</returns>
     public static async Task<bool> AddDownloadDatabase(Download download)
     {
@@ -78,7 +79,6 @@ public static class DownloadService
                 }
                 else
                 {
-
                     Debug.WriteLine("File exists stopping download");
                     return false;
                 }
@@ -120,13 +120,14 @@ public static class DownloadService
         var downloaded = await DownloadFile(download.Url);
         if (downloaded)
         {
-            Debug.WriteLine($"Downloaded file: {download.FileName}");
+            download.IsDownloaded = true;
+            download.IsNotDownloaded = false;
+            download.Deleted = false;
             await AddDownloadDatabase(download);
             return true;
         }
         if (CancelDownload)
         {
-            Debug.WriteLine($"Download cancelled");
             DeleteFile(download.Url);
             return false;
         }
@@ -140,20 +141,19 @@ public static class DownloadService
     {
         CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
-        var downloadedShows = await App.PositionData.GetAllDownloads();
-
-        if (favoriteShows is null || downloadedShows is null)
+        if (favoriteShows is null)
         {
             return;
         }
-        ProccessShow(favoriteShows, downloadedShows);
+        ProccessShow(favoriteShows);
     }
-    public static void ProccessShow(List<Show> favoriteShows, List<Download> downloadedShows)
+    public static void ProccessShow(List<Favorites> favoriteShows)
     {
-        favoriteShows.Where(x => !x.IsDownloaded).ToList().ForEach(async x =>
+        favoriteShows.ForEach(async x =>
         {
             if (CancelDownload)
             {
+                Autodownloading = false;
                 return;
             }
             var show = await FeedService.GetShows(x.Url, true);
@@ -167,21 +167,22 @@ public static class DownloadService
                 }
                 Debug.WriteLine("Waiting for download to finish");
             }
-            if (!downloadedShows.Exists(y => y.Url == x.Url) && !CancelDownload)
+            var downloadedshows = await App.PositionData.GetAllDownloads();
+            var down = downloadedshows.Exists(y => y.Url == show[0].Url);
+            if (!down && !CancelDownload)
             {
                 Autodownloading = true;
-                Debug.WriteLine("Downloading ", show[0].Url);
                 var result = await Downloading(show[0]);
                 if (result && !CancelDownload)
                 {
-                    x.IsDownloaded = true;
-                    await App.PositionData.UpdateFavorite(x);
+                    Debug.WriteLine("Download completed");
                     Autodownloading = false;
+                    Count++;
 #if ANDROID
                     var downloaded = new NotificationRequest
                     {
-                        NotificationId = x.Id,
-                        Title = show[0].Title,
+                        NotificationId = Count,
+                        Title = x.Title,
                         Description = "New Episode Downloaded",
                         Android = new AndroidOptions()
                         {
@@ -193,7 +194,6 @@ public static class DownloadService
                         await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
                         await LocalNotificationCenter.Current.RequestNotificationPermission();
                     }
-
                     await LocalNotificationCenter.Current.Show(downloaded);
 #endif
                 }

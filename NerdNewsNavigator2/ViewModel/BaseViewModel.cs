@@ -16,7 +16,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Show> FavoriteShows { get; set; } = new();
+    public ObservableCollection<Favorites> FavoriteShows { get; set; } = new();
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
@@ -273,6 +273,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Title = item.Title,
             Url = url,
             Image = item.Image,
+            IsDownloaded = true,
+            IsNotDownloaded = false,
+            Deleted = false,
             PubDate = item.PubDate,
             Description = item.Description,
             FileName = DownloadService.GetFileName(url)
@@ -282,6 +285,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         if (downloaded)
         {
             await DownloadSuccess(download);
+        }
+        else
+        {
+            FailedDownload(download);
         }
     }
     public void UpdatingDownload()
@@ -311,11 +318,31 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             File.Delete(download.FileName);
             return;
         }
+
         await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
         DownloadService.IsDownloading = false;
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        DownloadedShows.Add(download);
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
+    }
+    public void FailedDownload(Download download)
+    {
+        if (Shows.ToList().Exists(x => x.Title == download.Title))
+        {
+            Logger.LogInformation("Updated Shows");
+            var show = Shows.First(x => x.Url == download.Url);
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            Shows[Shows.IndexOf(show)] = show;
+        }
+        if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
+        {
+            Logger.LogInformation("Updated MostRecent Shows");
+            var show = MostRecentShows.First(x => x.Url == download.Url);
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            MostRecentShows[MostRecentShows.IndexOf(show)] = show;
+        }
     }
     #endregion
 
@@ -328,22 +355,16 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async void GetFavoriteShows(object stateinfo)
     {
         FavoriteShows.Clear();
-        var shows = new List<Show>();
         var temp = await App.PositionData.GetAllFavorites();
-        if (temp is null || !InternetConnected())
+        if (!InternetConnected() && temp is null)
         {
             return;
         }
-        temp?.ForEach(async item =>
-        {
-            var show = await FeedService.GetShows(item.Url, true);
-            shows?.Add(show?[0]);
-        });
         temp?.ForEach(FavoriteShows.Add);
     }
 
     /// <summary>
-    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for <see cref="Show.Url"/> and returns a <see cref="Show"/>
+    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
     /// </summary>
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
@@ -351,11 +372,26 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        if (InternetConnected())
+        if (!InternetConnected())
         {
-            var temp = await FeedService.GetShows(url, getFirstOnly);
-            temp?.ForEach(Shows.Add);
+            return;
         }
+        var temp = await FeedService.GetShows(url, getFirstOnly);
+        temp.ForEach(x =>
+        {
+            var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
+            if (downloaded)
+            {
+                x.IsDownloaded = true;
+                x.IsNotDownloaded = false;
+            }
+            else
+            {
+                x.IsDownloaded = false;
+                x.IsNotDownloaded = true;
+            }
+            Shows.Add(x);
+        });
     }
 
     /// <summary>
@@ -365,15 +401,27 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetMostRecent()
     {
         MostRecentShows.Clear();
-        await GetUpdatedPodcasts();
-        if (InternetConnected() && Podcasts is not null && Podcasts.Count > 0)
+        var temp = await App.PositionData.GetAllPodcasts();
+        if (!InternetConnected())
         {
-            Podcasts.ToList().ForEach(async show =>
-            {
-                var item = await FeedService.GetShows(show.Url, true);
-                MostRecentShows.Add(item[0]);
-            });
+            return;
         }
+        temp.ForEach(async show =>
+        {
+            var item = await FeedService.GetShows(show.Url, true);
+            var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
+            if (downloaded)
+            {
+                item[0].IsDownloaded = true;
+                item[0].IsNotDownloaded = false;
+            }
+            else
+            {
+                item[0].IsNotDownloaded = true;
+                item[0].IsDownloaded = false;
+            }
+            MostRecentShows.Add(item[0]);
+        });
     }
 
     /// <summary>
@@ -406,7 +454,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.ForEach(DownloadedShows.Add);
+        temp?.ForEach((item) =>
+        {
+            if (!item.Deleted)
+            {
+                DownloadedShows?.Add(item);
+            }
+        });
     }
 
     #endregion

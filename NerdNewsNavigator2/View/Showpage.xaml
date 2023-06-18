@@ -56,7 +56,28 @@
                             Grid.Row="1"
                             Margin="10"
                             Aspect="AspectFit"
+                            IsVisible="{Binding IsDownloaded}"
                             HeightRequest="320"
+                            WidthRequest="320">
+
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            </Image.GestureRecognizers>
+
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="True"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
+                        </Image>
+                        
+                        <Image
+                            Grid.Row="1"
+                            Margin="10"
+                            Aspect="AspectFit"
+                            HeightRequest="320"
+                            IsVisible="{Binding IsNotDownloaded}"
                             WidthRequest="320">
 
                             <Image.GestureRecognizers>
@@ -70,7 +91,7 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-
+                        
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
                             <Label
                                 FontAttributes="Bold"
@@ -92,7 +113,7 @@
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotDownloading}"
+                                IsVisible="{Binding IsNotDownloaded}"
                                 Text="Download"
                                 TextColor="Black">
 
@@ -101,6 +122,7 @@
                                 </Button.GestureRecognizers>
 
                             </Button>
+                            
                         </HorizontalStackLayout>
                         <Label
                             Grid.Row="3"

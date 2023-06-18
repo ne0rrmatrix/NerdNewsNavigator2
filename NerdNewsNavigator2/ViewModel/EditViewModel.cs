@@ -9,9 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
-    /// <summary>
-    /// An <see cref="IMessenger"/> instance managed by this class.
-    /// </summary>
     private readonly IMessenger _messenger;
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
@@ -23,6 +20,7 @@ public partial class EditViewModel : BaseViewModel
     public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
     {
         Logger = logger;
+        _messenger = messenger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         OnPropertyChanged(nameof(Orientation));
@@ -31,9 +29,11 @@ public partial class EditViewModel : BaseViewModel
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
-        _messenger = messenger;
     }
-
+    /// <summary>
+    /// Method checks for required Permission for Android Notifications and requests them if needed
+    /// </summary>
+    /// <returns></returns>
     public static async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
     {
         var status = await Permissions.CheckStatusAsync<AndroidPermissions>();
@@ -57,33 +57,29 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task DeletePodcast(string url)
     {
-        var result = await PodcastServices.Delete(url);
-        if (!result)
+        var exists = Podcasts.ToList().Exists(x => x.Url == url);
+        if (exists)
         {
-            return;
+            var podcast = Podcasts.First(x => x.Url == url);
+            Podcasts?.Remove(podcast);
+            await App.PositionData.DeletePodcast(podcast);
         }
-        var podcast = Podcasts.First(x => x.Url == url);
-        Podcasts.Remove(podcast);
+
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
             return;
         }
-        var item = favoriteShow.First(x => x.Url == url);
-        if (item is null)
+
+        var item = favoriteShow.ToList().Exists(x => x.Url == url);
+        if (item)
         {
-            return;
+            await FavoriteService.RemoveFavoriteFromDatabase(url);
+            var fav = FavoriteShows.First(x => x.Url == url);
+            favoriteShow?.Remove(fav);
         }
-        await FavoriteService.RemoveFavoriteFromDatabase(url);
-        FavoriteShows.Remove(item);
-        await GetUpdatedPodcasts();
     }
 
-    public void SetData(object stateinfo)
-    {
-        Preferences.Default.Set("AutoDownload", true);
-        _messenger?.Send(new MessageData(true));
-    }
     /// <summary>
     /// A Method that adds a favourite to the database.
     /// </summary>
@@ -96,11 +92,11 @@ public partial class EditViewModel : BaseViewModel
         var status = await CheckAndRequestForeGroundPermission();
         if (PermissionStatus.Granted == status)
         {
-            Logger.LogInformation("Background service working!");
+            Logger.LogInformation("Notification Permission Granted");
         }
         else if (PermissionStatus.Denied == status)
         {
-            Logger.LogInformation("Failed to add background service");
+            Logger.LogInformation("Notification Permission Denied");
         }
 #endif
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
@@ -110,19 +106,33 @@ public partial class EditViewModel : BaseViewModel
         else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
         {
             var item = Podcasts.First(x => x.Url == url);
-            var show = new Show
+            Favorites favorite = new()
             {
-                Url = item.Url,
                 Title = item.Title,
+                Url = item.Url,
                 Description = item.Description,
                 Image = item.Image,
+                PubDate = item.PubDate,
             };
-            await FavoriteService.AddFavoriteToDatabase(show);
+            await FavoriteService.AddFavoriteToDatabase(favorite);
+            FavoriteShows.Add(favorite);
+
             item.Download = true;
+            item.IsNotDownloaded = false;
             await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
-            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            ThreadPool.QueueUserWorkItem(SetData);
+
+            var start = Preferences.Default.Get("start", false);
+            if (start)
+            {
+                Logger.LogInformation("Auto Download is already set to start Automatically");
+                return true;
+            }
+            Preferences.Default.Set("start", true);
+
+            Logger.LogInformation("Setting Auto Download to start Automatically");
+            _messenger.Send(new MessageData(true));
+
             return true;
         }
         return false;
@@ -140,13 +150,21 @@ public partial class EditViewModel : BaseViewModel
         {
             return false;
         }
+
         await FavoriteService.RemoveFavoriteFromDatabase(url);
+
         var item = Podcasts.First(x => x.Url == url);
-        item.Download = false;
+        if (item is not null)
+        {
+            item.Download = false;
+            item.IsNotDownloaded = true;
+            await PodcastServices.UpdatePodcast(item);
+            Podcasts[Podcasts.IndexOf(item)] = item;
+        }
+
         var fav = FavoriteShows.First(x => x.Url == url);
         FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
-        await PodcastServices.UpdatePodcast(item);
-        Podcasts[Podcasts.IndexOf(item)] = item;
+
         return true;
     }
 }

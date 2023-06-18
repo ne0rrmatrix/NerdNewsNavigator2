@@ -2,9 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Maui;
 using Plugin.LocalNotification;
 using Plugin.LocalNotification.EventArgs;
-
+using System.Threading;
+#if WINDOWS
+using NerdNewsNavigator2.WinUI;
+#endif
+#if ANDROID
+using NerdNewsNavigator2.Platforms.Android;
+#endif
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -45,6 +52,7 @@ public partial class App : Application
             StartAutoDownloadService();
         });
     }
+
 #if ANDROID
     private async void OnNotificationActionTapped(NotificationActionEventArgs e)
     {
@@ -57,7 +65,11 @@ public partial class App : Application
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);
-        _messenger.Send(new MessageData(true));
+        var start = Preferences.Default.Get("start", false);
+        if (start)
+        {
+            _messenger.Send(new MessageData(true));
+        }
     }
 }
 

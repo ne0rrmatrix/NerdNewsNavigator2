@@ -11,13 +11,22 @@ public partial class SettingsPage : ContentPage
 {
     private readonly IMessenger _messenger;
     /// <summary>
-    /// Private <see cref="bool"/> which sets AutoDownload off/on.
+    /// an <see cref="int"/> instance managed by this class.
     /// </summary>
-    public bool SetAutoDownload { get; set; }
+    private string _setAutoDownload;
+
     /// <summary>
-    /// Private <see cref="bool"/> which sets Full Screen Mode.
+    /// an <see cref="int"/> instance managed by this class.
     /// </summary>
-    private bool FullScreenMode { get; set; } = new();
+    public string SetAutoDownload
+    {
+        get { return _setAutoDownload; }
+        set
+        {
+            _setAutoDownload = value;
+            OnPropertyChanged(nameof(_setAutoDownload));
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsPage"/>
@@ -27,8 +36,6 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
-        OnPropertyChanged(nameof(SetAutoDownload));
         _messenger = messenger;
     }
 
@@ -59,26 +66,29 @@ public partial class SettingsPage : ContentPage
         {
             return;
         }
-        SetAutoDownload = Preferences.Default.Get("AutoDownload", true);
-        if (SetAutoDownload)
+        if (SetAutoDownload == "Yes")
         {
-            SetAutoDownload = false;
+            SetAutoDownload = "No";
             OnPropertyChanged(nameof(SetAutoDownload));
-            Preferences.Default.Set("AutoDownload", false);
-            _messenger?.Send(new MessageData(false));
-#if ANDROID
-            MainActivity.SetAutoDownload = false;
-#endif
+            _ = Task.Run(() =>
+            {
+                Preferences.Default.Remove("start");
+                Thread.Sleep(1000);
+                Preferences.Default.Set("start", false);
+                _messenger.Send(new MessageData(false));
+            });
         }
         else
         {
-            SetAutoDownload = true;
+            SetAutoDownload = "Yes";
             OnPropertyChanged(nameof(SetAutoDownload));
-            Preferences.Default.Set("AutoDownload", true);
-            _messenger?.Send(new MessageData(true));
-#if ANDROID
-            MainActivity.SetAutoDownload = true;
-#endif
+            _ = Task.Run(() =>
+            {
+                Preferences.Default.Remove("start");
+                Thread.Sleep(1000);
+                Preferences.Default.Set("start", true);
+                _messenger.Send(new MessageData(true));
+            });
         }
     }
     /// <summary>
@@ -167,6 +177,16 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
+        var start = Preferences.Default.Get("start", false);
+        if (start)
+        {
+            SetAutoDownload = "Yes";
+        }
+        else
+        {
+            SetAutoDownload = "No";
+        }
+        OnPropertyChanged(nameof(SetAutoDownload));
         DeviceService.RestoreScreen();
         if (DownloadService.IsDownloading)
         {

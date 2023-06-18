@@ -14,9 +14,9 @@ public static class FavoriteService
     /// <summary>
     /// Method Adds Favorites <see cref="Show"/> to Database.
     /// </summary>
-    /// <param name="favorites">Is the Url of <see cref="Show.Url"/> to Add to datbase.</param> 
+    /// <param name="favorites">Is the Url of <see cref="Show"/> to Add to datbase.</param> 
     /// <returns>nothing</returns>
-    public static async Task<bool> AddFavoriteToDatabase(Show favorites)
+    public static async Task<bool> AddFavoriteToDatabase(Favorites favorites)
     {
         var items = await App.PositionData.GetAllFavorites();
         if (items.AsEnumerable().Any(x => x.Url == favorites.Url))

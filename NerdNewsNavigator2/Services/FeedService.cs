@@ -29,6 +29,7 @@ public static class FeedService
                 feed.Url = item;
                 feed.Id = counter;
                 feed.Download = false;
+                feed.IsNotDownloaded = true;
                 counter++;
 
                 foreach (var level2Element in level1Element.Elements("image"))

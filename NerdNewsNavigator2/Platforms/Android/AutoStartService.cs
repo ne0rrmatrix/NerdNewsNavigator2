@@ -5,13 +5,17 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using AndroidX.Core.App;
+using static Android.OS.PowerManager;
 
 namespace NerdNewsNavigator2.Platforms.Android;
 
 [Service]
 internal class AutoStartService : Service
 {
-    public bool Running { get; set; } = true;
+    private WakeLock _wakeLock;
+    public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
+    public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
+
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
@@ -40,6 +44,24 @@ internal class AutoStartService : Service
     }
     private void StartForegroundService()
     {
+        if (InternetConnected())
+        {
+            AcquireWakeLock();
+            if (CancellationTokenSource is null)
+            {
+                var cts = new CancellationTokenSource();
+                CancellationTokenSource = cts;
+            }
+            else if (CancellationTokenSource is not null)
+            {
+                CancellationTokenSource.Dispose();
+                CancellationTokenSource = null;
+                var cts = new CancellationTokenSource();
+                CancellationTokenSource = cts;
+            }
+            LongTask(CancellationTokenSource.Token);
+        }
+
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
             ? PendingIntentFlags.UpdateCurrent |
@@ -66,7 +88,7 @@ internal class AutoStartService : Service
         this.StartForeground(NOTIFICATION_ID, notification.Build());
     }
 
-    private static void CreateNotificationChannel(NotificationManager notificationMnaManager)
+    private void CreateNotificationChannel(NotificationManager notificationMnaManager)
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
@@ -76,30 +98,48 @@ internal class AutoStartService : Service
         }
 
     }
+    private void AcquireWakeLock()
+    {
+        _wakeLock?.Release();
 
+        WakeLockFlags wakeFlags = WakeLockFlags.Partial;
+
+        PowerManager pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
+        _wakeLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
+        if (!_wakeLock.IsHeld)
+        {
+            _wakeLock.Acquire();
+        }
+        var item = _wakeLock.IsHeld;
+        System.Diagnostics.Debug.WriteLine($"Wake Lock On: {item}");
+
+    }
     public override IBinder OnBind(Intent intent)
     {
         return null;
     }
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
-        Running = true;
+        System.Diagnostics.Debug.WriteLine("Staring Auto Download");
         StartForegroundService();
-        if (!InternetConnected())
-        {
-            Running = false;
-        }
-        _ = Task.Run(async () =>
-        {
-            while (Running)
-            {
-                Thread.Sleep(5000);
-                await Services.DownloadService.AutoDownload();
-                Thread.Sleep(1000 * 60 * 60);
-            }
-        });
-
         return StartCommandResult.Sticky;
+    }
+    public static void LongTask(CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            ATimer.Stop();
+            ATimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            return;
+        }
+        ATimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        ATimer.Start();
+    }
+
+    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+        _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
     }
 
     /// <summary>
@@ -112,20 +152,37 @@ internal class AutoStartService : Service
         {
             this.StartForegroundService(intent);
         }
-
     }
     /// <summary>
     /// A method that stops <see cref="Service"/> for Auto downloads
     /// </summary>
     public void Stop()
     {
+        System.Diagnostics.Debug.WriteLine("Stopping Auto Download");
+        CancellationTokenSource.Cancel();
+        LongTask(CancellationTokenSource.Token);
+        CancellationTokenSource?.Dispose();
+        CancellationTokenSource = null;
         var intent = new Intent(this, typeof(AutoStartService));
-        Running = false;
         this.StopService(intent);
     }
+
     public override void OnDestroy()
     {
+        if (_wakeLock.IsHeld)
+        {
+            _wakeLock.Release();
+        }
+        System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {_wakeLock.IsHeld}");
         base.OnDestroy();
-        Running = false;
+    }
+    protected override void Dispose(bool disposing)
+    {
+        if (_wakeLock.IsHeld)
+        {
+            _wakeLock.Release();
+            System.Diagnostics.Debug.WriteLine($"Wake lock status: {_wakeLock.IsHeld}");
+        }
+        base.Dispose(disposing);
     }
 }
