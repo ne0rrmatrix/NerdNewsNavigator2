@@ -150,14 +150,10 @@ public static class DownloadService
     {
         favoriteShows.ForEach(async x =>
         {
-            if (CancelDownload)
+            var show = await FeedService.GetShows(x.Url, true);
+            if (show is null || show.Count == 0 || CancelDownload)
             {
                 Autodownloading = false;
-                return;
-            }
-            var show = await FeedService.GetShows(x.Url, true);
-            if (show is null || show.Count == 0)
-            {
                 return;
             }
             while (Autodownloading)
