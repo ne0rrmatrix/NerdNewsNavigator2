@@ -156,6 +156,10 @@ public static class DownloadService
                 return;
             }
             var show = await FeedService.GetShows(x.Url, true);
+            if (show is null || show.Count == 0)
+            {
+                return;
+            }
             while (Autodownloading)
             {
                 Thread.Sleep(5000);

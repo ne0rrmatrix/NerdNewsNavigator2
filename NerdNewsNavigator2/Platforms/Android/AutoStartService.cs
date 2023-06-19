@@ -23,52 +23,29 @@ internal class AutoStartService : Service
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
-    private readonly IConnectivity _connectivity;
     #endregion
 
     public AutoStartService()
     {
-        _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
     }
-
-    /// <summary>
-    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
-    /// </summary>
-    /// <returns></returns>
-    public bool InternetConnected()
-    {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            PodcastServices.IsConnected = true;
-            return true;
-        }
-        else
-        {
-            PodcastServices.IsConnected = false;
-            return false;
-        }
-    }
     private void StartForegroundService()
     {
-        if (InternetConnected())
+        AcquireWakeLock();
+        if (CancellationTokenSource is null)
         {
-            AcquireWakeLock();
-            if (CancellationTokenSource is null)
-            {
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
-            else if (CancellationTokenSource is not null)
-            {
-                CancellationTokenSource.Dispose();
-                CancellationTokenSource = null;
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
-            LongTask(CancellationTokenSource.Token);
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
         }
+        else if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        LongTask(CancellationTokenSource.Token);
 
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
@@ -156,10 +133,11 @@ internal class AutoStartService : Service
     private static void OnTimedEvent(object source, ElapsedEventArgs e)
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        var item = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        if (item == string.Empty)
+        System.Diagnostics.Debug.WriteLine(Status);
+        if (Status == string.Empty)
         {
             System.Diagnostics.Debug.WriteLine("No wifi or cell service");
+            return;
         }
         if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
         {
@@ -189,6 +167,11 @@ internal class AutoStartService : Service
             _wakeLock.Release();
         }
         System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {_wakeLock.IsHeld}");
+        if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource = null;
+        }
+        CancellationTokenSource?.Dispose();
         base.OnDestroy();
     }
 }
