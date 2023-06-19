@@ -162,17 +162,16 @@ public static class DownloadService
                 if (CancelDownload)
                 {
                     Autodownloading = false;
-                    break;
+                    return;
                 }
                 Debug.WriteLine("Waiting for download to finish");
             }
             var downloadedshows = await App.PositionData.GetAllDownloads();
-            var down = downloadedshows.Exists(y => y.Url == show[0].Url);
-            if (!down && !CancelDownload)
+            if (!downloadedshows.Exists(y => y.Url == show[0].Url))
             {
                 Autodownloading = true;
                 var result = await Downloading(show[0]);
-                if (result && !CancelDownload)
+                if (result)
                 {
                     Debug.WriteLine("Download completed");
                     Autodownloading = false;
@@ -188,11 +187,6 @@ public static class DownloadService
                             IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
                         },
                     };
-                    if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
-                    {
-                        await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
-                        await LocalNotificationCenter.Current.RequestNotificationPermission();
-                    }
                     await LocalNotificationCenter.Current.Show(downloaded);
 #endif
                 }
