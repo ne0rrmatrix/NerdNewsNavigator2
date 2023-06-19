@@ -6,6 +6,7 @@ namespace NerdNewsNavigator2.Services;
 
 public class HttpClientDownloadWithProgress : IDisposable
 {
+    #region Properties
     private readonly string _downloadUrl;
     private readonly string _destinationFilePath;
     private HttpClient _httpClient;
@@ -14,7 +15,7 @@ public class HttpClientDownloadWithProgress : IDisposable
     public event ProgressChangedHandler ProgressChanged;
 
     private readonly CancellationTokenSource _downloadCancel = new();
-
+    #endregion
     public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
     {
         _downloadUrl = downloadUrl;

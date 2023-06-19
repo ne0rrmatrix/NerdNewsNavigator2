@@ -275,6 +275,27 @@ public partial class MediaControl : ContentView
             mediaElement.Aspect = Aspect.AspectFit;
         }
     }
+
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="LivePage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public void Tapped(string url)
+    {
+        mediaElement.Stop();
+        mediaElement.Source = url;
+        MenuIsVisible = false;
+        mediaElement.Play();
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
+
+    private void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
+    {
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
     #endregion
 
     #region Full Screen Functions
@@ -349,26 +370,5 @@ public partial class MediaControl : ContentView
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
         return (interval).ToString();
-    }
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="LivePage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public void Tapped(string url)
-    {
-        mediaElement.Stop();
-        mediaElement.Source = url;
-        MenuIsVisible = false;
-        mediaElement.Play();
-        OnPropertyChanged(nameof(MenuIsVisible));
-    }
-
-    private void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
-    {
-        MenuIsVisible = false;
-        OnPropertyChanged(nameof(MenuIsVisible));
     }
 }

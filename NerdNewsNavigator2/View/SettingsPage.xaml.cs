@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class SettingsPage : ContentPage
 {
+    #region Properties
     private readonly IMessenger _messenger;
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
@@ -27,7 +28,7 @@ public partial class SettingsPage : ContentPage
             OnPropertyChanged(nameof(_setAutoDownload));
         }
     }
-
+    #endregion
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsPage"/>
     /// </summary>

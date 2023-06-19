@@ -2,21 +2,20 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Plugin.LocalNotification;
-using Plugin.LocalNotification.AndroidOption;
-
 namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
 public static class DownloadService
 {
+    #region Properties
     public static bool CancelDownload { get; set; } = false;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
     public static int Count { get; set; } = 0;
+    #endregion
 
     /// <summary>
     /// Method Adds Downloaded <see cref="Download"/> to Database.

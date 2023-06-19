@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class LivePage : ContentPage
 {
+    #region Properties
     private YoutubeClient Youtube { get; set; } = new();
     private HttpClient Client { get; set; } = new();
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
@@ -16,6 +17,7 @@ public partial class LivePage : ContentPage
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
     private readonly ILogger<LivePage> _logger;
+    #endregion
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -51,7 +53,7 @@ public partial class LivePage : ContentPage
         var item = "https://www.youtube.com/user/twit";
         _ = LoadVideo(item);
     }
-
+    #region Youtube Methods
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
     /// </summary>
@@ -76,7 +78,8 @@ public partial class LivePage : ContentPage
     private async Task<string> ParseVideoIdAsync(string url)
     {
         var userId = (await Youtube.Channels.GetByUserAsync(url)).Id;
-        var page = await Client.GetAsync("https://www.youtube.com/channel/" + $"{userId}/live");
+        var item = "https://www.youtube.com/channel/";
+        var page = await Client.GetAsync(item + $"{userId}/live");
         var result = await page.Content.ReadAsStringAsync();
         if (result is null)
         {
@@ -131,4 +134,5 @@ public partial class LivePage : ContentPage
         }
         return content;
     }
+    #endregion
 }
