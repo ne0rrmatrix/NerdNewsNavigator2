@@ -82,6 +82,32 @@
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
                 </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HorizontalOptions="Start"
+                        Text="Set Wifi Only"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Default=240,
+                                               Tablet=360}" />
+                    <Button
+                        Margin="10"
+                        x:Name="WifiBtn"
+                        Clicked="WifiOnly"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Tablet=24,
+                                           Default=12}"
+                        HeightRequest="{OnIdiom Default=35,
+                                                Tablet=50}"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnIdiom Tablet=170,
+                                               Default=80}" />
+                </HorizontalStackLayout>
                 
                 <HorizontalStackLayout>
                     <Label

@@ -178,6 +178,7 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
+        WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
         var start = Preferences.Default.Get("start", false);
         if (start)
         {
@@ -192,6 +193,21 @@ public partial class SettingsPage : ContentPage
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        }
+    }
+
+    private void WifiOnly(object sender, EventArgs e)
+    {
+        var wifiOnly = Preferences.Default.Get("WifiOnly", "No");
+        if (wifiOnly == "No")
+        {
+            WifiBtn.Text = "Yes";
+            Preferences.Default.Set("WifiOnly", "Yes");
+        }
+        else
+        {
+            WifiBtn.Text = "No";
+            Preferences.Default.Set("WifiOnly", "No");
         }
     }
 }

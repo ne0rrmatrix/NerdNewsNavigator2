@@ -51,3 +51,6 @@ global using NerdNewsNavigator2.Controls;
 global using Plugin.LocalNotification;
 global using Plugin.LocalNotification.AndroidOption;
 global using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+#if ANDROID
+global using NerdNewsNavigator2.Platforms.Android;
+#endif

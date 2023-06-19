@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+using System.Timers;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -14,6 +15,8 @@ internal class AutoStartService : Service
 {
     #region Properties
     private WakeLock _wakeLock;
+    private static string Status { get; set; }
+    public static string WifiOnlyDownloading { get; set; }
     public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
@@ -26,6 +29,8 @@ internal class AutoStartService : Service
     public AutoStartService()
     {
         _connectivity = MauiApplication.Current.Services.GetService<IConnectivity>();
+        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
     }
 
     /// <summary>
@@ -132,15 +137,36 @@ internal class AutoStartService : Service
         if (cancellationToken.IsCancellationRequested)
         {
             ATimer.Stop();
+            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
             ATimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
             return;
         }
         ATimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         ATimer.Start();
     }
 
+    private static void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Connection status has changed");
+        Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
+        System.Diagnostics.Debug.WriteLine(Status);
+        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+    }
     private static void OnTimedEvent(object source, ElapsedEventArgs e)
     {
+        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        var item = string.Join(", ", Connectivity.Current.ConnectionProfiles);
+        if (item == string.Empty)
+        {
+            System.Diagnostics.Debug.WriteLine("No wifi or cell service");
+        }
+        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
+        {
+            System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
+            return;
+        }
+
         System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
         _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
     }
@@ -156,20 +182,6 @@ internal class AutoStartService : Service
             this.StartForegroundService(intent);
         }
     }
-    /// <summary>
-    /// A method that stops <see cref="Service"/> for Auto downloads
-    /// </summary>
-    public void Stop()
-    {
-        System.Diagnostics.Debug.WriteLine("Stopping Auto Download");
-        CancellationTokenSource.Cancel();
-        LongTask(CancellationTokenSource.Token);
-        CancellationTokenSource?.Dispose();
-        CancellationTokenSource = null;
-        var intent = new Intent(this, typeof(AutoStartService));
-        this.StopService(intent);
-    }
-
     public override void OnDestroy()
     {
         if (_wakeLock.IsHeld)
