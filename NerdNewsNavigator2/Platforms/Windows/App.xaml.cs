@@ -110,10 +110,10 @@ public partial class App : MauiWinUIApplication
         {
             _aTimer.Stop();
             Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
-            _aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            _aTimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
-        _aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        _aTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         _aTimer.Start();
     }
@@ -124,7 +124,7 @@ public partial class App : MauiWinUIApplication
         System.Diagnostics.Debug.WriteLine(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
     }
-    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    private static void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
         var item = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         System.Diagnostics.Debug.WriteLine(item);

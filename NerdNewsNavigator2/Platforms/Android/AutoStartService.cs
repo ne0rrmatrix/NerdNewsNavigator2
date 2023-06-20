@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
-using System.Timers;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -115,10 +115,10 @@ internal class AutoStartService : Service
         {
             ATimer.Stop();
             Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
-            ATimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
-        ATimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         ATimer.Start();
     }
@@ -130,7 +130,7 @@ internal class AutoStartService : Service
         System.Diagnostics.Debug.WriteLine(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
     }
-    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    private static void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         System.Diagnostics.Debug.WriteLine(Status);

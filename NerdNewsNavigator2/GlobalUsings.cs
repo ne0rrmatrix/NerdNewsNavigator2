@@ -2,55 +2,41 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-global using System;
-global using System.Collections.Generic;
-global using System.Threading.Tasks;
-global using CommunityToolkit.Mvvm.ComponentModel;
+global using System.Xml.Linq;
+global using System.Xml;
+global using System.Web;
+global using System.ComponentModel;
+global using System.Text.RegularExpressions;
 global using System.Collections.ObjectModel;
 global using System.Diagnostics;
-global using CommunityToolkit.Mvvm.Input;
+global using Microsoft.Extensions.Logging;
 global using NerdNewsNavigator2.Model;
 global using NerdNewsNavigator2.Services;
 global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.Data;
-global using Microsoft.Extensions.Logging;
 global using NerdNewsNavigator2.ViewModel;
+global using NerdNewsNavigator2.Messages;
 global using CommunityToolkit.Maui;
-global using System.Xml.Linq;
-global using System.Xml;
-global using System.Web;
-global using Microsoft.Maui.LifecycleEvents;
-global using System.Globalization;
-global using System.Text;
-global using CommunityToolkit.Maui.Converters;
-global using System.ComponentModel;
 global using CommunityToolkit.Maui.Core.Primitives;
-global using CommunityToolkit.Maui.Core.Views;
 global using CommunityToolkit.Maui.Views;
-global using SQLite;
-global using System.Timers;
-global using System.Text.RegularExpressions;
-global using System.Text.Json;
-global using System.Linq;
-global using Microsoft.Maui.Devices;
-global using MetroLog.Layouts;
-global using MetroLog.Targets;
-global using MetroLog;
-global using MetroLog.MicrosoftExtensions;
-global using Microsoft.Extensions.Options;
-global using MetroLog.Operators;
+global using CommunityToolkit.Mvvm.Input;
+global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using CommunityToolkit.Mvvm.Messaging;
-global using NerdNewsNavigator2.Messages;
 global using CommunityToolkit.Maui.Alerts;
-global using MetroLog.Maui;
+global using SQLite;
 global using YoutubeExplode;
-global using YoutubeExplode.Videos;
-global using M3U8Parser;
-global using NerdNewsNavigator2.Controls;
-global using Plugin.LocalNotification;
-global using Plugin.LocalNotification.AndroidOption;
+global using MetroLog.Maui;
+global using MetroLog.MicrosoftExtensions;
+global using MetroLog.Operators;
 global using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+global using M3U8Parser;
+#if ANDROID || IOS
+
+global using Plugin.LocalNotification;
+#endif
+
 #if ANDROID
+global using Plugin.LocalNotification.AndroidOption;
 global using NerdNewsNavigator2.Platforms.Android;
 #endif
