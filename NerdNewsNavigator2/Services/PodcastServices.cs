@@ -79,7 +79,7 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static async Task AddPodcast(string url)
     {
-        var podcast = await Task.FromResult(FeedService.GetFeed(url)).Result;
+        var podcast = await FeedService.GetFeed(url);
         if (podcast == null)
         {
             return;
@@ -88,6 +88,8 @@ public static class PodcastServices
         {
             Title = podcast.Title,
             Url = podcast.Url,
+            Download = false,
+            IsNotDownloaded = true,
             Description = podcast.Description,
             Image = podcast.Image,
         });

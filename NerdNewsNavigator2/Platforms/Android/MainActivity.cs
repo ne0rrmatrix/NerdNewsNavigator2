@@ -6,7 +6,6 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using NerdNewsNavigator2.Platforms.Android;
 
 namespace NerdNewsNavigator2;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
@@ -42,13 +41,16 @@ public class MainActivity : MauiAppCompatActivity
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         this.StartForegroundService(serviceIntent);
     }
-
     private void StopService()
     {
-        AutoStartService.CancellationTokenSource.Cancel();
-        AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
-        AutoStartService.CancellationTokenSource?.Dispose();
-        AutoStartService.CancellationTokenSource = null;
+        if (AutoStartService.CancellationTokenSource is not null)
+        {
+            AutoStartService.CancellationTokenSource.Cancel();
+            AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
+            AutoStartService.CancellationTokenSource?.Dispose();
+            AutoStartService.CancellationTokenSource = null;
+        }
+
         System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);

@@ -48,10 +48,6 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private async void AddPodcast(object sender, EventArgs e)
     {
-        if (sender is null || Url.Text is null)
-        {
-            return;
-        }
         if (ValidateUrl(Url.Text) && Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute) && Url.Text.Contains("twit"))
         {
             await PodcastServices.AddPodcast(Url.Text.ToString());
@@ -61,12 +57,13 @@ public partial class SettingsPage : ContentPage
         }
         await Toast.Make("Error: Not a twit Podcast!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
     }
+    /// <summary>
+    /// Method sets Auto Download Toggle
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void AutoDownload(object sender, EventArgs e)
     {
-        if (sender is null)
-        {
-            return;
-        }
         if (SetAutoDownload == "Yes")
         {
             SetAutoDownload = "No";
@@ -92,20 +89,25 @@ public partial class SettingsPage : ContentPage
             });
         }
     }
+
     /// <summary>
-    /// Method validates URL <see cref="Uri"/> <see cref="string"/>
+    /// Method sets Wifi Only toggle 
     /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    private static bool ValidateUrl(string url)
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void WifiOnly(object sender, EventArgs e)
     {
-        if (url.Trim() == string.Empty)
+        var wifiOnly = Preferences.Default.Get("WifiOnly", "No");
+        if (wifiOnly == "No")
         {
-            return false;
+            WifiBtn.Text = "Yes";
+            Preferences.Default.Set("WifiOnly", "Yes");
         }
-        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-        return rgx.IsMatch(url);
+        else
+        {
+            WifiBtn.Text = "No";
+            Preferences.Default.Set("WifiOnly", "No");
+        }
     }
 
     /// <summary>
@@ -153,7 +155,6 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-
     private async void ResetPodcasts(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(ResetAllSettingsPage)}");
@@ -172,12 +173,13 @@ public partial class SettingsPage : ContentPage
     #endregion
 
     /// <summary>
-    /// Method sets screen to normal screen size.
+    /// Method loads defaults data for Page and sets Nav Bar Visibility
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
+        WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
         var start = Preferences.Default.Get("start", false);
         if (start)
         {
@@ -193,5 +195,21 @@ public partial class SettingsPage : ContentPage
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
+    }
+
+    /// <summary>
+    /// Method validates URL <see cref="Uri"/> <see cref="string"/>
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private static bool ValidateUrl(string url)
+    {
+        if (url.Trim() == string.Empty)
+        {
+            return false;
+        }
+        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
+        return rgx.IsMatch(url);
     }
 }

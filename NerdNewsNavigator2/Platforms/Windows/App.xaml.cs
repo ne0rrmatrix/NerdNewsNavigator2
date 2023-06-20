@@ -14,8 +14,9 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    private IConnectivity _connectivity;
     private readonly System.Timers.Timer _aTimer = new(60 * 60 * 1000);
+    public static string WifiOnlyDownloading { get; set; }
+    private static string Status { get; set; }
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
     /// <summary>
@@ -25,6 +26,7 @@ public partial class App : MauiWinUIApplication
     public App()
     {
         this.InitializeComponent();
+        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
             var nativeWindow = handler.PlatformView;
@@ -48,37 +50,23 @@ public partial class App : MauiWinUIApplication
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
-        _connectivity = MauiWinUIApplication.Current.Services.GetService<IConnectivity>();
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
-            if (message.Start && InternetConnected())
+            if (message.Start)
             {
                 Start();
+                Task.Run(() =>
+                {
+                    Thread.Sleep(60 * 1000);
+                    _ = DownloadService.AutoDownload();
+                });
             }
             else
             {
                 Stop();
             }
         });
-    }
-
-    /// <summary>
-    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
-    /// </summary>
-    /// <returns></returns>
-    public bool InternetConnected()
-    {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            PodcastServices.IsConnected = true;
-            return true;
-        }
-        else
-        {
-            PodcastServices.IsConnected = false;
-            return false;
-        }
     }
 
     /// <summary>
@@ -106,10 +94,13 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public void Stop()
     {
-        CancellationTokenSource.Cancel();
-        LongTask(CancellationTokenSource.Token);
-        CancellationTokenSource?.Dispose();
-        CancellationTokenSource = null;
+        if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Cancel();
+            LongTask(CancellationTokenSource.Token);
+            CancellationTokenSource?.Dispose();
+            CancellationTokenSource = null;
+        }
         Debug.WriteLine("Stopped Auto Downloder");
     }
 
@@ -118,15 +109,35 @@ public partial class App : MauiWinUIApplication
         if (cancellationToken.IsCancellationRequested)
         {
             _aTimer.Stop();
-            _aTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
+            _aTimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
-        _aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        _aTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
+        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         _aTimer.Start();
     }
-
-    private static void OnTimedEvent(object source, ElapsedEventArgs e)
+    private static void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine("Connection status has changed");
+        Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
+        System.Diagnostics.Debug.WriteLine(Status);
+        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+    }
+    private static void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
+    {
+        var item = string.Join(", ", Connectivity.Current.ConnectionProfiles);
+        System.Diagnostics.Debug.WriteLine(item);
+        if (Status == string.Empty)
+        {
+            System.Diagnostics.Debug.WriteLine("No wifi or cell service");
+            return;
+        }
+        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
+        {
+            System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
+            return;
+        }
         Debug.WriteLine($"Timed event: {e} Started");
         _ = DownloadService.AutoDownload();
     }
