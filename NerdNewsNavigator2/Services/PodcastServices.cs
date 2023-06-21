@@ -20,7 +20,7 @@ public static class PodcastServices
     public static Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        var item = GetUrl();
+        var item = GetPodcastList();
         item.ForEach(async x =>
         {
             var temp = await FeedService.GetFeed(x);
@@ -29,7 +29,11 @@ public static class PodcastServices
         return Task.FromResult(podcasts);
     }
 
-    private static List<string> GetUrl()
+    /// <summary>
+    /// Get OPML file from web and return list of current Podcasts.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="string"/> of Url's</returns>
+    private static List<string> GetPodcastList()
     {
         List<string> list = new();
         try
