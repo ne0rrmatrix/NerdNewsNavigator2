@@ -438,6 +438,18 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             var res = items.OrderBy(x => x.Title).ToList();
             await PodcastServices.AddToDatabase(res);
             res?.ForEach(Podcasts.Add);
+            if (FavoriteShows.Count > 0)
+            {
+                FavoriteShows.ToList().ForEach(async oldFavorite =>
+                {
+                    if (!Podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
+                    {
+
+                        await App.PositionData.DeleteFavorite(oldFavorite);
+                    }
+                });
+                ThreadPool.QueueUserWorkItem(GetFavoriteShows);
+            }
             return;
         }
         if (temp is not null)
