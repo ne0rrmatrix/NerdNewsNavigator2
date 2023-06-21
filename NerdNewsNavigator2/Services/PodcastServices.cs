@@ -32,24 +32,31 @@ public static class PodcastServices
     private static List<string> GetUrl()
     {
         List<string> list = new();
-        var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
-        var reader = new XmlTextReader(item);
-        while (reader.Read())
+        try
         {
-            switch (reader.NodeType)
+            var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
+            var reader = new XmlTextReader(item);
+            while (reader.Read())
             {
-                case XmlNodeType.Element:
-                    while (reader.MoveToNextAttribute()) // Read the attributes.
-                    {
-                        if (reader.Name == "xmlUrl")
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        while (reader.MoveToNextAttribute()) // Read the attributes.
                         {
-                            list.Add(reader.Value);
+                            if (reader.Name == "xmlUrl")
+                            {
+                                list.Add(reader.Value);
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
+            return list;
         }
-        return list;
+        catch
+        {
+            return list;
+        }
     }
     /// <summary>
     /// Method Adds Playback <see cref="Position"/> to Database.
