@@ -406,22 +406,22 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return;
         }
-        temp.ForEach(async show =>
-        {
-            var item = await FeedService.GetShows(show.Url, true);
-            var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
-            if (downloaded)
+        temp?.Where(x => !x.Deleted).ToList().ForEach(async show =>
             {
-                item[0].IsDownloaded = true;
-                item[0].IsNotDownloaded = false;
-            }
-            else
-            {
-                item[0].IsNotDownloaded = true;
-                item[0].IsDownloaded = false;
-            }
-            MostRecentShows.Add(item[0]);
-        });
+                var item = await FeedService.GetShows(show.Url, true);
+                var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
+                if (downloaded)
+                {
+                    item[0].IsDownloaded = true;
+                    item[0].IsNotDownloaded = false;
+                }
+                else
+                {
+                    item[0].IsNotDownloaded = true;
+                    item[0].IsDownloaded = false;
+                }
+                MostRecentShows.Add(item[0]);
+            });
     }
 
     /// <summary>
@@ -454,10 +454,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             }
             return;
         }
-        if (temp is not null)
-        {
-            temp?.ForEach(Podcasts.Add);
-        }
+        temp?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
     private async Task UpdateCheckAsync()
     {
@@ -486,13 +483,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.ForEach((item) =>
-        {
-            if (!item.Deleted)
-            {
-                DownloadedShows?.Add(item);
-            }
-        });
+        temp?.Where(x => x.Deleted).ToList().ForEach(DownloadedShows.Add);
     }
 
     #endregion

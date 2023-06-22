@@ -63,13 +63,13 @@ public static class PodcastServices
         }
     }
     /// <summary>
-    /// Method Adds Playback <see cref="Position"/> to Database.
+    /// Method Adds Playback <see cref="Podcast"/> to Database.
     /// </summary>
-    /// <param name="position"></param> Position Class object.
+    /// <param name="podcast"></param> Position Class object.
     /// <returns>nothing</returns>
-    public static async Task AddToDatabase(List<Podcast> position)
+    public static async Task AddToDatabase(List<Podcast> podcast)
     {
-        foreach (var item in position)
+        foreach (var item in podcast)
         {
             await App.PositionData.AddPodcast(item);
         }
@@ -104,10 +104,13 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static async Task AddDefaultPodcasts()
     {
-        await RemoveDefaultPodcasts();
-        var items = await GetFromUrl();
-        var res = items.OrderBy(x => x.Title).ToList();
-        await AddToDatabase(res);
+        await Task.Run(async () =>
+        {
+            await RemoveDefaultPodcasts();
+            var items = await GetFromUrl();
+            var res = items.OrderBy(x => x.Title).ToList();
+            await AddToDatabase(res);
+        });
     }
 
     /// <summary>
@@ -116,14 +119,17 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static async Task RemoveDefaultPodcasts()
     {
-        var items = await App.PositionData.GetAllPodcasts();
-        if (items is null || items.Count == 0)
+        await Task.Run(async () =>
         {
-            return;
-        }
-        items.Where(x => x.Url.Contains("feeds.twit.tv")).ToList().ForEach(async item =>
-        {
-            await App.PositionData.DeletePodcast(item);
+            var items = await App.PositionData.GetAllPodcasts();
+            if (items is null || items.Count == 0)
+            {
+                return;
+            }
+            items.Where(x => x.Url.Contains("feeds.twit.tv")).ToList().ForEach(async item =>
+            {
+                await App.PositionData.DeletePodcast(item);
+            });
         });
     }
 
@@ -144,15 +150,5 @@ public static class PodcastServices
             await App.PositionData.DeletePodcast(item);
         });
         return true;
-    }
-
-    /// <summary>
-    /// Method Updates a <see cref="Podcast"/> to Database.
-    /// </summary>
-    /// <param name="podcast"><see cref="string"/> Url of <see cref="Podcast"/></param>
-    /// <returns>nothing</returns>
-    public static async Task UpdatePodcast(Podcast podcast)
-    {
-        await App.PositionData.UpdatePodcast(podcast);
     }
 }

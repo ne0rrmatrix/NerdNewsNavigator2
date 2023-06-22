@@ -10,4 +10,5 @@ namespace NerdNewsNavigator2.Model;
 [Table("Podcasts")]
 public class Podcast : Shared
 {
+    public bool Deleted { get; set; } = false;
 }

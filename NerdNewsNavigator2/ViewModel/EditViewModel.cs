@@ -62,9 +62,9 @@ public partial class EditViewModel : BaseViewModel
         {
             var podcast = Podcasts.First(x => x.Url == url);
             Podcasts?.Remove(podcast);
-            await App.PositionData.DeletePodcast(podcast);
+            podcast.Deleted = true;
+            await App.PositionData.UpdatePodcast(podcast);
         }
-
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)
         {
@@ -114,13 +114,14 @@ public partial class EditViewModel : BaseViewModel
                 Image = item.Image,
                 PubDate = item.PubDate,
             };
-            await FavoriteService.AddFavoriteToDatabase(favorite);
             FavoriteShows.Add(favorite);
 
             item.Download = true;
             item.IsNotDownloaded = false;
-            await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
+
+            await App.PositionData.UpdatePodcast(item);
+            await FavoriteService.AddFavoriteToDatabase(favorite);
 
             var start = Preferences.Default.Get("start", false);
             if (start)
@@ -128,11 +129,10 @@ public partial class EditViewModel : BaseViewModel
                 Logger.LogInformation("Auto Download is already set to start Automatically");
                 return true;
             }
-            Preferences.Default.Set("start", true);
 
+            Preferences.Default.Set("start", true);
             Logger.LogInformation("Setting Auto Download to start Automatically");
             _messenger.Send(new MessageData(true));
-
             return true;
         }
         return false;
@@ -151,20 +151,19 @@ public partial class EditViewModel : BaseViewModel
             return false;
         }
 
-        await FavoriteService.RemoveFavoriteFromDatabase(url);
+        var fav = FavoriteShows.First(x => x.Url == url);
+        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
 
         var item = Podcasts.First(x => x.Url == url);
         if (item is not null)
         {
             item.Download = false;
             item.IsNotDownloaded = true;
-            await PodcastServices.UpdatePodcast(item);
             Podcasts[Podcasts.IndexOf(item)] = item;
+            await App.PositionData.UpdatePodcast(item);
         }
 
-        var fav = FavoriteShows.First(x => x.Url == url);
-        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
-
+        await FavoriteService.RemoveFavoriteFromDatabase(url);
         return true;
     }
 }

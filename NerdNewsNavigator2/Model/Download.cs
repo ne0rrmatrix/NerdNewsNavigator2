@@ -10,13 +10,7 @@ namespace NerdNewsNavigator2.Model;
 [Table("Downloads")]
 public class Download : Shared
 {
-    /// <summary>
-    /// The <c>CopyRight</c> is a <see cref="string"/> of <see cref="Download"/> Class.
-    /// </summary>
     public string CopyRight { get; set; }
-    /// <summary>
-    /// the <c>FileName</c> is a <see cref="string"/> of <see cref="Download"/> Class.
-    /// </summary>
     public string FileName { get; set; }
     public bool Deleted { get; set; }
 }

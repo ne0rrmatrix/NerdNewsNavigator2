@@ -59,18 +59,21 @@ public partial class VideoPlayerPage : ContentPage
         Pos.SavedPosition = TimeSpan.Zero;
         Pos.Title = Url;
         var positionList = await App.PositionData.GetAllPositions();
-        foreach (var item in positionList)
+        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+        if (result is not null)
         {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
-            }
+            Pos = result;
+            _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+            mediaElement.SeekTo(Pos.SavedPosition);
         }
+        else
+        {
+            _logger.LogInformation("Could not find saved position");
+        }
+
         mediaElement.ShouldKeepScreenOn = true;
-        mediaElement.SeekTo(Pos.SavedPosition);
-        _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-        mediaElement.StateChanged += Media_Stopped;
+        _logger.LogInformation("ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+        mediaElement.StateChanged += MediaStopped;
     }
 
     /// <summary>
@@ -83,20 +86,23 @@ public partial class VideoPlayerPage : ContentPage
         Pos.Title = Url;
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
-        foreach (var item in positionList)
+        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+        if (result is not null)
         {
-            if (Pos.Title == item.Title)
-            {
-                Pos.SavedPosition = item.SavedPosition;
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", item.Title, item.SavedPosition);
-            }
+            Pos = result;
+            _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
         }
+        else
+        {
+            _logger.LogInformation("Could not find saved position");
+        }
+
         if (e.NewState == MediaElementState.Opening)
         {
             mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.ShouldKeepScreenOn = true;
             _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
-            mediaElement.StateChanged += Media_Stopped;
+            mediaElement.StateChanged += MediaStopped;
         }
     }
 
@@ -105,7 +111,7 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void Media_Stopped(object? sender, MediaStateChangedEventArgs e)
+    private async void MediaStopped(object? sender, MediaStateChangedEventArgs e)
     {
         switch (e.NewState)
         {
@@ -120,7 +126,7 @@ public partial class VideoPlayerPage : ContentPage
                 {
                     Pos.SavedPosition = mediaElement.Position;
                     _logger.LogInformation("Paused: {Position}", mediaElement.Position);
-                    await Save();
+                    await App.PositionData.UpdatePosition(Pos);
                 }
                 break;
         }
@@ -131,7 +137,7 @@ public partial class VideoPlayerPage : ContentPage
                 {
                     Pos.SavedPosition = mediaElement.Position;
                     _logger.LogInformation("Finished Seeking: {Position}", mediaElement.Position);
-                    await Save();
+                    await App.PositionData.UpdatePosition(Pos);
                 }
                 break;
         }
@@ -148,27 +154,6 @@ public partial class VideoPlayerPage : ContentPage
     }
 
     #endregion
-
-    /// <summary>
-    /// Manages saving of <see cref="Pos"/> to <see cref="PositionDataBase"/> Database.
-    /// </summary>
-    /// <returns></returns>
-    private async Task Save()
-    {
-        var items = await App.PositionData.GetAllPositions();
-        foreach (var item in items)
-        {
-            if (item.Title == Pos.Title)
-            {
-                await App.PositionData.Delete(item);
-            }
-        }
-        await App.PositionData.Add(new Position
-        {
-            Title = Pos.Title,
-            SavedPosition = Pos.SavedPosition,
-        });
-    }
 
     /// <summary>
     /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
