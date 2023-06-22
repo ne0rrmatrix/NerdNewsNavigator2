@@ -11,37 +11,6 @@ public static class PodcastServices
 {
     #region Properties
     public static bool IsConnected { get; set; } = true;
-    /// <summary>
-    /// Default URL <see cref="List{T}"/> <see cref="string"/> for Twit podcasts.
-    /// </summary>
-
-    private static readonly List<string> s_twit = new()
-        {
-            "https://feeds.twit.tv/ww_video_hd.xml",
-            "https://feeds.twit.tv/aaa_video_hd.xml",
-            "https://feeds.twit.tv/hom_video_hd.xml",
-            "https://feeds.twit.tv/hop_video_hd.xml",
-            "https://feeds.twit.tv/howin_video_hd.xml",
-            "https://feeds.twit.tv/ipad_video_hd.xml",
-            "https://feeds.twit.tv/mbw_video_hd.xml",
-            "https://feeds.twit.tv/sn_video_hd.xml",
-            "https://feeds.twit.tv/ttg_video_hd.xml",
-            "https://feeds.twit.tv/tnw_video_hd.xml",
-            "https://feeds.twit.tv/twiet_video_hd.xml",
-            "https://feeds.twit.tv/twig_video_hd.xml",
-            "https://feeds.twit.tv/twit_video_hd.xml",
-            "https://feeds.twit.tv/events_video_hd.xml",
-            "https://feeds.twit.tv/specials_video_hd.xml",
-            "https://feeds.twit.tv/bits_video_hd.xml",
-            "https://feeds.twit.tv/leo_video_hd.xml",
-            "https://feeds.twit.tv/ant_video_hd.xml",
-            "https://feeds.twit.tv/jason_video_hd.xml",
-            "https://feeds.twit.tv/mikah_video_hd.xml",
-            "https://feeds.twit.tv/twis_video_hd.xml",
-            "https://feeds.twit.tv/uls_video_hd.xml",
-            "https://feeds.twit.tv/htg_video_hd.xml",
-            "https://feeds.twit.tv/floss_video_hd.xml"
-        };
     #endregion
 
     /// <summary>
@@ -51,14 +20,48 @@ public static class PodcastServices
     public static Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        s_twit.ForEach(async podcast =>
+        var item = GetPodcastList();
+        item.ForEach(async x =>
         {
-            var temp = await FeedService.GetFeed(podcast);
+            var temp = await FeedService.GetFeed(x);
             podcasts.Add(temp);
         });
         return Task.FromResult(podcasts);
     }
 
+    /// <summary>
+    /// Get OPML file from web and return list of current Podcasts.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="string"/> of Url's</returns>
+    private static List<string> GetPodcastList()
+    {
+        List<string> list = new();
+        try
+        {
+            var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
+            var reader = new XmlTextReader(item);
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        while (reader.MoveToNextAttribute()) // Read the attributes.
+                        {
+                            if (reader.Name == "xmlUrl")
+                            {
+                                list.Add(reader.Value);
+                            }
+                        }
+                        break;
+                }
+            }
+            return list;
+        }
+        catch
+        {
+            return list;
+        }
+    }
     /// <summary>
     /// Method Adds Playback <see cref="Position"/> to Database.
     /// </summary>

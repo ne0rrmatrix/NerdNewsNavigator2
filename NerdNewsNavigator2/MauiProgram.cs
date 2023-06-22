@@ -12,6 +12,10 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            // Font added to address issue: https://github.com/dotnet/maui/issues/13239
+            // fonts.AddFont("OpenSans-Medium.ttf", "OpenSansMedium"); !! Still throws error !!
+            // Alias set to match error string
+            fonts.AddFont("OpenSans-Medium.ttf", "sans-serif-medium");
         }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement()
 #if ANDROID || IOS
         .UseLocalNotification();

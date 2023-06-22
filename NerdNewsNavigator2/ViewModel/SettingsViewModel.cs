@@ -20,4 +20,15 @@ public partial class SettingsViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
     }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task UpdatePodcasts()
+    {
+        Podcasts.Clear();
+        await App.PositionData.DeleteAllPodcasts();
+        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+    }
 }
