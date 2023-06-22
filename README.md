@@ -1,7 +1,9 @@
 <h1 align="center">NerdNewsNavigator2</h1>
 
 A Dotnet Maui Video player for Twit.tv RSS feeds. Browse latest episodes from Twit tv network RSS feeds and watch live as they are broadcasted.
-Or download them for offline watching.
+Or download them for offline watching. Automatically keeps track of playback position and when video is resumed it starts where you left off. 
+Podcast list is updated automatically every 30 days, or it can manually be updated in settings. App also allows you to choose to download only
+when wifi is connected. Save you data!
 
 ## Current Features implemented
 1. Browser RSS feed in a nice menu based layout.
@@ -16,10 +18,6 @@ Or download them for offline watching.
 10. Downloader implemented on Show page. Shows can be accessed through downloads in flyout menu.
 11. Automatic download of most recent favorite shows is now implemented.
 12. A button to control automatic downloads has been placed in settings.
-
-## Current known issues
-1. Requires internet access all the time in order to function in any way. _ Fixed! Can play downloaded podcast while in airplane mode.
-2. Downloaded podcasts are only available on downloads page. Does not automatically play downloaded show from show page after downloading.
 
 ## TODO
 1. Work on better UI implementation.
