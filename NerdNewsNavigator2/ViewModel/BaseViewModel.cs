@@ -431,6 +431,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
+        var task = UpdateCheckAsync();
+        task.Wait();
         var temp = await App.PositionData.GetAllPodcasts();
         if (InternetConnected() && (temp is null || temp.Count == 0))
         {
@@ -455,6 +457,24 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         if (temp is not null)
         {
             temp?.ForEach(Podcasts.Add);
+        }
+    }
+    private async Task UpdateCheckAsync()
+    {
+        var currentdate = DateTime.Now;
+        var oldDate = Preferences.Default.Get("OldDate", DateTime.Now);
+        Logger.LogInformation("Total day since last Update check for new Podcasts: {numberOfDays}", (currentdate - oldDate).Days.ToString());
+        if ((currentdate - oldDate).TotalDays <= 0)
+        {
+            Preferences.Default.Set("OldDate", DateTime.Now);
+            Logger.LogInformation("Setting current date as Last Update Check");
+        }
+        if ((oldDate - currentdate).Days > 30)
+        {
+            Logger.LogInformation("Last Update Check is over 30 days ago. Updating now.");
+            Preferences.Default.Remove("OldDate");
+            Preferences.Default.Set("OldDate", currentdate);
+            await App.PositionData.DeleteAllPodcasts();
         }
     }
 

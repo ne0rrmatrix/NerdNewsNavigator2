@@ -34,7 +34,6 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     {
         DownloadService.CancelDownload = true;
         IsBusy = true;
-        Preferences.Default.Remove("AutoDownload");
         await App.PositionData.DeleteAll();
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
