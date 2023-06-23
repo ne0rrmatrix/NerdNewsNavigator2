@@ -87,7 +87,7 @@ public static class DownloadService
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
             {
-                Status = ($"Download Progress: {progressPercentage}%");
+                Status = $"Download Progress: {progressPercentage}%";
             };
             await client.StartDownload();
             return true;

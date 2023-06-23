@@ -81,11 +81,7 @@ public partial class LivePage : ContentPage
         var item = "https://www.youtube.com/channel/";
         var page = await Client.GetAsync(item + $"{userId}/live");
         var result = await page.Content.ReadAsStringAsync();
-        if (result is null)
-        {
-            return string.Empty;
-        }
-        return result.Substring(result.IndexOf("watch?v=") + 8, 11);
+        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=") + 8, 11);
     }
 
     /// <summary>

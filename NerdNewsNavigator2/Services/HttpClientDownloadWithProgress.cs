@@ -68,7 +68,9 @@ public class HttpClientDownloadWithProgress : IDisposable
             }
 
             if (readCount % 100 == 0)
+            {
                 TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+            }
         }
         while (isMoreToRead);
     }
@@ -76,11 +78,15 @@ public class HttpClientDownloadWithProgress : IDisposable
     private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
     {
         if (ProgressChanged == null)
+        {
             return;
+        }
 
         double? progressPercentage = null;
         if (totalDownloadSize.HasValue)
+        {
             progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
+        }
 
         ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
     }

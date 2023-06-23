@@ -27,13 +27,13 @@ public partial class PodcastViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
         Task.Run(async () =>
-        {
-            OnPropertyChanged(nameof(IsBusy));
+       {
+           OnPropertyChanged(nameof(IsBusy));
 
-            await GetUpdatedPodcasts();
-            IsBusy = false;
-            OnPropertyChanged(nameof(IsBusy));
-        });
+           await GetUpdatedPodcasts();
+           IsBusy = false;
+           OnPropertyChanged(nameof(IsBusy));
+       });
     }
 
     /// <summary>

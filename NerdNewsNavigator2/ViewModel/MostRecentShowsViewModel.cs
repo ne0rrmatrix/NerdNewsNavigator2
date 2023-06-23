@@ -25,13 +25,10 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         }
         if (DownloadService.IsDownloading)
         {
-            _ = ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
 #if WINDOWS || ANDROID
-        Task.Run(async () =>
-        {
-            await GetMostRecent();
-        });
+        Task.Run(GetMostRecent);
 #endif
 #if IOS || MACCATALYST
         _ = GetMostRecent();

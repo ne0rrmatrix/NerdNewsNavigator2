@@ -7,7 +7,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 
-namespace NerdNewsNavigator2;
+namespace NerdNewsNavigator2.Platforms.Android;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
@@ -39,7 +39,7 @@ public class MainActivity : MauiAppCompatActivity
     private void StartService()
     {
         var serviceIntent = new Intent(this, typeof(AutoStartService));
-        this.StartForegroundService(serviceIntent);
+        StartForegroundService(serviceIntent);
     }
     private void StopService()
     {

@@ -49,7 +49,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
-    ILogger<BaseViewModel> Logger { get; set; }
+    private ILogger<BaseViewModel> Logger { get; set; }
 
     /// <summary>
     /// an <see cref="IConnectivity"/> instance managed by this class.
@@ -97,7 +97,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             {
                 OnPropertyChanged(nameof(IsNotDownloading));
             }
-
         }
     }
     public bool IsNotDownloading => !IsDownloading;
@@ -145,7 +144,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
         Logger = logger;
-        this._connectivity = connectivity;
+        _connectivity = connectivity;
         _downloadProgress = string.Empty;
         DownloadChanged += () =>
         {
@@ -207,11 +206,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadChanged();
         MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsDownloading = false;
-            DownloadService.IsDownloading = false;
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
-        });
+       {
+           IsDownloading = false;
+           DownloadService.IsDownloading = false;
+           Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+       });
     }
 
     /// <summary>
@@ -247,16 +246,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         Logger.LogInformation("Trying to start download of {URL}", url);
 
-        List<Show> list;
-        if (mostRecent)
-        {
-            list = MostRecentShows.ToList();
-        }
-        else
-        {
-            list = Shows.ToList();
-        }
-
+        var list = mostRecent ? MostRecentShows.ToList() : Shows.ToList();
         var item = list.AsEnumerable().First(x => x.Url == url);
         await ProcessDownloads(item, url);
         TriggerProgressChanged();

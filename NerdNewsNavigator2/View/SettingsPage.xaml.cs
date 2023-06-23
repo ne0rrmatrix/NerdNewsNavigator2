@@ -68,7 +68,7 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "No";
             OnPropertyChanged(nameof(SetAutoDownload));
-            _ = Task.Run(() =>
+            Task.Run(() =>
             {
                 Preferences.Default.Remove("start");
                 Thread.Sleep(1000);
@@ -80,7 +80,7 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "Yes";
             OnPropertyChanged(nameof(SetAutoDownload));
-            _ = Task.Run(() =>
+            Task.Run(() =>
             {
                 Preferences.Default.Remove("start");
                 Thread.Sleep(1000);
@@ -181,14 +181,7 @@ public partial class SettingsPage : ContentPage
     {
         WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
         var start = Preferences.Default.Get("start", false);
-        if (start)
-        {
-            SetAutoDownload = "Yes";
-        }
-        else
-        {
-            SetAutoDownload = "No";
-        }
+        SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
         DeviceService.RestoreScreen();
         if (DownloadService.IsDownloading)

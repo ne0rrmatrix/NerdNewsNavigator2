@@ -28,20 +28,20 @@ public partial class SettingsViewModel : BaseViewModel
     public Task UpdatePodcasts()
     {
         ThreadPool.QueueUserWorkItem(async (state) =>
-        {
-            var res = await PodcastServices.UpdatePodcast();
-            Podcasts.Clear();
-            res.ForEach(Podcasts.Add);
+       {
+           var res = await PodcastServices.UpdatePodcast();
+           Podcasts.Clear();
+           res.ForEach(Podcasts.Add);
 
-            var fav = await PodcastServices.UpdateFavorites();
-            FavoriteShows.Clear();
-            fav.ForEach(FavoriteShows.Add);
+           var fav = await PodcastServices.UpdateFavorites();
+           FavoriteShows.Clear();
+           fav.ForEach(FavoriteShows.Add);
 
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-            });
-        });
+           await MainThread.InvokeOnMainThreadAsync(async () =>
+           {
+               await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+           });
+       });
         return Task.CompletedTask;
     }
 }

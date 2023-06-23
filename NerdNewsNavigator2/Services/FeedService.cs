@@ -69,7 +69,10 @@ public static class FeedService
             mgr.AddNamespace("media", mediaNamespace);
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
             if (rssNodes == null)
+            {
                 return Task.FromResult(shows);
+            }
+
             foreach (XmlNode node in rssNodes)
             {
                 Show show = new()

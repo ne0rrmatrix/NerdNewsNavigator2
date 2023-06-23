@@ -25,7 +25,7 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {

@@ -37,7 +37,7 @@ public partial class App : Application
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
-        _ = ThreadPool.QueueUserWorkItem(state =>
+        ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
         });

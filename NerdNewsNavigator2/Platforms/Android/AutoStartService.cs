@@ -70,7 +70,7 @@ internal class AutoStartService : Service
         notification.SetSmallIcon(Resource.Drawable.ic_stat_alarm);
         notification.SetSilent(true);
 
-        this.StartForeground(NOTIFICATION_ID, notification.Build());
+        StartForeground(NOTIFICATION_ID, notification.Build());
     }
 
     private static void CreateNotificationChannel(NotificationManager notificationMnaManager)
@@ -81,7 +81,6 @@ internal class AutoStartService : Service
            NotificationImportance.None);
             notificationMnaManager.CreateNotificationChannel(channel);
         }
-
     }
     private void AcquireWakeLock()
     {
@@ -157,7 +156,7 @@ internal class AutoStartService : Service
         var intent = new Intent(this, typeof(AutoStartService));
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            this.StartForegroundService(intent);
+            StartForegroundService(intent);
         }
     }
     public override void OnDestroy()
