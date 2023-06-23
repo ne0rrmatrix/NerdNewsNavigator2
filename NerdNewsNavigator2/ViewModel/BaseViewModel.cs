@@ -436,26 +436,17 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         var temp = await App.PositionData.GetAllPodcasts();
         if (InternetConnected() && (temp is null || temp.Count == 0))
         {
-            var items = await PodcastServices.GetFromUrl();
-            var res = items.OrderBy(x => x.Title).ToList();
-            await PodcastServices.AddToDatabase(res);
-            res?.ForEach(Podcasts.Add);
-            if (FavoriteShows.Count > 0)
-            {
-                FavoriteShows.ToList().ForEach(async oldFavorite =>
-                {
-                    if (!Podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
-                    {
-
-                        await App.PositionData.DeleteFavorite(oldFavorite);
-                    }
-                });
-                ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            }
+            var res = await PodcastServices.UpdatePodcast();
+            Podcasts.Clear();
+            res.ForEach(Podcasts.Add);
+            var fav = await PodcastServices.UpdateFavorites();
+            FavoriteShows.Clear();
+            fav.ForEach(FavoriteShows.Add);
             return;
         }
         temp?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
+
     private async Task UpdateCheckAsync()
     {
         var currentdate = DateTime.Now;

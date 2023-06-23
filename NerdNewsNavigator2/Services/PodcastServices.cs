@@ -12,7 +12,7 @@ public static class PodcastServices
     #region Properties
     public static bool IsConnected { get; set; } = true;
     #endregion
-
+    #region Get Podcasts
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
@@ -62,6 +62,93 @@ public static class PodcastServices
             return list;
         }
     }
+    #endregion
+
+    #region Update Podcast list
+    public static async Task<List<Podcast>> UpdatePodcast()
+    {
+        var podcasts = await App.PositionData.GetAllPodcasts();
+        await App.PositionData.DeleteAllPodcasts();
+
+        // list of stale podcasts
+        var stalePodcasts = podcasts.Where(x => x.Deleted).ToList();
+
+        var newPodcasts = await RemoveStalePodcastsAsync(stalePodcasts);
+
+        return await AddPodcastsToDBAsync(stalePodcasts, newPodcasts);
+    }
+    private static async Task<List<Podcast>> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
+    {
+        // get updated podcast list
+        var newPodcasts = await PodcastServices.GetFromUrl();
+
+        // remove stale podcasts
+        if (stalePodcasts.Count > 0)
+        {
+            newPodcasts.ForEach(x =>
+            {
+                if (!stalePodcasts.Exists(y => y.Deleted == x.Deleted))
+                {
+                    newPodcasts.Remove(x);
+                }
+            });
+        }
+        return newPodcasts;
+    }
+    private static async Task<List<Podcast>> AddPodcastsToDBAsync(List<Podcast> stalePodcasts, List<Podcast> newPodcasts)
+    {
+        var res = new List<Podcast>();
+
+        // add all podcasts that are not stale, add all new podcasts if any
+        if (stalePodcasts.Count > 0)
+        {
+            Debug.WriteLine("Found stale podcasts");
+            newPodcasts?.ForEach(x =>
+            {
+                if (!stalePodcasts.Any(y => y.Title == x.Title))
+                {
+                    res.Add(x);
+                }
+            });
+        }
+        else
+        {
+            Debug.WriteLine("Did not find any stale Podcasts");
+            newPodcasts.ForEach(res.Add);
+        }
+        // sort podcast alphabetically
+        res = res.OrderBy(x => x.Title).ToList();
+
+        await AddToDatabase(res);
+        return res;
+    }
+    public static async Task<List<Favorites>> UpdateFavorites()
+    {
+        // get old favorites list
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+        var podcasts = await App.PositionData.GetAllPodcasts();
+        var temp = favoriteShows;
+        // if favorite podcasts are stale remove them
+        if (favoriteShows.Count > 0)
+        {
+            favoriteShows.ToList().ForEach(async oldFavorite =>
+            {
+                if (!podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
+                {
+
+                    await App.PositionData.DeleteFavorite(oldFavorite);
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        temp.Remove(oldFavorite);
+                    });
+                }
+            });
+        }
+        return temp;
+    }
+    #endregion
+
+    #region Manipulate Database
     /// <summary>
     /// Method Adds Playback <see cref="Podcast"/> to Database.
     /// </summary>
@@ -151,4 +238,5 @@ public static class PodcastServices
         });
         return true;
     }
+    #endregion
 }
