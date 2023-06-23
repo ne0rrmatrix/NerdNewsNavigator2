@@ -434,7 +434,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         var task = UpdateCheckAsync();
         task.Wait();
         var temp = await App.PositionData.GetAllPodcasts();
-        if (InternetConnected() && (temp is null || temp.Count == 0))
+        if (InternetConnected() && !task.Result && (temp is null || temp.Count == 0))
         {
             var res = await PodcastServices.UpdatePodcast();
             Podcasts.Clear();
@@ -447,7 +447,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         temp?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
 
-    private async Task UpdateCheckAsync()
+    private async Task<bool> UpdateCheckAsync()
     {
         var currentdate = DateTime.Now;
         var oldDate = Preferences.Default.Get("OldDate", DateTime.Now);
@@ -462,8 +462,16 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Logger.LogInformation("Last Update Check is over 30 days ago. Updating now.");
             Preferences.Default.Remove("OldDate");
             Preferences.Default.Set("OldDate", currentdate);
-            await App.PositionData.DeleteAllPodcasts();
+            var res = await PodcastServices.UpdatePodcast();
+            Podcasts.Clear();
+            res.ForEach(Podcasts.Add);
+
+            var fav = await PodcastServices.UpdateFavorites();
+            FavoriteShows.Clear();
+            fav.ForEach(FavoriteShows.Add);
+            return true;
         }
+        return false;
     }
 
     /// <summary>
@@ -474,7 +482,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.Where(x => x.Deleted).ToList().ForEach(DownloadedShows.Add);
+        temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
     }
 
     #endregion

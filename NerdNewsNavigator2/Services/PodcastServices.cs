@@ -12,6 +12,7 @@ public static class PodcastServices
     #region Properties
     public static bool IsConnected { get; set; } = true;
     #endregion
+
     #region Get Podcasts
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
@@ -80,42 +81,46 @@ public static class PodcastServices
     private static async Task<List<Podcast>> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
     {
         // get updated podcast list
-        var newPodcasts = await PodcastServices.GetFromUrl();
+        var newPodcasts = await GetFromUrl();
+        if (stalePodcasts.Count == 0)
+        {
+            return newPodcasts;
+        }
 
         // remove stale podcasts
-        if (stalePodcasts.Count > 0)
+        newPodcasts.ForEach(x =>
         {
-            newPodcasts.ForEach(x =>
+            if (!stalePodcasts.Exists(y => y.Deleted == x.Deleted))
             {
-                if (!stalePodcasts.Exists(y => y.Deleted == x.Deleted))
-                {
-                    newPodcasts.Remove(x);
-                }
-            });
-        }
+                newPodcasts.Remove(x);
+                Debug.WriteLine($"Removed stale podcast: {x.Title}");
+            }
+        });
         return newPodcasts;
     }
     private static async Task<List<Podcast>> AddPodcastsToDBAsync(List<Podcast> stalePodcasts, List<Podcast> newPodcasts)
     {
         var res = new List<Podcast>();
-
-        // add all podcasts that are not stale, add all new podcasts if any
-        if (stalePodcasts.Count > 0)
+        if (stalePodcasts.Count == 0)
+        {
+            newPodcasts.ForEach(res.Add);
+            Debug.WriteLine("Did not find any stale Podcasts");
+        }
+        else
         {
             Debug.WriteLine("Found stale podcasts");
+
+            // add all podcasts that are not stale, add all new podcasts if any
             newPodcasts?.ForEach(x =>
             {
                 if (!stalePodcasts.Any(y => y.Title == x.Title))
                 {
                     res.Add(x);
+                    Debug.WriteLine($"Added new podcast: {x.Title}");
                 }
             });
         }
-        else
-        {
-            Debug.WriteLine("Did not find any stale Podcasts");
-            newPodcasts.ForEach(res.Add);
-        }
+
         // sort podcast alphabetically
         res = res.OrderBy(x => x.Title).ToList();
 
@@ -128,27 +133,32 @@ public static class PodcastServices
         var favoriteShows = await App.PositionData.GetAllFavorites();
         var podcasts = await App.PositionData.GetAllPodcasts();
         var temp = favoriteShows;
-        // if favorite podcasts are stale remove them
-        if (favoriteShows.Count > 0)
-        {
-            favoriteShows.ToList().ForEach(async oldFavorite =>
-            {
-                if (!podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
-                {
 
-                    await App.PositionData.DeleteFavorite(oldFavorite);
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        temp.Remove(oldFavorite);
-                    });
-                }
-            });
+        // if favorite podcasts are stale remove them
+        if (favoriteShows.Count == 0)
+        {
+            Debug.WriteLine("Did not find any stale Favorite Shows");
+            return temp;
         }
+
+        favoriteShows.ToList().ForEach(async oldFavorite =>
+        {
+            if (!podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
+            {
+                await App.PositionData.DeleteFavorite(oldFavorite);
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    temp.Remove(oldFavorite);
+                });
+                Debug.WriteLine($"Removed stale Favorites show: {oldFavorite.Title}");
+            }
+        });
         return temp;
     }
     #endregion
 
     #region Manipulate Database
+
     /// <summary>
     /// Method Adds Playback <see cref="Podcast"/> to Database.
     /// </summary>
