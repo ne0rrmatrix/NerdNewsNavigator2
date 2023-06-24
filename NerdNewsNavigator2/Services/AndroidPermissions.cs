@@ -14,6 +14,7 @@ internal class AndroidPermissions : BasePlatformPermission
         {
         (global::Android.Manifest.Permission.ForegroundService, true),
         (global::Android.Manifest.Permission.PostNotifications, true),
+        (global::Android.Manifest.Permission.WriteExternalStorage, true),
         }.ToArray();
 #endif
 }

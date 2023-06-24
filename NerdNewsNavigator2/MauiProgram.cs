@@ -23,6 +23,7 @@ public static class MauiProgram
         ;
 #endif
         #region Logging
+
         builder.Logging
 
 #if DEBUG
@@ -40,7 +41,7 @@ public static class MauiProgram
                     options.MinLevel = LogLevel.Debug;
                     options.MaxLevel = LogLevel.Critical;
                 })
-#if RELEASE
+
             .AddStreamingFileLogger(
                 options =>
                 {
@@ -51,7 +52,7 @@ public static class MauiProgram
                         FileSystem.CacheDirectory,
                         "MetroLogs");
                 })
-#endif
+
             .AddConsoleLogger(
                 options =>
                 {
@@ -98,6 +99,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<PositionDataBase>();
 
+        builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();

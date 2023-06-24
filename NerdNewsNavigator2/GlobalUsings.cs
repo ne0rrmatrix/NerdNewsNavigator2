@@ -30,6 +30,7 @@ global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.ViewModel;
 global using SQLite;
 global using YoutubeExplode;
+global using CommunityToolkit.Maui.Storage;
 global using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 #if ANDROID || IOS

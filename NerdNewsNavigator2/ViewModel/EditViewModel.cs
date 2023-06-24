@@ -31,6 +31,7 @@ public partial class EditViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
     }
+
     /// <summary>
     /// Method checks for required Permission for Android Notifications and requests them if needed
     /// </summary>

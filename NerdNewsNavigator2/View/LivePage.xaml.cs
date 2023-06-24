@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages watching Live video from twit.tv podcasting network
 /// </summary>
-public partial class LivePage : ContentPage
+public partial class LivePage : ContentPage, IDisposable
 {
     #region Properties
     private YoutubeClient Youtube { get; set; } = new();
@@ -129,6 +129,20 @@ public partial class LivePage : ContentPage
             content = await response.Content.ReadAsStringAsync();
         }
         return content;
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing && Client != null)
+        {
+            Client.Dispose();
+            Client = null;
+        }
     }
     #endregion
 }
