@@ -171,7 +171,9 @@ public static class DownloadService
         });
     }
 
+#pragma warning disable S1172 // Unused method parameters should be removed
     private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show, Favorites x)
+#pragma warning restore S1172 // Unused method parameters should be removed
     {
         if (!downloadedShows.Exists(y => y.Url == show.Url))
         {
