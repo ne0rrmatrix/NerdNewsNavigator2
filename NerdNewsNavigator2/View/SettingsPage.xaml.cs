@@ -28,6 +28,8 @@ public partial class SettingsPage : ContentPage
             OnPropertyChanged(nameof(_setAutoDownload));
         }
     }
+
+    private LogController Log { get; set; } = new();
     #endregion
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsPage"/>
@@ -204,5 +206,10 @@ public partial class SettingsPage : ContentPage
         var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
         var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
         return rgx.IsMatch(url);
+    }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        Log.GoToLogsPageCommand.Execute(_messenger);
     }
 }

@@ -160,7 +160,7 @@
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
                 </HorizontalStackLayout>
-                
+
                 <HorizontalStackLayout>
                     <Label
                         FontAttributes="Bold"
@@ -193,32 +193,6 @@
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
                         HorizontalOptions="Start"
-                        Text="Download Logs"
-                        TextColor="Black"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
-                    <Button
-                        Margin="10"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=SaveFileCommand}"
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
-                                                Tablet=50}"
-                        HorizontalOptions="End"
-                        Text="Download"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout>
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HorizontalOptions="Start"
                         Text="Show logs"
                         TextColor="Black"
                         VerticalOptions="Center"
@@ -226,7 +200,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=ShakeCommand}"
+                        Clicked="Button_Clicked"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"

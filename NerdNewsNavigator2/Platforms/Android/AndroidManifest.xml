@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ahdftech.nerdNewsNavigator" android:versionName="1.1.0">
-	<application android:usesCleartextTraffic="false" android:allowBackup="false" android:icon="@mipmap/appicon" android:enableOnBackInvokedCallback="true" android:requestLegacyExternalStorage="true" android:supportsRtl="true" android:label="NerdNewsNavigator"></application>
+	<application android:usesCleartextTraffic="false" android:allowBackup="false" android:icon="@mipmap/appicon" android:enableOnBackInvokedCallback="true" android:supportsRtl="true" android:label="NerdNewsNavigator"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
