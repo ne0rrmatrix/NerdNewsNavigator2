@@ -359,14 +359,14 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
     /// <returns><see cref="Show"/></returns>
-    public async Task GetShows(string url, bool getFirstOnly)
+    public void GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
         if (!InternetConnected())
         {
             return;
         }
-        var temp = await FeedService.GetShows(url, getFirstOnly);
+        var temp = FeedService.GetShows(url, getFirstOnly);
         temp.ForEach(x =>
         {
             var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
@@ -396,9 +396,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             return;
         }
-        temp?.Where(x => !x.Deleted).ToList().ForEach(async show =>
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
             {
-                var item = await FeedService.GetShows(show.Url, true);
+                var item = FeedService.GetShows(show.Url, true);
                 var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
                 if (downloaded)
                 {
@@ -415,26 +415,48 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     }
 
     /// <summary>
+    /// A method that sets <see cref="DownloadedShows"/> from the database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    public async void GetDownloadedShows(object stateinfo)
+    {
+        DownloadedShows.Clear();
+        var temp = await App.PositionData.GetAllDownloads();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
+    }
+
+    #endregion
+
+    #region Update Podcasts
+    /// <summary>
     /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
     /// </summary>
     /// <returns></returns>
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        var task = UpdateCheckAsync();
-        task.Wait();
+        var updates = await UpdateCheckAsync();
+        if (updates)
+        {
+            return;
+        }
         var temp = await App.PositionData.GetAllPodcasts();
-        if (InternetConnected() && !task.Result && (temp is null || temp.Count == 0))
+        if (InternetConnected() && (temp is null || temp.Count == 0))
         {
             var res = await PodcastServices.UpdatePodcast();
             Podcasts.Clear();
-            res.ForEach(Podcasts.Add);
-            var fav = await PodcastServices.UpdateFavorites();
+
+            // sort podcast alphabetically
+            var orderPodcast = res.OrderBy(x => x.Title).ToList();
+
+            orderPodcast.ForEach(Podcasts.Add);
+            var fav = await PodcastServices.UpdateFavoritesAsync();
             FavoriteShows.Clear();
             fav.ForEach(FavoriteShows.Add);
             return;
         }
-        temp?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+        var item = temp.OrderBy(x => x.Title).ToList();
+        item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
 
     private async Task<bool> UpdateCheckAsync()
@@ -454,9 +476,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Preferences.Default.Set("OldDate", currentdate);
             var res = await PodcastServices.UpdatePodcast();
             Podcasts.Clear();
-            res.ForEach(Podcasts.Add);
+            var item = res.OrderBy(x => x.Title).ToList();
+            item.ForEach(Podcasts.Add);
 
-            var fav = await PodcastServices.UpdateFavorites();
+            var fav = await PodcastServices.UpdateFavoritesAsync();
             FavoriteShows.Clear();
             fav.ForEach(FavoriteShows.Add);
             return true;
@@ -464,19 +487,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         return false;
     }
 
-    /// <summary>
-    /// A method that sets <see cref="DownloadedShows"/> from the database.
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    public async void GetDownloadedShows(object stateinfo)
-    {
-        DownloadedShows.Clear();
-        var temp = await App.PositionData.GetAllDownloads();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
-    }
-
     #endregion
-
     #region Display Functions
 
 #nullable enable

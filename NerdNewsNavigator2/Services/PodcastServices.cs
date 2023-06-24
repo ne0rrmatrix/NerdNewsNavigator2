@@ -14,6 +14,7 @@ public static class PodcastServices
     #endregion
 
     #region Get Podcasts
+
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
@@ -21,138 +22,88 @@ public static class PodcastServices
     public static Task<List<Podcast>> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        var item = GetPodcastList();
-        item.ForEach(async x =>
+        var item = FeedService.GetPodcastListAsync();
+        item.ForEach(x =>
         {
-            var temp = await FeedService.GetFeed(x);
+            var temp = FeedService.GetFeed(x);
             podcasts.Add(temp);
         });
         return Task.FromResult(podcasts);
     }
 
-    /// <summary>
-    /// Get OPML file from web and return list of current Podcasts.
-    /// </summary>
-    /// <returns><see cref="List{T}"/> <see cref="string"/> of Url's</returns>
-    private static List<string> GetPodcastList()
-    {
-        List<string> list = new();
-        try
-        {
-            var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
-            var reader = new XmlTextReader(item);
-            while (reader.Read())
-            {
-                switch (reader.NodeType)
-                {
-                    case XmlNodeType.Element:
-                        while (reader.MoveToNextAttribute()) // Read the attributes.
-                        {
-                            if (reader.Name == "xmlUrl")
-                            {
-                                list.Add(reader.Value);
-                            }
-                        }
-                        break;
-                }
-            }
-            return list;
-        }
-        catch
-        {
-            return list;
-        }
-    }
     #endregion
 
     #region Update Podcast list
     public static async Task<List<Podcast>> UpdatePodcast()
     {
         var podcasts = await App.PositionData.GetAllPodcasts();
-        await App.PositionData.DeleteAllPodcasts();
+        var stalePodcasts = new List<Podcast>();
 
         // list of stale podcasts
-        var stalePodcasts = podcasts.Where(x => x.Deleted).ToList();
-
+        podcasts?.Where(x => x.Deleted).ToList().ForEach(stalePodcasts.Add);
         var newPodcasts = await RemoveStalePodcastsAsync(stalePodcasts);
-
-        return await AddPodcastsToDBAsync(stalePodcasts, newPodcasts);
+        return await AddPodcastsToDBAsync(newPodcasts);
     }
     private static async Task<List<Podcast>> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
     {
         // get updated podcast list
         var newPodcasts = await GetFromUrl();
-        if (stalePodcasts.Count == 0)
+
+        if (stalePodcasts.Count == 0 || stalePodcasts is null)
         {
+            Debug.WriteLine("Did not find any deleted podcasts");
             return newPodcasts;
         }
 
-        // remove stale podcasts
+        // on new podcast list mark all old deleted podcast as deleted. If old podcast does not exist it ignores it.
         newPodcasts.ForEach(x =>
         {
-            if (!stalePodcasts.Exists(y => y.Deleted == x.Deleted))
+            if (stalePodcasts.Exists(y => y.Url == x.Url))
             {
-                newPodcasts.Remove(x);
-                Debug.WriteLine($"Removed stale podcast: {x.Title}");
+                x.Deleted = true;
+                Debug.WriteLine($"marking deleted {x.Title} in new Podcasts");
             }
         });
         return newPodcasts;
     }
-    private static async Task<List<Podcast>> AddPodcastsToDBAsync(List<Podcast> stalePodcasts, List<Podcast> newPodcasts)
+    private static async Task<List<Podcast>> AddPodcastsToDBAsync(List<Podcast> newPodcasts)
     {
         var res = new List<Podcast>();
-        if (stalePodcasts.Count == 0)
-        {
-            newPodcasts.ForEach(res.Add);
-            Debug.WriteLine("Did not find any stale Podcasts");
-        }
-        else
-        {
-            Debug.WriteLine("Found stale podcasts");
+        await App.PositionData.DeleteAllPodcasts();
 
-            // add all podcasts that are not stale, add all new podcasts if any
-            newPodcasts?.ForEach(x =>
-            {
-                if (!stalePodcasts.Any(y => y.Title == x.Title))
-                {
-                    res.Add(x);
-                    Debug.WriteLine($"Added new podcast: {x.Title}");
-                }
-            });
-        }
-
-        // sort podcast alphabetically
-        res = res.OrderBy(x => x.Title).ToList();
+        // add all podcasts
+        newPodcasts.ForEach(res.Add);
 
         await AddToDatabase(res);
         return res;
     }
-    public static async Task<List<Favorites>> UpdateFavorites()
+    public static async Task<List<Favorites>> UpdateFavoritesAsync()
     {
         // get old favorites list
         var favoriteShows = await App.PositionData.GetAllFavorites();
         var podcasts = await App.PositionData.GetAllPodcasts();
-        var temp = favoriteShows;
+        var temp = new List<Favorites>();
 
-        // if favorite podcasts are stale remove them
         if (favoriteShows.Count == 0)
         {
             Debug.WriteLine("Did not find any stale Favorite Shows");
-            return temp;
+            return favoriteShows;
         }
-
-        favoriteShows.ToList().ForEach(async oldFavorite =>
+        favoriteShows.ToList().ForEach(oldFavorite =>
         {
-            if (!podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
+            var stale = podcasts.FirstOrDefault(x => x.Title == oldFavorite.Title);
+            // if favorite podcasts is not stale add it back to favorites list
+            if (stale is not null)
             {
-                await App.PositionData.DeleteFavorite(oldFavorite);
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    temp.Remove(oldFavorite);
-                });
+                temp.Add(oldFavorite);
+            }
+            else
+            {
                 Debug.WriteLine($"Removed stale Favorites show: {oldFavorite.Title}");
             }
         });
+        await App.PositionData.DeleteAllFavorites();
+        await AddFavoritesToDatabase(temp);
         return temp;
     }
     #endregion
@@ -173,13 +124,25 @@ public static class PodcastServices
     }
 
     /// <summary>
+    /// Method Adds Playback <see cref="Favorites"/> to Database.
+    /// </summary>
+    /// <param name="favorite"></param> Position Class object.
+    /// <returns>nothing</returns>
+    public static async Task AddFavoritesToDatabase(List<Favorites> favorite)
+    {
+        foreach (var item in favorite)
+        {
+            await App.PositionData.AddFavorites(item);
+        }
+    }
+    /// <summary>
     /// Method Adds a <see cref="Podcast"/> to Database.
     /// </summary>
     /// <param name="url"><see cref="string"/> Url of <see cref="Podcast"/></param>
     /// <returns>nothing</returns>
     public static async Task AddPodcast(string url)
     {
-        var podcast = await FeedService.GetFeed(url);
+        var podcast = FeedService.GetFeed(url);
         if (podcast == null)
         {
             return;

@@ -29,13 +29,11 @@ public partial class SettingsViewModel : BaseViewModel
     {
         ThreadPool.QueueUserWorkItem(async (state) =>
        {
-           var res = await PodcastServices.UpdatePodcast();
+           _ = await PodcastServices.UpdatePodcast();
            Podcasts.Clear();
-           res.ForEach(Podcasts.Add);
 
-           var fav = await PodcastServices.UpdateFavorites();
+           _ = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
-           fav.ForEach(FavoriteShows.Add);
 
            await MainThread.InvokeOnMainThreadAsync(async () =>
            {

@@ -34,24 +34,17 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     {
         DownloadService.CancelDownload = true;
         IsBusy = true;
-        await App.PositionData.DeleteAll();
-        await App.PositionData.DeleteAllPodcasts();
-        await App.PositionData.DeleteAllDownloads();
-        await App.PositionData.DeleteAllFavorites();
-
-        var start = Preferences.Default.Get("start", false);
-        if (start)
-        {
-            _messenger.Send(new MessageData(false));
-        }
-
-        Preferences.Default.Clear();
-        FavoriteShows.Clear();
-        Shows.Clear();
-        Podcasts.Clear();
+        await DeleteAllAsync();
+        SetVariables();
 
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var files = System.IO.Directory.GetFiles(path, "*.mp4");
+        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
+
+        IsBusy = false;
+        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+    }
+    private void DeleleFiles(string[] files)
+    {
         try
         {
             foreach (var file in files)
@@ -64,8 +57,24 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         {
             _logger.LogInformation("{data}", ex.Message);
         }
+    }
+    private void SetVariables()
+    {
+        Preferences.Default.Clear();
+        FavoriteShows.Clear();
+        Shows.Clear();
+        Podcasts.Clear();
 
-        IsBusy = false;
-        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+        if (Preferences.Default.Get("start", false))
+        {
+            _messenger.Send(new MessageData(false));
+        }
+    }
+    private static async Task DeleteAllAsync()
+    {
+        await App.PositionData.DeleteAll();
+        await App.PositionData.DeleteAllPodcasts();
+        await App.PositionData.DeleteAllDownloads();
+        await App.PositionData.DeleteAllFavorites();
     }
 }

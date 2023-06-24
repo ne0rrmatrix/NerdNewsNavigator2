@@ -71,7 +71,10 @@ public partial class EditViewModel : BaseViewModel
         {
             return;
         }
-
+        await DeleteFavorites(favoriteShow, url);
+    }
+    private async Task DeleteFavorites(List<Favorites> favoriteShow, string url)
+    {
         var item = favoriteShow.ToList().Exists(x => x.Url == url);
         if (item)
         {
@@ -80,7 +83,6 @@ public partial class EditViewModel : BaseViewModel
             favoriteShow?.Remove(fav);
         }
     }
-
     /// <summary>
     /// A Method that adds a favourite to the database.
     /// </summary>
@@ -89,7 +91,6 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task<bool> AddToFavorite(string url)
     {
-#if ANDROID
         var status = await CheckAndRequestForeGroundPermission();
         if (PermissionStatus.Granted == status)
         {
@@ -99,7 +100,6 @@ public partial class EditViewModel : BaseViewModel
         {
             Logger.LogInformation("Notification Permission Denied");
         }
-#endif
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;
@@ -107,36 +107,47 @@ public partial class EditViewModel : BaseViewModel
         else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
         {
             var item = Podcasts.First(x => x.Url == url);
-            Favorites favorite = new()
-            {
-                Title = item.Title,
-                Url = item.Url,
-                Description = item.Description,
-                Image = item.Image,
-                PubDate = item.PubDate,
-            };
-            FavoriteShows.Add(favorite);
+            await ProcessFavoritesAsync(item);
+            await ProcessPodcastsAsync(item);
 
-            item.Download = true;
-            item.IsNotDownloaded = false;
-            Podcasts[Podcasts.IndexOf(item)] = item;
-
-            await App.PositionData.UpdatePodcast(item);
-            await FavoriteService.AddFavoriteToDatabase(favorite);
-
-            var start = Preferences.Default.Get("start", false);
-            if (start)
-            {
-                Logger.LogInformation("Auto Download is already set to start Automatically");
-                return true;
-            }
-
-            Preferences.Default.Set("start", true);
-            Logger.LogInformation("Setting Auto Download to start Automatically");
-            _messenger.Send(new MessageData(true));
-            return true;
+            return SetPreferences();
         }
         return false;
+    }
+    private bool SetPreferences()
+    {
+        var start = Preferences.Default.Get("start", false);
+        if (start)
+        {
+            Logger.LogInformation("Auto Download is already set to start Automatically");
+            return true;
+        }
+
+        Preferences.Default.Set("start", true);
+        Logger.LogInformation("Setting Auto Download to start Automatically");
+        _messenger.Send(new MessageData(true));
+        return true;
+    }
+    private async Task ProcessPodcastsAsync(Podcast item)
+    {
+        item.Download = true;
+        item.IsNotDownloaded = false;
+        Podcasts[Podcasts.IndexOf(item)] = item;
+
+        await App.PositionData.UpdatePodcast(item);
+    }
+    private async Task ProcessFavoritesAsync(Podcast item)
+    {
+        Favorites favorite = new()
+        {
+            Title = item.Title,
+            Url = item.Url,
+            Description = item.Description,
+            Image = item.Image,
+            PubDate = item.PubDate,
+        };
+        FavoriteShows.Add(favorite);
+        await FavoriteService.AddFavoriteToDatabase(favorite);
     }
 
     /// <summary>

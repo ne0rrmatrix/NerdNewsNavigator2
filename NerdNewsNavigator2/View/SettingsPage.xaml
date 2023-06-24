@@ -6,7 +6,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
-    xmlns:data="clr-namespace:NerdNewsNavigator2.View"
+    xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
@@ -77,7 +77,7 @@
                         HeightRequest="{OnIdiom Default=35,
                                                 Tablet=50}"
                         HorizontalOptions="End"
-                        Text="{Binding Source={RelativeSource AncestorType={x:Type data:SettingsPage}}, Path=SetAutoDownload}"
+                        Text="{Binding Source={RelativeSource AncestorType={x:Type page:SettingsPage}}, Path=SetAutoDownload}"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />

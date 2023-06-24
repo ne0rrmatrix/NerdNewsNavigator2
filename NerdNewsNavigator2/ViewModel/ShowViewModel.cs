@@ -27,7 +27,7 @@ public partial class ShowViewModel : BaseViewModel
         {
             _url = value;
             var decodedUrl = HttpUtility.UrlDecode(value);
-            _ = GetShows(decodedUrl, false);
+            GetShows(decodedUrl, false);
             OnPropertyChanged(nameof(Shows));
         }
     }

@@ -146,11 +146,11 @@ public static class DownloadService
         }
         ProccessShow(favoriteShows);
     }
-    public static void ProccessShow(List<Favorites> favoriteShows)
+    private static void ProccessShow(List<Favorites> favoriteShows)
     {
         favoriteShows.ForEach(async x =>
         {
-            var show = await FeedService.GetShows(x.Url, true);
+            var show = FeedService.GetShows(x.Url, true);
             if (show is null || show.Count == 0 || CancelDownload)
             {
                 Autodownloading = false;
@@ -166,35 +166,39 @@ public static class DownloadService
                 }
                 Debug.WriteLine("Waiting for download to finish");
             }
-            var downloadedshows = await App.PositionData.GetAllDownloads();
-            if (!downloadedshows.Exists(y => y.Url == show[0].Url))
-            {
-                Autodownloading = true;
-                var result = await Downloading(show[0]);
-                if (result)
-                {
-                    Debug.WriteLine("Download completed");
-                    Autodownloading = false;
-                    Count++;
-#if ANDROID
-                    var downloaded = new NotificationRequest
-                    {
-                        NotificationId = Count,
-                        Title = x.Title,
-                        Description = "New Episode Downloaded",
-                        Android = new AndroidOptions()
-                        {
-                            IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
-                        },
-                    };
-                    await LocalNotificationCenter.Current.Show(downloaded);
-#endif
-                }
-                else
-                {
-                    Autodownloading = false;
-                }
-            }
+            var downloadedShows = await App.PositionData.GetAllDownloads();
+            await ProcessDownloadAsync(downloadedShows, show[0], x);
         });
+    }
+
+    private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show, Favorites x)
+    {
+        if (!downloadedShows.Exists(y => y.Url == show.Url))
+        {
+            Autodownloading = true;
+            if (await Downloading(show))
+            {
+                Debug.WriteLine("Download completed");
+                Autodownloading = false;
+                Count++;
+#if ANDROID
+                var downloaded = new NotificationRequest
+                {
+                    NotificationId = Count,
+                    Title = x.Title,
+                    Description = "New Episode Downloaded",
+                    Android = new AndroidOptions()
+                    {
+                        IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                    },
+                };
+                await LocalNotificationCenter.Current.Show(downloaded);
+#endif
+            }
+            else
+            {
+                Autodownloading = false;
+            }
+        }
     }
 }
