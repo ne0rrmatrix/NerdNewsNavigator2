@@ -20,13 +20,7 @@ public class PositionDataBase
     /// </summary>
     private readonly SQLiteAsyncConnection _connection;
 
-    public const SQLite.SQLiteOpenFlags Flags =
-        // open the database in read/write mode
-        SQLite.SQLiteOpenFlags.ReadWrite |
-        // create the database if it doesn't exist
-        SQLite.SQLiteOpenFlags.Create |
-        // enable multi-threaded database access
-        SQLite.SQLiteOpenFlags.SharedCache;
+    public const SQLite.SQLiteOpenFlags Flags = SQLite.SQLiteOpenFlags.ReadWrite | SQLite.SQLiteOpenFlags.Create | SQLite.SQLiteOpenFlags.SharedCache;
 
     #endregion
     /// <summary>
@@ -100,6 +94,7 @@ public class PositionDataBase
             return null;
         }
     }
+
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Favorites"/> from database.
     /// </summary>
@@ -118,6 +113,7 @@ public class PositionDataBase
             return null;
         }
     }
+
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Download"/> from database.
     /// </summary>
@@ -136,9 +132,11 @@ public class PositionDataBase
             return null;
         }
     }
+
     #endregion
 
     #region Delete by Table
+
     /// <summary>
     /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
@@ -302,6 +300,7 @@ public class PositionDataBase
     #endregion
 
     #region Update Data
+
     /// <summary>
     /// Method Updates a <see cref="Position"/> from Database
     /// </summary>
@@ -407,6 +406,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     #endregion
 
     #region Delete Individual Items
@@ -489,5 +489,6 @@ public class PositionDataBase
             return false;
         }
     }
+
     #endregion
 }
