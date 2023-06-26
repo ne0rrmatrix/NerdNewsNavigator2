@@ -239,7 +239,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadService.IsDownloading = true;
         IsDownloading = true;
-        //Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
