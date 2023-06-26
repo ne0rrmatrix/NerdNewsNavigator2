@@ -11,8 +11,6 @@ namespace NerdNewsNavigator2.View;
 public partial class VideoPlayerPage : ContentPage
 {
     #region Properties
-    public static bool IsYoutube { get; set; } = false;
-    public static string Url { get; set; } = string.Empty;
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
 
     /// <summary>
@@ -57,7 +55,7 @@ public partial class VideoPlayerPage : ContentPage
     private async void Seek(object? sender, EventArgs e)
     {
         Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = Url;
+        Pos.Title = string.Empty;
         var positionList = await App.PositionData.GetAllPositions();
         var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
         if (result is not null)
@@ -83,7 +81,7 @@ public partial class VideoPlayerPage : ContentPage
     /// <param name="e"></param>
     private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
     {
-        Pos.Title = Url;
+        Pos.Title = string.Empty;
         Pos.SavedPosition = TimeSpan.Zero;
         var positionList = await App.PositionData.GetAllPositions();
         var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);

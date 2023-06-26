@@ -274,7 +274,6 @@ public partial class MediaControl : ContentView
     #endregion
 
     #region Full Screen Functions
-#nullable enable
     private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
 #if WINDOWS

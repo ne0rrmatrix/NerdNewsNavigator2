@@ -6,6 +6,7 @@ using BackgroundTasks;
 using Foundation;
 using SQLitePCL;
 using UIKit;
+using UserNotifications;
 
 namespace NerdNewsNavigator2.Platforms.iOS;
 
@@ -25,7 +26,6 @@ public class AppDelegate : MauiUIApplicationDelegate
         BGTaskScheduler.Shared.Register(RefreshTaskId, null, task => HandleAppRefresh(task as BGAppRefreshTask));
         return MauiProgram.CreateMauiApp();
     }
-
     public override void OnActivated(UIApplication application)
     {
         base.OnActivated(application);

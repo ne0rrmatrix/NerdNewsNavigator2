@@ -38,10 +38,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
 
     /// <summary>
-    /// The <see cref="bool"/> instance managed by this class.
-    /// </summary>
-
-    /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
     public DisplayInfo MyMainDisplay { get; set; } = new();
@@ -59,86 +55,44 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
+    [ObservableProperty]
     private int _orientation;
 
-    /// <summary>
-    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
-    /// </summary>
-    public int Orientation
-    {
-        get => _orientation;
-        set => SetProperty(ref _orientation, value);
-    }
-
+    [ObservableProperty]
     private string _title;
-    public string Title
-    {
-        get { return _title; }
-        set
-        {
-            _title = value;
-            OnPropertyChanged(nameof(Title));
-        }
-    }
+
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
     private bool _isDownloading;
 
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
-    public bool IsDownloading
-    {
-        get => _isDownloading;
-        set
-        {
-            if (SetProperty(ref _isDownloading, value))
-            {
-                OnPropertyChanged(nameof(IsNotDownloading));
-            }
-        }
-    }
     public bool IsNotDownloading => !IsDownloading;
 
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
+    [ObservableProperty]
     private string _downloadProgress;
-
-    /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    public string DownloadProgress
-    {
-        get => _downloadProgress;
-        set => SetProperty(ref _downloadProgress, value);
-    }
 
     /// <summary>
     /// A <see cref="bool"/> instance managed by this class. 
     /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     private bool _isBusy;
 
     /// <summary>
     /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
-    public bool IsBusy
-    {
-        get => _isBusy;
-        set
-        {
-            if (SetProperty(ref _isBusy, value))
-            {
-                OnPropertyChanged(nameof(IsNotBusy));
-            }
-        }
-    }
-
-    /// <summary>
-    /// A <see cref="bool"/> public property managed by this class.
-    /// </summary>
     public bool IsNotBusy => !IsBusy;
+
+    [ObservableProperty]
+    private double _progressInfos = 0;
 
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
@@ -285,10 +239,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadService.IsDownloading = true;
         IsDownloading = true;
-
+        //Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
+            ProgressInfos = DownloadService.Progress;
+            OnPropertyChanged(nameof(ProgressInfos));
             Title = DownloadProgress;
             Thread.Sleep(1000);
         }

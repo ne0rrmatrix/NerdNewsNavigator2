@@ -15,10 +15,12 @@ public partial class SettingsViewModel : BaseViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
     }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>

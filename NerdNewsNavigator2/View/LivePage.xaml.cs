@@ -10,6 +10,7 @@ namespace NerdNewsNavigator2.View;
 public partial class LivePage : ContentPage, IDisposable
 {
     #region Properties
+    private readonly string _item = "https://www.youtube.com/user/twit";
     private YoutubeClient Youtube { get; set; } = new();
     private HttpClient Client { get; set; } = new();
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
@@ -27,6 +28,7 @@ public partial class LivePage : ContentPage, IDisposable
         InitializeComponent();
         BindingContext = liveViewModel;
         _logger = logger;
+        _ = LoadVideo(_item);
     }
 
     /// <summary>
@@ -39,20 +41,6 @@ public partial class LivePage : ContentPage, IDisposable
         _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
     }
 
-    /// <summary>
-    /// Method Loads Video after page has finished being rendered.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        var item = "https://www.youtube.com/user/twit";
-        _ = LoadVideo(item);
-    }
     #region Youtube Methods
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
@@ -60,7 +48,6 @@ public partial class LivePage : ContentPage, IDisposable
     /// <returns></returns>
     private async Task LoadVideo(string url)
     {
-        mediaElement.IsYoutube = true;
         var m3u = await ParseVideoIdAsync(url);
         if (m3u != string.Empty)
         {

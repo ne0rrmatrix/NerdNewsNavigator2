@@ -117,10 +117,13 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void AddDefault(object sender, EventArgs e)
+    private void AddDefault(object sender, EventArgs e)
     {
-        await PodcastServices.AddDefaultPodcasts();
-        await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        _ = Task.Run(async () =>
+        {
+            await PodcastServices.AddDefaultPodcasts();
+            await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        });
     }
 
     /// <summary>
@@ -128,18 +131,21 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void RemoveDefault(object sender, EventArgs e)
+    private void RemoveDefault(object sender, EventArgs e)
     {
-        var item = await App.PositionData.GetAllPodcasts();
-        if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
+        _ = Task.Run(async () =>
         {
-            await PodcastServices.RemoveDefaultPodcasts();
-            await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        else
-        {
-            await DisplayAlert("", "At least one podcast needs to be added", "Ok");
-        }
+            var item = await App.PositionData.GetAllPodcasts();
+            if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
+            {
+                await PodcastServices.RemoveDefaultPodcasts();
+                await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            }
+            else
+            {
+                _ = MainThread.InvokeOnMainThreadAsync(async () => await DisplayAlert("", "At least one podcast needs to be added", "Ok"));
+            }
+        });
     }
 
     /// <summary>
@@ -186,10 +192,12 @@ public partial class SettingsPage : ContentPage
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
         DeviceService.RestoreScreen();
+#if WINDOWS || IOS
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
+#endif
     }
 
     /// <summary>
@@ -199,7 +207,7 @@ public partial class SettingsPage : ContentPage
     /// <returns></returns>
     private static bool ValidateUrl(string url)
     {
-        if (url.Trim() == string.Empty)
+        if (url == null || url.Trim() == string.Empty)
         {
             return false;
         }

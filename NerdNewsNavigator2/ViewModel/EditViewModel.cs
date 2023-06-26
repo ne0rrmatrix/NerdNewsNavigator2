@@ -24,12 +24,13 @@ public partial class EditViewModel : BaseViewModel
         _messenger = messenger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
         _ = GetUpdatedPodcasts();
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
     }
 
     /// <summary>

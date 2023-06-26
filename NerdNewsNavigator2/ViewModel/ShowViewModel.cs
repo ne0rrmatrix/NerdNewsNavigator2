@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.iOSOption;
+
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -11,27 +14,11 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
-
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
+    [ObservableProperty]
     private string _url;
-
-    /// <summary>
-    /// A public <see cref="string"/> that contains a Url for <see cref="Show"/>
-    /// </summary>
-    public string Url
-    {
-        get { return _url; }
-        set
-        {
-            _url = value;
-            var decodedUrl = HttpUtility.UrlDecode(value);
-            GetShows(decodedUrl, false);
-            OnPropertyChanged(nameof(Shows));
-        }
-    }
-
     #endregion
 
     /// <summary>
@@ -45,10 +32,17 @@ public partial class ShowViewModel : BaseViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
+    }
+    partial void OnUrlChanged(string oldValue, string newValue)
+    {
+        var decodedUrl = HttpUtility.UrlDecode(newValue);
+        GetShows(decodedUrl, false);
     }
 
     /// <summary>
@@ -81,8 +75,58 @@ public partial class ShowViewModel : BaseViewModel
             item.IsNotDownloaded = false;
             Shows[Shows.IndexOf(item)] = item;
         }
+
+#if WINDOWS || MACCATALYST
         await Downloading(url, false);
+#endif
+#if ANDROID || IOS
+        await UpdateNotification(item, url);
+#endif
     }
+
+#if ANDROID || IOS
+    public async Task UpdateNotification(Show item, string url)
+    {
+        await LocalNotificationCenter.Current.RequestNotificationPermission();
+        var request = new Plugin.LocalNotification.NotificationRequest
+        {
+            NotificationId = 1337,
+            Title = item?.Title,
+            Description = $"Download Progress {(int)ProgressInfos}",
+#if ANDROID
+            Android = new AndroidOptions
+            {
+                IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                ProgressBarProgress = (int)ProgressInfos,
+                IsProgressBarIndeterminate = false,
+                Color =
+                    {
+                        ResourceName = "colorPrimary"
+                    },
+                AutoCancel = true,
+                ProgressBarMax = 100,
+            },
+#endif
+        };
+        await LocalNotificationCenter.Current.Show(request);
+
+        _ = Task.Run(async () =>
+        {
+            await Downloading(url, false);
+        });
+
+        while (DownloadService.IsDownloading)
+        {
+            Thread.Sleep(1000);
+            request.Description = $"Download Progress {(int)ProgressInfos}%";
+            request.Android.ProgressBarProgress = (int)ProgressInfos;
+            await LocalNotificationCenter.Current.Show(request);
+        }
+        request.Android.ProgressBarProgress = 100;
+        request.Description = "Download Complete";
+        await LocalNotificationCenter.Current.Show(request);
+    }
+#endif
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>

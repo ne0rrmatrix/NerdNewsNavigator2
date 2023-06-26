@@ -13,7 +13,7 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <media:MediaControl x:Name="mediaElement" Source="{Binding Url}" />
+    <media:MediaControl x:Name="mediaElement" Source="{Binding Url}" IsYoutube="False" />
 
 
 </ContentPage>

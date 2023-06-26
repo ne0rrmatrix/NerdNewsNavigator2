@@ -32,9 +32,11 @@ public partial class PodcastPage : ContentPage
             OnPropertyChanged(nameof(ItemLayout));
         }
         DeviceService.RestoreScreen();
+#if WINDOWS || IOS
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
+#endif
     }
 }

@@ -12,6 +12,7 @@ public static class DownloadService
     public static bool CancelDownload { get; set; } = false;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
+    public static double Progress { get; set; }
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
     public static int Count { get; set; } = 0;
@@ -88,6 +89,7 @@ public static class DownloadService
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
             {
                 Status = $"Download Progress: {progressPercentage}%";
+                Progress = (double)progressPercentage;
             };
             await client.StartDownload();
             return true;

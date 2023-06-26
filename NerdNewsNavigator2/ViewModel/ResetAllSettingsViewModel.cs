@@ -21,7 +21,6 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     {
         _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
-        OnPropertyChanged(nameof(IsBusy));
         _ = ResetAll();
         _messenger = messenger;
     }

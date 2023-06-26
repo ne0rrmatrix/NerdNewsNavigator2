@@ -99,7 +99,6 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<PositionDataBase>();
 
-        builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
