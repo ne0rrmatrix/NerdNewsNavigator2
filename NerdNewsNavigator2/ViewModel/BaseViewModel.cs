@@ -301,10 +301,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         FavoriteShows.Clear();
         var temp = await App.PositionData.GetAllFavorites();
-        if (!InternetConnected() && temp is null)
-        {
-            return;
-        }
         temp?.ForEach(FavoriteShows.Add);
     }
 
@@ -317,10 +313,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public void GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        if (!InternetConnected())
-        {
-            return;
-        }
         var temp = FeedService.GetShows(url, getFirstOnly);
         temp.ForEach(x =>
         {
@@ -347,10 +339,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         MostRecentShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        if (!InternetConnected())
-        {
-            return;
-        }
         temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
             {
                 var item = FeedService.GetShows(show.Url, true);
@@ -396,7 +384,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             return;
         }
         var temp = await App.PositionData.GetAllPodcasts();
-        if (InternetConnected() && (temp is null || temp.Count == 0))
+        if (temp.Count == 0)
         {
             var res = await PodcastServices.UpdatePodcast();
             Podcasts.Clear();

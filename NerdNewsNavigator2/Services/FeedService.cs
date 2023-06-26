@@ -39,7 +39,7 @@ public static class FeedService
         }
         catch
         {
-            return list;
+            return Enumerable.Empty<string>().ToList();
         }
     }
 
@@ -111,7 +111,7 @@ public static class FeedService
         }
         catch
         {
-            return shows;
+            return Enumerable.Empty<Show>().ToList();
         }
     }
     private static List<Show> ProcessShows(XmlNodeList rssNodes, List<Show> shows, bool getFirstOnly, XmlNamespaceManager mgr)

@@ -66,13 +66,18 @@ public class PositionDataBase
         try
         {
             var test = await _connection.Table<Position>().ToListAsync();
+            if (test is null)
+            {
+                _logger.LogInformation("Returning empty collection");
+                return Enumerable.Empty<Position>().ToList();
+            }
             _logger.LogInformation("Got all Positions from Database.");
             return test;
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to get all Positions from Database: {Message}", ex.Message);
-            return null;
+            return Enumerable.Empty<Position>().ToList();
         }
     }
 
@@ -85,13 +90,18 @@ public class PositionDataBase
         try
         {
             var temp = await _connection.Table<Podcast>().ToListAsync();
+            if (temp is null)
+            {
+                _logger.LogInformation("Returning empty collection");
+                return Enumerable.Empty<Podcast>().ToList();
+            }
             _logger.LogInformation("Got all Podcasts from Database.");
             return temp;
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to get Podcasts from Database: {Message}", ex.Message);
-            return null;
+            return Enumerable.Empty<Podcast>().ToList();
         }
     }
 
@@ -104,13 +114,18 @@ public class PositionDataBase
         try
         {
             var temp = await _connection.Table<Favorites>().ToListAsync();
+            if (temp is null)
+            {
+                _logger.LogInformation("Returning empty collection");
+                return Enumerable.Empty<Favorites>().ToList();
+            }
             _logger.LogInformation("Got all Favorites from Database.");
             return temp;
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to get Favorites from Database: {Message}", ex.Message);
-            return null;
+            return Enumerable.Empty<Favorites>().ToList();
         }
     }
 
@@ -123,13 +138,18 @@ public class PositionDataBase
         try
         {
             var temp = await _connection.Table<Download>().ToListAsync();
+            if (temp is null)
+            {
+                _logger.LogInformation("Returning empty collection");
+                return Enumerable.Empty<Download>().ToList();
+            }
             _logger.LogInformation("Got all Downloads from Database.");
             return temp;
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to get Downloads from Database: {Message}", ex.Message);
-            return null;
+            return Enumerable.Empty<Download>().ToList();
         }
     }
 
