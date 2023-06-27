@@ -87,7 +87,14 @@ public partial class ShowViewModel : BaseViewModel
 #if ANDROID
     public async Task UpdateNotification(Show item, string url)
     {
+        ProgressInfos = 0.00;
+        var isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
         await LocalNotificationCenter.Current.RequestNotificationPermission();
+        while (!isNotifified)
+        {
+            Thread.Sleep(100);
+            isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
+        }
         var request = new Plugin.LocalNotification.NotificationRequest
         {
             NotificationId = 1337,
@@ -114,17 +121,21 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Downloading(url, false);
         });
-
-        while (DownloadService.IsDownloading)
+        _ = Task.Run(async () =>
         {
-            Thread.Sleep(1000);
-            request.Description = $"Download Progress {(int)ProgressInfos}%";
-            request.Android.ProgressBarProgress = (int)ProgressInfos;
+            DownloadService.IsDownloading = true;
+            while (DownloadService.IsDownloading)
+            {
+                Thread.Sleep(1000);
+                request.Description = $"Download Progress {(int)ProgressInfos}%";
+                request.Android.ProgressBarProgress = (int)ProgressInfos;
+                request.Silent = true;
+                await LocalNotificationCenter.Current.Show(request);
+            }
+            request.Android.ProgressBarProgress = 100;
+            request.Description = "Download Complete";
             await LocalNotificationCenter.Current.Show(request);
-        }
-        request.Android.ProgressBarProgress = 100;
-        request.Description = "Download Complete";
-        await LocalNotificationCenter.Current.Show(request);
+        });
     }
 #endif
 

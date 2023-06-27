@@ -195,7 +195,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     }
     public async Task StartDownload(string url, bool mostRecent)
     {
+#if WINDOWS || MACCATALYST || IOS
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+#endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         Logger.LogInformation("Trying to start download of {URL}", url);
