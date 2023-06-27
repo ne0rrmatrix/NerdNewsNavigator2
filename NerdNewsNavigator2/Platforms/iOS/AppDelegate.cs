@@ -6,7 +6,6 @@ using BackgroundTasks;
 using Foundation;
 using SQLitePCL;
 using UIKit;
-using UserNotifications;
 
 namespace NerdNewsNavigator2.Platforms.iOS;
 
@@ -59,12 +58,6 @@ public class AppDelegate : MauiUIApplicationDelegate
         };
         HandleDownload(task);
     }
-    public override void DidEnterBackground(UIApplication application)
-    {
-        Console.WriteLine("App entering background state.");
-        AutoDownload();
-    }
-
     public override void WillEnterForeground(UIApplication application)
     {
         Console.WriteLine("App will enter foreground");

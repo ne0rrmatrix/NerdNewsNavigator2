@@ -14,12 +14,7 @@ namespace NerdNewsNavigator2.Platforms.Android;
 internal class AutoStartService : Service
 {
     #region Properties
-    private WakeLock _wakeLock;
-    private string Status { get; set; }
-    private string WifiOnlyDownloading { get; set; }
-    private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
-    public CancellationTokenSource CancellationTokenSource { get; set; } = null;
-
+    private AutoDownloadService AutoDownloadService { get; set; } = new();
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
@@ -27,25 +22,23 @@ internal class AutoStartService : Service
 
     public AutoStartService()
     {
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
     }
     private void StartForegroundService()
     {
-        AcquireWakeLock();
-        if (CancellationTokenSource is null)
+        AutoDownloadService.AcquireWakeLock();
+        if (AutoDownloadService.CancellationTokenSource is null)
         {
             var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
+            AutoDownloadService.CancellationTokenSource = cts;
         }
-        else if (CancellationTokenSource is not null)
+        else if (AutoDownloadService.CancellationTokenSource is not null)
         {
-            CancellationTokenSource.Dispose();
-            CancellationTokenSource = null;
+            AutoDownloadService.CancellationTokenSource.Dispose();
+            AutoDownloadService.CancellationTokenSource = null;
             var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
+            AutoDownloadService.CancellationTokenSource = cts;
         }
-        LongTask(CancellationTokenSource.Token);
+        AutoDownloadService.LongTask(AutoDownloadService.CancellationTokenSource.Token);
 
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
@@ -82,22 +75,6 @@ internal class AutoStartService : Service
             notificationMnaManager.CreateNotificationChannel(channel);
         }
     }
-    private void AcquireWakeLock()
-    {
-        _wakeLock?.Release();
-
-        var wakeFlags = WakeLockFlags.Partial;
-
-        var pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
-        _wakeLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
-        if (!_wakeLock.IsHeld)
-        {
-            _wakeLock.Acquire();
-        }
-        var item = _wakeLock.IsHeld;
-        System.Diagnostics.Debug.WriteLine($"Wake Lock On: {item}");
-
-    }
     public override IBinder OnBind(Intent intent)
     {
         return null;
@@ -107,51 +84,6 @@ internal class AutoStartService : Service
         System.Diagnostics.Debug.WriteLine("Staring Auto Download");
         StartForegroundService();
         return StartCommandResult.Sticky;
-    }
-    public void LongTask(CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            ATimer.Stop();
-            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
-            ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
-            return;
-        }
-        ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
-        ATimer.Start();
-    }
-
-    private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
-    {
-        System.Diagnostics.Debug.WriteLine("Connection status has changed");
-        Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        System.Diagnostics.Debug.WriteLine(Status);
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-    }
-    private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
-    {
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-
-        var connectionStatus = Connectivity.Current.ConnectionProfiles;
-        connectionStatus.ToList().ForEach(item =>
-        {
-            switch (item)
-            {
-                case ConnectionProfile.WiFi:
-                case ConnectionProfile.Ethernet:
-                    System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
-                    _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
-                    break;
-                case ConnectionProfile.Cellular:
-                    if (WifiOnlyDownloading == "No")
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
-                        _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
-                    }
-                    break;
-            }
-        });
     }
 
     /// <summary>
@@ -167,16 +99,16 @@ internal class AutoStartService : Service
     }
     public override void OnDestroy()
     {
-        if (_wakeLock.IsHeld)
+        if (AutoDownloadService.WLock.IsHeld)
         {
-            _wakeLock.Release();
+            AutoDownloadService.WLock.Release();
         }
-        System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {_wakeLock.IsHeld}");
-        if (CancellationTokenSource is not null)
+        System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {AutoDownloadService.WLock.IsHeld}");
+        if (AutoDownloadService.CancellationTokenSource is not null)
         {
-            CancellationTokenSource = null;
+            AutoDownloadService.CancellationTokenSource = null;
         }
-        CancellationTokenSource?.Dispose();
+        AutoDownloadService.CancellationTokenSource?.Dispose();
         base.OnDestroy();
     }
 }
