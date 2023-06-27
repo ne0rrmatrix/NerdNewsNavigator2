@@ -75,6 +75,9 @@ public partial class App : Application
                 Stop = true;
                 LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
                 break;
+            default:
+                Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
+                break;
         }
     }
 
