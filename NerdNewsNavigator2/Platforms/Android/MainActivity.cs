@@ -11,7 +11,7 @@ namespace NerdNewsNavigator2.Platforms.Android;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
-    public static bool SetAutoDownload { get; set; }
+    private AutoStartService AutoService { get; set; } = new();
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
@@ -43,12 +43,12 @@ public class MainActivity : MauiAppCompatActivity
     }
     private void StopService()
     {
-        if (AutoStartService.CancellationTokenSource is not null)
+        if (AutoService.CancellationTokenSource is not null)
         {
-            AutoStartService.CancellationTokenSource.Cancel();
-            AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
-            AutoStartService.CancellationTokenSource?.Dispose();
-            AutoStartService.CancellationTokenSource = null;
+            AutoService.CancellationTokenSource.Cancel();
+            AutoService.LongTask(AutoService.CancellationTokenSource.Token);
+            AutoService.CancellationTokenSource?.Dispose();
+            AutoService.CancellationTokenSource = null;
         }
 
         System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");

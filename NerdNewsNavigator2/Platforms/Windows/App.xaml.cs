@@ -15,8 +15,8 @@ namespace NerdNewsNavigator2.WinUI;
 public partial class App : MauiWinUIApplication
 {
     private readonly System.Timers.Timer _aTimer = new(60 * 60 * 1000);
-    public static string WifiOnlyDownloading { get; set; }
-    private static string Status { get; set; }
+    private string WifiOnlyDownloading { get; set; }
+    private string Status { get; set; }
     public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
     /// <summary>
@@ -117,29 +117,39 @@ public partial class App : MauiWinUIApplication
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         _aTimer.Start();
     }
-    private static void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
+    private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Connection status has changed");
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        System.Diagnostics.Debug.WriteLine(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-    }
-    private static void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
-    {
-        var item = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        System.Diagnostics.Debug.WriteLine(item);
         if (Status == string.Empty)
         {
-            System.Diagnostics.Debug.WriteLine("No wifi or cell service");
+            Debug.WriteLine("No Connection to internet available");
             return;
         }
-        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
+        System.Diagnostics.Debug.WriteLine(Status);
+    }
+    private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
+    {
+        var connectionStatus = Connectivity.Current.ConnectionProfiles;
+        connectionStatus.ToList().ForEach(item =>
         {
-            System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
-            return;
-        }
-        Debug.WriteLine($"Timed event: {e} Started");
-        _ = DownloadService.AutoDownload();
+            switch (item)
+            {
+                case ConnectionProfile.WiFi:
+                case ConnectionProfile.Ethernet:
+                    Debug.WriteLine($"Timed event: {e} Started");
+                    _ = DownloadService.AutoDownload();
+                    break;
+                case ConnectionProfile.Cellular:
+                    if (WifiOnlyDownloading == "No")
+                    {
+                        Debug.WriteLine($"Timed event: {e} Started");
+                        _ = DownloadService.AutoDownload();
+                    }
+                    break;
+            }
+        });
     }
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

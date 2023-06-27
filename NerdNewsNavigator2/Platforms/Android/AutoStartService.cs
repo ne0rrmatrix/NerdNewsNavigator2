@@ -15,10 +15,10 @@ internal class AutoStartService : Service
 {
     #region Properties
     private WakeLock _wakeLock;
-    private static string Status { get; set; }
-    public static string WifiOnlyDownloading { get; set; }
-    public static System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
-    public static CancellationTokenSource CancellationTokenSource { get; set; } = null;
+    private string Status { get; set; }
+    private string WifiOnlyDownloading { get; set; }
+    private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
+    public CancellationTokenSource CancellationTokenSource { get; set; } = null;
 
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
@@ -108,7 +108,7 @@ internal class AutoStartService : Service
         StartForegroundService();
         return StartCommandResult.Sticky;
     }
-    public static void LongTask(CancellationToken cancellationToken)
+    public void LongTask(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
@@ -122,30 +122,36 @@ internal class AutoStartService : Service
         ATimer.Start();
     }
 
-    private static void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
+    private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Connection status has changed");
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         System.Diagnostics.Debug.WriteLine(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
     }
-    private static void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
+    private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        System.Diagnostics.Debug.WriteLine(Status);
-        if (Status == string.Empty)
-        {
-            System.Diagnostics.Debug.WriteLine("No wifi or cell service");
-            return;
-        }
-        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
-        {
-            System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
-            return;
-        }
 
-        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
-        _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+        var connectionStatus = Connectivity.Current.ConnectionProfiles;
+        connectionStatus.ToList().ForEach(item =>
+        {
+            switch (item)
+            {
+                case ConnectionProfile.WiFi:
+                case ConnectionProfile.Ethernet:
+                    System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+                    _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+                    break;
+                case ConnectionProfile.Cellular:
+                    if (WifiOnlyDownloading == "No")
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+                        _ = NerdNewsNavigator2.Services.DownloadService.AutoDownload();
+                    }
+                    break;
+            }
+        });
     }
 
     /// <summary>
