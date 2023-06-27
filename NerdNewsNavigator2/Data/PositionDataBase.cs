@@ -52,7 +52,7 @@ public class PositionDataBase
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to start Position Database: {Message}", ex.Message);
+            _logger.LogError("Failed to start Database: {Message}", ex.Message);
         }
     }
 
@@ -63,22 +63,14 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Position"/></returns>
     public async Task<List<Position>> GetAllPositions()
     {
-        try
+        var test = await _connection.Table<Position>().ToListAsync();
+        if (test is null)
         {
-            var test = await _connection.Table<Position>().ToListAsync();
-            if (test is null)
-            {
-                _logger.LogInformation("Returning empty collection");
-                return Enumerable.Empty<Position>().ToList();
-            }
-            _logger.LogInformation("Got all Positions from Database.");
-            return test;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get all Positions from Database: {Message}", ex.Message);
+            _logger.LogInformation("Returning empty collection");
             return Enumerable.Empty<Position>().ToList();
         }
+        _logger.LogInformation("Got all Positions from Database.");
+        return test;
     }
 
     /// <summary>
@@ -87,22 +79,14 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public async Task<List<Podcast>> GetAllPodcasts()
     {
-        try
+        var temp = await _connection.Table<Podcast>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Podcast>().ToListAsync();
-            if (temp is null)
-            {
-                _logger.LogInformation("Returning empty collection");
-                return Enumerable.Empty<Podcast>().ToList();
-            }
-            _logger.LogInformation("Got all Podcasts from Database.");
-            return temp;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Podcasts from Database: {Message}", ex.Message);
+            _logger.LogInformation("Returning empty collection");
             return Enumerable.Empty<Podcast>().ToList();
         }
+        _logger.LogInformation("Got all Podcasts from Database.");
+        return temp;
     }
 
     /// <summary>
@@ -111,22 +95,14 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Favorites"/></returns>
     public async Task<List<Favorites>> GetAllFavorites()
     {
-        try
+        var temp = await _connection.Table<Favorites>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Favorites>().ToListAsync();
-            if (temp is null)
-            {
-                _logger.LogInformation("Returning empty collection");
-                return Enumerable.Empty<Favorites>().ToList();
-            }
-            _logger.LogInformation("Got all Favorites from Database.");
-            return temp;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Favorites from Database: {Message}", ex.Message);
+            _logger.LogInformation("Returning empty collection");
             return Enumerable.Empty<Favorites>().ToList();
         }
+        _logger.LogInformation("Got all Favorites from Database.");
+        return temp;
     }
 
     /// <summary>
@@ -135,22 +111,14 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Download"/></returns>
     public async Task<List<Download>> GetAllDownloads()
     {
-        try
+        var temp = await _connection.Table<Download>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Download>().ToListAsync();
-            if (temp is null)
-            {
-                _logger.LogInformation("Returning empty collection");
-                return Enumerable.Empty<Download>().ToList();
-            }
-            _logger.LogInformation("Got all Downloads from Database.");
-            return temp;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Downloads from Database: {Message}", ex.Message);
+            _logger.LogInformation("Returning empty collection");
             return Enumerable.Empty<Download>().ToList();
         }
+        _logger.LogInformation("Got all Downloads from Database.");
+        return temp;
     }
 
     #endregion
