@@ -142,10 +142,6 @@ public static class DownloadService
     {
         CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
-        if (favoriteShows is null)
-        {
-            return;
-        }
         ProccessShow(favoriteShows);
     }
     private static void ProccessShow(List<Favorites> favoriteShows)

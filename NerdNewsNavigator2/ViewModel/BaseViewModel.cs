@@ -339,7 +339,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         MostRecentShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        var item = temp.OrderBy(x => x.Title).ToList();
+        item?.Where(x => !x.Deleted).ToList().ForEach(show =>
             {
                 var item = FeedService.GetShows(show.Url, true);
                 var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);

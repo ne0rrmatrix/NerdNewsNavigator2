@@ -39,7 +39,7 @@ public static class FeedService
         }
         catch
         {
-            return Enumerable.Empty<string>().ToList();
+            return list;
         }
     }
 

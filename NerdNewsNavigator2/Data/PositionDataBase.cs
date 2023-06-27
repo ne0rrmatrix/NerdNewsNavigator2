@@ -67,7 +67,7 @@ public class PositionDataBase
         if (test is null)
         {
             _logger.LogInformation("Returning empty collection");
-            return Enumerable.Empty<Position>().ToList();
+            return new List<Position>();
         }
         _logger.LogInformation("Got all Positions from Database.");
         return test;
@@ -83,7 +83,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.LogInformation("Returning empty collection");
-            return Enumerable.Empty<Podcast>().ToList();
+            return new List<Podcast>();
         }
         _logger.LogInformation("Got all Podcasts from Database.");
         return temp;
@@ -99,7 +99,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.LogInformation("Returning empty collection");
-            return Enumerable.Empty<Favorites>().ToList();
+            return new List<Favorites>();
         }
         _logger.LogInformation("Got all Favorites from Database.");
         return temp;
@@ -115,7 +115,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.LogInformation("Returning empty collection");
-            return Enumerable.Empty<Download>().ToList();
+            return new List<Download>();
         }
         _logger.LogInformation("Got all Downloads from Database.");
         return temp;

@@ -178,6 +178,10 @@ public partial class SettingsPage : ContentPage
         var item = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
         await Browser.OpenAsync(item);
     }
+    private void ShowLogs(object sender, EventArgs e)
+    {
+        Log.GoToLogsPageCommand.Execute(_messenger);
+    }
     #endregion
 
     /// <summary>
@@ -214,10 +218,5 @@ public partial class SettingsPage : ContentPage
         var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
         var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
         return rgx.IsMatch(url);
-    }
-
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-        Log.GoToLogsPageCommand.Execute(_messenger);
     }
 }

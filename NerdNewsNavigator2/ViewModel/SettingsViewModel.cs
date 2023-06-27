@@ -27,8 +27,9 @@ public partial class SettingsViewModel : BaseViewModel
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
-    public Task UpdatePodcasts()
+    public async Task UpdatePodcasts()
     {
+        await Toast.Make("Updating Podcasts.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         ThreadPool.QueueUserWorkItem(async (state) =>
        {
            _ = await PodcastServices.UpdatePodcast();
@@ -42,6 +43,5 @@ public partial class SettingsViewModel : BaseViewModel
                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
            });
        });
-        return Task.CompletedTask;
     }
 }
