@@ -37,7 +37,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
+    /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
@@ -48,61 +48,18 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
-        var item = Shows.First(x => x.Url == url);
-        if (item != null)
-        {
-            item.IsDownloaded = true;
-            item.IsNotDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
-        }
 
 #if WINDOWS || MACCATALYST || IOS
         await Downloading(url, false);
 #endif
 #if ANDROID
-        await UpdateNotification(item, url);
+        var item = Shows.First(x => x.Url == url);
+        await NotificationService.CheckNotification();
+        var requests = await NotificationService.NotificationRequests(item);
+        NotificationService.AfterNotifications(requests);
+        RunDownloads(url);
 #endif
     }
-
-#if ANDROID
-    public async Task UpdateNotification(Show item, string url)
-    {
-        var request = new Plugin.LocalNotification.NotificationRequest
-        {
-            NotificationId = 1337,
-            Title = item?.Title,
-            Description = $"Download Progress {(int)ProgressInfos}",
-            Android = new AndroidOptions
-            {
-                IconSmallName = new AndroidIcon("ic_stat_alarm"),
-                ProgressBarProgress = (int)ProgressInfos,
-                IsProgressBarIndeterminate = false,
-                Color =
-                    {
-                        ResourceName = "colorPrimary"
-                    },
-                AutoCancel = true,
-                ProgressBarMax = 100,
-            },
-        };
-        await LocalNotificationCenter.Current.Show(request);
-        _ = Task.Run(async () =>
-        {
-            await Downloading(url, false);
-        });
-
-        while (DownloadService.IsDownloading)
-        {
-            Thread.Sleep(1000);
-            request.Description = $"Download Progress {(int)ProgressInfos}%";
-            request.Android.ProgressBarProgress = (int)ProgressInfos;
-            await LocalNotificationCenter.Current.Show(request);
-        }
-        request.Android.ProgressBarProgress = 100;
-        request.Description = "Download Complete";
-        await LocalNotificationCenter.Current.Show(request);
-    }
-#endif
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>

@@ -175,6 +175,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
+        var item = Shows.First(x => x.Url == url);
+        if (item != null)
+        {
+            item.IsDownloaded = true;
+            item.IsNotDownloaded = false;
+            Shows[Shows.IndexOf(item)] = item;
+        }
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -206,6 +213,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         var item = list.AsEnumerable().First(x => x.Url == url);
         await ProcessDownloads(item, url);
         TriggerProgressChanged();
+    }
+    public void RunDownloads(string url)
+    {
+        _ = Task.Run(async () =>
+        {
+            await Downloading(url, false);
+        });
     }
     public async Task ProcessDownloads(Show item, string url)
     {
@@ -278,16 +292,16 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             Logger.LogInformation("Updated Shows");
             var show = Shows.First(x => x.Url == download.Url);
-            show.IsDownloaded = true;
-            show.IsNotDownloaded = false;
+            show.IsDownloaded = false;
+            show.IsNotDownloaded = true;
             Shows[Shows.IndexOf(show)] = show;
         }
         if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
         {
             Logger.LogInformation("Updated MostRecent Shows");
             var show = MostRecentShows.First(x => x.Url == download.Url);
-            show.IsDownloaded = true;
-            show.IsNotDownloaded = false;
+            show.IsDownloaded = false;
+            show.IsNotDownloaded = true;
             MostRecentShows[MostRecentShows.IndexOf(show)] = show;
         }
     }

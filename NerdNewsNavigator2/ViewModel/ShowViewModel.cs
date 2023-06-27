@@ -58,7 +58,7 @@ public partial class ShowViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
+    /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
@@ -69,87 +69,17 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
-        var item = Shows.First(x => x.Url == url);
-        if (item != null)
-        {
-            item.IsDownloaded = true;
-            item.IsNotDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
-        }
-
 #if WINDOWS || MACCATALYST || IOS
         await Downloading(url, false);
 #endif
 #if ANDROID
-        await UpdateNotification(item, url);
+        var item = Shows.First(x => x.Url == url);
+        await NotificationService.CheckNotification();
+        var requests = await NotificationService.NotificationRequests(item);
+        NotificationService.AfterNotifications(requests);
+        RunDownloads(url);
 #endif
     }
-
-#if ANDROID
-    public async Task UpdateNotification(Show item, string url)
-    {
-        ProgressInfos = 0.00;
-        var isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
-        await LocalNotificationCenter.Current.RequestNotificationPermission();
-        while (!isNotifified)
-        {
-            Thread.Sleep(100);
-            isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
-        }
-        var request = new Plugin.LocalNotification.NotificationRequest
-        {
-            NotificationId = 1337,
-            Title = item?.Title,
-            CategoryType = NotificationCategoryType.Progress,
-            Description = $"Download Progress {(int)ProgressInfos}",
-#if ANDROID
-            Android = new AndroidOptions
-            {
-                IconSmallName = new AndroidIcon("ic_stat_alarm"),
-                Ongoing = true,
-                ProgressBarProgress = (int)ProgressInfos,
-                IsProgressBarIndeterminate = false,
-                Color =
-                    {
-                        ResourceName = "colorPrimary"
-                    },
-                AutoCancel = true,
-                ProgressBarMax = 100,
-            },
-#endif
-        };
-        await LocalNotificationCenter.Current.Show(request);
-
-        _ = Task.Run(async () =>
-        {
-            await Downloading(url, false);
-        });
-        _ = Task.Run(async () =>
-        {
-            DownloadService.IsDownloading = true;
-            while (DownloadService.IsDownloading)
-            {
-                if (App.Stop)
-                {
-                    break;
-                }
-                request.Description = $"Download Progress {(int)ProgressInfos}%";
-                request.Android.ProgressBarProgress = (int)ProgressInfos;
-                request.Silent = true;
-                await LocalNotificationCenter.Current.Show(request);
-                Thread.Sleep(5000);
-            }
-            request.Android.ProgressBarProgress = 100;
-            request.Android.Ongoing = false;
-            request.Description = "Download Complete";
-            request.CategoryType = NotificationCategoryType.None;
-            if (!App.Stop)
-            {
-                await LocalNotificationCenter.Current.Show(request);
-            }
-        });
-    }
-#endif
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>

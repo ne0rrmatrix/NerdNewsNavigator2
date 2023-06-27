@@ -64,6 +64,7 @@ public class HttpClientDownloadWithProgress : IDisposable
             if (DownloadService.CancelDownload)
             {
                 isMoreToRead = false;
+                DownloadService.CancelDownload = true;
                 _downloadCancel.Cancel();
             }
 

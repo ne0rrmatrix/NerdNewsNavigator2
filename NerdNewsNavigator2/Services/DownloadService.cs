@@ -92,6 +92,10 @@ public static class DownloadService
                 Progress = (double)progressPercentage;
             };
             await client.StartDownload();
+            if (CancelDownload)
+            {
+                return false;
+            }
             return true;
         }
         catch (Exception ex)
@@ -119,7 +123,7 @@ public static class DownloadService
             FileName = GetFileName(show.Url)
         };
         var downloaded = await DownloadFile(download.Url);
-        if (downloaded)
+        if (downloaded && !CancelDownload)
         {
             download.IsDownloaded = true;
             download.IsNotDownloaded = false;
@@ -129,6 +133,7 @@ public static class DownloadService
         }
         if (CancelDownload)
         {
+            Debug.WriteLine("Deleting file");
             DeleteFile(download.Url);
             return false;
         }
