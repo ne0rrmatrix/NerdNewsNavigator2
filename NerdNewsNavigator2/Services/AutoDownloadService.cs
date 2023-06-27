@@ -28,13 +28,13 @@ public class AutoDownloadService
             var start = Preferences.Default.Get("start", false);
             if (!start)
             {
-                Debug.WriteLine("Auto Downloader is disabled in settings");
+                System.Diagnostics.Debug.WriteLine("Auto Downloader is disabled in settings");
                 return;
             }
             if (profiles.Contains(ConnectionProfile.WiFi) || WifiOnlyDownloading == "No")
             {
                 Thread.Sleep(60 * 1000);
-                Debug.WriteLine("Auto download now");
+                System.Diagnostics.Debug.WriteLine("Auto download now");
                 _ = DownloadService.AutoDownload();
             }
         });
