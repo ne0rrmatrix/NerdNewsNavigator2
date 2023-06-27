@@ -48,7 +48,6 @@ internal class AutoStartService : Service
         var pendingIntent = PendingIntent.GetActivity(this, 0, intent, pendingIntentFlags);
 
         var notifcationManager = GetSystemService(NotificationService) as NotificationManager;
-
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             CreateNotificationChannel(notifcationManager);

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Plugin.LocalNotification;
+using Plugin.LocalNotification.EventArgs;
 using Plugin.LocalNotification.iOSOption;
 
 namespace NerdNewsNavigator2.ViewModel;
@@ -99,11 +100,13 @@ public partial class ShowViewModel : BaseViewModel
         {
             NotificationId = 1337,
             Title = item?.Title,
+            CategoryType = NotificationCategoryType.Progress,
             Description = $"Download Progress {(int)ProgressInfos}",
 #if ANDROID
             Android = new AndroidOptions
             {
                 IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                Ongoing = true,
                 ProgressBarProgress = (int)ProgressInfos,
                 IsProgressBarIndeterminate = false,
                 Color =
@@ -126,15 +129,24 @@ public partial class ShowViewModel : BaseViewModel
             DownloadService.IsDownloading = true;
             while (DownloadService.IsDownloading)
             {
-                Thread.Sleep(1000);
+                if (App.Stop)
+                {
+                    break;
+                }
                 request.Description = $"Download Progress {(int)ProgressInfos}%";
                 request.Android.ProgressBarProgress = (int)ProgressInfos;
                 request.Silent = true;
                 await LocalNotificationCenter.Current.Show(request);
+                Thread.Sleep(5000);
             }
             request.Android.ProgressBarProgress = 100;
+            request.Android.Ongoing = false;
             request.Description = "Download Complete";
-            await LocalNotificationCenter.Current.Show(request);
+            request.CategoryType = NotificationCategoryType.None;
+            if (!App.Stop)
+            {
+                await LocalNotificationCenter.Current.Show(request);
+            }
         });
     }
 #endif

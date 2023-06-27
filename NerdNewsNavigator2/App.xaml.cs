@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application
 {
+    public static bool Stop { get; set; } = false;
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -33,7 +34,25 @@ public partial class App : Application
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
-
+#if ANDROID
+        LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
+            {
+                new NotificationCategory(NotificationCategoryType.Progress)
+                {
+                    ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
+                    {
+                        new NotificationAction(100)
+                        {
+                            Title = "Stop Download",
+                        },
+                        new NotificationAction(101)
+                        {
+                            Title ="Close Notification",
+                        },
+                    })
+                }
+            }));
+#endif
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
@@ -44,13 +63,21 @@ public partial class App : Application
     }
 
 #if ANDROID
-    private async void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
+
+    private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
     {
-        if (e.IsTapped)
+        switch (e.ActionId)
         {
-            await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
+            case 100:
+                DownloadService.CancelDownload = true;
+                break;
+            case 101:
+                Stop = true;
+                LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
+                break;
         }
     }
+
 #endif
     private void StartAutoDownloadService()
     {
