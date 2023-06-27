@@ -76,15 +76,15 @@ public partial class ShowViewModel : BaseViewModel
             Shows[Shows.IndexOf(item)] = item;
         }
 
-#if WINDOWS || MACCATALYST
+#if WINDOWS || MACCATALYST || IOS
         await Downloading(url, false);
 #endif
-#if ANDROID || IOS
+#if ANDROID
         await UpdateNotification(item, url);
 #endif
     }
 
-#if ANDROID || IOS
+#if ANDROID
     public async Task UpdateNotification(Show item, string url)
     {
         await LocalNotificationCenter.Current.RequestNotificationPermission();
