@@ -28,12 +28,12 @@ public static class NotificationService
                 {
                     break;
                 }
-                request.NotificationId = Id;
                 request.Description = $"Download Progress {(int)DownloadService.Progress}%";
                 request.Android.ProgressBarProgress = (int)DownloadService.Progress;
                 request.Silent = true;
+                request.NotificationId = Id;
                 await LocalNotificationCenter.Current.Show(request);
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
             }
             if (DownloadService.CancelDownload)
             {
@@ -41,6 +41,7 @@ public static class NotificationService
                 WeakReferenceMessenger.Default.Send(new NotificationItemMessage(request.NotificationId, request.Title, true));
                 request.Android.ProgressBarProgress = 0;
                 request.Android.Ongoing = false;
+                request.NotificationId = Id;
                 request.Description = "Download cancelled";
                 request.CategoryType = NotificationCategoryType.None;
                 DownloadService.Progress = 0;

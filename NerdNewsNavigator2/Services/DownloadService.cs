@@ -158,11 +158,10 @@ public static class DownloadService
         {
             favoriteShows.ForEach(x =>
             {
-                Thread.Sleep(1000);
                 var show = FeedService.GetShows(x.Url, true);
                 while (IsDownloading)
                 {
-                    Thread.Sleep(5000);
+                    Thread.Sleep(8000);
                     if (CancelDownload)
                     {
                         IsDownloading = false;
