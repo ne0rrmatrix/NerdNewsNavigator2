@@ -170,10 +170,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             Message.Add(newMessage);
         }
-        Message.ForEach(x =>
-        {
-            Debug.WriteLine($"Url: {x.Url}, Id: {x.Id}");
-        });
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
     }

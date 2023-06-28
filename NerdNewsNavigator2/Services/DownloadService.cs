@@ -198,11 +198,6 @@ public static class DownloadService
             });
 #endif
             var item = await Downloading(show);
-            System.Diagnostics.Debug.WriteLine("trying to start!");
-            if (item)
-            {
-                Debug.WriteLine("Download completed");
-            }
         }
     }
 }

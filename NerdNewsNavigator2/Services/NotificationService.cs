@@ -64,7 +64,6 @@ public static class NotificationService
     public static async Task<NotificationRequest> NotificationRequests(Show item)
     {
         Id += 1;
-        System.Diagnostics.Debug.WriteLine($"Sending notification request: Id: {Id}");
         WeakReferenceMessenger.Default.Send(new NotificationItemMessage(Id, item?.Url, false));
         var request = new Plugin.LocalNotification.NotificationRequest
         {
