@@ -197,7 +197,7 @@ public static class DownloadService
                 NotificationService.AfterNotifications(requests);
             });
 #endif
-            var item = await Downloading(show);
+            await Downloading(show);
         }
     }
 }
