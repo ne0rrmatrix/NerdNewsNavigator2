@@ -15,7 +15,6 @@ public static class DownloadService
     public static double Progress { get; set; }
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
-    public static int Count { get; set; } = 0;
     #endregion
 
     /// <summary>
@@ -122,6 +121,7 @@ public static class DownloadService
             Description = show.Description,
             FileName = GetFileName(show.Url)
         };
+
         var downloaded = await DownloadFile(download.Url);
         if (downloaded && !CancelDownload)
         {
@@ -131,6 +131,7 @@ public static class DownloadService
             await AddDownloadDatabase(download);
             return true;
         }
+
         if (CancelDownload)
         {
             Debug.WriteLine("Deleting file");
@@ -147,62 +148,61 @@ public static class DownloadService
     {
         CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
-        ProccessShow(favoriteShows);
+        await ProccessShowAsync(favoriteShows);
     }
-    private static void ProccessShow(List<Favorites> favoriteShows)
+    private static async Task ProccessShowAsync(List<Favorites> favoriteShows)
     {
-        favoriteShows.ForEach(async x =>
+        var downloadedShows = await App.PositionData.GetAllDownloads();
+        IsDownloading = false;
+        _ = Task.Run(() =>
         {
-            var show = FeedService.GetShows(x.Url, true);
-            if (show is null || show.Count == 0 || CancelDownload)
+            favoriteShows.ForEach(x =>
             {
-                Autodownloading = false;
-                return;
-            }
-            while (Autodownloading)
-            {
-                Thread.Sleep(5000);
-                if (CancelDownload)
+                Thread.Sleep(1000);
+                var show = FeedService.GetShows(x.Url, true);
+                while (IsDownloading)
+                {
+                    Thread.Sleep(5000);
+                    if (CancelDownload)
+                    {
+                        IsDownloading = false;
+                        CancelDownload = false;
+                        return;
+                    }
+                    Debug.WriteLine("Waiting for download to finish");
+                }
+                if (show is null || show.Count == 0 || CancelDownload)
                 {
                     Autodownloading = false;
                     return;
                 }
-                Debug.WriteLine("Waiting for download to finish");
-            }
-            var downloadedShows = await App.PositionData.GetAllDownloads();
-            await ProcessDownloadAsync(downloadedShows, show[0], x);
+                _ = Task.Run(async () =>
+                {
+                    await ProcessDownloadAsync(downloadedShows, show[0]);
+                    IsDownloading = false;
+                });
+            });
         });
     }
 
-#pragma warning disable S1172 // Unused method parameters should be removed
-    private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show, Favorites x)
-#pragma warning restore S1172 // Unused method parameters should be removed
+    private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
     {
         if (!downloadedShows.Exists(y => y.Url == show.Url))
         {
-            Autodownloading = true;
-            if (await Downloading(show))
+            IsDownloading = true;
+#if ANDROID
+            _ = Task.Run(async () =>
+            {
+                await NotificationService.CheckNotification();
+                var requests = await NotificationService.NotificationRequests(show);
+                NotificationService.AfterNotifications(requests);
+            });
+#endif
+            var item = await Downloading(show);
+            System.Diagnostics.Debug.WriteLine("trying to start!");
+            if (item)
             {
                 Debug.WriteLine("Download completed");
-                Autodownloading = false;
-                Count++;
-#if ANDROID
-                var downloaded = new NotificationRequest
-                {
-                    NotificationId = Count,
-                    Title = x.Title,
-                    Description = "New Episode Downloaded",
-                    Android = new AndroidOptions()
-                    {
-                        IconSmallName = new AndroidIcon("ic_stat_alarm"),
-                    },
-                };
-                await LocalNotificationCenter.Current.Show(downloaded);
-#endif
-            }
-            else
-            {
-                Autodownloading = false;
             }
         }
     }

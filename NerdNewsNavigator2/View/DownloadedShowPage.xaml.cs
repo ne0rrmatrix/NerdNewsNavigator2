@@ -29,7 +29,7 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await MessagingService.RecievedDelete(message.Value);
-            WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<DeletedItemMessage>(message);
         });
     }
 

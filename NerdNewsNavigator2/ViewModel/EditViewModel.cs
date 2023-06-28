@@ -9,8 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
-    private readonly IMessenger _messenger;
-
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
@@ -18,10 +16,9 @@ public partial class EditViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
+    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
-        _messenger = messenger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         _ = GetUpdatedPodcasts();
@@ -124,10 +121,6 @@ public partial class EditViewModel : BaseViewModel
             Logger.LogInformation("Auto Download is already set to start Automatically");
             return true;
         }
-
-        Preferences.Default.Set("start", true);
-        Logger.LogInformation("Setting Auto Download to start Automatically");
-        _messenger.Send(new MessageData(true));
         return true;
     }
     private async Task ProcessPodcastsAsync(Podcast item)

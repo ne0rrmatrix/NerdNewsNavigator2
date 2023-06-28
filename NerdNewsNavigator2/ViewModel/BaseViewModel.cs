@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     public delegate void DownloadChangedHandler();
@@ -105,39 +105,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Logger.LogInformation("NavBar closed");
             ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         };
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
     }
 
-    #region Messaging Service
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DownloadItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
-        });
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
-    }
-    #endregion
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>
@@ -498,5 +469,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         }
 #pragma warning restore IDE0066
     }
+
     #endregion
 }

@@ -38,7 +38,6 @@ public static class MessagingService
         if (!value)
         {
             await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            WeakReferenceMessenger.Default.Reset();
         }
     }
 
@@ -57,6 +56,5 @@ public static class MessagingService
         {
             await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         }
-        WeakReferenceMessenger.Default.Reset();
     }
 }

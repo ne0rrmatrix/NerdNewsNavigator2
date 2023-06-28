@@ -22,22 +22,6 @@ public class AutoDownloadService
     {
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        Task.Run(() =>
-        {
-            var profiles = Connectivity.Current.ConnectionProfiles;
-            var start = Preferences.Default.Get("start", false);
-            if (!start)
-            {
-                System.Diagnostics.Debug.WriteLine("Auto Downloader is disabled in settings");
-                return;
-            }
-            if (profiles.Contains(ConnectionProfile.WiFi) || WifiOnlyDownloading == "No")
-            {
-                Thread.Sleep(60 * 1000);
-                System.Diagnostics.Debug.WriteLine("Auto download now");
-                _ = DownloadService.AutoDownload();
-            }
-        });
     }
 #if ANDROID
     public void AcquireWakeLock()
@@ -105,6 +89,7 @@ public class AutoDownloadService
         ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         ATimer.Start();
+        _ = DownloadService.AutoDownload();
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
