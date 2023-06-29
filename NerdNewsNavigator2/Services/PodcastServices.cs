@@ -22,8 +22,11 @@ public static class PodcastServices
     public static List<Podcast> GetFromUrl()
     {
         List<Podcast> podcasts = new();
-        var item = FeedService.GetPodcastListAsync();
-        item.ForEach(x => podcasts.Add(FeedService.GetFeed(x)));
+        PodcastData.Special.ForEach(podcast =>
+        {
+            var temp = FeedService.GetFeed(podcast);
+            podcasts.Add(temp);
+        });
         return podcasts;
     }
 
