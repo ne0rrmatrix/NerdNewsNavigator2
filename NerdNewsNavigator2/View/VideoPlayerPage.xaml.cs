@@ -11,7 +11,6 @@ namespace NerdNewsNavigator2.View;
 public partial class VideoPlayerPage : ContentPage
 {
     #region Properties
-    public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
 
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
