@@ -30,6 +30,7 @@
 
 
         <CollectionView.ItemTemplate>
+
             <DataTemplate x:DataType="model:Show">
 
                 <Frame
@@ -42,6 +43,7 @@
                                               MacCatalyst=370,
                                               Android=370,
                                               iOS=320}">
+
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
                         <Label
@@ -56,8 +58,8 @@
                             Grid.Row="1"
                             Margin="10"
                             Aspect="AspectFit"
-                            IsVisible="{Binding IsDownloaded}"
                             HeightRequest="320"
+                            IsVisible="{Binding IsDownloaded}"
                             WidthRequest="320">
 
                             <Image.GestureRecognizers>
@@ -71,7 +73,7 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-                        
+
                         <Image
                             Grid.Row="1"
                             Margin="10"
@@ -91,8 +93,9 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-                        
+
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
+
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
@@ -105,7 +108,6 @@
                                 Text="{Binding PubDate}"
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
-
                             <Button
                                 x:Name="Btn"
                                 Margin="5"
@@ -122,8 +124,9 @@
                                 </Button.GestureRecognizers>
 
                             </Button>
-                            
+
                         </HorizontalStackLayout>
+
                         <Label
                             Grid.Row="3"
                             FontSize="10"
@@ -137,6 +140,7 @@
                 </Frame>
 
             </DataTemplate>
+
         </CollectionView.ItemTemplate>
 
     </CollectionView>

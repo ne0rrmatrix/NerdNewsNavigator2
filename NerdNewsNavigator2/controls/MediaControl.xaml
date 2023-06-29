@@ -57,15 +57,15 @@
                 WidthRequest="40" />
 
             <CollectionView
-                        HorizontalOptions="End"
-                        Margin="80"
-                        WidthRequest="120"
-                        HeightRequest="240"
-                        IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
-                        IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
-                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
-                        SelectionMode="Single"
-                        VerticalOptions="End">
+                Margin="80"
+                HeightRequest="240"
+                HorizontalOptions="End"
+                IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
+                ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
+                SelectionMode="Single"
+                VerticalOptions="End"
+                WidthRequest="120">
 
                 <CollectionView.GestureRecognizers>
                     <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
@@ -78,15 +78,15 @@
                         <VerticalStackLayout>
 
                             <Label
-                                        FontSize="26"
-                                        HorizontalOptions="End"
-                                        HorizontalTextAlignment="Center"
-                                        Text="{Binding Title}"
-                                        TextColor="White"
-                                        WidthRequest="90">
+                                FontSize="26"
+                                HorizontalOptions="End"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding Title}"
+                                TextColor="White"
+                                WidthRequest="90">
+
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
-
                                 </Label.GestureRecognizers>
                             </Label>
 
@@ -108,11 +108,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnRewind_Clicked"
-                        HeightRequest="{OnIdiom Phone= 40, Default=80}"
+                        HeightRequest="{OnIdiom Phone=40,
+                                                Default=80}"
                         HorizontalOptions="Center"
                         Source="rewind.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone= 40, Default=80}" />
+                        WidthRequest="{OnIdiom Phone=40,
+                                               Default=80}" />
 
                     <ImageButton
                         x:Name="BtnPLay"
@@ -120,11 +122,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnPlay_Clicked"
-                        HeightRequest="{OnIdiom Phone= 40, Default=80}"
+                        HeightRequest="{OnIdiom Phone=40,
+                                                Default=80}"
                         HorizontalOptions="Center"
                         Source="pause.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone= 40, Default=80}" />
+                        WidthRequest="{OnIdiom Phone=40,
+                                               Default=80}" />
 
                     <ImageButton
                         x:Name="BtnForward"
@@ -132,11 +136,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnForward_Clicked"
-                        HeightRequest="{OnIdiom Phone= 40, Default=80}"
+                        HeightRequest="{OnIdiom Phone=40,
+                                                Default=80}"
                         HorizontalOptions="Center"
                         Source="fastforward.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone= 40, Default=80}" />
+                        WidthRequest="{OnIdiom Phone=40,
+                                               Default=80}" />
 
                     <ImageButton
                         x:Name="ImageButtonMute"
@@ -144,9 +150,11 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="OnMuteClicked"
-                        HeightRequest="{OnIdiom Phone= 40, Default=80}"
+                        HeightRequest="{OnIdiom Phone=40,
+                                                Default=80}"
                         Source="muted.png"
-                        WidthRequest="{OnIdiom Phone= 40, Default=80}">
+                        WidthRequest="{OnIdiom Phone=40,
+                                               Default=80}">
 
                         <ImageButton.Triggers>
                             <DataTrigger
@@ -166,11 +174,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="AspectButton"
-                        HeightRequest="{OnIdiom Phone= 40, Default=80}"
+                        HeightRequest="{OnIdiom Phone=40,
+                                                Default=80}"
                         HorizontalOptions="Center"
                         Source="aspect.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone= 40, Default=80}" />
+                        WidthRequest="{OnIdiom Phone=40,
+                                               Default=80}" />
                 </HorizontalStackLayout>
 
             </VerticalStackLayout>

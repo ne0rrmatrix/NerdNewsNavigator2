@@ -15,13 +15,18 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView Margin="5" ItemsSource="{Binding DownloadedShows}" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+    <CollectionView
+        Margin="5"
+        HorizontalScrollBarVisibility="Never"
+        ItemsSource="{Binding DownloadedShows}"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
+
             <DataTemplate x:DataType="model:Download">
 
                 <Frame
@@ -64,6 +69,7 @@
                         </Image>
 
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
+
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
@@ -90,6 +96,7 @@
                                 </Button.GestureRecognizers>
 
                             </Button>
+
                         </HorizontalStackLayout>
 
                         <Label
@@ -106,6 +113,7 @@
                 </Frame>
 
             </DataTemplate>
+
         </CollectionView.ItemTemplate>
 
     </CollectionView>

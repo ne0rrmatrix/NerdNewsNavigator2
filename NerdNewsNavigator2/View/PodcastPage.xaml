@@ -24,14 +24,18 @@
         VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
+
             <GridItemsLayout
                 x:Name="ItemLayout"
                 Orientation="Vertical"
                 Span="{Binding Orientation}" />
+
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
+
             <DataTemplate x:DataType="model:Podcast">
+
                 <Frame
                     Margin="{OnPlatform WinUI=90,
                                         MacCatalyst=90,
@@ -44,11 +48,13 @@
                                               MacCatalyst=370,
                                               Android=370,
                                               iOS=340}">
+
                     <Grid IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=IsNotBusy}">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375}" />
-
                         </Grid.ColumnDefinitions>
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto, MacCatalyst=Auto}" />
                             <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350, MacCatalyst=350}" />
@@ -58,6 +64,7 @@
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
+
                         <Label
                             Grid.Row="0"
                             Margin="5"
@@ -96,32 +103,42 @@
                                                    Tablet=300,
                                                    Default=290,
                                                    Desktop=340}" />
+
                     </Grid>
+
                 </Frame>
+
             </DataTemplate>
+
         </CollectionView.ItemTemplate>
-        
+
         <CollectionView.EmptyView>
+
             <ContentView>
-                <StackLayout HorizontalOptions="CenterAndExpand"
-                             VerticalOptions="CenterAndExpand">
+
+                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
                     <Label
-                    Padding="20"
-                    FontSize="Large"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsBusy}"
-                    Text="Loading..."
-                    TextColor="Black"
-                    VerticalOptions="Center" />
+                        Padding="20"
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding IsBusy}"
+                        Text="Loading..."
+                        TextColor="Black"
+                        VerticalOptions="Center" />
                     <ActivityIndicator
-                    IsEnabled="True"
-                    IsRunning="{Binding IsBusy}"
-                    IsVisible="{Binding IsBusy}"
-                    Color="Red" />
+                        IsEnabled="True"
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"
+                        Color="Red" />
+
                 </StackLayout>
+
             </ContentView>
+
         </CollectionView.EmptyView>
-        
+
     </CollectionView>
+
 </ContentPage>
