@@ -10,24 +10,14 @@ namespace NerdNewsNavigator2.ViewModel;
 [QueryProperty("Url", "Url")]
 public partial class VideoPlayerViewModel : BaseViewModel
 {
+    #region Properties
+
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
-    #region Properties
+    [ObservableProperty]
     private string _url;
 
-    /// <summary>
-    /// A public <see cref="string"/> that contains a Url for <see cref="Show"/>
-    /// </summary>
-    public string Url
-    {
-        get => _url;
-        set
-        {
-            SetProperty(ref _url, value);
-            VideoPlayerPage.Url = value;
-        }
-    }
     #endregion
 
     /// <summary>

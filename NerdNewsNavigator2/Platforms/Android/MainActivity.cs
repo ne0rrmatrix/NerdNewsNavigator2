@@ -7,11 +7,11 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 
-namespace NerdNewsNavigator2;
+namespace NerdNewsNavigator2.Platforms.Android;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
-    public static bool SetAutoDownload { get; set; }
+    private AutoDownloadService AutoDownloadService { get; set; } = new();
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
@@ -39,16 +39,16 @@ public class MainActivity : MauiAppCompatActivity
     private void StartService()
     {
         var serviceIntent = new Intent(this, typeof(AutoStartService));
-        this.StartForegroundService(serviceIntent);
+        StartForegroundService(serviceIntent);
     }
     private void StopService()
     {
-        if (AutoStartService.CancellationTokenSource is not null)
+        if (AutoDownloadService.CancellationTokenSource is not null)
         {
-            AutoStartService.CancellationTokenSource.Cancel();
-            AutoStartService.LongTask(AutoStartService.CancellationTokenSource.Token);
-            AutoStartService.CancellationTokenSource?.Dispose();
-            AutoStartService.CancellationTokenSource = null;
+            AutoDownloadService.CancellationTokenSource.Cancel();
+            AutoDownloadService.LongTask(AutoDownloadService.CancellationTokenSource.Token);
+            AutoDownloadService.CancellationTokenSource?.Dispose();
+            AutoDownloadService.CancellationTokenSource = null;
         }
 
         System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");

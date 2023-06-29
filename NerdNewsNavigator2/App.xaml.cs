@@ -7,8 +7,10 @@ namespace NerdNewsNavigator2;
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application
+public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
+    public static bool Stop { get; set; } = false;
+    public static List<Message> Message { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -23,34 +25,95 @@ public partial class App : Application
     public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
+        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
 #if ANDROID
         // Local Notification tap event listener
+        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
 #endif
         MainPage = new AppShell();
-
         _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
-
+#if ANDROID
+        LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
+            {
+                new NotificationCategory(NotificationCategoryType.Progress)
+                {
+                    ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
+                    {
+                        new NotificationAction(100)
+                        {
+                            Title = "Stop Download",
+                        },
+                    })
+                }
+            }));
+        LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
+            {
+                new NotificationCategory(NotificationCategoryType.None)
+                {
+                    ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
+                    {
+                        new NotificationAction(101)
+                        {
+                            Title ="Close Notification",
+                        },
+                    })
+                }
+            }));
+#endif
         LogController.InitializeNavigation(
             page => MainPage!.Navigation.PushModalAsync(page),
             () => MainPage!.Navigation.PopModalAsync());
-        _ = ThreadPool.QueueUserWorkItem(state =>
+        ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
         });
     }
 
 #if ANDROID
-    private async void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
+
+    private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
     {
-        if (e.IsTapped)
+        var message = Message.First(item => item.Id == e.Request.NotificationId);
+        switch (e.ActionId)
         {
-            await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
+            case 100:
+                if (e.Request.NotificationId == message.Id)
+                {
+                    DownloadService.CancelDownload = true;
+                }
+                else
+                {
+                    DownloadService.CancelDownload = true;
+                }
+                break;
+            case 101:
+                Stop = true;
+                LocalNotificationCenter.Current.Cancel(message.Id);
+                break;
+            default:
+                if (message.Cancel)
+                {
+                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
+                    break;
+                }
+                if (e.Request.NotificationId == message.Id)
+                {
+                    var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
+                    Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
+                }
+                else
+                {
+                    Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+                }
+                break;
         }
     }
+
 #endif
     private void StartAutoDownloadService()
     {
@@ -61,5 +124,56 @@ public partial class App : Application
             _messenger.Send(new MessageData(true));
         }
     }
+
+    #region Messaging Service
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(DownloadItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
+        });
+        WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);
+    }
+
+    /// <summary>
+    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(InternetItemMessage message)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await MessagingService.RecievedInternetMessage(message.Value);
+        });
+        WeakReferenceMessenger.Default.Unregister<InternetItemMessage>(message);
+    }
+    public void Receive(NotificationItemMessage message)
+    {
+        var newMessage = new Message
+        {
+            Cancel = message.Cancel,
+            Id = message.Id,
+            Url = message.Url
+        };
+        if (Message.Exists(x => x.Id == message.Id))
+        {
+            var item = Message.First(x => x.Id == message.Id);
+            item.Cancel = message.Cancel;
+            Message[Message.IndexOf(item)] = item;
+        }
+        else
+        {
+            Message.Add(newMessage);
+        }
+        WeakReferenceMessenger.Default.Reset();
+        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
+    }
+
+    #endregion
 }
 

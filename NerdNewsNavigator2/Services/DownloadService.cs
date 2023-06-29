@@ -12,9 +12,9 @@ public static class DownloadService
     public static bool CancelDownload { get; set; } = false;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
+    public static double Progress { get; set; }
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
-    public static int Count { get; set; } = 0;
     #endregion
 
     /// <summary>
@@ -87,9 +87,14 @@ public static class DownloadService
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
             {
-                Status = ($"Download Progress: {progressPercentage}%");
+                Status = $"Download Progress: {progressPercentage}%";
+                Progress = (double)progressPercentage;
             };
             await client.StartDownload();
+            if (CancelDownload)
+            {
+                return false;
+            }
             return true;
         }
         catch (Exception ex)
@@ -116,8 +121,9 @@ public static class DownloadService
             Description = show.Description,
             FileName = GetFileName(show.Url)
         };
+
         var downloaded = await DownloadFile(download.Url);
-        if (downloaded)
+        if (downloaded && !CancelDownload)
         {
             download.IsDownloaded = true;
             download.IsNotDownloaded = false;
@@ -125,8 +131,10 @@ public static class DownloadService
             await AddDownloadDatabase(download);
             return true;
         }
+
         if (CancelDownload)
         {
+            Debug.WriteLine("Deleting file");
             DeleteFile(download.Url);
             return false;
         }
@@ -140,61 +148,56 @@ public static class DownloadService
     {
         CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
-        if (favoriteShows is null)
-        {
-            return;
-        }
-        ProccessShow(favoriteShows);
+        await ProccessShowAsync(favoriteShows);
     }
-    public static void ProccessShow(List<Favorites> favoriteShows)
+    private static async Task ProccessShowAsync(List<Favorites> favoriteShows)
     {
-        favoriteShows.ForEach(async x =>
+        var downloadedShows = await App.PositionData.GetAllDownloads();
+        IsDownloading = false;
+        _ = Task.Run(() =>
         {
-            var show = await FeedService.GetShows(x.Url, true);
-            if (show is null || show.Count == 0 || CancelDownload)
+            favoriteShows.ForEach(x =>
             {
-                Autodownloading = false;
-                return;
-            }
-            while (Autodownloading)
-            {
-                Thread.Sleep(5000);
-                if (CancelDownload)
+                var show = FeedService.GetShows(x.Url, true);
+                while (IsDownloading)
+                {
+                    Thread.Sleep(8000);
+                    if (CancelDownload)
+                    {
+                        IsDownloading = false;
+                        CancelDownload = false;
+                        return;
+                    }
+                    Debug.WriteLine("Waiting for download to finish");
+                }
+                if (show is null || show.Count == 0 || CancelDownload)
                 {
                     Autodownloading = false;
                     return;
                 }
-                Debug.WriteLine("Waiting for download to finish");
-            }
-            var downloadedshows = await App.PositionData.GetAllDownloads();
-            if (!downloadedshows.Exists(y => y.Url == show[0].Url))
-            {
-                Autodownloading = true;
-                var result = await Downloading(show[0]);
-                if (result)
+                _ = Task.Run(async () =>
                 {
-                    Debug.WriteLine("Download completed");
-                    Autodownloading = false;
-                    Count++;
-#if ANDROID
-                    var downloaded = new NotificationRequest
-                    {
-                        NotificationId = Count,
-                        Title = x.Title,
-                        Description = "New Episode Downloaded",
-                        Android = new AndroidOptions()
-                        {
-                            IconSmallName = new Plugin.LocalNotification.AndroidOption.AndroidIcon("ic_stat_alarm"),
-                        },
-                    };
-                    await LocalNotificationCenter.Current.Show(downloaded);
-#endif
-                }
-                else
-                {
-                    Autodownloading = false;
-                }
-            }
+                    await ProcessDownloadAsync(downloadedShows, show[0]);
+                    IsDownloading = false;
+                });
+            });
         });
+    }
+
+    private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
+    {
+        if (!downloadedShows.Exists(y => y.Url == show.Url))
+        {
+            IsDownloading = true;
+#if ANDROID
+            _ = Task.Run(async () =>
+            {
+                await NotificationService.CheckNotification();
+                var requests = await NotificationService.NotificationRequests(show);
+                NotificationService.AfterNotifications(requests);
+            });
+#endif
+            await Downloading(show);
+        }
     }
 }

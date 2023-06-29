@@ -15,25 +15,22 @@ public partial class PodcastViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
         IsBusy = true;
-        OnPropertyChanged(nameof(IsBusy));
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
         Task.Run(async () =>
-        {
-            OnPropertyChanged(nameof(IsBusy));
-
-            await GetUpdatedPodcasts();
-            IsBusy = false;
-            OnPropertyChanged(nameof(IsBusy));
-        });
+       {
+           await GetUpdatedPodcasts();
+           IsBusy = false;
+       });
     }
 
     /// <summary>

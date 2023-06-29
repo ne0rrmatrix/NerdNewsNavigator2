@@ -36,7 +36,7 @@ public static class FavoriteService
     {
         var temp = await App.PositionData.GetAllFavorites();
         var result = temp.AsEnumerable().First(temp => temp.Url == url);
-        if (result != null)
+        if (result is not null)
         {
             await App.PositionData.DeleteFavorite(result);
             return true;

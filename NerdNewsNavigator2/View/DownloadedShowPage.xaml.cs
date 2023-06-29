@@ -29,7 +29,7 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await MessagingService.RecievedDelete(message.Value);
-            WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<DeletedItemMessage>(message);
         });
     }
 
@@ -41,9 +41,11 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
+#if WINDOWS || IOS || MACCATALYST
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
+#endif
     }
 }

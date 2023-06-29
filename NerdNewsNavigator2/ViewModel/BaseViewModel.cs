@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class BaseViewModel : ObservableObject
 {
     #region Properties
     public delegate void DownloadChangedHandler();
@@ -38,10 +38,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public ObservableCollection<Podcast> Podcasts { get; set; } = new();
 
     /// <summary>
-    /// The <see cref="bool"/> instance managed by this class.
-    /// </summary>
-
-    /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
     public DisplayInfo MyMainDisplay { get; set; } = new();
@@ -49,7 +45,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
-    ILogger<BaseViewModel> Logger { get; set; }
+    private ILogger<BaseViewModel> Logger { get; set; }
 
     /// <summary>
     /// an <see cref="IConnectivity"/> instance managed by this class.
@@ -59,132 +55,60 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
+    [ObservableProperty]
     private int _orientation;
 
-    /// <summary>
-    /// An <see cref="int"/> public property managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
-    /// </summary>
-    public int Orientation
-    {
-        get => _orientation;
-        set => SetProperty(ref _orientation, value);
-    }
-
+    [ObservableProperty]
     private string _title;
-    public string Title
-    {
-        get { return _title; }
-        set
-        {
-            _title = value;
-            OnPropertyChanged(nameof(Title));
-        }
-    }
+
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
     private bool _isDownloading;
 
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
-    public bool IsDownloading
-    {
-        get => _isDownloading;
-        set
-        {
-            if (SetProperty(ref _isDownloading, value))
-            {
-                OnPropertyChanged(nameof(IsNotDownloading));
-            }
-
-        }
-    }
     public bool IsNotDownloading => !IsDownloading;
 
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
+    [ObservableProperty]
     private string _downloadProgress;
-
-    /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    public string DownloadProgress
-    {
-        get => _downloadProgress;
-        set => SetProperty(ref _downloadProgress, value);
-    }
 
     /// <summary>
     /// A <see cref="bool"/> instance managed by this class. 
     /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     private bool _isBusy;
-
-    /// <summary>
-    /// A <see cref="bool"/> public property managed by this class.
-    /// </summary>
-    public bool IsBusy
-    {
-        get => _isBusy;
-        set
-        {
-            if (SetProperty(ref _isBusy, value))
-            {
-                OnPropertyChanged(nameof(IsNotBusy));
-            }
-        }
-    }
 
     /// <summary>
     /// A <see cref="bool"/> public property managed by this class.
     /// </summary>
     public bool IsNotBusy => !IsBusy;
 
+    [ObservableProperty]
+    private double _progressInfos = 0;
+
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
         Logger = logger;
-        this._connectivity = connectivity;
+        _connectivity = connectivity;
         _downloadProgress = string.Empty;
         DownloadChanged += () =>
         {
             Logger.LogInformation("NavBar closed");
             ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         };
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(GetFavoriteShows);
     }
 
-    #region Messaging Service
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DownloadItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
-        });
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
-    }
-    #endregion
     /// <summary>
     /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
     /// </summary>
@@ -207,11 +131,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadChanged();
         MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsDownloading = false;
-            DownloadService.IsDownloading = false;
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
-        });
+       {
+           IsDownloading = false;
+           DownloadService.IsDownloading = false;
+           Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+       });
     }
 
     /// <summary>
@@ -222,6 +146,13 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
+        var item = Shows.First(x => x.Url == url);
+        if (item != null)
+        {
+            item.IsDownloaded = true;
+            item.IsNotDownloaded = false;
+            Shows[Shows.IndexOf(item)] = item;
+        }
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -242,24 +173,24 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     }
     public async Task StartDownload(string url, bool mostRecent)
     {
+#if WINDOWS || MACCATALYST || IOS
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+#endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         Logger.LogInformation("Trying to start download of {URL}", url);
 
-        List<Show> list;
-        if (mostRecent)
-        {
-            list = MostRecentShows.ToList();
-        }
-        else
-        {
-            list = Shows.ToList();
-        }
-
+        var list = mostRecent ? MostRecentShows.ToList() : Shows.ToList();
         var item = list.AsEnumerable().First(x => x.Url == url);
         await ProcessDownloads(item, url);
         TriggerProgressChanged();
+    }
+    public void RunDownloads(string url)
+    {
+        _ = Task.Run(async () =>
+        {
+            await Downloading(url, false);
+        });
     }
     public async Task ProcessDownloads(Show item, string url)
     {
@@ -295,10 +226,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         DownloadService.IsDownloading = true;
         IsDownloading = true;
-
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
+            ProgressInfos = DownloadService.Progress;
+            OnPropertyChanged(nameof(ProgressInfos));
             Title = DownloadProgress;
             Thread.Sleep(1000);
         }
@@ -331,16 +263,16 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         {
             Logger.LogInformation("Updated Shows");
             var show = Shows.First(x => x.Url == download.Url);
-            show.IsDownloaded = true;
-            show.IsNotDownloaded = false;
+            show.IsDownloaded = false;
+            show.IsNotDownloaded = true;
             Shows[Shows.IndexOf(show)] = show;
         }
         if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
         {
             Logger.LogInformation("Updated MostRecent Shows");
             var show = MostRecentShows.First(x => x.Url == download.Url);
-            show.IsDownloaded = true;
-            show.IsNotDownloaded = false;
+            show.IsDownloaded = false;
+            show.IsNotDownloaded = true;
             MostRecentShows[MostRecentShows.IndexOf(show)] = show;
         }
     }
@@ -356,10 +288,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         FavoriteShows.Clear();
         var temp = await App.PositionData.GetAllFavorites();
-        if (!InternetConnected() && temp is null)
-        {
-            return;
-        }
         temp?.ForEach(FavoriteShows.Add);
     }
 
@@ -369,14 +297,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
     /// <returns><see cref="Show"/></returns>
-    public async Task GetShows(string url, bool getFirstOnly)
+    public void GetShows(string url, bool getFirstOnly)
     {
         Shows.Clear();
-        if (!InternetConnected())
-        {
-            return;
-        }
-        var temp = await FeedService.GetShows(url, getFirstOnly);
+        var temp = FeedService.GetShows(url, getFirstOnly);
         temp.ForEach(x =>
         {
             var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
@@ -402,28 +326,39 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     {
         MostRecentShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        if (!InternetConnected())
-        {
-            return;
-        }
-        temp.ForEach(async show =>
-        {
-            var item = await FeedService.GetShows(show.Url, true);
-            var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
-            if (downloaded)
+        var item = temp.OrderBy(x => x.Title).ToList();
+        item?.Where(x => !x.Deleted).ToList().ForEach(show =>
             {
-                item[0].IsDownloaded = true;
-                item[0].IsNotDownloaded = false;
-            }
-            else
-            {
-                item[0].IsNotDownloaded = true;
-                item[0].IsDownloaded = false;
-            }
-            MostRecentShows.Add(item[0]);
-        });
+                var item = FeedService.GetShows(show.Url, true);
+                var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
+                if (downloaded)
+                {
+                    item[0].IsDownloaded = true;
+                    item[0].IsNotDownloaded = false;
+                }
+                else
+                {
+                    item[0].IsNotDownloaded = true;
+                    item[0].IsDownloaded = false;
+                }
+                MostRecentShows.Add(item[0]);
+            });
     }
 
+    /// <summary>
+    /// A method that sets <see cref="DownloadedShows"/> from the database.
+    /// </summary>
+    /// <param name="stateinfo"></param>
+    public async void GetDownloadedShows(object stateinfo)
+    {
+        DownloadedShows.Clear();
+        var temp = await App.PositionData.GetAllDownloads();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
+    }
+
+    #endregion
+
+    #region Update Podcasts
     /// <summary>
     /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
     /// </summary>
@@ -431,35 +366,31 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
     public async Task GetUpdatedPodcasts()
     {
         Podcasts.Clear();
-        var task = UpdateCheckAsync();
-        task.Wait();
-        var temp = await App.PositionData.GetAllPodcasts();
-        if (InternetConnected() && (temp is null || temp.Count == 0))
+        var updates = await UpdateCheckAsync();
+        if (updates)
         {
-            var items = await PodcastServices.GetFromUrl();
-            var res = items.OrderBy(x => x.Title).ToList();
-            await PodcastServices.AddToDatabase(res);
-            res?.ForEach(Podcasts.Add);
-            if (FavoriteShows.Count > 0)
-            {
-                FavoriteShows.ToList().ForEach(async oldFavorite =>
-                {
-                    if (!Podcasts.Any(newPodcast => newPodcast.Url == oldFavorite.Url))
-                    {
-
-                        await App.PositionData.DeleteFavorite(oldFavorite);
-                    }
-                });
-                ThreadPool.QueueUserWorkItem(GetFavoriteShows);
-            }
             return;
         }
-        if (temp is not null)
+        var temp = await App.PositionData.GetAllPodcasts();
+        if (temp.Count == 0)
         {
-            temp?.ForEach(Podcasts.Add);
+            var res = await PodcastServices.UpdatePodcast();
+            Podcasts.Clear();
+
+            // sort podcast alphabetically
+            var orderPodcast = res.OrderBy(x => x.Title).ToList();
+
+            orderPodcast.ForEach(Podcasts.Add);
+            var fav = await PodcastServices.UpdateFavoritesAsync();
+            FavoriteShows.Clear();
+            fav.ForEach(FavoriteShows.Add);
+            return;
         }
+        var item = temp.OrderBy(x => x.Title).ToList();
+        item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
-    private async Task UpdateCheckAsync()
+
+    private async Task<bool> UpdateCheckAsync()
     {
         var currentdate = DateTime.Now;
         var oldDate = Preferences.Default.Get("OldDate", DateTime.Now);
@@ -474,29 +405,20 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
             Logger.LogInformation("Last Update Check is over 30 days ago. Updating now.");
             Preferences.Default.Remove("OldDate");
             Preferences.Default.Set("OldDate", currentdate);
-            await App.PositionData.DeleteAllPodcasts();
-        }
-    }
+            var res = await PodcastServices.UpdatePodcast();
+            Podcasts.Clear();
+            var item = res.OrderBy(x => x.Title).ToList();
+            item.ForEach(Podcasts.Add);
 
-    /// <summary>
-    /// A method that sets <see cref="DownloadedShows"/> from the database.
-    /// </summary>
-    /// <param name="stateinfo"></param>
-    public async void GetDownloadedShows(object stateinfo)
-    {
-        DownloadedShows.Clear();
-        var temp = await App.PositionData.GetAllDownloads();
-        temp?.ForEach((item) =>
-        {
-            if (!item.Deleted)
-            {
-                DownloadedShows?.Add(item);
-            }
-        });
+            var fav = await PodcastServices.UpdateFavoritesAsync();
+            FavoriteShows.Clear();
+            fav.ForEach(FavoriteShows.Add);
+            return true;
+        }
+        return false;
     }
 
     #endregion
-
     #region Display Functions
 
 #nullable enable
@@ -547,5 +469,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<InternetItemMe
         }
 #pragma warning restore IDE0066
     }
+
     #endregion
 }

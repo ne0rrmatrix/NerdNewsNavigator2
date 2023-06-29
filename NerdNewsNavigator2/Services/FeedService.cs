@@ -9,6 +9,40 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class FeedService
 {
+    /// <summary>
+    /// Get OPML file from web and return list of current Podcasts.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="string"/> of Url's</returns>
+    public static List<string> GetPodcastListAsync()
+    {
+        List<string> list = new();
+        try
+        {
+            var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
+            var reader = new XmlTextReader(item);
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        while (reader.MoveToNextAttribute()) // Read the attributes.
+                        {
+                            if (reader.Name == "xmlUrl")
+                            {
+                                list.Add(reader.Value);
+                            }
+                        }
+                        break;
+                }
+            }
+            return list;
+        }
+        catch
+        {
+            return list;
+        }
+    }
+
     #region Get the Podcasts
 
     /// <summary>
@@ -16,7 +50,7 @@ public static class FeedService
     /// </summary>
     /// <param name="item">The URL of <see cref="Podcast"/></param> 
     /// <returns><see cref="Podcast"/></returns>
-    public static Task<Podcast> GetFeed(string item)
+    public static Podcast GetFeed(string item)
     {
         var counter = 0;
         Podcast feed = new();
@@ -38,11 +72,11 @@ public static class FeedService
                 }
             }
 
-            return Task.FromResult(feed);
+            return feed;
         }
         catch
         {
-            return Task.FromResult(feed);
+            return feed;
         }
     }
     #endregion
@@ -55,7 +89,7 @@ public static class FeedService
     /// <param name="items">The Url of the <see cref="Show"/></param>
     /// <param name="getFirstOnly"><see cref="bool"/> Get only first item.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public static Task<List<Show>> GetShows(string items, bool getFirstOnly)
+    public static List<Show> GetShows(string items, bool getFirstOnly)
     {
         List<Show> shows = new();
         XmlDocument rssDoc = new();
@@ -69,29 +103,36 @@ public static class FeedService
             mgr.AddNamespace("media", mediaNamespace);
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
             if (rssNodes == null)
-                return Task.FromResult(shows);
-            foreach (XmlNode node in rssNodes)
             {
-                Show show = new()
-                {
-                    Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                    PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
-                    Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                    Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
-                    Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                };
-                shows.Add(show);
-                if (getFirstOnly)
-                {
-                    return Task.FromResult(shows);
-                }
+                return shows;
             }
-            return Task.FromResult(shows);
+
+            return ProcessShows(rssNodes, shows, getFirstOnly, mgr);
         }
         catch
         {
-            return Task.FromResult(shows);
+            return Enumerable.Empty<Show>().ToList();
         }
+    }
+    private static List<Show> ProcessShows(XmlNodeList rssNodes, List<Show> shows, bool getFirstOnly, XmlNamespaceManager mgr)
+    {
+        foreach (XmlNode node in rssNodes)
+        {
+            Show show = new()
+            {
+                Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
+                PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
+                Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
+                Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
+                Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+            };
+            shows.Add(show);
+            if (getFirstOnly)
+            {
+                return shows;
+            }
+        }
+        return shows;
     }
     #endregion
 

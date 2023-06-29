@@ -133,13 +133,13 @@ public partial class MediaControl : ContentView
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PositionChanged += OnPositionChanged;
         _ = Moved();
+        BtnPLay.Source = "pause.png";
     }
     public void SeekTo(TimeSpan position)
     {
         mediaElement.Pause();
         mediaElement.SeekTo(position);
         mediaElement.Play();
-        BtnPLay.Source = "pause.png";
     }
     public void Play()
     {
@@ -154,7 +154,7 @@ public partial class MediaControl : ContentView
     public void Stop()
     {
         mediaElement.Stop();
-        BtnPLay.Source = "play.png";
+        BtnPLay.Source = "pause.png";
     }
 
     #region Events
@@ -178,14 +178,12 @@ public partial class MediaControl : ContentView
         var newValue = ((Slider)sender).Value;
         mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
         mediaElement.Play();
-        BtnPLay.Source = "pause.png";
     }
 
 #nullable disable
     private void Slider_DragStarted(object sender, EventArgs e)
     {
         mediaElement.Pause();
-        BtnPLay.Source = "play.png";
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
@@ -205,7 +203,6 @@ public partial class MediaControl : ContentView
         mediaElement.Pause();
         mediaElement.SeekTo(time);
         mediaElement.Play();
-        BtnPLay.Source = "pause.png";
     }
 
     private void BtnForward_Clicked(object sender, EventArgs e)
@@ -214,12 +211,11 @@ public partial class MediaControl : ContentView
         mediaElement.Pause();
         mediaElement.SeekTo(time);
         mediaElement.Play();
-        BtnPLay.Source = "pause.png";
     }
     private void BtnPlay_Clicked(object sender, EventArgs e)
     {
-        if (mediaElement.CurrentState == MediaElementState.Stopped ||
-       mediaElement.CurrentState == MediaElementState.Paused)
+        if (mediaElement.CurrentState is MediaElementState.Stopped or
+       MediaElementState.Paused)
         {
             mediaElement.Play();
             BtnPLay.Source = "pause.png";
@@ -238,14 +234,7 @@ public partial class MediaControl : ContentView
     private void OnMuteClicked(object sender, EventArgs e)
     {
         mediaElement.ShouldMute = !mediaElement.ShouldMute;
-        if (mediaElement.ShouldMute)
-        {
-            ImageButtonMute.Source = "mute.png";
-        }
-        else
-        {
-            ImageButtonMute.Source = "muted.png";
-        }
+        ImageButtonMute.Source = mediaElement.ShouldMute ? (ImageSource)"mute.png" : (ImageSource)"muted.png";
         OnPropertyChanged(nameof(ImageButtonMute.Source));
     }
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
@@ -254,26 +243,12 @@ public partial class MediaControl : ContentView
     }
     private void Button_Pressed(object sender, EventArgs e)
     {
-        if (MenuIsVisible)
-        {
-            MenuIsVisible = false;
-        }
-        else
-        {
-            MenuIsVisible = true;
-        }
+        MenuIsVisible = !MenuIsVisible;
         OnPropertyChanged(nameof(MenuIsVisible));
     }
     private void AspectButton(object sender, EventArgs e)
     {
-        if (mediaElement.Aspect == Aspect.AspectFit)
-        {
-            mediaElement.Aspect = Aspect.AspectFill;
-        }
-        else
-        {
-            mediaElement.Aspect = Aspect.AspectFit;
-        }
+        mediaElement.Aspect = mediaElement.Aspect == Aspect.AspectFit ? Aspect.AspectFill : Aspect.AspectFit;
     }
 
     /// <summary>
@@ -299,7 +274,6 @@ public partial class MediaControl : ContentView
     #endregion
 
     #region Full Screen Functions
-#nullable enable
     private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
 #if WINDOWS
@@ -369,6 +343,6 @@ public partial class MediaControl : ContentView
     private static string TimeConverter(TimeSpan time)
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
-        return (interval).ToString();
+        return interval.ToString();
     }
 }

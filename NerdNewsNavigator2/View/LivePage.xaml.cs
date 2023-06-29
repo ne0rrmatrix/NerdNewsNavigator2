@@ -7,9 +7,10 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages watching Live video from twit.tv podcasting network
 /// </summary>
-public partial class LivePage : ContentPage
+public partial class LivePage : ContentPage, IDisposable
 {
     #region Properties
+    private readonly string _item = "https://www.youtube.com/user/twit";
     private YoutubeClient Youtube { get; set; } = new();
     private HttpClient Client { get; set; } = new();
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
@@ -27,6 +28,7 @@ public partial class LivePage : ContentPage
         InitializeComponent();
         BindingContext = liveViewModel;
         _logger = logger;
+        _ = LoadVideo(_item);
     }
 
     /// <summary>
@@ -39,20 +41,6 @@ public partial class LivePage : ContentPage
         _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
     }
 
-    /// <summary>
-    /// Method Loads Video after page has finished being rendered.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        var item = "https://www.youtube.com/user/twit";
-        _ = LoadVideo(item);
-    }
     #region Youtube Methods
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
@@ -60,7 +48,6 @@ public partial class LivePage : ContentPage
     /// <returns></returns>
     private async Task LoadVideo(string url)
     {
-        mediaElement.IsYoutube = true;
         var m3u = await ParseVideoIdAsync(url);
         if (m3u != string.Empty)
         {
@@ -81,11 +68,7 @@ public partial class LivePage : ContentPage
         var item = "https://www.youtube.com/channel/";
         var page = await Client.GetAsync(item + $"{userId}/live");
         var result = await page.Content.ReadAsStringAsync();
-        if (result is null)
-        {
-            return string.Empty;
-        }
-        return result.Substring(result.IndexOf("watch?v=") + 8, 11);
+        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=") + 8, 11);
     }
 
     /// <summary>
@@ -133,6 +116,20 @@ public partial class LivePage : ContentPage
             content = await response.Content.ReadAsStringAsync();
         }
         return content;
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing && Client != null)
+        {
+            Client.Dispose();
+            Client = null;
+        }
     }
     #endregion
 }

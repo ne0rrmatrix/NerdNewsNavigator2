@@ -18,20 +18,18 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(Orientation));
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
-            _ = ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
 #if WINDOWS || ANDROID
-        Task.Run(async () =>
-        {
-            await GetMostRecent();
-        });
+        Task.Run(GetMostRecent);
 #endif
 #if IOS || MACCATALYST
         _ = GetMostRecent();
@@ -39,7 +37,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
+    /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
@@ -50,14 +48,17 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
-        var item = MostRecentShows.First(x => x.Url == url);
-        if (item != null)
-        {
-            item.IsDownloaded = true;
-            item.IsNotDownloaded = false;
-            MostRecentShows[MostRecentShows.IndexOf(item)] = item;
-        }
-        await Downloading(url, true);
+
+#if WINDOWS || MACCATALYST || IOS
+        await Downloading(url, false);
+#endif
+#if ANDROID
+        var item = Shows.First(x => x.Url == url);
+        await NotificationService.CheckNotification();
+        var requests = await NotificationService.NotificationRequests(item);
+        NotificationService.AfterNotifications(requests);
+        RunDownloads(url);
+#endif
     }
 
     /// <summary>

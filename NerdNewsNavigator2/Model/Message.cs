@@ -4,13 +4,9 @@
 
 namespace NerdNewsNavigator2.Model;
 
-/// <summary>
-/// <c>Show</c> is a Class for storing Shows
-/// </summary>
-/// 
-[Table("Show")]
-public class Show : Shared
+public class Message
 {
-    public bool IsDownloading { get; set; } = false;
-    public string Status { get; set; } = string.Empty;
+    public int Id { get; set; }
+    public string Url { get; set; }
+    public bool Cancel { get; set; }
 }

@@ -15,10 +15,12 @@ public partial class SettingsViewModel : BaseViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
     }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
@@ -27,8 +29,19 @@ public partial class SettingsViewModel : BaseViewModel
     [RelayCommand]
     public async Task UpdatePodcasts()
     {
-        Podcasts.Clear();
-        await App.PositionData.DeleteAllPodcasts();
-        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+        await Toast.Make("Updating Podcasts.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        ThreadPool.QueueUserWorkItem(async (state) =>
+       {
+           _ = await PodcastServices.UpdatePodcast();
+           Podcasts.Clear();
+
+           _ = await PodcastServices.UpdateFavoritesAsync();
+           FavoriteShows.Clear();
+
+           await MainThread.InvokeOnMainThreadAsync(async () =>
+           {
+               await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+           });
+       });
     }
 }

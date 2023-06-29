@@ -28,6 +28,8 @@ public partial class SettingsPage : ContentPage
             OnPropertyChanged(nameof(_setAutoDownload));
         }
     }
+
+    private LogController Log { get; set; } = new();
     #endregion
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsPage"/>
@@ -68,7 +70,7 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "No";
             OnPropertyChanged(nameof(SetAutoDownload));
-            _ = Task.Run(() =>
+            Task.Run(() =>
             {
                 Preferences.Default.Remove("start");
                 Thread.Sleep(1000);
@@ -80,7 +82,7 @@ public partial class SettingsPage : ContentPage
         {
             SetAutoDownload = "Yes";
             OnPropertyChanged(nameof(SetAutoDownload));
-            _ = Task.Run(() =>
+            Task.Run(() =>
             {
                 Preferences.Default.Remove("start");
                 Thread.Sleep(1000);
@@ -115,10 +117,13 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void AddDefault(object sender, EventArgs e)
+    private void AddDefault(object sender, EventArgs e)
     {
-        await PodcastServices.AddDefaultPodcasts();
-        await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        _ = Task.Run(async () =>
+        {
+            await PodcastServices.AddDefaultPodcasts();
+            await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        });
     }
 
     /// <summary>
@@ -126,18 +131,21 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void RemoveDefault(object sender, EventArgs e)
+    private void RemoveDefault(object sender, EventArgs e)
     {
-        var item = await App.PositionData.GetAllPodcasts();
-        if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
+        _ = Task.Run(async () =>
         {
-            await PodcastServices.RemoveDefaultPodcasts();
-            await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-        else
-        {
-            await DisplayAlert("", "At least one podcast needs to be added", "Ok");
-        }
+            var item = await App.PositionData.GetAllPodcasts();
+            if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
+            {
+                await PodcastServices.RemoveDefaultPodcasts();
+                await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            }
+            else
+            {
+                _ = MainThread.InvokeOnMainThreadAsync(async () => await DisplayAlert("", "At least one podcast needs to be added", "Ok"));
+            }
+        });
     }
 
     /// <summary>
@@ -170,6 +178,10 @@ public partial class SettingsPage : ContentPage
         var item = "https://www.paypal.com/donate/?business=LYEHGH249KCP2&no_recurring=0&item_name=All+donations+are+welcome.+It+helps+support+development+of+NerdNewsNavigator.+Thank+you+for+your+support.&currency_code=CAD";
         await Browser.OpenAsync(item);
     }
+    private void ShowLogs(object sender, EventArgs e)
+    {
+        Log.GoToLogsPageCommand.Execute(_messenger);
+    }
     #endregion
 
     /// <summary>
@@ -181,20 +193,15 @@ public partial class SettingsPage : ContentPage
     {
         WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
         var start = Preferences.Default.Get("start", false);
-        if (start)
-        {
-            SetAutoDownload = "Yes";
-        }
-        else
-        {
-            SetAutoDownload = "No";
-        }
+        SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
         DeviceService.RestoreScreen();
+#if WINDOWS || IOS || MACCATALYST
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
+#endif
     }
 
     /// <summary>
@@ -204,7 +211,7 @@ public partial class SettingsPage : ContentPage
     /// <returns></returns>
     private static bool ValidateUrl(string url)
     {
-        if (url.Trim() == string.Empty)
+        if (url == null || url.Trim() == string.Empty)
         {
             return false;
         }

@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Application = Microsoft.Maui.Controls.Application;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
 #if ANDROID
@@ -16,7 +15,10 @@ internal static partial class DeviceService
     {
         var activity = Platform.CurrentActivity;
 
-        if (activity == null || activity.Window == null) return;
+        if (activity == null || activity.Window == null)
+        {
+            return;
+        }
 
         Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
@@ -28,7 +30,10 @@ internal static partial class DeviceService
     {
         var activity = Platform.CurrentActivity;
 
-        if (activity == null || activity.Window == null) return;
+        if (activity == null || activity.Window == null)
+        {
+            return;
+        }
 
         Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);

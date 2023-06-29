@@ -27,15 +27,16 @@ public partial class DownloadedShowViewModel : BaseViewModel
         _logger.LogInformation("DownloadedShowViewModel started.");
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        OnPropertyChanged(nameof(DownloadedShows));
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+#if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
+#endif
     }
 
     /// <summary>

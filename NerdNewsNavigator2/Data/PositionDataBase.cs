@@ -18,7 +18,9 @@ public class PositionDataBase
     /// <summary>
     /// A variable to manage <see cref="SQLiteAsyncConnection"/>
     /// </summary>
-    private SQLiteAsyncConnection _connection;
+    private readonly SQLiteAsyncConnection _connection;
+
+    public const SQLite.SQLiteOpenFlags Flags = SQLite.SQLiteOpenFlags.ReadWrite | SQLite.SQLiteOpenFlags.Create | SQLite.SQLiteOpenFlags.SharedCache;
 
     #endregion
     /// <summary>
@@ -28,21 +30,8 @@ public class PositionDataBase
     public PositionDataBase(ILogger<PositionDataBase> logger)
     {
         _logger = logger;
-        _ = Init();
-    }
-
-    /// <summary>
-    /// Method initializes the database using <see cref="_connection"/> to <see cref="SQLiteConnection"/>
-    /// </summary>
-    /// <returns><see cref="bool"/></returns>
-    public async Task<bool> Init()
-    {
         try
         {
-            if (_connection != null)
-            {
-                return false;
-            }
 #if WINDOWS || IOS || MACCATALYST
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
 #endif
@@ -50,23 +39,23 @@ public class PositionDataBase
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
 #endif
             _logger.LogInformation("Database path is: {Path}", databasePath);
-            _connection = new SQLiteAsyncConnection(databasePath);
+            _connection = new SQLiteAsyncConnection(databasePath, Flags);
 
-            await _connection.CreateTableAsync<Position>();
+            _connection.CreateTableAsync<Position>();
             _logger.LogInformation("Position Init {DatabasePath}", databasePath);
-            await _connection.CreateTableAsync<Podcast>();
+            _connection.CreateTableAsync<Podcast>();
             _logger.LogInformation("Podcast Init {DataBasePath}", databasePath);
-            await _connection.CreateTableAsync<Download>();
+            _connection.CreateTableAsync<Download>();
             _logger.LogInformation("Download Init {DatabasePath}", databasePath);
-            await _connection.CreateTableAsync<Favorites>();
+            _connection.CreateTableAsync<Favorites>();
             _logger.LogInformation("Favorites Init {DatabasePath}", databasePath);
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to start Position Database: {Message}", ex.Message);
+            _logger.LogError("Failed to start Database: {Message}", ex.Message);
         }
-        return true;
     }
+
     #region Get Data
     /// <summary>
     /// Method retrieves a <see cref="List{T}"/> of <see cref="Position"/> from database.
@@ -74,17 +63,14 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Position"/></returns>
     public async Task<List<Position>> GetAllPositions()
     {
-        try
+        var test = await _connection.Table<Position>().ToListAsync();
+        if (test is null)
         {
-            var test = await _connection.Table<Position>().ToListAsync();
-            _logger.LogInformation("Got all Positions from Database.");
-            return test;
+            _logger.LogInformation("Returning empty collection");
+            return new List<Position>();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get all Positions from Database: {Message}", ex.Message);
-            return null;
-        }
+        _logger.LogInformation("Got all Positions from Database.");
+        return test;
     }
 
     /// <summary>
@@ -93,57 +79,52 @@ public class PositionDataBase
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public async Task<List<Podcast>> GetAllPodcasts()
     {
-        try
+        var temp = await _connection.Table<Podcast>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Podcast>().ToListAsync();
-            _logger.LogInformation("Got all Podcasts from Database.");
-            return temp;
+            _logger.LogInformation("Returning empty collection");
+            return new List<Podcast>();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Podcasts from Database: {Message}", ex.Message);
-            return null;
-        }
+        _logger.LogInformation("Got all Podcasts from Database.");
+        return temp;
     }
+
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Favorites"/> from database.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Favorites"/></returns>
     public async Task<List<Favorites>> GetAllFavorites()
     {
-        try
+        var temp = await _connection.Table<Favorites>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Favorites>().ToListAsync();
-            _logger.LogInformation("Got all Favorites from Database.");
-            return temp;
+            _logger.LogInformation("Returning empty collection");
+            return new List<Favorites>();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Favorites from Database: {Message}", ex.Message);
-            return null;
-        }
+        _logger.LogInformation("Got all Favorites from Database.");
+        return temp;
     }
+
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Download"/> from database.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="Download"/></returns>
     public async Task<List<Download>> GetAllDownloads()
     {
-        try
+        var temp = await _connection.Table<Download>().ToListAsync();
+        if (temp is null)
         {
-            var temp = await _connection.Table<Download>().ToListAsync();
-            _logger.LogInformation("Got all Downloads from Database.");
-            return temp;
+            _logger.LogInformation("Returning empty collection");
+            return new List<Download>();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to get Downloads from Database: {Message}", ex.Message);
-            return null;
-        }
+        _logger.LogInformation("Got all Downloads from Database.");
+        return temp;
     }
+
     #endregion
 
     #region Delete by Table
+
     /// <summary>
     /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
@@ -230,27 +211,8 @@ public class PositionDataBase
     /// </summary>
     /// <param name="position">An instance of <see cref="Position"/></param>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> Add(Position position)
+    public async Task<bool> AddPosition(Position position)
     {
-        var test = await GetAllPositions();
-
-        foreach (var item in test)
-        {
-            if (item.Title == position.Title)
-            {
-                try
-                {
-
-                    await _connection.DeleteAsync(item);
-                    _logger.LogInformation("Succesfully deleted Position: {Title} {Position}", item.Title, item.SavedPosition);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Error deleting Position: {Message}", ex.Message);
-                    return false;
-                }
-            }
-        }
         try
         {
             await _connection.InsertAsync(position);
@@ -326,6 +288,7 @@ public class PositionDataBase
     #endregion
 
     #region Update Data
+
     /// <summary>
     /// Method Updates a <see cref="Position"/> from Database
     /// </summary>
@@ -335,8 +298,15 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.UpdateAsync(position);
-            _logger.LogInformation("Updated Database: {Title} {Position}", position.Title, position.SavedPosition);
+            var existingPositon = await _connection.Table<Position>().FirstOrDefaultAsync(x => x.Title == position.Title);
+            if (existingPositon is not null)
+            {
+                await _connection.UpdateAsync(position);
+                _logger.LogInformation("Updated Database: {Title} {Position}", position.Title, position.SavedPosition);
+                return true;
+            }
+            await _connection.InsertAsync(position);
+            _logger.LogInformation("Adding to Database: {Title} {Position}", position.Title, position.SavedPosition);
             return true;
         }
         catch (Exception ex)
@@ -355,8 +325,15 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.UpdateAsync(podcast);
-            _logger.LogInformation("Updated Podcast: {Title}", podcast.Title);
+            var existingPodcast = await _connection.Table<Podcast>().FirstOrDefaultAsync(x => x.Title == podcast.Title);
+            if (existingPodcast is not null)
+            {
+                await _connection.UpdateAsync(podcast);
+                _logger.LogInformation("Updated Podcast: {Title}", podcast.Title);
+                return true;
+            }
+            await _connection.InsertAsync(podcast);
+            _logger.LogInformation("Added Podcast: {Title}", podcast.Title);
             return true;
         }
         catch (Exception ex)
@@ -375,8 +352,14 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.UpdateAsync(favorites);
-            _logger.LogInformation("Updated Favorite: {Title}", favorites.Title);
+            var existingFavorites = await _connection.Table<Favorites>().FirstOrDefaultAsync(x => x.Title == favorites.Title);
+            if (existingFavorites is not null)
+            {
+                await _connection.UpdateAsync(favorites);
+                _logger.LogInformation("Updated Favorite: {Title}", favorites.Title);
+            }
+            await _connection.InsertAsync(favorites);
+            _logger.LogInformation("Added Favorite: {Title}", favorites.Title);
             return true;
         }
         catch (Exception ex)
@@ -395,8 +378,14 @@ public class PositionDataBase
     {
         try
         {
-            await _connection.UpdateAsync(download);
-            _logger.LogInformation("Updated Download: {Title}", download.Title);
+            var existingFavorites = await _connection.Table<Download>().FirstOrDefaultAsync(x => x.Title == download.Title);
+            if (existingFavorites is not null)
+            {
+                await _connection.UpdateAsync(download);
+                _logger.LogInformation("Updated Download: {Title}", download.Title);
+            }
+            await _connection.InsertAsync(download);
+            _logger.LogInformation("Added Download: {Title}", download.Title);
             return true;
         }
         catch (Exception ex)
@@ -405,6 +394,7 @@ public class PositionDataBase
             return false;
         }
     }
+
     #endregion
 
     #region Delete Individual Items
@@ -487,5 +477,6 @@ public class PositionDataBase
             return false;
         }
     }
+
     #endregion
 }

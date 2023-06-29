@@ -9,8 +9,5 @@ namespace NerdNewsNavigator2.Model;
 [Table("Positions")]
 public class Position : Shared
 {
-    /// <summary>
-    /// The <c>SavedPosition</c> is a <see cref="TimeSpan"/> of <see cref="Position"/> Class.
-    /// </summary>
     public TimeSpan SavedPosition { get; set; }
 }

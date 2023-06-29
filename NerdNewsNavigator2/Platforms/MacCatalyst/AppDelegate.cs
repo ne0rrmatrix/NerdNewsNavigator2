@@ -4,7 +4,7 @@
 
 using Foundation;
 
-namespace NerdNewsNavigator2;
+namespace NerdNewsNavigator2.Platforms.MacCatalyst;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
