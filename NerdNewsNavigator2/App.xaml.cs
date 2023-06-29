@@ -27,17 +27,17 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         InitializeComponent();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-#if ANDROID
-        // Local Notification tap event listener
-        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
-        LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
-#endif
+
         MainPage = new AppShell();
         _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
-#if ANDROID
+#if ANDROID || IOS
+        // Local Notification tap event listener
+        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
+        LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
+
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
                 new NotificationCategory(NotificationCategoryType.Progress)
@@ -50,6 +50,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                         },
                     })
                 }
+
             }));
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
@@ -74,7 +75,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         });
     }
 
-#if ANDROID
+#if ANDROID || IOS
 
     private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
     {

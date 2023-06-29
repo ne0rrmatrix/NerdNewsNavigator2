@@ -189,7 +189,7 @@ public static class DownloadService
         if (!downloadedShows.Exists(y => y.Url == show.Url))
         {
             IsDownloading = true;
-#if ANDROID
+#if ANDROID || IOS
             _ = Task.Run(async () =>
             {
                 await NotificationService.CheckNotification();

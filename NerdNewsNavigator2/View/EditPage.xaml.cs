@@ -22,7 +22,7 @@ public partial class EditPage : ContentPage
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-#if WINDOWS || IOS || MACCATALYST
+#if WINDOWS || MACCATALYST
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);

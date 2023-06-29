@@ -69,10 +69,10 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
-#if WINDOWS || MACCATALYST || IOS
+#if WINDOWS || MACCATALYST
         await Downloading(url, false);
 #endif
-#if ANDROID
+#if ANDROID || IOS
         var item = Shows.First(x => x.Url == url);
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);

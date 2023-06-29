@@ -106,14 +106,14 @@
 		<PackageReference Include="M3U8Parser" Version="1.0.1" />
 		<PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Plugin.LocalNotification" Version="10.1.6" />
+		<PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
 		<PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.15" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.16" />
 	</ItemGroup>
   
   <ItemGroup>

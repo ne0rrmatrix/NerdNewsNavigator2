@@ -62,6 +62,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     {
         Console.WriteLine("App will enter foreground");
         AutoDownload();
+        base.WillEnterForeground(application);
     }
     public AppDelegate() : base()
     {

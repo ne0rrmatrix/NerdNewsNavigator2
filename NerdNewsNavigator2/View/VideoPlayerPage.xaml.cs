@@ -81,22 +81,21 @@ public partial class VideoPlayerPage : ContentPage
     /// <param name="e"></param>
     private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
     {
-        Pos.Title = string.Empty;
-        Pos.SavedPosition = TimeSpan.Zero;
-        var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
-        if (result is not null)
-        {
-            Pos = result;
-            _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
-        }
-        else
-        {
-            _logger.LogInformation("Could not find saved position");
-        }
-
         if (e.NewState == MediaElementState.Opening)
         {
+            Pos.Title = string.Empty;
+            Pos.SavedPosition = TimeSpan.Zero;
+            var positionList = await App.PositionData.GetAllPositions();
+            var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+            if (result is not null)
+            {
+                Pos = result;
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+            }
+            else
+            {
+                _logger.LogInformation("Could not find saved position");
+            }
             mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.ShouldKeepScreenOn = true;
             _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
