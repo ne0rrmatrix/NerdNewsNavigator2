@@ -259,10 +259,14 @@ public partial class MediaControl : ContentView
     [RelayCommand]
     public void Tapped(string url)
     {
+#if ANDROID
         mediaElement.Stop();
-        mediaElement.Source = url;
+#endif
+        mediaElement.Source = new Uri(url);
         MenuIsVisible = false;
+#if ANDROID
         mediaElement.Play();
+#endif
         OnPropertyChanged(nameof(MenuIsVisible));
     }
 

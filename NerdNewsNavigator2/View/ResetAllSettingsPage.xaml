@@ -13,6 +13,7 @@
     </Shell.BackButtonBehavior>
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
         <Label
             Padding="20"
             FontSize="Large"
@@ -23,11 +24,13 @@
             Text="Loading..."
             TextColor="Black"
             VerticalOptions="Center" />
+
         <ActivityIndicator
             IsEnabled="true"
             IsRunning="True"
             IsVisible="true"
             Color="Red" />
+
     </StackLayout>
 
 </ContentPage>

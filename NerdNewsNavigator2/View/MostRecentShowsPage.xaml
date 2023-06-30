@@ -15,13 +15,18 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView Margin="5" ItemsSource="{Binding MostRecentShows}" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+    <CollectionView
+        Margin="5"
+        HorizontalScrollBarVisibility="Never"
+        ItemsSource="{Binding MostRecentShows}"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
+
             <DataTemplate x:DataType="model:Show">
 
                 <Frame
@@ -34,6 +39,7 @@
                                               MacCatalyst=370,
                                               Android=370,
                                               iOS=320}">
+
                     <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
                         <Label
@@ -61,13 +67,13 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        
+
                         <Image
                             Grid.Row="1"
                             Margin="10"
-                        IsVisible="{Binding IsNotDownloaded}"
                             Aspect="AspectFit"
                             HeightRequest="320"
+                            IsVisible="{Binding IsNotDownloaded}"
                             WidthRequest="320">
                             <Image.Source>
                                 <UriImageSource
@@ -79,8 +85,9 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        
+
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
+
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="12"
@@ -106,6 +113,7 @@
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
+
                         </HorizontalStackLayout>
 
                         <Label
@@ -122,6 +130,7 @@
                 </Frame>
 
             </DataTemplate>
+
         </CollectionView.ItemTemplate>
 
     </CollectionView>

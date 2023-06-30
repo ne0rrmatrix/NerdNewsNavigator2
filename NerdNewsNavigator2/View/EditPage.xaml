@@ -15,14 +15,19 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView ItemsSource="{Binding Podcasts}" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+    <CollectionView
+        HorizontalScrollBarVisibility="Never"
+        ItemsSource="{Binding Podcasts}"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
+
             <DataTemplate x:DataType="model:Podcast">
+
                 <Frame
                     Margin="{OnPlatform WinUI=90,
                                         MacCatalyst=90,
@@ -37,12 +42,13 @@
                                               iOS=340}">
 
                     <Grid>
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{OnPlatform WinUI=350, MacCatalyst=350, Android=310, iOS=375}" />
                         </Grid.ColumnDefinitions>
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
-
                             <RowDefinition Height="{OnPlatform WinUI=350, Android=350, MacCatalyst=350, iOS=350}" />
                             <RowDefinition Height="{OnPlatform WinUI=130, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
                             <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=280}" />
@@ -65,7 +71,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="{OnIdiom Phone=350,
                                                    Tablet=340,
-                                                   Desktop=350}" >
+                                                   Desktop=350}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
@@ -138,8 +144,11 @@
                         </Button>
 
                     </Grid>
+
                 </Frame>
+
             </DataTemplate>
+
         </CollectionView.ItemTemplate>
 
     </CollectionView>

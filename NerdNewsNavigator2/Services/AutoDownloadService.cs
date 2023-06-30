@@ -22,6 +22,7 @@ public class AutoDownloadService
     {
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
     }
 #if ANDROID
     public void AcquireWakeLock()
@@ -82,14 +83,15 @@ public class AutoDownloadService
         if (cancellationToken.IsCancellationRequested)
         {
             ATimer.Stop();
-            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
             ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
         ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         ATimer.Start();
-        _ = DownloadService.AutoDownload();
+        if (CheckIfWifiOnly())
+        {
+            _ = DownloadService.AutoDownload();
+        }
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
@@ -97,23 +99,37 @@ public class AutoDownloadService
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         System.Diagnostics.Debug.WriteLine(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        if (WifiOnlyDownloading == "No" && !CheckIfWifiOnly())
+        {
+            DownloadService.CancelDownload = true;
+        }
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (CheckIfWifiOnly())
+        {
+            System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+            DownloadService.CancelDownload = false;
+            _ = DownloadService.AutoDownload();
+            return;
+        }
+        System.Diagnostics.Debug.WriteLine("Auto Downloader not started");
+    }
+
+    public bool CheckIfWifiOnly()
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         System.Diagnostics.Debug.WriteLine(Status);
         if (Status == string.Empty)
         {
             System.Diagnostics.Debug.WriteLine("No wifi or cell service");
-            return;
+            return false;
         }
         if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
         {
             System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
-            return;
+            return false;
         }
-
-        System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
-        _ = DownloadService.AutoDownload();
+        return true;
     }
 }

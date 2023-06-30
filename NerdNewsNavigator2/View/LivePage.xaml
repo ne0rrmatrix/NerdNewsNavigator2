@@ -10,9 +10,9 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
-    <Grid>
-        <media:MediaControl x:Name="mediaElement" IsYoutube="True"/>
-    </Grid>
 
+    <Grid>
+        <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
+    </Grid>
 
 </ContentPage>

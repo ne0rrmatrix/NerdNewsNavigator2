@@ -23,10 +23,13 @@ public static class MauiProgram
         ;
 #endif
         #region Logging
-
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
         builder.Logging
 
 #if DEBUG
+           .AddDebug()
            .AddTraceLogger(
                 options =>
                 {

@@ -4,9 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+    xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
-    xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
@@ -32,6 +32,7 @@
             <VerticalStackLayout Margin="10">
 
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -55,9 +56,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
-                
+
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -81,9 +84,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -95,8 +100,8 @@
                         WidthRequest="{OnIdiom Default=240,
                                                Tablet=360}" />
                     <Button
-                        Margin="10"
                         x:Name="WifiBtn"
+                        Margin="10"
                         Clicked="WifiOnly"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -107,9 +112,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
-                
+
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -133,9 +140,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
-                
+
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -159,9 +168,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -185,9 +196,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -211,8 +224,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
+
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -250,9 +266,11 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
+
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -288,6 +306,7 @@
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
+
                 </HorizontalStackLayout>
 
             </VerticalStackLayout>
