@@ -53,6 +53,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         await Downloading(url, false);
 #endif
 #if ANDROID || IOS
+        DownloadService.CancelDownload = false;
         var item = Shows.First(x => x.Url == url);
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);

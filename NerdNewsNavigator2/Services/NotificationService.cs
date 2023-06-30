@@ -19,7 +19,6 @@ public static class NotificationService
         _ = Task.Run(async () =>
         {
             DownloadService.IsDownloading = true;
-
             while (DownloadService.IsDownloading)
             {
                 if (App.Stop || DownloadService.CancelDownload)
@@ -35,7 +34,6 @@ public static class NotificationService
 #endif
                 Thread.Sleep(1000);
             }
-
             if (DownloadService.CancelDownload)
             {
                 System.Diagnostics.Debug.WriteLine($"Id is: {request.NotificationId}, and sending true");

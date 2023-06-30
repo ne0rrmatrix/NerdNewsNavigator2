@@ -102,6 +102,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                     LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
                     break;
                 }
+                if (e.Request.Cancel())
+                {
+                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
+                    break;
+                }
                 if (e.Request.NotificationId == message.Id)
                 {
                     var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));

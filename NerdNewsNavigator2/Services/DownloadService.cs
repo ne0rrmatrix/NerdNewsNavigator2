@@ -165,7 +165,6 @@ public static class DownloadService
                     if (CancelDownload)
                     {
                         IsDownloading = false;
-                        CancelDownload = false;
                         return;
                     }
                     Debug.WriteLine("Waiting for download to finish");
