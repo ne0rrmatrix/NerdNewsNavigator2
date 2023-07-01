@@ -42,15 +42,20 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
+#if ANDROID || IOS
     public async Task Download(string url)
+#endif
+#if WINDOWS || MACCATALYST
+    public void Download(string url)
+#endif
     {
+        Debug.WriteLine("Starting download");
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
-
 #if WINDOWS || MACCATALYST
-        await Downloading(url, false);
+        RunDownloads(url, false);
 #endif
 #if ANDROID || IOS
         DownloadService.CancelDownload = false;
@@ -58,7 +63,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);
         NotificationService.AfterNotifications(requests);
-        RunDownloads(url);
+        RunDownloads(url, false);
 #endif
     }
 

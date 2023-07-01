@@ -153,20 +153,22 @@ public partial class BaseViewModel : ObservableObject
             item.IsNotDownloaded = false;
             Shows[Shows.IndexOf(item)] = item;
         }
+
+        while (IsDownloading)
+        {
+            Thread.Sleep(10000);
+            Logger.LogInformation("Waiting for download to finish");
+        }
+        IsDownloading = true;
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
             return;
         }
-        var downloadTemp = DownloadedShows.Any(x => x.Url == url);
+        var downloadTemp = DownloadedShows.ToList().Exists(x => x.Url == url);
         if (downloadTemp)
         {
             return;
-        }
-        while (IsDownloading)
-        {
-            Thread.Sleep(5000);
-            Logger.LogInformation("Waiting for download to finish");
         }
         DownloadService.CancelDownload = false;
         await StartDownload(url, mostRecent);
@@ -174,7 +176,10 @@ public partial class BaseViewModel : ObservableObject
     public async Task StartDownload(string url, bool mostRecent)
     {
 #if WINDOWS || MACCATALYST
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        });
 #endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
@@ -185,11 +190,11 @@ public partial class BaseViewModel : ObservableObject
         await ProcessDownloads(item, url);
         TriggerProgressChanged();
     }
-    public void RunDownloads(string url)
+    public void RunDownloads(string url, bool isMostRecent)
     {
         _ = Task.Run(async () =>
         {
-            await Downloading(url, false);
+            await Downloading(url, isMostRecent);
         });
     }
     public async Task ProcessDownloads(Show item, string url)
@@ -299,8 +304,14 @@ public partial class BaseViewModel : ObservableObject
     /// <returns><see cref="Show"/></returns>
     public void GetShows(string url, bool getFirstOnly)
     {
-        Shows.Clear();
         var temp = FeedService.GetShows(url, getFirstOnly);
+        var shows = new Show();
+        if (Shows.ToList().Exists(x => x.IsDownloading))
+        {
+            shows = Shows.First(x => x.IsDownloading);
+        }
+
+        Shows.Clear();
         temp.ForEach(x =>
         {
             var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
@@ -314,8 +325,14 @@ public partial class BaseViewModel : ObservableObject
                 x.IsDownloaded = false;
                 x.IsNotDownloaded = true;
             }
+            if (x.Url == shows.Url)
+            {
+                Debug.WriteLine($"Show: {x.Title} is downloading, fixing listing");
+                x.IsDownloading = true;
+            }
             Shows.Add(x);
         });
+
     }
 
     /// <summary>
@@ -324,8 +341,14 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task GetMostRecent()
     {
+        var shows = new Show();
+        if (Shows.ToList().Exists(x => x.IsDownloading))
+        {
+            shows = Shows.First(x => x.IsDownloading);
+        }
         MostRecentShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
+
         var item = temp.OrderBy(x => x.Title).ToList();
         item?.Where(x => !x.Deleted).ToList().ForEach(show =>
             {
@@ -340,6 +363,11 @@ public partial class BaseViewModel : ObservableObject
                 {
                     item[0].IsNotDownloaded = true;
                     item[0].IsDownloaded = false;
+                }
+                if (item[0].Url == shows.Url)
+                {
+                    Debug.WriteLine($"Show: {item[0].Title} is downloading, fixing listing");
+                    item[0].IsDownloading = true;
                 }
                 MostRecentShows.Add(item[0]);
             });
@@ -367,7 +395,7 @@ public partial class BaseViewModel : ObservableObject
     {
         Podcasts.Clear();
         var updates = await UpdateCheckAsync();
-        if (updates)
+        if (updates || IsDownloading)
         {
             return;
         }

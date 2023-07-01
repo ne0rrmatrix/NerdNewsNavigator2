@@ -38,9 +38,17 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
 
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
-
-        IsBusy = false;
-        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+        _ = Task.Run(async () =>
+        {
+            await GetUpdatedPodcasts();
+            IsBusy = false;
+            ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+            ThreadPool.QueueUserWorkItem(GetFavoriteShows);
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+            });
+        });
     }
     private void DeleleFiles(string[] files)
     {
