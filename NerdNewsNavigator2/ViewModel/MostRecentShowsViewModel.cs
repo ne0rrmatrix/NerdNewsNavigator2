@@ -55,7 +55,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
 #if WINDOWS || MACCATALYST
-        RunDownloads(url, false);
+        RunDownloads(url, true);
 #endif
 #if ANDROID || IOS
         DownloadService.CancelDownload = false;
@@ -63,7 +63,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);
         NotificationService.AfterNotifications(requests);
-        RunDownloads(url, false);
+        RunDownloads(url, true);
 #endif
     }
 

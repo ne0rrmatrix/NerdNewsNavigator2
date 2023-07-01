@@ -162,6 +162,9 @@ public partial class VideoPlayerPage : ContentPage
         {
             mediaElement.Stop();
             _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+            mediaElement.Handler?.DisconnectHandler();
+            mediaElement.Handler = null;
+            mediaElement = null;
         }
     }
 }
