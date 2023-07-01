@@ -146,12 +146,19 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
-        var item = Shows.First(x => x.Url == url);
+        var item = mostRecent ? MostRecentShows.First(x => x.Url == url) : Shows.First(x => x.Url == url);
         if (item != null)
         {
             item.IsDownloaded = true;
             item.IsNotDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
+            if (mostRecent)
+            {
+                MostRecentShows[MostRecentShows.IndexOf(item)] = item;
+            }
+            else
+            {
+                Shows[Shows.IndexOf(item)] = item;
+            }
         }
 
         while (IsDownloading)
@@ -342,7 +349,7 @@ public partial class BaseViewModel : ObservableObject
     public async Task GetMostRecent()
     {
         var shows = new Show();
-        if (Shows.ToList().Exists(x => x.IsDownloading))
+        if (MostRecentShows.ToList().Exists(x => x.IsDownloading))
         {
             shows = Shows.First(x => x.IsDownloading);
         }
