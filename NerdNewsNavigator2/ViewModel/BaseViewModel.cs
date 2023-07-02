@@ -17,6 +17,7 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
     public ObservableCollection<Favorites> FavoriteShows { get; set; } = new();
+
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
@@ -142,25 +143,44 @@ public partial class BaseViewModel : ObservableObject
     /// A method that download a show to device.
     /// </summary>
     /// <param name="url"></param>
-    /// <param name="mostRecent"></param>
     /// <returns></returns>
-    public async Task Downloading(string url, bool mostRecent)
+    public async Task Downloading(string url)
     {
-        var item = Shows.First(x => x.Url == url);
-        if (item != null)
+        var item = App.AllShows.First(x => x.Url == url);
+        if (MostRecentShows.Count > 0)
+        {
+            var recent = MostRecentShows.First(x => x.Url == url);
+            recent.IsDownloading = true;
+            recent.IsNotDownloaded = false;
+            recent.IsDownloaded = true;
+            Debug.WriteLine("Recent task is starting");
+            MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
+            Debug.WriteLine("Recent task is done");
+        }
+        if (Shows.Count > 0)
+        {
+            var show = Shows.First(x => x.Url == url);
+            show.IsDownloading = true;
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            Debug.WriteLine("Show task starting");
+            Shows[Shows.IndexOf(show)] = show;
+            Debug.WriteLine("Show task done");
+        }
+        if (item is not null)
         {
             item.IsDownloaded = true;
             item.IsNotDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
+            item.IsDownloading = true;
+            Debug.WriteLine("App taks starting");
+            App.AllShows[App.AllShows.IndexOf(item)] = item;
+            Debug.WriteLine($"App Task is downloading: {App.AllShows.First(x => x.Url == url).IsDownloading}");
+            Debug.WriteLine("App Task done");
         }
+
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-            return;
-        }
-        var downloadTemp = DownloadedShows.Any(x => x.Url == url);
-        if (downloadTemp)
-        {
             return;
         }
         while (IsDownloading)
@@ -169,19 +189,18 @@ public partial class BaseViewModel : ObservableObject
             Logger.LogInformation("Waiting for download to finish");
         }
         DownloadService.CancelDownload = false;
-        await StartDownload(url, mostRecent);
+        await StartDownload(url);
     }
-    public async Task StartDownload(string url, bool mostRecent)
+    public async Task StartDownload(string url)
     {
 #if WINDOWS || MACCATALYST
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
 #endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         Logger.LogInformation("Trying to start download of {URL}", url);
 
-        var list = mostRecent ? MostRecentShows.ToList() : Shows.ToList();
-        var item = list.AsEnumerable().First(x => x.Url == url);
+        var item = App.AllShows.First(x => x.Url == url);
         await ProcessDownloads(item, url);
         TriggerProgressChanged();
     }
@@ -189,15 +208,11 @@ public partial class BaseViewModel : ObservableObject
     {
         _ = Task.Run(async () =>
         {
-            await Downloading(url, false);
+            await Downloading(url);
         });
     }
     public async Task ProcessDownloads(Show item, string url)
     {
-        if (item == null)
-        {
-            return;
-        }
         Logger.LogInformation("Found match!");
         Download download = new()
         {
@@ -211,6 +226,7 @@ public partial class BaseViewModel : ObservableObject
             Description = item.Description,
             FileName = DownloadService.GetFileName(url)
         };
+        Debug.WriteLine("Added Show to DownloadedShows");
         DownloadService.IsDownloading = true;
         var downloaded = await DownloadService.DownloadFile(download.Url);
         if (downloaded)
@@ -219,7 +235,7 @@ public partial class BaseViewModel : ObservableObject
         }
         else
         {
-            FailedDownload(download);
+            await FailedDownloadAsync(download);
         }
     }
     public void UpdatingDownload()
@@ -257,24 +273,34 @@ public partial class BaseViewModel : ObservableObject
         DownloadedShows.Add(download);
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
-    public void FailedDownload(Download download)
+    public Task FailedDownloadAsync(Download download)
     {
-        if (Shows.ToList().Exists(x => x.Title == download.Title))
+        var item = App.AllShows.FirstOrDefault(x => x.Url == download.Url);
+        var show = Shows.FirstOrDefault(x => x.Url == download.Url);
+        var recent = MostRecentShows.First(x => x.Url == download.Url);
+        if (item is not null)
         {
-            Logger.LogInformation("Updated Shows");
-            var show = Shows.First(x => x.Url == download.Url);
+            Logger.LogInformation("Setting AllShows update");
+            item.IsDownloaded = false;
+            item.IsNotDownloaded = true;
+            item.IsDownloading = false;
+            App.AllShows[App.AllShows.IndexOf(item)] = item;
+        }
+        if (show is not null)
+        {
             show.IsDownloaded = false;
             show.IsNotDownloaded = true;
+            show.IsDownloading = false;
             Shows[Shows.IndexOf(show)] = show;
         }
-        if (MostRecentShows.ToList().Exists(x => x.Title == download.Title))
+        if (recent is not null)
         {
-            Logger.LogInformation("Updated MostRecent Shows");
-            var show = MostRecentShows.First(x => x.Url == download.Url);
-            show.IsDownloaded = false;
-            show.IsNotDownloaded = true;
-            MostRecentShows[MostRecentShows.IndexOf(show)] = show;
+            recent.IsDownloaded = false;
+            recent.IsNotDownloaded = true;
+            recent.IsDownloading = false;
+            MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
         }
+        return Task.CompletedTask;
     }
     #endregion
 
@@ -290,7 +316,21 @@ public partial class BaseViewModel : ObservableObject
         var temp = await App.PositionData.GetAllFavorites();
         temp?.ForEach(FavoriteShows.Add);
     }
-
+    public async Task GetAllShows()
+    {
+        if (App.AllShows.Count > 0)
+        {
+            return;
+        }
+        var items = await App.PositionData.GetAllPodcasts();
+        App.AllShows.Clear();
+        items.ToList().ForEach(x =>
+        {
+            var item = FeedService.GetShows(x.Url, false);
+            item.ForEach(App.AllShows.Add);
+        });
+        Logger.LogInformation("Got all Shows");
+    }
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
     /// </summary>
@@ -303,16 +343,25 @@ public partial class BaseViewModel : ObservableObject
         var temp = FeedService.GetShows(url, getFirstOnly);
         temp.ForEach(x =>
         {
+            var showIsdownloading = App.AllShows.First(y => y.Url == x.Url);
             var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
-            if (downloaded)
+            if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
             {
-                x.IsDownloaded = true;
+                x.IsDownloading = true;
+                Logger.LogInformation("Show is downloading");
                 x.IsNotDownloaded = false;
+                x.IsDownloaded = true;
             }
             else
             {
-                x.IsDownloaded = false;
                 x.IsNotDownloaded = true;
+                x.IsDownloaded = false;
+            }
+            if (downloaded)
+            {
+                x.IsDownloading = false;
+                x.IsDownloaded = true;
+                x.IsNotDownloaded = false;
             }
             Shows.Add(x);
         });
@@ -331,18 +380,28 @@ public partial class BaseViewModel : ObservableObject
             {
                 var item = FeedService.GetShows(show.Url, true);
                 var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
-                if (downloaded)
+                var showIsdownloading = App.AllShows.First(y => y.Url == item[0].Url);
+                if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
                 {
-                    item[0].IsDownloaded = true;
+                    item[0].IsDownloading = true;
+                    Logger.LogInformation("Show is downloading");
                     item[0].IsNotDownloaded = false;
+                    item[0].IsDownloaded = true;
                 }
                 else
                 {
                     item[0].IsNotDownloaded = true;
                     item[0].IsDownloaded = false;
                 }
+                if (downloaded)
+                {
+                    item[0].IsNotDownloaded = false;
+                    item[0].IsDownloaded = true;
+                    item[0].IsDownloading = false;
+                }
                 MostRecentShows.Add(item[0]);
             });
+        Logger.LogInformation("Got Most recent shows");
     }
 
     /// <summary>
@@ -384,10 +443,20 @@ public partial class BaseViewModel : ObservableObject
             var fav = await PodcastServices.UpdateFavoritesAsync();
             FavoriteShows.Clear();
             fav.ForEach(FavoriteShows.Add);
+            _ = Task.Run(async () =>
+            {
+                await GetAllShows();
+                await GetMostRecent();
+            });
             return;
         }
         var item = temp.OrderBy(x => x.Title).ToList();
         item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+        _ = Task.Run(async () =>
+        {
+            await GetAllShows();
+            await GetMostRecent();
+        });
     }
 
     private async Task<bool> UpdateCheckAsync()

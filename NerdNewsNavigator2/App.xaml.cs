@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
+    public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
     /// <summary>

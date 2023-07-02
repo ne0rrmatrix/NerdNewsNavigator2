@@ -42,7 +42,12 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
+#if ANDROID || IOS
     public async Task Download(string url)
+#endif
+#if WINDOWS || MACCATALYST
+    public void Download(string url)
+#endif
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
@@ -50,7 +55,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         });
 
 #if WINDOWS || MACCATALYST
-        await Downloading(url, false);
+        RunDownloads(url);
 #endif
 #if ANDROID || IOS
         DownloadService.CancelDownload = false;
@@ -78,6 +83,11 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Play(string url)
     {
+        var itemUrl = MostRecentShows.FirstOrDefault(x => x.Url == url);
+        if (itemUrl is not null && itemUrl.IsDownloading)
+        {
+            return;
+        }
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
