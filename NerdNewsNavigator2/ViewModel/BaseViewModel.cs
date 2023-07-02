@@ -146,6 +146,7 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task Downloading(string url)
     {
+        App.SafeShutdown = false;
         var item = App.AllShows.First(x => x.Url == url);
         if (MostRecentShows.Count > 0)
         {
@@ -153,9 +154,7 @@ public partial class BaseViewModel : ObservableObject
             recent.IsDownloading = true;
             recent.IsNotDownloaded = false;
             recent.IsDownloaded = true;
-            Debug.WriteLine("Recent task is starting");
             MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
-            Debug.WriteLine("Recent task is done");
         }
         if (Shows.Count > 0)
         {
@@ -163,19 +162,14 @@ public partial class BaseViewModel : ObservableObject
             show.IsDownloading = true;
             show.IsDownloaded = true;
             show.IsNotDownloaded = false;
-            Debug.WriteLine("Show task starting");
             Shows[Shows.IndexOf(show)] = show;
-            Debug.WriteLine("Show task done");
         }
         if (item is not null)
         {
             item.IsDownloaded = true;
             item.IsNotDownloaded = false;
             item.IsDownloading = true;
-            Debug.WriteLine("App taks starting");
             App.AllShows[App.AllShows.IndexOf(item)] = item;
-            Debug.WriteLine($"App Task is downloading: {App.AllShows.First(x => x.Url == url).IsDownloading}");
-            Debug.WriteLine("App Task done");
         }
 
         if (!InternetConnected())
@@ -213,7 +207,6 @@ public partial class BaseViewModel : ObservableObject
     }
     public async Task ProcessDownloads(Show item, string url)
     {
-        Logger.LogInformation("Found match!");
         Download download = new()
         {
             Title = item.Title,
@@ -237,6 +230,7 @@ public partial class BaseViewModel : ObservableObject
         {
             await FailedDownloadAsync(download);
         }
+        App.SafeShutdown = true;
     }
     public void UpdatingDownload()
     {
@@ -280,7 +274,6 @@ public partial class BaseViewModel : ObservableObject
         var recent = MostRecentShows.First(x => x.Url == download.Url);
         if (item is not null)
         {
-            Logger.LogInformation("Setting AllShows update");
             item.IsDownloaded = false;
             item.IsNotDownloaded = true;
             item.IsDownloading = false;
@@ -348,7 +341,6 @@ public partial class BaseViewModel : ObservableObject
             if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
             {
                 x.IsDownloading = true;
-                Logger.LogInformation("Show is downloading");
                 x.IsNotDownloaded = false;
                 x.IsDownloaded = true;
             }
@@ -384,7 +376,6 @@ public partial class BaseViewModel : ObservableObject
                 if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
                 {
                     item[0].IsDownloading = true;
-                    Logger.LogInformation("Show is downloading");
                     item[0].IsNotDownloaded = false;
                     item[0].IsDownloaded = true;
                 }
@@ -424,6 +415,7 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task GetUpdatedPodcasts()
     {
+        App.SafeShutdown = false;
         Podcasts.Clear();
         var updates = await UpdateCheckAsync();
         if (updates)
@@ -456,6 +448,7 @@ public partial class BaseViewModel : ObservableObject
         {
             await GetAllShows();
             await GetMostRecent();
+            App.SafeShutdown = true;
         });
     }
 

@@ -9,6 +9,7 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
+    public static bool SafeShutdown { get; set; } = false;
     public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
@@ -76,6 +77,21 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         });
     }
 
+    protected override Window CreateWindow(IActivationState activationState)
+    {
+        Window window = base.CreateWindow(activationState);
+        window.Destroying += (s, e) =>
+        {
+            DownloadService.CancelDownload = true;
+            Debug.WriteLine("Cancelling Downloads");
+            while (!SafeShutdown)
+            {
+                Thread.Sleep(500);
+            }
+            Debug.WriteLine("Safe shutdown completed");
+        };
+        return window;
+    }
 #if ANDROID || IOS
 
     private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)

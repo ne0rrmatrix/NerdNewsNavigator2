@@ -63,6 +63,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
+        App.AllShows.Clear();
         _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()
