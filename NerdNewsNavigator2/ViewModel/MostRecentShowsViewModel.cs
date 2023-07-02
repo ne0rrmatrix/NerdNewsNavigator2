@@ -83,7 +83,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Play(string url)
     {
-        var itemUrl = MostRecentShows.FirstOrDefault(x => x.Url == url);
+        var itemUrl = MostRecentShows.ToList().Find(x => x.Url == url);
         if (itemUrl is not null && itemUrl.IsDownloading)
         {
             return;

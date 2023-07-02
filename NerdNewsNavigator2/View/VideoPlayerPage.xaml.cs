@@ -56,7 +56,7 @@ public partial class VideoPlayerPage : ContentPage
         Pos.SavedPosition = TimeSpan.Zero;
         Pos.Title = string.Empty;
         var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+        var result = positionList.ToList().Find(x => x.Title == Pos.Title);
         if (result is not null)
         {
             Pos = result;
@@ -85,7 +85,7 @@ public partial class VideoPlayerPage : ContentPage
             Pos.Title = string.Empty;
             Pos.SavedPosition = TimeSpan.Zero;
             var positionList = await App.PositionData.GetAllPositions();
-            var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+            var result = positionList.ToList().Find(x => x.Title == Pos.Title);
             if (result is not null)
             {
                 Pos = result;

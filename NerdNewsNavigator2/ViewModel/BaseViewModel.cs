@@ -269,9 +269,9 @@ public partial class BaseViewModel : ObservableObject
     }
     public Task FailedDownloadAsync(Download download)
     {
-        var item = App.AllShows.FirstOrDefault(x => x.Url == download.Url);
-        var show = Shows.FirstOrDefault(x => x.Url == download.Url);
-        var recent = MostRecentShows.First(x => x.Url == download.Url);
+        var item = App.AllShows.Find(x => x.Url == download.Url);
+        var show = Shows.ToList().Find(x => x.Url == download.Url);
+        var recent = MostRecentShows.ToList().Find(x => x.Url == download.Url);
         if (item is not null)
         {
             item.IsDownloaded = false;
@@ -393,6 +393,7 @@ public partial class BaseViewModel : ObservableObject
                 MostRecentShows.Add(item[0]);
             });
         Logger.LogInformation("Got Most recent shows");
+        App.SafeShutdown = true;
     }
 
     /// <summary>

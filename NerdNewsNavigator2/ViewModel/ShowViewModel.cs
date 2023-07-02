@@ -95,7 +95,7 @@ public partial class ShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Play(string url)
     {
-        var itemUrl = Shows.FirstOrDefault(x => x.Url == url);
+        var itemUrl = Shows.ToList().Find(x => x.Url == url);
         if (itemUrl is not null && itemUrl.IsDownloading)
         {
             return;
