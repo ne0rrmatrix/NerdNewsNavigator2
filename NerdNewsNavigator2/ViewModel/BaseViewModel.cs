@@ -146,12 +146,20 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task Downloading(string url, bool mostRecent)
     {
-        var item = Shows.First(x => x.Url == url);
+        var item = mostRecent ? MostRecentShows.First(x => x.Url == url) : Shows.First(x => x.Url == url);
         if (item != null)
         {
             item.IsDownloaded = true;
             item.IsNotDownloaded = false;
             Shows[Shows.IndexOf(item)] = item;
+            if (mostRecent)
+            {
+                MostRecentShows[MostRecentShows.IndexOf(item)] = item;
+            }
+            else
+            {
+                Shows[Shows.IndexOf(item)] = item;
+            }
         }
         if (!InternetConnected())
         {
@@ -185,11 +193,11 @@ public partial class BaseViewModel : ObservableObject
         await ProcessDownloads(item, url);
         TriggerProgressChanged();
     }
-    public void RunDownloads(string url)
+    public void RunDownloads(string url, bool isMostRecent)
     {
         _ = Task.Run(async () =>
         {
-            await Downloading(url, false);
+            await Downloading(url, isMostRecent);
         });
     }
     public async Task ProcessDownloads(Show item, string url)
@@ -299,11 +307,16 @@ public partial class BaseViewModel : ObservableObject
     /// <returns><see cref="Show"/></returns>
     public void GetShows(string url, bool getFirstOnly)
     {
-        Shows.Clear();
         var temp = FeedService.GetShows(url, getFirstOnly);
+        var recentTemp = new List<Show>();
+        if (Shows.Count == 0)
+        {
+            Debug.WriteLine("Shows list is empty");
+        }
         temp.ForEach(x =>
         {
             var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
+            var recent = Shows.Any(y => y.Url == x.Url);
             if (downloaded)
             {
                 x.IsDownloaded = true;
@@ -314,8 +327,16 @@ public partial class BaseViewModel : ObservableObject
                 x.IsDownloaded = false;
                 x.IsNotDownloaded = true;
             }
-            Shows.Add(x);
+            if (recent)
+            {
+                x.IsDownloading = true;
+                Debug.WriteLine($"Show: {x.Title} is downloading, fixing listing");
+            }
+            recentTemp.Add(x);
         });
+        Shows.Clear();
+        recentTemp.ForEach(Shows.Add);
+
     }
 
     /// <summary>
@@ -324,25 +345,38 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        MostRecentShows.Clear();
+        if (DownloadService.IsDownloading)
+        {
+            return;
+        }
         var temp = await App.PositionData.GetAllPodcasts();
+        var recentTemp = new List<Show>();
+
         var item = temp.OrderBy(x => x.Title).ToList();
         item?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        {
+            var item = FeedService.GetShows(show.Url, true);
+            var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
+            var recent = MostRecentShows.Any(y => y.Url == item[0].Url);
+            if (downloaded)
             {
-                var item = FeedService.GetShows(show.Url, true);
-                var downloaded = DownloadedShows.Any(y => y.Url == item[0].Url);
-                if (downloaded)
-                {
-                    item[0].IsDownloaded = true;
-                    item[0].IsNotDownloaded = false;
-                }
-                else
-                {
-                    item[0].IsNotDownloaded = true;
-                    item[0].IsDownloaded = false;
-                }
-                MostRecentShows.Add(item[0]);
-            });
+                item[0].IsDownloaded = true;
+                item[0].IsNotDownloaded = false;
+            }
+            else
+            {
+                item[0].IsNotDownloaded = true;
+                item[0].IsDownloaded = false;
+            }
+            if (recent)
+            {
+                item[0].IsDownloading = true;
+                Debug.WriteLine($"Show: {item[0].Title} is downloading, fixing listing");
+            }
+            recentTemp.Add(item[0]);
+        });
+        MostRecentShows.Clear();
+        recentTemp.ForEach(MostRecentShows.Add);
     }
 
     /// <summary>

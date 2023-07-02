@@ -50,7 +50,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         });
 
 #if WINDOWS || MACCATALYST
-        await Downloading(url, false);
+        await Downloading(url, true);
 #endif
 #if ANDROID || IOS
         DownloadService.CancelDownload = false;
@@ -58,7 +58,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);
         NotificationService.AfterNotifications(requests);
-        RunDownloads(url);
+        RunDownloads(url, true);
 #endif
     }
 

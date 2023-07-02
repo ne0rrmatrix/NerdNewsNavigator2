@@ -78,7 +78,7 @@ public partial class ShowViewModel : BaseViewModel
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);
         NotificationService.AfterNotifications(requests);
-        RunDownloads(url);
+        RunDownloads(url, false);
 #endif
     }
 
