@@ -19,6 +19,7 @@ public partial class LivePage : ContentPage, IDisposable
     /// </summary>
     private readonly ILogger<LivePage> _logger;
     #endregion
+
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
@@ -29,16 +30,6 @@ public partial class LivePage : ContentPage, IDisposable
         BindingContext = liveViewModel;
         _logger = logger;
         _ = LoadVideo(_item);
-    }
-
-    /// <summary>
-    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
-    /// </summary>
-    protected override void OnDisappearing()
-    {
-        mediaElement.ShouldKeepScreenOn = false;
-        mediaElement.Stop();
-        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
     }
 
     #region Youtube Methods
@@ -117,6 +108,18 @@ public partial class LivePage : ContentPage, IDisposable
         }
         return content;
     }
+    #endregion
+
+    /// <summary>
+    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
+    /// </summary>
+    protected override void OnDisappearing()
+    {
+        mediaElement.ShouldKeepScreenOn = false;
+        mediaElement.Stop();
+        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+    }
+
     public void Dispose()
     {
         Dispose(true);
@@ -131,5 +134,4 @@ public partial class LivePage : ContentPage, IDisposable
             Client = null;
         }
     }
-    #endregion
 }

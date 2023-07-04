@@ -1,0 +1,11 @@
+<opml version="2.0">
+<head>
+<title>TWiT Subscriptions</title>
+<dateCreated>Thu, 22 Jun 2023 20:56:52 -0700</dateCreated>
+<ownerName>Leo Laporte</ownerName>
+<ownerEmail>leo@twit.tv (Leo Laporte)</ownerEmail>
+</head>
+<body>
+<outline description="A weekly look at all things Microsoft, including Windows, Office, Xbox, Enterprise, and more. Join Leo Laporte and two of the foremost Windows watchers in the world, Paul Thurrott of Thurrott.com and Richard Campbell. Records live every Wednesday at 2:00pm Eastern / 11:00am Pacific / 18:00 UTC." text="Windows Weekly" htmlUrl="https://twit.tv/shows/windows-weekly" version="RSS2" xmlUrl="https://feeds.twit.tv/ww_video_hd.xml" type="rss" />
+</body>
+</opml>

@@ -12,6 +12,5 @@ public class DownloadItemMessage : ValueChangedMessage<bool>
     {
         Title = title;
     }
-
     public string Title { get; }
 }

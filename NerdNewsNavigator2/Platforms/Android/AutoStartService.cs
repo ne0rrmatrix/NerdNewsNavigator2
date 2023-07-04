@@ -23,6 +23,7 @@ internal class AutoStartService : Service
     public AutoStartService()
     {
     }
+    #region Foreground Service Methods
     private void StartForegroundService()
     {
         AutoDownloadService.AcquireWakeLock();
@@ -96,6 +97,8 @@ internal class AutoStartService : Service
             StartForegroundService(intent);
         }
     }
+    #endregion
+
     public override void OnDestroy()
     {
         if (AutoDownloadService.WLock.IsHeld)

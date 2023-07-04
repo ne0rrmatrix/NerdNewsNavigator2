@@ -40,6 +40,7 @@ public partial class ShowViewModel : BaseViewModel
         }
 #endif
     }
+    #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);
@@ -98,6 +99,10 @@ public partial class ShowViewModel : BaseViewModel
         var itemUrl = Shows.ToList().Find(x => x.Url == url);
         if (itemUrl is not null && itemUrl.IsDownloading)
         {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Toast.Make("Video is Downloading. Please wait.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            });
             return;
         }
 #if ANDROID || IOS || MACCATALYST
@@ -109,4 +114,5 @@ public partial class ShowViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
+    #endregion
 }

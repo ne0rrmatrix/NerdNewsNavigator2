@@ -49,6 +49,8 @@ public class PositionDataBase
             _logger.LogInformation("Download Init {DatabasePath}", databasePath);
             _connection.CreateTableAsync<Favorites>();
             _logger.LogInformation("Favorites Init {DatabasePath}", databasePath);
+            _connection.CreateTableAsync<Show>();
+            _logger.LogInformation("AllShows Init {DataBasePath}", databasePath);
         }
         catch (Exception ex)
         {
@@ -70,6 +72,22 @@ public class PositionDataBase
             return new List<Position>();
         }
         _logger.LogInformation("Got all Positions from Database.");
+        return test;
+    }
+
+    /// <summary>
+    /// Method retrieves a <see cref="List{T}"/> of <see cref="Show"/> from database.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
+    public async Task<List<Show>> GetAllShows()
+    {
+        var test = await _connection.Table<Show>().ToListAsync();
+        if (test is null)
+        {
+            _logger.LogInformation("Returning empty collection");
+            return new List<Show>();
+        }
+        _logger.LogInformation("Got all Shows from Database.");
         return test;
     }
 
@@ -165,6 +183,26 @@ public class PositionDataBase
     }
 
     /// <summary>
+    /// Method deletes all <see cref="Show"/> from database.
+    /// </summary>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteAllShows()
+    {
+        try
+        {
+
+            await _connection.DeleteAllAsync<Show>();
+            _logger.LogInformation("Succesfully Deleted all Shows.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to delete all Shows. {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Method deletes all <see cref="Favorites"/> from database.
     /// </summary>
     /// <returns><see cref="bool"/></returns>
@@ -217,6 +255,26 @@ public class PositionDataBase
         {
             await _connection.InsertAsync(position);
             _logger.LogInformation("Saved to database: {Title} {Position}", position.Title, position.SavedPosition);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to save to Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Adds a <see cref="Show"/> to Database
+    /// </summary>
+    /// <param name="show">An instance of <see cref="Show"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> AddShow(Show show)
+    {
+        try
+        {
+            await _connection.InsertAsync(show);
+            _logger.LogInformation("Saved to database: {Show}", show.Title);
             return true;
         }
         catch (Exception ex)
@@ -316,6 +374,32 @@ public class PositionDataBase
         }
     }
 
+    /// <summary>
+    /// Method Updates a <see cref="Show"/> from Database
+    /// </summary>
+    /// <param name="show">an instance of <see cref="Show"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> UpdateShow(Show show)
+    {
+        try
+        {
+            var existingPositon = await _connection.Table<Show>().FirstOrDefaultAsync(x => x.Title == show.Title);
+            if (existingPositon is not null)
+            {
+                await _connection.UpdateAsync(show);
+                _logger.LogInformation("Updated Database: {Title}", show.Title);
+                return true;
+            }
+            await _connection.InsertAsync(show);
+            _logger.LogInformation("Adding to Database: {Title}", show.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Update Show from Database {Message}", ex.Message);
+            return false;
+        }
+    }
     /// <summary>
     /// Method Update a <see cref="Podcast"/> from Database
     /// </summary>
@@ -434,6 +518,26 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.LogError("Failed to Delete Podcast from Database: {Message}", ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Method Deletes a <see cref="Show"/> from Database
+    /// </summary>
+    /// <param name="show">an instance of <see cref="Show"/></param>
+    /// <returns><see cref="bool"/></returns>
+    public async Task<bool> DeleteShow(Show show)
+    {
+        try
+        {
+            await _connection.DeleteAsync(show);
+            _logger.LogInformation("Deleted Show: {Title}", show.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to Delete Show from Database: {Message}", ex.Message);
             return false;
         }
     }

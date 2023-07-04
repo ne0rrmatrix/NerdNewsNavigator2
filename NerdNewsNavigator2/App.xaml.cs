@@ -9,7 +9,7 @@ namespace NerdNewsNavigator2;
 /// </summary>
 public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
-    public static bool SafeShutdown { get; set; } = false;
+    #region Properties
     public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
@@ -19,6 +19,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
     public static PositionDataBase PositionData { get; private set; }
 
     private readonly IMessenger _messenger;
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
@@ -35,6 +36,10 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
+        LogController.InitializeNavigation(
+           page => MainPage!.Navigation.PushModalAsync(page),
+           () => MainPage!.Navigation.PopModalAsync());
+
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -68,9 +73,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                 }
             }));
 #endif
-        LogController.InitializeNavigation(
-            page => MainPage!.Navigation.PushModalAsync(page),
-            () => MainPage!.Navigation.PopModalAsync());
+
         ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
@@ -79,19 +82,16 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 
     protected override Window CreateWindow(IActivationState activationState)
     {
-        Window window = base.CreateWindow(activationState);
+        var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
             DownloadService.CancelDownload = true;
-            Debug.WriteLine("Cancelling Downloads");
-            while (!SafeShutdown)
-            {
-                Thread.Sleep(500);
-            }
+            Thread.Sleep(500);
             Debug.WriteLine("Safe shutdown completed");
         };
         return window;
     }
+
 #if ANDROID || IOS
 
     private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
@@ -196,7 +196,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
     }
-
     #endregion
 }
 

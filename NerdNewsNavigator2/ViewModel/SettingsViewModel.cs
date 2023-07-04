@@ -22,6 +22,7 @@ public partial class SettingsViewModel : BaseViewModel
         }
 #endif
     }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>

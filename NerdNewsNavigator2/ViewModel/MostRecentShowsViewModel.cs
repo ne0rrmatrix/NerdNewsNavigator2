@@ -35,7 +35,7 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         _ = GetMostRecent();
 #endif
     }
-
+    #region Events
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
@@ -86,6 +86,10 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         var itemUrl = MostRecentShows.ToList().Find(x => x.Url == url);
         if (itemUrl is not null && itemUrl.IsDownloading)
         {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Toast.Make("Video is Downloading. Please wait.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            });
             return;
         }
 #if ANDROID || IOS || MACCATALYST
@@ -97,4 +101,5 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
+    #endregion
 }

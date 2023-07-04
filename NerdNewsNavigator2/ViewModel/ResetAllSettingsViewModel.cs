@@ -25,6 +25,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         _messenger = messenger;
     }
 
+    #region Methods
     /// <summary>
     /// A Method to delete the <see cref="List{T}"/> of <see cref="Podcast"/>
     /// Function has to be public to work. I don't know why!
@@ -72,5 +73,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
+        await App.PositionData.DeleteAllShows();
     }
+    #endregion
 }

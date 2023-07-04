@@ -39,6 +39,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
 #endif
     }
 
+    #region Events
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
     /// </summary>
@@ -92,5 +93,6 @@ public partial class DownloadedShowViewModel : BaseViewModel
         DownloadedShows.Remove(item);
         _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
+    #endregion
 }
 
