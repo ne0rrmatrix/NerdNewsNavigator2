@@ -62,7 +62,6 @@
                                     CachingEnabled="true"
                                     Uri="{Binding Image}" />
                             </Image.Source>
-
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding FileName}" />
                             </Image.GestureRecognizers>
@@ -90,11 +89,9 @@
                                 HeightRequest="35"
                                 Text="Delete"
                                 TextColor="White">
-
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
-
                             </Button>
 
                         </HorizontalStackLayout>

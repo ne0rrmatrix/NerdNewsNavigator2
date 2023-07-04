@@ -75,6 +75,12 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     [RelayCommand]
     public async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
 
+    [RelayCommand]
+    public void Cancel()
+    {
+        DownloadService.CancelDownload = true;
+    }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
     /// </summary>

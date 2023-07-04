@@ -87,7 +87,11 @@ public partial class ShowViewModel : BaseViewModel
         RunDownloads(url);
 #endif
     }
-
+    [RelayCommand]
+    public void Cancel()
+    {
+        DownloadService.CancelDownload = true;
+    }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
     /// </summary>

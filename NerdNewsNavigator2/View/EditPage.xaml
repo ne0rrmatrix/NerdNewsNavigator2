@@ -92,7 +92,7 @@
                                                    Desktop=340}" />
                         <Button
                             Grid.Row="2"
-                            Margin="30"
+                            Margin="10"
                             BackgroundColor="Red"
                             FontAttributes="Bold"
                             FontSize="Micro"
@@ -106,25 +106,22 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
-
                         <Button
                             Grid.Row="2"
-                            Margin="0"
+                            Margin="10"
                             BackgroundColor="Blue"
                             FontAttributes="Bold"
                             FontSize="Micro"
                             HeightRequest="35"
-                            HorizontalOptions="Center"
+                            HorizontalOptions="End"
                             IsVisible="{Binding IsNotDownloaded}"
-                            Text="Add"
+                            Text="Add Favorite"
                             TextColor="White"
-                            WidthRequest="{OnIdiom Default=70,
-                                                   Tablet=80}">
+                            WidthRequest="125">
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
                             </Button.GestureRecognizers>
                         </Button>
-
                         <Button
                             Grid.Row="2"
                             Margin="30"

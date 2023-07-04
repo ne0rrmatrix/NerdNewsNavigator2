@@ -91,7 +91,6 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-
                         <Label
                             Grid.Row="2"
                             Margin="10"
