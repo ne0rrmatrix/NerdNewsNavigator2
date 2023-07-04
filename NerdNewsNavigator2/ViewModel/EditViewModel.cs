@@ -106,6 +106,12 @@ public partial class EditViewModel : BaseViewModel
         {
             var podcast = Podcasts.First(x => x.Url == url);
             Podcasts?.Remove(podcast);
+            var shows = FeedService.GetShows(podcast.Url, false);
+            shows.ForEach(async show =>
+            {
+                App.AllShows.Remove(show);
+                await App.PositionData.DeleteShow(show);
+            });
             podcast.Deleted = true;
             await App.PositionData.UpdatePodcast(podcast);
         }

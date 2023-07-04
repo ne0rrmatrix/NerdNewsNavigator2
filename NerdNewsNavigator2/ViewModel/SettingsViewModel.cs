@@ -35,7 +35,7 @@ public partial class SettingsViewModel : BaseViewModel
        {
            _ = await PodcastServices.UpdatePodcast();
            Podcasts.Clear();
-
+           App.AllShows.Clear();
            _ = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
 
