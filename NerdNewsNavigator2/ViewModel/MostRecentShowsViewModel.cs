@@ -76,9 +76,13 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     public async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
 
     [RelayCommand]
-    public void Cancel()
+    public static void Cancel()
     {
         DownloadService.CancelDownload = true;
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        });
     }
 
     /// <summary>

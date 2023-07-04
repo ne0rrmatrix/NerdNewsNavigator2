@@ -88,9 +88,13 @@ public partial class ShowViewModel : BaseViewModel
 #endif
     }
     [RelayCommand]
-    public void Cancel()
+    public static void Cancel()
     {
         DownloadService.CancelDownload = true;
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        });
     }
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
