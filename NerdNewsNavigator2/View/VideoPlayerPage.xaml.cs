@@ -62,6 +62,7 @@ public partial class VideoPlayerPage : ContentPage
             Pos = result;
             _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
             mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.Play();
         }
         else
         {

@@ -128,6 +128,12 @@ public static class DownloadService
             download.IsDownloaded = true;
             download.IsNotDownloaded = false;
             download.Deleted = false;
+            var allShow = App.AllShows.First(x => x.Url == download.Url);
+            allShow.IsDownloaded = true;
+            allShow.IsNotDownloaded = true;
+            allShow.IsDownloading = false;
+            App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
+            await App.PositionData.UpdateShow(allShow);
             await AddDownloadDatabase(download);
             return true;
         }
