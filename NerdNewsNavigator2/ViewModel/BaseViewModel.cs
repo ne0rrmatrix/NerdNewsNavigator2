@@ -322,43 +322,27 @@ public partial class BaseViewModel : ObservableObject
         var temp = FeedService.GetShows(url, getFirstOnly);
         temp.ForEach(async x =>
         {
-            var downloaded = DownloadedShows.Any(y => y.Url == x.Url);
-            var newShows = !App.AllShows.Any(y => y.Url == x.Url);
-            if (App.AllShows.Count == 0)
+            var downloaded = DownloadedShows.ToList().Exists(y => y.Url == x.Url);
+            var newShows = !App.AllShows.ToList().Exists(y => y.Url == x.Url);
+            var showIsdownloading = App.AllShows.First(y => y.Url == x.Url);
+            if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
             {
-                if (downloaded)
-                {
-                    x.IsDownloading = false;
-                    x.IsDownloaded = true;
-                    x.IsNotDownloaded = false;
-                }
-                else
-                {
-                    x.IsNotDownloaded = true;
-                    x.IsDownloaded = false;
-                }
+                x.IsDownloading = true;
+                x.IsNotDownloaded = false;
+                x.IsDownloaded = true;
             }
             else
             {
-                var showIsdownloading = App.AllShows.First(y => y.Url == x.Url);
-                if (showIsdownloading is not null && showIsdownloading.IsDownloading && !downloaded)
-                {
-                    x.IsDownloading = true;
-                    x.IsNotDownloaded = false;
-                    x.IsDownloaded = true;
-                }
-                else
-                {
-                    x.IsNotDownloaded = true;
-                    x.IsDownloaded = false;
-                }
-                if (downloaded)
-                {
-                    x.IsDownloading = false;
-                    x.IsDownloaded = true;
-                    x.IsNotDownloaded = false;
-                }
+                x.IsNotDownloaded = true;
+                x.IsDownloaded = false;
             }
+            if (downloaded || App.AllShows.Count == 0)
+            {
+                x.IsDownloading = false;
+                x.IsDownloaded = true;
+                x.IsNotDownloaded = false;
+            }
+
             Shows.Add(x);
             if (newShows)
             {

@@ -91,7 +91,18 @@ public partial class DownloadedShowViewModel : BaseViewModel
         item.IsNotDownloaded = true;
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
+        await SetDataAsync(url);
         _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+    }
+
+    private static async Task SetDataAsync(string url)
+    {
+        var allShow = App.AllShows.First(x => x.Url == url);
+        allShow.IsDownloaded = false;
+        allShow.IsNotDownloaded = true;
+        allShow.IsDownloading = false;
+        App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
+        await App.PositionData.UpdateShow(allShow);
     }
     #endregion
 }
