@@ -72,6 +72,16 @@ public static class PodcastServices
         AddToDatabase(res);
         return res;
     }
+    public static List<Show> UpdateAllShows(List<Podcast> newPodcasts)
+    {
+        var res = new List<Show>();
+        newPodcasts.ForEach((podcast) =>
+        {
+            var item = FeedService.GetShows(podcast.Url, false);
+            item.ForEach(res.Add);
+        });
+        return res;
+    }
     public static async Task<List<Favorites>> UpdateFavoritesAsync()
     {
         // get old favorites list

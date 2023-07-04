@@ -31,16 +31,21 @@ public partial class SettingsViewModel : BaseViewModel
     public async Task UpdatePodcasts()
     {
         await Toast.Make("Updating Podcasts.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        IsBusy = true;
         ThreadPool.QueueUserWorkItem(async (state) =>
        {
-           _ = await PodcastServices.UpdatePodcast();
+           var podcast = await PodcastServices.UpdatePodcast();
            Podcasts.Clear();
            App.AllShows.Clear();
-           _ = await PodcastServices.UpdateFavoritesAsync();
+           podcast.ForEach(Podcasts.Add);
+           var shows = PodcastServices.UpdateAllShows(podcast);
+           shows.ForEach(App.AllShows.Add);
+           var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
-
+           fav.ForEach(FavoriteShows.Add);
            await MainThread.InvokeOnMainThreadAsync(async () =>
            {
+               IsBusy = false;
                await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
            });
        });
