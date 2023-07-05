@@ -470,7 +470,7 @@ public partial class BaseViewModel : ObservableObject
         item?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
             var item = FeedService.GetShows(show.Url, true);
-            var app = App.AllShows.FirstOrDefault(y => y.Url == item[0].Url);
+            var app = App.AllShows.Find(y => y.Url == item[0].Url);
             if (app is null && item is not null)
             {
                 App.AllShows.Add(item[0]);
