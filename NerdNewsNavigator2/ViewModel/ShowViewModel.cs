@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Plugin.LocalNotification;
-using Plugin.LocalNotification.EventArgs;
-using Plugin.LocalNotification.iOSOption;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace NerdNewsNavigator2.ViewModel;
 
@@ -15,6 +13,13 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ShowViewModel : BaseViewModel
 {
     #region Properties
+
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
+    private readonly ILogger<ShowViewModel> _logger;
+
+    private string Item { get; set; }
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
@@ -27,6 +32,12 @@ public partial class ShowViewModel : BaseViewModel
     /// </summary>
     public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        _logger = logger;
+        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this, (r, m) =>
+        {
+            RecievedDownloadSttusMessage(m.Value, m.Now);
+        });
+
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
@@ -40,11 +51,56 @@ public partial class ShowViewModel : BaseViewModel
         }
 #endif
     }
+    public void RecievedDownloadSttusMessage(bool value, Show item)
+    {
+        if (item is not null)
+        {
+            item.IsDownloading = value;
+            _ = MainThread.InvokeOnMainThreadAsync(() => Dnow.Update(item));
+        }
+    }
     #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);
+        Item = decodedUrl;
         GetShows(decodedUrl, false);
+    }
+    public async Task Delete(string url)
+    {
+        var item = DownloadedShows.First(x => x.Url == url);
+        if (item is null)
+        {
+            return;
+        }
+        var filename = DownloadService.GetFileName(item.Url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+            _logger.LogInformation("Deleted file {file}", tempFile);
+            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
+        }
+        else
+        {
+            _logger.LogInformation("File {file} was not found in file system.", tempFile);
+        }
+        item.IsDownloaded = false;
+        item.Deleted = true;
+        item.IsNotDownloaded = true;
+        await App.PositionData.UpdateDownload(item);
+        DownloadedShows.Remove(item);
+        SetDataAsync(url);
+        _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+    }
+    private void SetDataAsync(string url)
+    {
+        var allShow = App.AllShows.First(x => x.Url == url);
+        allShow.IsDownloaded = false;
+        allShow.IsNotDownloaded = true;
+        allShow.IsDownloading = false;
+        App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
+        Dnow.Update(allShow);
     }
 
     /// <summary>
@@ -122,5 +178,7 @@ public partial class ShowViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
+
     #endregion
+
 }

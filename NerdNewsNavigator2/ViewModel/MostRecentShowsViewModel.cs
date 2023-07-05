@@ -9,12 +9,18 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class MostRecentShowsViewModel : BaseViewModel
 {
+    private readonly ILogger<MostRecentShowsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
     /// <paramref name="logger"/>
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        _logger = logger;
+        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this, (r, m) =>
+        {
+            RecievedDownloadSttusMessage(m.Value, m.Now);
+        });
         OnPropertyChanged(nameof(IsBusy));
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
@@ -35,7 +41,61 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         _ = GetMostRecent();
 #endif
     }
+    public void RecievedDownloadSttusMessage(bool value, Show item)
+    {
+        if (item is not null)
+        {
+            item.IsDownloading = value;
+            _ = MainThread.InvokeOnMainThreadAsync(() => Dnow.Update(item));
+        }
+    }
+
     #region Events
+    /// <summary>
+    /// Deletes file and removes it from database.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+
+    [RelayCommand]
+    public async Task Delete(string url)
+    {
+        var item = DownloadedShows.First(x => x.Url == url);
+        if (item is null)
+        {
+            return;
+        }
+        var filename = DownloadService.GetFileName(item.Url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+            _logger.LogInformation("Deleted file {file}", tempFile);
+            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
+        }
+        else
+        {
+            _logger.LogInformation("File {file} was not found in file system.", tempFile);
+        }
+        item.IsDownloaded = false;
+        item.Deleted = true;
+        item.IsNotDownloaded = true;
+        await App.PositionData.UpdateDownload(item);
+        DownloadedShows.Remove(item);
+        SetDataAsync(url);
+        _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+    }
+
+    private void SetDataAsync(string url)
+    {
+        var allShow = App.AllShows.First(x => x.Url == url);
+        allShow.IsDownloaded = false;
+        allShow.IsNotDownloaded = true;
+        allShow.IsDownloading = false;
+        App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
+        Dnow.Update(allShow);
+    }
+
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>

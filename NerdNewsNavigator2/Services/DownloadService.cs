@@ -106,7 +106,7 @@ public static class DownloadService
     }
 
     /// <summary>
-    /// A method that download a show to device.
+    /// A method that download a Item to device.
     /// </summary>
     /// <param name="show"></param>
     /// <returns></returns>
@@ -133,7 +133,6 @@ public static class DownloadService
             allShow.IsNotDownloaded = true;
             allShow.IsDownloading = false;
             App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
-            await App.PositionData.UpdateShow(allShow);
             await AddDownloadDatabase(download);
             return true;
         }

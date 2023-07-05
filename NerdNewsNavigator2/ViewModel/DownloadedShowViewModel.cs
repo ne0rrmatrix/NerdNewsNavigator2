@@ -25,6 +25,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     {
         _logger = logger;
         _logger.LogInformation("DownloadedShowViewModel started.");
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
@@ -91,18 +92,17 @@ public partial class DownloadedShowViewModel : BaseViewModel
         item.IsNotDownloaded = true;
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
-        await SetDataAsync(url);
+        SetDataAsync(url);
         _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
 
-    private static async Task SetDataAsync(string url)
+    private static void SetDataAsync(string url)
     {
         var allShow = App.AllShows.First(x => x.Url == url);
         allShow.IsDownloaded = false;
         allShow.IsNotDownloaded = true;
         allShow.IsDownloading = false;
         App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
-        await App.PositionData.UpdateShow(allShow);
     }
     #endregion
 }

@@ -73,7 +73,6 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
-        await App.PositionData.DeleteAllShows();
     }
     #endregion
 }

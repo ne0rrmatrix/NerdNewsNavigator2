@@ -38,12 +38,6 @@ public static class PodcastServices
         podcasts?.Where(x => x.Deleted).ToList().ForEach(stalePodcasts.Add);
         var newPodcasts = RemoveStalePodcastsAsync(stalePodcasts);
         await App.PositionData.DeleteAllPodcasts();
-        await App.PositionData.DeleteAllShows();
-        newPodcasts.ForEach(podcast =>
-        {
-            var item = FeedService.GetShows(podcast.Url, false);
-            item.ForEach(async (x) => await App.PositionData.AddShow(x));
-        });
         return await AddPodcastsToDBAsync(newPodcasts);
     }
     private static List<Podcast> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
