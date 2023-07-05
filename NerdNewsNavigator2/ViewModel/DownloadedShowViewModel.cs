@@ -61,49 +61,6 @@ public partial class DownloadedShowViewModel : BaseViewModel
 #endif
     }
 
-    /// <summary>
-    /// Deletes file and removes it from database.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-
-    [RelayCommand]
-    public async Task Delete(string url)
-    {
-        var item = DownloadedShows.First(x => x.Url == url);
-        if (item is null)
-        {
-            return;
-        }
-        var filename = DownloadService.GetFileName(item.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            _logger.LogInformation("Deleted file {file}", tempFile);
-            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
-        }
-        else
-        {
-            _logger.LogInformation("File {file} was not found in file system.", tempFile);
-        }
-        item.IsDownloaded = false;
-        item.Deleted = true;
-        item.IsNotDownloaded = true;
-        await App.PositionData.UpdateDownload(item);
-        DownloadedShows.Remove(item);
-        SetDataAsync(url);
-        _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
-    }
-
-    private static void SetDataAsync(string url)
-    {
-        var allShow = App.AllShows.First(x => x.Url == url);
-        allShow.IsDownloaded = false;
-        allShow.IsNotDownloaded = true;
-        allShow.IsDownloading = false;
-        App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
-    }
     #endregion
 }
 

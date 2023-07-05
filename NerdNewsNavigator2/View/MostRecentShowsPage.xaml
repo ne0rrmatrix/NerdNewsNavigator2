@@ -127,20 +127,6 @@
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
-                            <Button
-                                Margin="20"
-                                BackgroundColor="Red"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                IsVisible="{Binding IsDownloaded}"
-                                Text="Delete"
-                                TextColor="White"
-                                WidthRequest="90">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-                            </Button>
 
                         </HorizontalStackLayout>
 
