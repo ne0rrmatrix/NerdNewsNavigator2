@@ -108,7 +108,6 @@ public partial class BaseViewModel : ObservableObject
         DownloadChanged += () =>
         {
             Logger.LogInformation("NavBar closed");
-            ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         };
         if (Podcasts.Count > 0)
         {
@@ -282,7 +281,6 @@ public partial class BaseViewModel : ObservableObject
             Title = DownloadProgress;
             Thread.Sleep(1000);
         }
-        TriggerProgressChanged();
     }
     public async Task DownloadSuccess(Download download)
     {
@@ -309,8 +307,9 @@ public partial class BaseViewModel : ObservableObject
         allShows.IsNotDownloaded = true;
         allShows.IsDownloading = true;
         App.AllShows[App.AllShows.IndexOf(allShows)] = allShows;
-        WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(true, App.AllShows.Find(x => x.IsDownloaded)));
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
+        TriggerProgressChanged();
     }
     #endregion
 
@@ -365,19 +364,14 @@ public partial class BaseViewModel : ObservableObject
         {
             var item = FeedService.GetShows(show.Url, true);
             var app = App.AllShows.Find(y => y.Url == item[0].Url);
-            if (app is null && item is not null)
+
+            App.AllShows.Add(item?[0]);
+            MostRecentShows?.Add(item[0]);
+            if (app is not null)
             {
-                App.AllShows.Add(item[0]);
+                item[0].IsDownloading = app.IsDownloading;
             }
-            if (item is not null)
-            {
-                MostRecentShows.Add(item[0]);
-                if (item is not null && app is not null && app.IsDownloading)
-                {
-                    item[0].IsDownloading = app.IsDownloading;
-                }
-                Dnow.Update(item[0]);
-            }
+            Dnow?.Update(item[0]);
         });
         Logger.LogInformation("Got Most recent shows");
     }
@@ -390,13 +384,7 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
-        if (App.AllShows.Count == 0)
-        {
-            Logger.LogInformation("Did not find any AllShows");
-            return;
-        }
-        temp?.ForEach(x =>
+        temp?.Where(y => !y.Deleted).ToList().ForEach(x =>
         {
             var item = App.AllShows.Find(y => y.Url == x.Url);
             if (item is not null)
@@ -404,7 +392,11 @@ public partial class BaseViewModel : ObservableObject
                 item.IsDownloaded = true;
                 item.IsNotDownloaded = false;
                 item.IsDownloading = false;
-                App.AllShows[App.AllShows.IndexOf(item)] = item;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    App.AllShows[App.AllShows.IndexOf(item)] = item;
+                });
+                DownloadedShows.Add(x);
             }
         });
         Logger.LogInformation("Add all downloads to All Shows list");

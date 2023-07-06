@@ -84,7 +84,7 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public async Task Delete(string url)
     {
-        var item = DownloadedShows.First(x => x.Url == url);
+        var item = DownloadedShows.FirstOrDefault(x => x.Url == url);
         if (item is null)
         {
             return;
@@ -106,6 +106,14 @@ public partial class SharedViewModel : BaseViewModel
         item.IsNotDownloaded = true;
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
+        var all = App.AllShows.Find(x => x.Url == url);
+        all.IsDownloaded = false;
+        all.IsDownloading = false;
+        all.IsNotDownloaded = true;
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            App.AllShows[App.AllShows.IndexOf(all)] = all;
+        });
         SetDataAsync(url);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
