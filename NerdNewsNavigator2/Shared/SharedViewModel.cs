@@ -66,11 +66,7 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public async Task Tap(string url)
     {
-        var item = Shows.FirstOrDefault(x => x.Url == url);
-        if (item is null)
-        {
-            item = MostRecentShows.FirstOrDefault(x => x.Url == url);
-        }
+        var item = Shows.FirstOrDefault(x => x.Url == url) ?? MostRecentShows.FirstOrDefault(x => x.Url == url);
         WeakReferenceMessenger.Default.Send(new UrlItemMessage(item));
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
 

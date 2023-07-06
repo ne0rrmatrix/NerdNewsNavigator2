@@ -119,7 +119,7 @@ public static class PodcastServices
             };
             await App.PositionData.AddPosition(pos);
             await App.PositionData.AddPodcast(pod);
-    });
+        });
     }
 
     /// <summary>
