@@ -54,12 +54,15 @@ public partial class VideoPlayerPage : ContentPage
     private async void Seek(object? sender, EventArgs e)
     {
         Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = string.Empty;
+        Pos.Title = App.ShowItem.Title;
         var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == Pos.Title);
+        var result = positionList.ToList().Find(x => x.Title == App.ShowItem.Title);
         if (result is not null)
         {
             Pos = result;
+            Debug.WriteLine(result.Title);
+            Pos.Title = result.Title;
+            Pos.SavedPosition = result.SavedPosition;
             _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
             mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.Play();

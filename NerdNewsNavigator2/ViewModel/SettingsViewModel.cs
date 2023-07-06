@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A Class that extends <see cref="BaseViewModel"/> for <see cref="SettingsViewModel"/>
 /// </summary>
-public partial class SettingsViewModel : BaseViewModel
+public partial class SettingsViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/>

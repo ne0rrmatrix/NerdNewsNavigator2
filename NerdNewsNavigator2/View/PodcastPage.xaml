@@ -62,7 +62,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
                         </Grid.GestureRecognizers>
 
                         <Label

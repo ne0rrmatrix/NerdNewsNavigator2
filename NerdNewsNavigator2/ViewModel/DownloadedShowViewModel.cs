@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
-public partial class DownloadedShowViewModel : BaseViewModel
+public partial class DownloadedShowViewModel : SharedViewModel
 {
     #region Properties
     /// <summary>
@@ -40,14 +40,13 @@ public partial class DownloadedShowViewModel : BaseViewModel
 #endif
     }
 
-    #region Events
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
     /// </summary>
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url)
+    public async Task PlayDownloadedShow(string url)
     {
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
@@ -60,7 +59,5 @@ public partial class DownloadedShowViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
-
-    #endregion
 }
 

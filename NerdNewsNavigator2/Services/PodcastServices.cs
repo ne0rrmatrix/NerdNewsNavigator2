@@ -59,7 +59,7 @@ public static class PodcastServices
     {
         var res = new List<Podcast>();
         await App.PositionData.DeleteAllPodcasts();
-
+        await App.PositionData.DeleteAll();
         // add all podcasts
         newPodcasts.ForEach(res.Add);
 
@@ -106,6 +106,22 @@ public static class PodcastServices
     public static void AddToDatabase(List<Podcast> podcast)
     {
         podcast.ForEach(async (x) => await App.PositionData.AddPodcast(x));
+        List<Position> posList = new();
+        podcast.ForEach(pod =>
+        {
+            Position pos = new()
+            {
+                Title = pod.Title,
+                Description = pod.Description,
+                Url = pod.Url,
+                Image = pod.Image,
+                Download = pod.Download,
+                Link = pod.Link,
+                PubDate = pod.PubDate
+            };
+            posList.Add(pos);
+        });
+        posList.ForEach(async (x) => await App.PositionData.AddPosition(x));
     }
 
     /// <summary>

@@ -6,26 +6,15 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that manages displaying <see cref="Podcast"/> from twit.tv network.
 /// </summary>
-public partial class PodcastViewModel : BaseViewModel
+public partial class PodcastViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PodcastViewModel"/> class.
     /// </summary>
     public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        Orientation = OnDeviceOrientationChange();
         IsBusy = true;
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-        }
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
+
         Task.Run(async () =>
        {
            await GetUpdatedPodcasts();
@@ -39,7 +28,7 @@ public partial class PodcastViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url)
+    public async Task GotoShowPage(string url)
     {
         var encodedUrl = HttpUtility.UrlEncode(url);
         await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");

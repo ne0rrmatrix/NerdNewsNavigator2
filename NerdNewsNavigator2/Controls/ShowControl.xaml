@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="NerdNewsNavigator2.View.DownloadedShowPage"
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="NerdNewsNavigator2.Controls.ShowControl"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
-    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    Title="{Binding Title}"
-    x:DataType="viewmodel:DownloadedShowViewModel"
+    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.Shared"
+    x:Name="showControl"
+    x:DataType="viewmodel:SharedViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    mc:Ignorable="d">
 
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
-    </Shell.BackButtonBehavior>
 
     <CollectionView
         Margin="5"
         HorizontalScrollBarVisibility="Never"
-        ItemsSource="{Binding DownloadedShows}"
+        ItemsSource="{Binding Source, Source={x:Reference showControl}}"
         VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
@@ -27,7 +27,7 @@
 
         <CollectionView.ItemTemplate>
 
-            <DataTemplate x:DataType="model:Download">
+            <DataTemplate x:DataType="model:Show">
 
                 <Frame
                     Margin="{OnPlatform WinUI=90,
@@ -39,13 +39,13 @@
                                               MacCatalyst=370,
                                               Android=370,
                                               iOS=320}">
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
+
+                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
 
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            FontSize="12"
-                            HeightRequest="35"
+                            FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Title}"
                             TextColor="Black"
@@ -55,16 +55,35 @@
                             Margin="10"
                             Aspect="AspectFit"
                             HeightRequest="320"
+                            IsVisible="{Binding IsDownloaded}"
                             WidthRequest="320">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            </Image.GestureRecognizers>
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
-                                    CachingEnabled="true"
+                                    CachingEnabled="True"
                                     Uri="{Binding Image}" />
                             </Image.Source>
+                        </Image>
+
+                        <Image
+                            Grid.Row="1"
+                            Margin="10"
+                            Aspect="AspectFit"
+                            HeightRequest="320"
+                            IsVisible="{Binding IsNotDownloaded}"
+                            WidthRequest="320">
                             <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                             </Image.GestureRecognizers>
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="True"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
                         </Image>
 
                         <HorizontalStackLayout Grid.Row="2" Padding="10">
@@ -82,23 +101,38 @@
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
                             <Button
-                                Margin="20"
+                                x:Name="Btn"
+                                Margin="5"
+                                BackgroundColor="Green"
+                                FontAttributes="Bold"
+                                FontSize="12"
+                                HeightRequest="35"
+                                IsVisible="{Binding IsNotDownloaded}"
+                                Text="Download"
+                                TextColor="Black"
+                                WidthRequest="90">
+                                <Button.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
+                                </Button.GestureRecognizers>
+                            </Button>
+                            <Button
+                                Margin="5"
                                 BackgroundColor="Red"
                                 FontAttributes="Bold"
                                 FontSize="12"
                                 HeightRequest="35"
-                                Text="Delete"
-                                TextColor="White">
+                                IsVisible="{Binding IsDownloading}"
+                                Text="Cancel"
+                                TextColor="Black"
+                                WidthRequest="90">
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
-
                         </HorizontalStackLayout>
 
                         <Label
                             Grid.Row="3"
-                            Margin="10"
                             FontSize="10"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
@@ -114,5 +148,4 @@
         </CollectionView.ItemTemplate>
 
     </CollectionView>
-
-</ContentPage>
+</ContentView>

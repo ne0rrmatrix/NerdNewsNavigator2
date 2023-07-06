@@ -136,41 +136,7 @@ public partial class BaseViewModel : ObservableObject
             return false;
         }
     }
-    /// <summary>
-    /// Deletes file and removes it from database.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-
-    [RelayCommand]
-    public async Task Delete(string url)
-    {
-        var item = DownloadedShows.First(x => x.Url == url);
-        if (item is null)
-        {
-            return;
-        }
-        var filename = DownloadService.GetFileName(item.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            Logger.LogInformation("Deleted file {file}", tempFile);
-            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
-        }
-        else
-        {
-            Logger.LogInformation("File {file} was not found in file system.", tempFile);
-        }
-        item.IsDownloaded = false;
-        item.Deleted = true;
-        item.IsNotDownloaded = true;
-        await App.PositionData.UpdateDownload(item);
-        DownloadedShows.Remove(item);
-        SetDataAsync(url);
-        Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
-    }
-
+    #region Download Tasks
     public void SetDataAsync(string url)
     {
         var allShow = App.AllShows.First(x => x.Url == url);
@@ -180,7 +146,6 @@ public partial class BaseViewModel : ObservableObject
         App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
         Dnow.Update(allShow);
     }
-    #region Download Tasks
     private void TriggerProgressChanged()
     {
         DownloadChanged();
@@ -229,74 +194,6 @@ public partial class BaseViewModel : ObservableObject
                 Shows[Shows.IndexOf(shows)] = shows;
             });
         }
-    }
-
-    /// <summary>
-    /// A Method that passes a Url to <see cref="DownloadService"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-#if ANDROID || IOS
-    public async Task Download(string url)
-#endif
-#if WINDOWS || MACCATALYST
-    public void Download(string url)
-#endif
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        });
-
-#if WINDOWS || MACCATALYST
-        RunDownloads(url);
-#endif
-#if ANDROID || IOS
-        DownloadService.CancelDownload = false;
-        var item = Shows.First(x => x.Url == url);
-        await NotificationService.CheckNotification();
-        var requests = await NotificationService.NotificationRequests(item);
-        NotificationService.AfterNotifications(requests);
-        RunDownloads(url);
-#endif
-    }
-
-    [RelayCommand]
-    public static void Cancel()
-    {
-        DownloadService.CancelDownload = true;
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        });
-    }
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task Play(string url)
-    {
-        var itemUrl = MostRecentShows.ToList().Find(x => x.Url == url);
-        if (itemUrl is not null && itemUrl.IsDownloading)
-        {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await Toast.Make("Video is Downloading. Please wait.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            });
-            return;
-        }
-#if ANDROID || IOS || MACCATALYST
-        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-#endif
-#if WINDOWS
-        var item = "ms-appdata:///LocalCache/Local/" + DownloadService.GetFileName(url);
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-#endif
     }
 
     /// <summary>
@@ -406,15 +303,12 @@ public partial class BaseViewModel : ObservableObject
         IsDownloading = false;
         DownloadService.IsDownloading = false;
         DownloadedShows.Add(download);
-
-        App.AllShows.ForEach(allShows =>
-        {
-            Debug.WriteLine("Settings most recent shows");
-            allShows.IsDownloaded = false;
-            allShows.IsNotDownloaded = true;
-            allShows.IsDownloading = true;
-            App.AllShows[App.AllShows.IndexOf(allShows)] = allShows;
-        });
+        Logger.LogInformation("Settings most recent shows");
+        var allShows = App.AllShows.Find(x => x.Title == download.Title);
+        allShows.IsDownloaded = false;
+        allShows.IsNotDownloaded = true;
+        allShows.IsDownloading = true;
+        App.AllShows[App.AllShows.IndexOf(allShows)] = allShows;
         WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(true, App.AllShows.Find(x => x.IsDownloaded)));
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
     }
@@ -497,6 +391,23 @@ public partial class BaseViewModel : ObservableObject
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
         temp?.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
+        if (App.AllShows.Count == 0)
+        {
+            Logger.LogInformation("Did not find any AllShows");
+            return;
+        }
+        temp?.ForEach(x =>
+        {
+            var item = App.AllShows.Find(y => y.Url == x.Url);
+            if (item is not null)
+            {
+                item.IsDownloaded = true;
+                item.IsNotDownloaded = false;
+                item.IsDownloading = false;
+                App.AllShows[App.AllShows.IndexOf(item)] = item;
+            }
+        });
+        Logger.LogInformation("Add all downloads to All Shows list");
     }
 
     #endregion
@@ -567,6 +478,7 @@ public partial class BaseViewModel : ObservableObject
     }
 
     #endregion
+
     #region Display Functions
 
 #nullable enable

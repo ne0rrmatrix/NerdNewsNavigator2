@@ -2,14 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using AngleSharp.Dom;
+
 namespace NerdNewsNavigator2;
 
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
 {
     #region Properties
+    public static Show ShowItem { get; set; } = new();
     public static List<Show> AllShows { get; set; } = new();
     public static List<Show> MostRecentShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
@@ -31,7 +34,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         InitializeComponent();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-
+        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
         MainPage = new AppShell();
         _messenger = messenger;
         // Database Dependancy Injection START
@@ -196,6 +199,12 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         }
         WeakReferenceMessenger.Default.Reset();
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
+    }
+    public void Receive(UrlItemMessage message)
+    {
+        ShowItem = message.ShowItem;
+        WeakReferenceMessenger.Default.Reset();
+        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
     }
     #endregion
 }

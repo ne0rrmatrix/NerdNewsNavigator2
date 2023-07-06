@@ -120,6 +120,9 @@
 	</ItemGroup>
   
   <ItemGroup>
+    <Compile Update="Controls\ShowControl.xaml.cs">
+      <DependentUpon>ShowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -166,6 +169,9 @@
   
   <ItemGroup>
     <MauiXaml Update="Controls\MediaControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Controls\ShowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\SettingsPage.xaml">

@@ -3,6 +3,7 @@
     x:Class="NerdNewsNavigator2.View.MostRecentShowsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
@@ -14,139 +15,6 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
-
-    <CollectionView
-        Margin="5"
-        HorizontalScrollBarVisibility="Never"
-        ItemsSource="{Binding MostRecentShows}"
-        VerticalScrollBarVisibility="Never">
-
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
-        </CollectionView.ItemsLayout>
-
-        <CollectionView.ItemTemplate>
-
-            <DataTemplate x:DataType="model:Show">
-
-                <Frame
-                    Margin="{OnPlatform WinUI=90,
-                                        MacCatalyst=90,
-                                        Android=90,
-                                        iOS=90}"
-                    BackgroundColor="White"
-                    WidthRequest="{OnPlatform WinUI=370,
-                                              MacCatalyst=370,
-                                              Android=370,
-                                              iOS=320}">
-
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
-
-                        <Label
-                            Grid.Row="0"
-                            FontAttributes="Bold"
-                            FontSize="10"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Title}"
-                            TextColor="Black"
-                            WidthRequest="300" />
-                        <Image
-                            Grid.Row="1"
-                            Margin="10"
-                            Aspect="AspectFit"
-                            HeightRequest="320"
-                            IsVisible="{Binding IsDownloaded}"
-                            WidthRequest="320">
-                            <Image.Source>
-                                <UriImageSource
-                                    CacheValidity="10:00:00:00"
-                                    CachingEnabled="true"
-                                    Uri="{Binding Image}" />
-                            </Image.Source>
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                            </Image.GestureRecognizers>
-                        </Image>
-                        <Image
-                            Grid.Row="1"
-                            Margin="10"
-                            Aspect="AspectFit"
-                            HeightRequest="320"
-                            IsVisible="{Binding IsNotDownloaded}"
-                            WidthRequest="320">
-                            <Image.Source>
-                                <UriImageSource
-                                    CacheValidity="10:00:00:00"
-                                    CachingEnabled="true"
-                                    Uri="{Binding Image}" />
-                            </Image.Source>
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                            </Image.GestureRecognizers>
-                        </Image>
-
-                        <HorizontalStackLayout Grid.Row="2" Padding="10">
-
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="Published: "
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="{Binding PubDate}"
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Button
-                                Margin="10"
-                                BackgroundColor="Green"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                IsVisible="{Binding IsNotDownloaded}"
-                                Text="Download"
-                                TextColor="Black"
-                                WidthRequest="90">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-                            </Button>
-                            <Button
-                                Margin="5"
-                                BackgroundColor="Red"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                IsVisible="{Binding IsDownloading}"
-                                Text="Cancel"
-                                TextColor="Black"
-                                WidthRequest="90">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MostRecentShowsViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-                            </Button>
-
-                        </HorizontalStackLayout>
-
-                        <Label
-                            Grid.Row="4"
-                            FontSize="10"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Description}"
-                            TextColor="Black"
-                            TextType="Html"
-                            WidthRequest="300" />
-
-                    </Grid>
-
-                </Frame>
-
-            </DataTemplate>
-
-        </CollectionView.ItemTemplate>
-
-    </CollectionView>
+    <media:ShowControl Source="{Binding MostRecentShows}" />
 
 </ContentPage>

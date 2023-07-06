@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="MostRecentShowsViewModel"/>
 /// </summary>
-public partial class MostRecentShowsViewModel : BaseViewModel
+public partial class MostRecentShowsViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
@@ -15,23 +15,6 @@ public partial class MostRecentShowsViewModel : BaseViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this, (r, m) =>
-        {
-            RecievedDownloadSttusMessage(m.Value, m.Now);
-        });
-        OnPropertyChanged(nameof(IsBusy));
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        Orientation = OnDeviceOrientationChange();
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-        }
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
 #if WINDOWS || ANDROID
         Task.Run(GetMostRecent);
 #endif
@@ -39,24 +22,4 @@ public partial class MostRecentShowsViewModel : BaseViewModel
         _ = GetMostRecent();
 #endif
     }
-    public void RecievedDownloadSttusMessage(bool value, Show item)
-    {
-        if (item is not null)
-        {
-            item.IsDownloading = value;
-            _ = MainThread.InvokeOnMainThreadAsync(() => Dnow.Update(item));
-        }
-    }
-
-    #region Events
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="MostRecentShowsPage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task Tap(string url) => await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
-
-    #endregion
 }
