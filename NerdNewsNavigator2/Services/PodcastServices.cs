@@ -105,9 +105,7 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static void AddToDatabase(List<Podcast> podcast)
     {
-        podcast.ForEach(async (x) => await App.PositionData.AddPodcast(x));
-        List<Position> posList = new();
-        podcast.ForEach(pod =>
+        podcast.ForEach(async pod =>
         {
             Position pos = new()
             {
@@ -119,9 +117,9 @@ public static class PodcastServices
                 Link = pod.Link,
                 PubDate = pod.PubDate
             };
-            posList.Add(pos);
-        });
-        posList.ForEach(async (x) => await App.PositionData.AddPosition(x));
+            await App.PositionData.AddPosition(pos);
+            await App.PositionData.AddPodcast(pod);
+    });
     }
 
     /// <summary>
