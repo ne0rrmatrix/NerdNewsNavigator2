@@ -154,9 +154,8 @@ public static class DownloadService
         IsDownloading = false;
         _ = Task.Run(() =>
         {
-            favoriteShows.ForEach(x =>
+            favoriteShows.ForEach(async x =>
             {
-                var item = downloadedShows.Find(y => y.Title == x.Title);
                 var show = FeedService.GetShows(x.Url, true);
                 while (IsDownloading)
                 {
@@ -173,29 +172,18 @@ public static class DownloadService
                     Autodownloading = false;
                     return;
                 }
-                var test = false;
-                if (item is null)
+                else if (!downloadedShows.Exists(y => y.Title == x.Title))
                 {
-                    _ = Task.Run(async () =>
-                    {
-                        if (!test)
-                        {
-                            await ProcessDownloadAsync(downloadedShows, show[0]);
-                        }
-                        IsDownloading = false;
-                    });
+                    await ProcessDownloadAsync(downloadedShows, show[0]);
                 }
-                else
-                {
-                    IsDownloading = false;
-                }
+                IsDownloading = false;
             });
         });
     }
 
     private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
     {
-        var item = downloadedShows.FirstOrDefault(x => x.Url == show.Url);
+        var item = downloadedShows.Find(x => x.Url == show.Url);
         if (item is null)
         {
             IsDownloading = true;

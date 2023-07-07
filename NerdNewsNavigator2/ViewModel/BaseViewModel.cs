@@ -161,6 +161,7 @@ public partial class BaseViewModel : ObservableObject
     {
         var show = e.Item;
         await SetProperties(show);
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
     }
     private async Task SetProperties(Show show)
     {
