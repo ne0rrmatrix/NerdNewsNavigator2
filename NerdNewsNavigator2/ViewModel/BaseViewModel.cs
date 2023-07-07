@@ -114,8 +114,8 @@ public partial class BaseViewModel : ObservableObject
             ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
             Logger.LogInformation("Got All Most Recent Shows");
         }
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
     }
 
     /// <summary>
@@ -261,7 +261,6 @@ public partial class BaseViewModel : ObservableObject
             Description = item.Description,
             FileName = DownloadService.GetFileName(url)
         };
-        Debug.WriteLine("Added Show to DownloadedShows");
         DownloadService.IsDownloading = true;
         var downloaded = await DownloadService.DownloadFile(download.Url);
         if (downloaded)
@@ -325,7 +324,18 @@ public partial class BaseViewModel : ObservableObject
         temp?.ForEach(FavoriteShows.Add);
         Logger.LogInformation("Got all Favorite Shows");
     }
-
+    public static async Task GetAllShows()
+    {
+        var podcast = await App.PositionData.GetAllPodcasts();
+        var dupes = new List<Show>();
+        podcast.ForEach(x =>
+        {
+            var temp = FeedService.GetShows(x.Url, false);
+            temp?.ForEach(dupes.Add);
+        });
+        var test = dupes.GroupBy(x => x.Title).Select(d => d.First()).ToList();
+        test.ForEach(App.AllShows.Add);
+    }
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
     /// </summary>
@@ -345,7 +355,6 @@ public partial class BaseViewModel : ObservableObject
             }
             else { x.IsDownloading = false; }
             Shows.Add(x);
-            App.AllShows.Add(x);
             Dnow.Update(x);
         });
         Logger.LogInformation("Got All Shows");
@@ -365,7 +374,6 @@ public partial class BaseViewModel : ObservableObject
             var item = FeedService.GetShows(show.Url, true);
             var app = App.AllShows.Find(y => y.Url == item[0].Url);
 
-            App.AllShows.Add(item?[0]);
             MostRecentShows?.Add(item[0]);
             if (app is not null)
             {
@@ -384,20 +392,25 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp?.Where(y => !y.Deleted).ToList().ForEach(x =>
+        var deDupe = temp.GroupBy(x => x.Title).Select(d => d.First()).ToList();
+
+        if (App.AllShows.Count == 0)
         {
-            var item = App.AllShows.Find(y => y.Url == x.Url);
-            if (item is not null)
+            await GetAllShows();
+        }
+        App.AllShows.Where(x => deDupe.Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
+        {
+            item.IsDownloaded = true;
+            item.IsNotDownloaded = false;
+            item.IsDownloading = false;
+            _ = MainThread.InvokeOnMainThreadAsync(() =>
             {
-                item.IsDownloaded = true;
-                item.IsNotDownloaded = false;
-                item.IsDownloading = false;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    App.AllShows[App.AllShows.IndexOf(item)] = item;
-                });
-                DownloadedShows.Add(x);
-            }
+                App.AllShows[App.AllShows.IndexOf(item)] = item;
+            });
+        });
+        deDupe.Where(x => App.AllShows.Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
+        {
+            DownloadedShows.Add(item);
         });
         Logger.LogInformation("Add all downloads to All Shows list");
     }

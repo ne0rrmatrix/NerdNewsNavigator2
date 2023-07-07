@@ -27,6 +27,7 @@ public static class DownloadService
         var items = await App.PositionData.GetAllDownloads();
         if (items.Exists(x => x.Url == download.Url))
         {
+            Debug.WriteLine("Download already exists. Not adding download to database");
             return false;
         }
         await App.PositionData.AddDownload(download);
@@ -110,40 +111,32 @@ public static class DownloadService
     /// </summary>
     /// <param name="show"></param>
     /// <returns></returns>
-    public static async Task<bool> Downloading(Show show)
+    public static async Task Downloading(Show show)
     {
         Download download = new()
         {
             Title = show.Title,
             Url = show.Url,
             Image = show.Image,
+            IsDownloaded = true,
+            IsNotDownloaded = false,
+            Deleted = false,
             PubDate = show.PubDate,
             Description = show.Description,
             FileName = GetFileName(show.Url)
         };
 
         var downloaded = await DownloadFile(download.Url);
-        if (downloaded && !CancelDownload)
+        if (downloaded)
         {
-            download.IsDownloaded = true;
-            download.IsNotDownloaded = false;
-            download.Deleted = false;
-            var allShow = App.AllShows.First(x => x.Url == download.Url);
-            allShow.IsDownloaded = true;
-            allShow.IsNotDownloaded = true;
-            allShow.IsDownloading = false;
-            App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
-            await AddDownloadDatabase(download);
-            return true;
-        }
 
-        if (CancelDownload)
-        {
-            Debug.WriteLine("Deleting file");
-            DeleteFile(download.Url);
-            return false;
+            await AddDownloadDatabase(download);
+            Debug.WriteLine("Trying to Add Downlaoded Show to Database");
+            show.IsDownloading = false;
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = true;
+            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
         }
-        return false;
     }
 
     /// <summary>
@@ -163,6 +156,7 @@ public static class DownloadService
         {
             favoriteShows.ForEach(x =>
             {
+                var item = downloadedShows.Find(y => y.Title == x.Title);
                 var show = FeedService.GetShows(x.Url, true);
                 while (IsDownloading)
                 {
@@ -179,18 +173,30 @@ public static class DownloadService
                     Autodownloading = false;
                     return;
                 }
-                _ = Task.Run(async () =>
+                var test = false;
+                if (item is null)
                 {
-                    await ProcessDownloadAsync(downloadedShows, show[0]);
+                    _ = Task.Run(async () =>
+                    {
+                        if (!test)
+                        {
+                            await ProcessDownloadAsync(downloadedShows, show[0]);
+                        }
+                        IsDownloading = false;
+                    });
+                }
+                else
+                {
                     IsDownloading = false;
-                });
+                }
             });
         });
     }
 
     private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
     {
-        if (!downloadedShows.Exists(y => y.Url == show.Url))
+        var item = downloadedShows.FirstOrDefault(x => x.Url == show.Url);
+        if (item is null)
         {
             IsDownloading = true;
 #if ANDROID || IOS

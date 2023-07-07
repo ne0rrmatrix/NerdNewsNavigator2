@@ -7,7 +7,6 @@ namespace NerdNewsNavigator2.Shared;
 [QueryProperty("Url", "Url")]
 public partial class SharedViewModel : BaseViewModel
 {
-
     #region Properties
 
     /// <summary>
@@ -42,6 +41,7 @@ public partial class SharedViewModel : BaseViewModel
         }
 #endif
     }
+
     public void RecievedDownloadSttusMessage(bool value, Show item)
     {
         if (item is not null)
@@ -50,6 +50,7 @@ public partial class SharedViewModel : BaseViewModel
             _ = MainThread.InvokeOnMainThreadAsync(() => Dnow.Update(item));
         }
     }
+
     #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
@@ -73,6 +74,7 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     #endregion
+
     #region Shared ViewModel code
 
     /// <summary>
@@ -80,7 +82,6 @@ public partial class SharedViewModel : BaseViewModel
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-
     [RelayCommand]
     public async Task Delete(string url)
     {
@@ -185,6 +186,5 @@ public partial class SharedViewModel : BaseViewModel
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
     }
-
     #endregion
 }
