@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Platform.Compatibility;
 using NerdNewsNavigator2.Extensions;
 
 namespace NerdNewsNavigator2.ViewModel;
@@ -20,6 +17,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
 
     public event DownloadChangedHandler DownloadChanged;
     public DownloadNow Dnow { get; set; } = new();
+
     /// <summary>
 	/// Gets the presented page.
 	/// </summary>
