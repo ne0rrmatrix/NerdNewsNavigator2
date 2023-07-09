@@ -10,202 +10,201 @@
 		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<RootNamespace>NerdNewsNavigator2</RootNamespace>
 		<UseMaui>true</UseMaui>
-    <UseMauiEssentials>true</UseMauiEssentials>
-		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
+        <UseMauiEssentials>true</UseMauiEssentials>
+	    <SingleProject>true</SingleProject>
+	    <ImplicitUsings>enable</ImplicitUsings>
 
-		<!-- Display name -->
-		<ApplicationTitle>NerdNewsNavigator2</ApplicationTitle>
+	    <!-- Display name -->
+	    <ApplicationTitle>NerdNewsNavigator2</ApplicationTitle>
 
-		<!-- App Identifier -->
-		<ApplicationId>com.android.nerdnewsnavigator2</ApplicationId>
-		<ApplicationIdGuid>bec751aa-42c5-41d6-8e3f-5f40783fe069</ApplicationIdGuid>
+	    <!-- App Identifier -->
+	    <ApplicationId>com.android.nerdnewsnavigator2</ApplicationId>
+	    <ApplicationIdGuid>bec751aa-42c5-41d6-8e3f-5f40783fe069</ApplicationIdGuid>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>19</ApplicationVersion>
+	    <!-- Versions -->
+	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+	    <ApplicationVersion>19</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-    <DefaultLanguage>en</DefaultLanguage>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <Platforms>AnyCPU</Platforms>
-    <Configurations>Debug;Release</Configurations>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppInstallerUri>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\bin\Release\net7.0-windows10.0.19041.0\win10-x64</AppInstallerUri>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <PackageCertificateThumbprint>D2B5C6F044C764C5B848962C6A34A4002E174D64</PackageCertificateThumbprint>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+	    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+        <DefaultLanguage>en</DefaultLanguage>
+        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+        <Platforms>AnyCPU</Platforms>
+        <Configurations>Debug;Release</Configurations>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>True</GenerateTestArtifacts>
+        <AppInstallerUri>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\bin\Release\net7.0-windows10.0.19041.0\win10-x64</AppInstallerUri>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <PackageCertificateThumbprint>D2B5C6F044C764C5B848962C6A34A4002E174D64</PackageCertificateThumbprint>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
-	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
-	  <RunAOTCompilation>False</RunAOTCompilation>
+	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+	    <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
-    <AndroidUseAapt2>True</AndroidUseAapt2>
-    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-    <RunAOTCompilation>False</RunAOTCompilation>
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidUseAapt2>True</AndroidUseAapt2>
+        <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+        <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-    <BuildIpa>False</BuildIpa>
-    <IpaIncludeArtwork>True</IpaIncludeArtwork>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+        <BuildIpa>False</BuildIpa>
+        <IpaIncludeArtwork>True</IpaIncludeArtwork>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
-    <BuildIpa>False</BuildIpa>
-    <IpaIncludeArtwork>True</IpaIncludeArtwork>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+        <BuildIpa>False</BuildIpa>
+        <IpaIncludeArtwork>True</IpaIncludeArtwork>
+    </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
     </PropertyGroup>
     
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
-    <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
-    <CodesignProvision>VS: WildCard Development</CodesignProvision>
-    <ProvisioningType>automatic</ProvisioningType>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+        <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
+        <CodesignProvision>VS: WildCard Development</CodesignProvision>
+        <ProvisioningType>automatic</ProvisioningType>
+    </PropertyGroup>
 
-  	<!-- App Icon -->
-  <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
+    <!-- App Icon -->
+    <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
   
-	<ItemGroup>
-	<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#34AAD2" />
+    <ItemGroup>
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#34AAD2" />
+        <!-- Splash Screen -->
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#34AAD2" />
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#34AAD2" />
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.svg" />
 
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" />
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
 
-		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
-
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
 	
-	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-		<PackageReference Include="M3U8Parser" Version="1.0.1" />
-		<PackageReference Include="MetroLog.Maui" Version="2.1.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
-		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
-		<PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
-		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
-		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
-		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.16" />
-	</ItemGroup>
+    <ItemGroup>
+	    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
+	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+	    <PackageReference Include="M3U8Parser" Version="1.0.1" />
+	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
+	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+	    <PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
+	    <PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
+	    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
+	    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
+	    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
+	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
+	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
+	    <PackageReference Include="YoutubeExplode" Version="6.2.16" />
+    </ItemGroup>
   
-  <ItemGroup>
+    <ItemGroup>
     <Compile Update="Controls\ShowControl.xaml.cs">
-      <DependentUpon>ShowControl.xaml</DependentUpon>
+        <DependentUpon>ShowControl.xaml</DependentUpon>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Update="View\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
+        <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="View\LivePage.xaml.cs">
-      <DependentUpon>LivePage.xaml</DependentUpon>
+        <DependentUpon>LivePage.xaml</DependentUpon>
     </Compile>
     <Compile Update="View\EditPage.xaml.cs">
-      <DependentUpon>EditPage.xaml</DependentUpon>
+        <DependentUpon>EditPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="View\PodcastPage.xaml.cs">
-      <DependentUpon>PodcastPage.xaml</DependentUpon>
+        <DependentUpon>PodcastPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="View\Showpage.xaml.cs">
-      <DependentUpon>Showpage.xaml</DependentUpon>
+        <DependentUpon>Showpage.xaml</DependentUpon>
     </Compile>
-      <Compile Update="View\TabletPodcastPage.xaml.cs">
+        <Compile Update="View\TabletPodcastPage.xaml.cs">
         <DependentUpon>TabletPodcastPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="View\TabletLivePage.xaml.cs">
+        </Compile>
+        <Compile Update="View\TabletLivePage.xaml.cs">
         <DependentUpon>TabletLivePage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="View\TabletShowPage.xaml.cs">
+        </Compile>
+        <Compile Update="View\TabletShowPage.xaml.cs">
         <DependentUpon>TabletShowPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="View\VideoPlayerPage.xaml.cs">
+        </Compile>
+        <Compile Update="View\VideoPlayerPage.xaml.cs">
         <DependentUpon>VideoPlayerPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="View\ResetAllSettingsPage.xaml.cs">
+        </Compile>
+        <Compile Update="View\ResetAllSettingsPage.xaml.cs">
         <DependentUpon>ResetAllSettingsPage.xaml</DependentUpon>
-      </Compile>
-  </ItemGroup>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
+    <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
+    </ItemGroup>
   
-  <ItemGroup>
+    <ItemGroup>
     <MauiXaml Update="Controls\MediaControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Controls\ShowControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\DownloadedShowPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\LivePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\MostRecentShowsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\EditPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\TabletLivePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\Showpage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\VideoPlayerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\PodcastPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\ResetAllSettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+        <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-  </ItemGroup>
+    </ItemGroup>
   
 </Project>
