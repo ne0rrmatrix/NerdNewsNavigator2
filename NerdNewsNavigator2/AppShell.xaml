@@ -5,16 +5,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
     Title="NerdNewsNavigator"
-    FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="200"
+    Shell.BackgroundColor="#34AAD2"
+    Shell.FlyoutBackgroundColor="LightGray"
     Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
-                                       Default=false}">
+                                       Android=true,
+                                       iOS=true,
+                                       WinUI=false}">
 
     <Shell.MenuItemTemplate>
-
         <DataTemplate>
-
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
@@ -32,7 +33,6 @@
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>
-
         </DataTemplate>
 
     </Shell.MenuItemTemplate>
