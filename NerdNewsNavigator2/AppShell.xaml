@@ -7,8 +7,7 @@
     Title="NerdNewsNavigator"
     FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
-    FlyoutWidth="200"
-    Shell.NavBarIsVisible="False">
+    FlyoutWidth="200">
 
     <Shell.MenuItemTemplate>
 
@@ -36,8 +35,39 @@
 
     </Shell.MenuItemTemplate>
 
+    <TabBar>
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:PodcastPage}"
+            Icon="house.png"
+            IsVisible="{OnPlatform WinUI=false,
+                                   Default=true}" />
+        <ShellContent
+            Title="Recent"
+            ContentTemplate="{DataTemplate local:MostRecentShowsPage}"
+            Icon="history.png"
+            IsVisible="{OnPlatform WinUI=false,
+                                   Default=true}" />
+        <ShellContent
+            Title="Downloads"
+            ContentTemplate="{DataTemplate local:DownloadedShowPage}"
+            Icon="download.png"
+            IsVisible="{OnPlatform WinUI=false,
+                                   Default=true}" />
+        <ShellContent
+            Title="Live"
+            ContentTemplate="{DataTemplate local:LivePage}"
+            Icon="live_broadcasting.png"
+            IsVisible="{OnPlatform WinUI=false,
+                                   Default=true}" />
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Icon="settings.png"
+            IsVisible="{OnPlatform WinUI=false,
+                                   Default=true}" />
+    </TabBar>
     <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
-
     <MenuItem
         Clicked="GotoFirstPage"
         IconImageSource="house.png"
@@ -58,5 +88,4 @@
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
         Text="Settings" />
-
 </Shell>

@@ -10,11 +10,7 @@
     x:DataType="viewmodel:ShowViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
-    </Shell.BackButtonBehavior>
+    Shell.BackgroundColor="#34AAD2">
 
     <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
 

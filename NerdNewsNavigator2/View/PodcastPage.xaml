@@ -10,12 +10,7 @@
     ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
-    </Shell.BackButtonBehavior>
+    Loaded="ContentPage_Loaded">
 
     <CollectionView
         Margin="5"

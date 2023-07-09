@@ -303,10 +303,12 @@ public partial class MediaControl : ContentView
     {
         if (e.Direction == SwipeDirection.Up)
         {
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             DeviceService.FullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             DeviceService.RestoreScreen();
         }
     }
@@ -315,11 +317,13 @@ public partial class MediaControl : ContentView
         if (s_fullScreen)
         {
             DeviceService.RestoreScreen();
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             s_fullScreen = false;
         }
         else
         {
             DeviceService.FullScreen();
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             s_fullScreen = true;
         }
     }

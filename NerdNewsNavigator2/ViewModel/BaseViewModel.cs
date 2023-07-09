@@ -2,12 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Platform.Compatibility;
+using NerdNewsNavigator2.Extensions;
+
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject
+public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>
 {
     #region Properties
     public delegate void DownloadCompletedEventHandler(object sender, DownloadEventArgs e);
@@ -15,6 +20,11 @@ public partial class BaseViewModel : ObservableObject
 
     public event DownloadChangedHandler DownloadChanged;
     public DownloadNow Dnow { get; set; } = new();
+    /// <summary>
+	/// Gets the presented page.
+	/// </summary>
+	protected static Page CurrentPage =>
+        PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
@@ -104,6 +114,7 @@ public partial class BaseViewModel : ObservableObject
         Logger = logger;
         _connectivity = connectivity;
         _downloadProgress = string.Empty;
+        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
         Dnow.DownloadCompleted += DownloadNow_DownloadCompletedAsync;
         DownloadChanged += () =>
         {
@@ -111,11 +122,41 @@ public partial class BaseViewModel : ObservableObject
         };
         if (Podcasts.Count > 0)
         {
-            ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
             Logger.LogInformation("Got All Most Recent Shows");
         }
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+    }
+    public void Receive(FullScreenItemMessage message)
+    {
+        var currentPage = BaseViewModel.CurrentPage;
+        Debug.WriteLine($"Recieved message {message.Value}");
+        if (message.Value)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                NavigationPage.SetBackButtonTitle(currentPage, string.Empty);
+                NavigationPage.SetHasBackButton(currentPage, false);
+                Shell.SetFlyoutItemIsVisible(currentPage, false);
+                Shell.SetNavBarIsVisible(currentPage, false);
+                Shell.SetTabBarIsVisible(Shell.Current, false);
+                NavigationPage.SetHasNavigationBar(currentPage, false);
+                Shell.SetTabBarIsVisible(currentPage, false);
+            });
+        }
+        else
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                NavigationPage.SetHasNavigationBar(currentPage, true);
+                NavigationPage.SetHasBackButton(currentPage, true);
+                Shell.SetFlyoutItemIsVisible(currentPage, true);
+                Shell.SetNavBarIsVisible(currentPage, true);
+                Shell.SetTabBarIsVisible(currentPage, true);
+            });
+        }
+        WeakReferenceMessenger.Default.Reset();
+        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
     }
 
     /// <summary>
