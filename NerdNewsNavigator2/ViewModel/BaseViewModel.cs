@@ -574,7 +574,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         {
             case true:
                 return DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait ? 2 : 3;
-            default:
+        }
+        switch (DeviceInfo.Current.Idiom == DeviceIdiom.Desktop)
+        {
+            case true:
+                return 3;
+            case false:
                 return 2;
         }
 #pragma warning restore IDE0066

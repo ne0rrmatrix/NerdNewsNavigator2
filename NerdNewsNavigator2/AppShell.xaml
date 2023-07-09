@@ -37,7 +37,7 @@
 
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform WinUI=false, Default=true}" IsVisible="{OnPlatform WinUI=false, Default=true}">
+    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true}">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"
