@@ -19,9 +19,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     public DownloadNow Dnow { get; set; } = new();
 
     /// <summary>
-	/// Gets the presented page.
-	/// </summary>
-	protected static Page CurrentPage => PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
+    /// Gets the presented page.
+    /// </summary>
+    protected static Page CurrentPage
+    {
+        get
+        {
+            return PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
+        }
+    }
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
