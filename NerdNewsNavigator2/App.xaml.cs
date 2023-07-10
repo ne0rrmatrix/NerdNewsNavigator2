@@ -13,8 +13,8 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
-    public static List<Show> AllShows { get; set; } = new();
-    public static List<Show> MostRecentShows { get; set; } = new();
+    //public static List<Show> AllShows { get; set; } = new();
+    //public static List<Show> MostRecentShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
     /// <summary>

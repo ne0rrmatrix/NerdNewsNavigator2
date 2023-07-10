@@ -32,6 +32,7 @@ public partial class DownloadedShowViewModel : SharedViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {

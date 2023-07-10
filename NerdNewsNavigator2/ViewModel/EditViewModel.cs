@@ -106,11 +106,6 @@ public partial class EditViewModel : SharedViewModel
         {
             var podcast = Podcasts.First(x => x.Url == url);
             Podcasts?.Remove(podcast);
-            var shows = FeedService.GetShows(podcast.Url, false);
-            shows.ForEach(show =>
-            {
-                App.AllShows.Remove(show);
-            });
             podcast.Deleted = true;
             await App.PositionData.UpdatePodcast(podcast);
         }

@@ -125,6 +125,9 @@ public static class FeedService
                 Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                 Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                 Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+                IsDownloading = false,
+                IsNotDownloaded = true,
+                IsDownloaded = false,
             };
             shows.Add(show);
             if (getFirstOnly)

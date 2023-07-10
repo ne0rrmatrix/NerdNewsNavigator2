@@ -56,7 +56,7 @@ public partial class SharedViewModel : BaseViewModel
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);
         Item = decodedUrl;
-        GetShows(decodedUrl, false);
+        GetShowsAsync(decodedUrl, false);
     }
 
     /// <summary>
@@ -107,15 +107,6 @@ public partial class SharedViewModel : BaseViewModel
         item.IsNotDownloaded = true;
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
-        var all = App.AllShows.Find(x => x.Url == url);
-        all.IsDownloaded = false;
-        all.IsDownloading = false;
-        all.IsNotDownloaded = true;
-        await MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            App.AllShows[App.AllShows.IndexOf(all)] = all;
-        });
-        SetDataAsync(url);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
 

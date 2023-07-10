@@ -36,10 +36,7 @@ public partial class SettingsViewModel : SharedViewModel
        {
            var podcast = await PodcastServices.UpdatePodcast();
            Podcasts.Clear();
-           App.AllShows.Clear();
            podcast.ForEach(Podcasts.Add);
-           var shows = PodcastServices.UpdateAllShows(podcast);
-           shows.ForEach(App.AllShows.Add);
            var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
            fav.ForEach(FavoriteShows.Add);
