@@ -408,6 +408,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     {
         MostRecentShows.Clear();
         IsBusy = true;
+        if (MostRecentShows.Count > 0)
+        {
+            return;
+        }
         while (App.AllShows.Count == 0)
         {
             Thread.Sleep(100);

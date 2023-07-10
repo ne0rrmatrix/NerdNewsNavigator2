@@ -15,6 +15,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
     public static Show ShowItem { get; set; } = new();
     public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
+    public static bool Started { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
@@ -101,8 +102,9 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
     /// <returns></returns>
-    public async Task GetMostRecent()
+    public static async Task GetMostRecent()
     {
+        Started = true;
         AllShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
         var downloads = await App.PositionData.GetAllDownloads();
@@ -120,6 +122,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         });
         var item = BaseViewModel.RemoveDuplicates(result);
         item.ForEach(AllShows.Add);
+        Started = false;
         Debug.WriteLine("Got Most recent shows");
     }
 

@@ -108,6 +108,8 @@ public partial class EditViewModel : SharedViewModel
             Podcasts?.Remove(podcast);
             podcast.Deleted = true;
             await App.PositionData.UpdatePodcast(podcast);
+            MostRecentShows.Clear();
+            App.AllShows.Clear();
         }
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)

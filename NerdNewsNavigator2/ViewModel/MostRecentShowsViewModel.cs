@@ -15,6 +15,10 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        if (App.AllShows.Count == 0 && !App.Started)
+        {
+            Task.Run(App.GetMostRecent);
+        }
 #if WINDOWS || ANDROID
         Task.Run(GetMostRecent);
 #endif

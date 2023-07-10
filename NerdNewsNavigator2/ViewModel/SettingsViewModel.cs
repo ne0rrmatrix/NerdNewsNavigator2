@@ -40,6 +40,9 @@ public partial class SettingsViewModel : SharedViewModel
            var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
            fav.ForEach(FavoriteShows.Add);
+           App.AllShows.Clear();
+           MostRecentShows.Clear();
+           _ = Task.Run(App.GetMostRecent);
            await MainThread.InvokeOnMainThreadAsync(async () =>
            {
                IsBusy = false;
