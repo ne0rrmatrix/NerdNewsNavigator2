@@ -386,7 +386,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             var downloads = await App.PositionData.GetAllDownloads();
             var temp = FeedService.GetShows(url, getFirstOnly);
             var item = BaseViewModel.RemoveDuplicates(temp);
-            var result = new List<Show>();
             item.ForEach(x =>
             {
                 if (downloads.Exists(y => y.Url == x.Url))
@@ -395,9 +394,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
                     x.IsNotDownloaded = false;
                     x.IsDownloading = false;
                 }
-                result.Add(x);
+                Shows.Add(x);
             });
-            result.ForEach(Shows.Add);
         });
         Logger.LogInformation("Got All Shows");
     }
@@ -409,22 +407,17 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     public async Task GetMostRecent()
     {
         MostRecentShows.Clear();
-        var temp = await App.PositionData.GetAllPodcasts();
-        var downloads = await App.PositionData.GetAllDownloads();
-        var result = new List<Show>();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        IsBusy = true;
+        while (App.AllShows.Count == 0)
         {
-            var item = FeedService.GetShows(show.Url, true);
-            if (downloads.Exists(y => y.Url == item[0].Url))
-            {
-                item[0].IsDownloaded = true;
-                item[0].IsNotDownloaded = false;
-                item[0].IsDownloading = false;
-            }
-            result.Add(item[0]);
+            Thread.Sleep(100);
+        }
+        App.AllShows.ForEach(MostRecentShows.Add);
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsBusy = false;
+
         });
-        var item = BaseViewModel.RemoveDuplicates(result);
-        item.ForEach(MostRecentShows.Add);
         Logger.LogInformation("Got Most recent shows");
     }
 

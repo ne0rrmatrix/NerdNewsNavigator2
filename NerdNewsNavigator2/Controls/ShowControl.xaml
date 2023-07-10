@@ -146,6 +146,31 @@
             </DataTemplate>
 
         </CollectionView.ItemTemplate>
+        <CollectionView.EmptyView>
 
+            <ContentView>
+
+                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
+                    <Label
+                        Padding="20"
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding IsBusy}"
+                        Text="Loading..."
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+                    <ActivityIndicator
+                        IsEnabled="True"
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"
+                        Color="Red" />
+
+                </StackLayout>
+
+            </ContentView>
+
+        </CollectionView.EmptyView>
     </CollectionView>
 </ContentView>

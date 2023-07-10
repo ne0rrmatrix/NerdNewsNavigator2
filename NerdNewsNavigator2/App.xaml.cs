@@ -13,8 +13,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
-    //public static List<Show> AllShows { get; set; } = new();
-    //public static List<Show> MostRecentShows { get; set; } = new();
+    public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
     /// <summary>
@@ -43,7 +42,10 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-
+        Task.Run(async () =>
+        {
+            await GetMostRecent();
+        });
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -94,6 +96,31 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             Debug.WriteLine("Safe shutdown completed");
         };
         return window;
+    }
+    /// <summary>
+    /// Method gets most recent episode from each podcast on twit.tv
+    /// </summary>
+    /// <returns></returns>
+    public async Task GetMostRecent()
+    {
+        AllShows.Clear();
+        var temp = await App.PositionData.GetAllPodcasts();
+        var downloads = await App.PositionData.GetAllDownloads();
+        var result = new List<Show>();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        {
+            var item = FeedService.GetShows(show.Url, true);
+            if (downloads.Exists(y => y.Url == item[0].Url))
+            {
+                item[0].IsDownloaded = true;
+                item[0].IsNotDownloaded = false;
+                item[0].IsDownloading = false;
+            }
+            result.Add(item[0]);
+        });
+        var item = BaseViewModel.RemoveDuplicates(result);
+        item.ForEach(AllShows.Add);
+        Debug.WriteLine("Got Most recent shows");
     }
 
 #if ANDROID || IOS
