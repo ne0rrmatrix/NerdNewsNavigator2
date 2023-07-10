@@ -25,14 +25,18 @@ public partial class DownloadedShowViewModel : SharedViewModel
     {
         _logger = logger;
         _logger.LogInformation("DownloadedShowViewModel started.");
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
-        ThreadPool.QueueUserWorkItem(GetDownloadedShows);
+        IsBusy = true;
+        Task.Run(async () =>
+        {
+            await GetDownloadedShows();
+            IsBusy = false;
+        });
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
