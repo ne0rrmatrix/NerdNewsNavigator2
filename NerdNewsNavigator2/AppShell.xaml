@@ -12,6 +12,10 @@
     Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
                                        Android=true,
                                        iOS=true,
+                                       WinUI=false}"
+    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
+                                       Android=true,
+                                       iOS=true,
                                        WinUI=false}">
 
     <Shell.MenuItemTemplate>

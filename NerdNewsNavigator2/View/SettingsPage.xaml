@@ -9,11 +9,10 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
 
     <Grid

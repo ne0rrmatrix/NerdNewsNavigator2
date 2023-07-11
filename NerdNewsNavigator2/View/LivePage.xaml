@@ -9,7 +9,13 @@
     Title=""
     x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
-    Shell.BackgroundColor="Black">
+    Shell.BackgroundColor="Black"
+    Shell.NavBarIsVisible="{OnPlatform WinUI=False,
+                                       Default=True}">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
+    </Shell.BackButtonBehavior>
 
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
 

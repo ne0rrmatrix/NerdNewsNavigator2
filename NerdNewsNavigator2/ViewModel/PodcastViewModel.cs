@@ -13,13 +13,8 @@ public partial class PodcastViewModel : SharedViewModel
     /// </summary>
     public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        IsBusy = true;
-
-        Task.Run(async () =>
-       {
-           await GetUpdatedPodcasts();
-           IsBusy = false;
-       });
+        Task.Run(GetUpdatedPodcasts);
+        Task.Run(GetMostRecent);
     }
 
     /// <summary>

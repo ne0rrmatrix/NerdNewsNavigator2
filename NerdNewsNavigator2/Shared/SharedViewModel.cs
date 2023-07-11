@@ -23,16 +23,15 @@ public partial class SharedViewModel : BaseViewModel
     public SharedViewModel(ILogger<SharedViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
-        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this, (r, m) =>
-        {
-            RecievedDownloadSttusMessage(m.Value, m.Now);
-        });
-
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
+        if (App.AllShows.Count == 0 && !App.Started)
+        {
+            Task.Run(GetMostRecent);
         }
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
@@ -40,15 +39,6 @@ public partial class SharedViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
         }
 #endif
-    }
-
-    public void RecievedDownloadSttusMessage(bool value, Show item)
-    {
-        if (item is not null)
-        {
-            item.IsDownloading = value;
-            _ = MainThread.InvokeOnMainThreadAsync(() => Dnow.Update(item));
-        }
     }
 
     #region Events
@@ -105,9 +95,20 @@ public partial class SharedViewModel : BaseViewModel
         item.IsDownloaded = false;
         item.Deleted = true;
         item.IsNotDownloaded = true;
-        await App.PositionData.UpdateDownload(item);
+        await App.PositionData.DeleteDownload(item);
         DownloadedShows.Remove(item);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
+        var show = GetShowForDownload(url);
+        if (show != null)
+        {
+            await Dnow.Update(show);
+        }
+        Logger.LogInformation("Failed to find a show to update");
+        _ = Task.Run(async () =>
+        {
+            await App.GetMostRecent();
+            await GetMostRecent();
+        });
     }
 
     /// <summary>
@@ -129,7 +130,10 @@ public partial class SharedViewModel : BaseViewModel
         });
 
 #if WINDOWS || MACCATALYST
-        RunDownloads(url);
+        _ = Task.Run(async () =>
+        {
+            await Downloading(url);
+        });
 #endif
 #if ANDROID || IOS
         DownloadService.CancelDownload = false;
@@ -137,7 +141,10 @@ public partial class SharedViewModel : BaseViewModel
         await NotificationService.CheckNotification();
         var requests = await NotificationService.NotificationRequests(item);
         NotificationService.AfterNotifications(requests);
-        RunDownloads(url);
+        _ = Task.Run(async () =>
+        {
+            await Downloading(url);
+        });
 #endif
     }
 

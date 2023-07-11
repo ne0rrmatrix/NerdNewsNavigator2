@@ -12,6 +12,10 @@
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded">
 
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
+    </Shell.BackButtonBehavior>
+
     <CollectionView
         Margin="5"
         HorizontalScrollBarVisibility="Never"
@@ -117,18 +121,12 @@
                         FontSize="Large"
                         HorizontalOptions="Center"
                         HorizontalTextAlignment="Center"
-                        IsVisible="{Binding IsBusy}"
                         Text="Loading..."
                         TextColor="Black"
                         VerticalOptions="Center" />
-                    <ActivityIndicator
-                        IsEnabled="True"
-                        IsRunning="{Binding IsBusy}"
-                        IsVisible="{Binding IsBusy}"
-                        Color="Red" />
+                    <ActivityIndicator IsRunning="True" Color="Red" />
 
                 </StackLayout>
-
             </ContentView>
 
         </CollectionView.EmptyView>

@@ -24,12 +24,12 @@ public static class MauiProgram
 #endif
         #region Logging
 #if DEBUG
-        builder.Logging.AddDebug();
+        //  builder.Logging.AddDebug();
 #endif
         builder.Logging
 
 #if DEBUG
-           .AddDebug()
+           //.AddDebug()
            .AddTraceLogger(
                 options =>
                 {

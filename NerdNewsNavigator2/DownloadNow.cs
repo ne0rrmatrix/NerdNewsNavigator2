@@ -11,9 +11,10 @@ public class DownloadNow
     public DownloadNow()
     {
     }
-    public void Update(Show show)
+    public async Task Update(Show show)
     {
-        var item = SetShow(show);
+        var item = await SetShowAsync(show);
+        System.Diagnostics.Debug.WriteLine($"Dnow received: {show.Title}");
         DownloadEventArgs args = new()
         {
             Item = item
@@ -28,9 +29,18 @@ public class DownloadNow
             handler(this, e);
         }
     }
-    private static Show SetShow(Show show)
+    private static async Task<Show> SetShowAsync(Show show)
     {
-        if (show.IsDownloading)
+        System.Diagnostics.Debug.WriteLine($"SetShow received {show.Title}");
+        var downloadedShows = await App.PositionData.GetAllDownloads();
+        if (downloadedShows.Find(x => x.Url == show.Url) is not null)
+        {
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = false;
+            show.IsDownloading = false;
+            return show;
+        }
+        if (App.CurrenDownloads.Find(x => x.Url == show.Url) is not null)
         {
             show.IsDownloading = true;
             show.IsDownloaded = true;
@@ -42,8 +52,8 @@ public class DownloadNow
             show.IsDownloading = false;
             show.IsDownloaded = false;
             show.IsNotDownloaded = true;
-            return show;
         }
+        return show;
     }
 }
 

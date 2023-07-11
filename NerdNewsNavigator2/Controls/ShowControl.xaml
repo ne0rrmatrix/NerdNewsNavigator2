@@ -67,7 +67,23 @@
                                     Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-
+                        <Image
+                            Grid.Row="1"
+                            Margin="10"
+                            Aspect="AspectFit"
+                            HeightRequest="320"
+                            IsVisible="{Binding IsDownloading}"
+                            WidthRequest="320">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            </Image.GestureRecognizers>
+                            <Image.Source>
+                                <UriImageSource
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="True"
+                                    Uri="{Binding Image}" />
+                            </Image.Source>
+                        </Image>
                         <Image
                             Grid.Row="1"
                             Margin="10"
@@ -157,15 +173,10 @@
                         FontSize="Large"
                         HorizontalOptions="Center"
                         HorizontalTextAlignment="Center"
-                        IsVisible="{Binding IsBusy}"
                         Text="Loading..."
                         TextColor="Black"
                         VerticalOptions="Center" />
-                    <ActivityIndicator
-                        IsEnabled="True"
-                        IsRunning="{Binding IsBusy}"
-                        IsVisible="{Binding IsBusy}"
-                        Color="Red" />
+                    <ActivityIndicator IsRunning="True" Color="Red" />
 
                 </StackLayout>
 

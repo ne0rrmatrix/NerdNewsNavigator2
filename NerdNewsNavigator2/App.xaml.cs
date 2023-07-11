@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using AngleSharp.Dom;
-
 namespace NerdNewsNavigator2;
 
 /// <summary>
@@ -12,11 +10,13 @@ namespace NerdNewsNavigator2;
 public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
 {
     #region Properties
+    private static DownloadNow Dnow { get; set; } = new();
     public static Show ShowItem { get; set; } = new();
     public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
     public static bool Started { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
+    public static List<Show> CurrenDownloads { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -43,10 +43,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-        Task.Run(async () =>
-        {
-            await GetMostRecent();
-        });
+        Task.Run(GetMostRecent);
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -107,23 +104,20 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         Started = true;
         AllShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        var downloads = await App.PositionData.GetAllDownloads();
-        var result = new List<Show>();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        var item = temp.OrderBy(x => x.Title).ToList();
+        List<Show> list = new();
+        item?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
             var item = FeedService.GetShows(show.Url, true);
-            if (downloads.Exists(y => y.Url == item[0].Url))
-            {
-                item[0].IsDownloaded = true;
-                item[0].IsNotDownloaded = false;
-                item[0].IsDownloading = false;
-            }
-            result.Add(item[0]);
+            list.Add(item[0]);
         });
-        var item = BaseViewModel.RemoveDuplicates(result);
-        item.ForEach(AllShows.Add);
+        var deDupe = BaseViewModel.RemoveDuplicates(list);
+        deDupe.ForEach(async item =>
+        {
+            await Dnow.Update(item);
+        });
+        deDupe.ForEach(AllShows.Add);
         Started = false;
-        Debug.WriteLine("Got Most recent shows");
     }
 
 #if ANDROID || IOS

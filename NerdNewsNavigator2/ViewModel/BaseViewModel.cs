@@ -9,7 +9,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>
+public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>, IRecipient<DownloadStatusMessage>
 {
     #region Properties
     public delegate void DownloadCompletedEventHandler(object sender, DownloadEventArgs e);
@@ -117,7 +117,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         Logger = logger;
         _connectivity = connectivity;
         _downloadProgress = string.Empty;
-        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
         Dnow.DownloadCompleted += DownloadNow_DownloadCompletedAsync;
         DownloadChanged += () =>
         {
@@ -129,10 +128,21 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         }
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
     }
-    public void Receive(FullScreenItemMessage message)
+
+    void IRecipient<DownloadStatusMessage>.Receive(DownloadStatusMessage message)
+    {
+        Logger.LogInformation("Received download status mesage: {Title} and value: {Value}", message.Now.Title, message.Value);
+        if (message is not null)
+        {
+            var item = message.Now;
+            item.IsDownloading = message.Value;
+            _ = Dnow.Update(item);
+        }
+    }
+    void IRecipient<FullScreenItemMessage>.Receive(FullScreenItemMessage message)
     {
         var currentPage = BaseViewModel.CurrentPage;
-        Debug.WriteLine($"Recieved message {message.Value}");
+        Logger.LogInformation("Recieved message {message}", message.Value);
         if (message.Value)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -189,62 +199,39 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             DownloadService.IsDownloading = false;
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
         });
-        var item = IsMostRecent();
-        WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, item));
     }
-    private async void DownloadNow_DownloadCompletedAsync(object sender, DownloadEventArgs e)
+    private void DownloadNow_DownloadCompletedAsync(object sender, DownloadEventArgs e)
     {
         var show = e.Item;
-        await SetProperties(show);
-        _ = Task.Run(async () =>
-        {
-            await GetDownloadedShows();
-        });
+        Logger.LogInformation("BaseViewModel: Download now received status update: {Title}", show.Title);
+        SetProperties(show);
     }
-    private async Task SetProperties(Show show)
+    private void SetProperties(Show show)
     {
-        var downloads = DownloadedShows.FirstOrDefault(x => x.Url == show.Url);
         var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
         var recent = MostRecentShows.FirstOrDefault(x => x.Url == show.Url);
-        if (downloads is not null)
-        {
-            show.IsDownloaded = true;
-            show.IsDownloading = false;
-            show.IsNotDownloaded = false;
-        }
+        var allShow = App.AllShows.Find(x => x.Url == show.Url);
+        Logger.LogInformation("Set Properties received show: {show}: value: {value}", show.Title, show.IsDownloading);
         if (recent is not null)
         {
-            recent.IsDownloaded = show.IsDownloaded;
-            recent.IsNotDownloaded = show.IsNotDownloaded;
-            recent.IsDownloading = show.IsDownloading;
-            await MainThread.InvokeOnMainThreadAsync(() =>
+            MainThread.InvokeOnMainThreadAsync(() =>
             {
-                MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
+                MostRecentShows[MostRecentShows.IndexOf(recent)] = show;
             });
         }
         if (shows is not null)
         {
-            shows.IsDownloaded = show.IsDownloaded;
-            shows.IsNotDownloaded = show.IsNotDownloaded;
-            shows.IsDownloading = show.IsDownloading;
-            await MainThread.InvokeOnMainThreadAsync(() =>
+            MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Shows[Shows.IndexOf(shows)] = shows;
+                Shows[Shows.IndexOf(shows)] = show;
             });
         }
-    }
-    public Show IsMostRecent()
-    {
-        if (MostRecentShows.ToList().Exists(x => x.IsDownloading))
+        if (allShow is not null)
         {
-            return MostRecentShows.ToList().Find(x => x.IsDownloading);
+            App.AllShows[App.AllShows.IndexOf(allShow)] = show;
         }
-        if (Shows.ToList().Exists(x => x.IsDownloading))
-        {
-            return Shows.ToList().Find(x => x.IsDownloading);
-        }
-        return new Show();
     }
+
     /// <summary>
     /// A method that download a Item to device.
     /// </summary>
@@ -257,73 +244,67 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
             return;
         }
+        var show = GetShowForDownload(url);
+        Logger.LogInformation("Getting ready to send message about download starting");
+        show.IsDownloading = true;
+        App.CurrenDownloads.Add(show);
+        WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(true, show));
         while (IsDownloading)
         {
             Thread.Sleep(5000);
             Logger.LogInformation("Waiting for download to finish");
         }
+        IsDownloading = true;
         DownloadService.CancelDownload = false;
-        await StartDownload(url);
+        await StartDownload(show);
     }
-    public async Task StartDownload(string url)
+    public async Task StartDownload(Show show)
     {
 #if WINDOWS || MACCATALYST
         _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
 #endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        Logger.LogInformation("Trying to start download of {URL}", url);
+        Logger.LogInformation("Trying to start download of {URL}", show.Url);
+        await ProcessDownloads(show);
+        TriggerProgressChanged();
+    }
+
+    public Show GetShowForDownload(string url)
+    {
         if (Shows.ToList().Exists(x => x.Url == url))
         {
             var showItem = Shows.ToList().Find(x => x.Url == url);
-            showItem.IsDownloading = true;
-            Shows[Shows.IndexOf(showItem)] = showItem;
-            Dnow.Update(showItem);
+            return showItem;
         }
         else if (MostRecentShows.ToList().Exists(x => x.Url == url))
         {
             var showItem = MostRecentShows.ToList().Find(x => x.Url == url);
-            showItem.IsDownloaded = false;
-            MostRecentShows[MostRecentShows.IndexOf(showItem)] = showItem;
-            Dnow.Update(showItem);
+            return showItem;
         }
-        var item = IsMostRecent();
-        WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(true, item));
-        await ProcessDownloads(item, url);
-        TriggerProgressChanged();
+        return new Show();
     }
-    public void RunDownloads(string url)
-    {
-        _ = Task.Run(async () =>
-        {
-            await Downloading(url);
-        });
-    }
-    public async Task ProcessDownloads(Show item, string url)
+    public async Task ProcessDownloads(Show item)
     {
         Download download = new()
         {
             Title = item.Title,
-            Url = url,
+            Url = item.Url,
             Image = item.Image,
             IsDownloaded = true,
             IsNotDownloaded = false,
             Deleted = false,
             PubDate = item.PubDate,
             Description = item.Description,
-            FileName = DownloadService.GetFileName(url)
+            FileName = DownloadService.GetFileName(item.Url)
         };
         DownloadService.IsDownloading = true;
-        var downloaded = await DownloadService.DownloadFile(download.Url);
-        if (downloaded)
-        {
-            await DownloadSuccess(download);
-        }
+        await DownloadService.DownloadFile(download.Url);
+        await DownloadSuccess(download);
     }
     public void UpdatingDownload()
     {
         DownloadService.IsDownloading = true;
-        IsDownloading = true;
         while (DownloadService.IsDownloading)
         {
             DownloadProgress = DownloadService.Status;
@@ -335,26 +316,25 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     }
     public async Task DownloadSuccess(Download download)
     {
-        Logger.LogInformation("Downloaded file: {file}", download.FileName);
-        var result = await App.PositionData.GetAllDownloads();
-        var item = result.Find(result => result.Title == download.Title);
-        if (item != null)
-        {
-            await App.PositionData.DeleteDownload(item);
-        }
-        if (DownloadService.CancelDownload)
-        {
-            File.Delete(download.FileName);
-            return;
-        }
-
-        await DownloadService.AddDownloadDatabase(download);
         IsDownloading = false;
         DownloadService.IsDownloading = false;
-        DownloadedShows.Add(download);
-        Logger.LogInformation("Settings most recent shows");
-        _ = Task.Run(async () => { await GetDownloadedShows(); });
-        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
+        var show = App.CurrenDownloads.Find(x => x.Title == download.Title);
+        Logger.LogInformation("Downloaded file: {file}", download.FileName);
+        if (DownloadService.CancelDownload)
+        {
+            App.CurrenDownloads.Remove(show);
+            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
+            Debug.WriteLine("Download Cancelled in baseviewmodel");
+        }
+        else
+        {
+            App.CurrenDownloads.Remove(show);
+            await DownloadService.AddDownloadDatabase(download);
+            DownloadedShows.Add(download);
+            Logger.LogInformation("Settings shows status");
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
+            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
+        }
         TriggerProgressChanged();
     }
     #endregion
@@ -383,19 +363,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         Shows.Clear();
         _ = Task.Run(async () =>
         {
-            var downloads = await App.PositionData.GetAllDownloads();
+            await GetDownloadedShows();
             var temp = FeedService.GetShows(url, getFirstOnly);
             var item = BaseViewModel.RemoveDuplicates(temp);
-            item.ForEach(x =>
-            {
-                if (downloads.Exists(y => y.Url == x.Url))
-                {
-                    x.IsDownloaded = true;
-                    x.IsNotDownloaded = false;
-                    x.IsDownloading = false;
-                }
-                Shows.Add(x);
-            });
+            item.ForEach(Shows.Add);
+            Shows.ToList().ForEach(async show => await Dnow.Update(show));
         });
         Logger.LogInformation("Got All Shows");
     }
@@ -406,22 +378,18 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        MostRecentShows.Clear();
-        IsBusy = true;
-        if (MostRecentShows.Count > 0)
-        {
-            return;
-        }
-        while (App.AllShows.Count == 0)
+        while (App.Started)
         {
             Thread.Sleep(100);
         }
-        App.AllShows.ForEach(MostRecentShows.Add);
-        await MainThread.InvokeOnMainThreadAsync(() =>
+        if (App.AllShows.Count == 0)
         {
-            IsBusy = false;
+            MostRecentShows.Clear();
+            await App.GetMostRecent();
+        }
 
-        });
+        App.AllShows.ToList().ForEach(MostRecentShows.Add);
+        MostRecentShows.ToList().ForEach(async (show) => await Dnow.Update(show));
         Logger.LogInformation("Got Most recent shows");
     }
 
@@ -487,8 +455,11 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     /// <returns></returns>
     public async Task GetUpdatedPodcasts()
     {
+        if (Podcasts.Count > 0)
+        {
+            return;
+        }
         Podcasts.Clear();
-
         var updates = await UpdateCheckAsync();
         var temp = await App.PositionData.GetAllPodcasts();
         if (!updates && temp.Count == 0)
@@ -577,7 +548,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         {
             return 2;
         }
-#pragma warning disable IDE0066
         switch (DeviceInfo.Current.Idiom == DeviceIdiom.Phone)
         {
             case true:
@@ -595,8 +565,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             case false:
                 return 2;
         }
-#pragma warning restore IDE0066
     }
-
     #endregion
 }

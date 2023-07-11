@@ -5,12 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    BackgroundColor="#34AAD2"
-    Shell.NavBarIsVisible="False">
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
-    </Shell.BackButtonBehavior>
+    BackgroundColor="#34AAD2">
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
 
