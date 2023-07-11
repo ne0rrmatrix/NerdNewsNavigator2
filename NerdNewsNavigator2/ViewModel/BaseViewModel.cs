@@ -315,12 +315,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
         if (File.Exists(tempFile) && DownloadService.CancelDownload)
         {
-            var item = App.Message.Find(x => x.Url == show.Url);
-            if (item is not null)
-            {
-                App.Message.Remove(item);
-                System.Diagnostics.Debug.WriteLine("Remvoed message from Que");
-            }
             Logger.LogInformation("Deleting file from cancelled download: {FileName}", download.FileName);
             File.Delete(tempFile);
         }
