@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Globalization;
+
 namespace NerdNewsNavigator2.Services;
 
 /// <summary>
@@ -157,6 +159,6 @@ public static class FeedService
     /// <returns><see cref="DateTime"/></returns>
     public static DateTime ConvertToDateTime(string dateTime)
     {
-        return DateTime.Parse(dateTime.Remove(25));
+        return DateTime.Parse(dateTime.Remove(25), new CultureInfo("en-US"));
     }
 }

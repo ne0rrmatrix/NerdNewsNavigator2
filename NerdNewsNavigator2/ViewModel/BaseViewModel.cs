@@ -9,14 +9,13 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// <c>BaseViewModel</c> is a <see cref="ViewModel"/> class that can be Inherited.
 /// </summary>
-public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>, IRecipient<DownloadStatusMessage>
+public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>
 {
     #region Properties
     public delegate void DownloadCompletedEventHandler(object sender, DownloadEventArgs e);
     public delegate void DownloadChangedHandler();
 
     public event DownloadChangedHandler DownloadChanged;
-    public DownloadNow Dnow { get; set; } = new();
 
     /// <summary>
     /// Gets the presented page.
@@ -110,14 +109,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
 
     [ObservableProperty]
     private double _progressInfos = 0;
-
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
         Logger = logger;
         _connectivity = connectivity;
         _downloadProgress = string.Empty;
-        Dnow.DownloadCompleted += DownloadNow_DownloadCompletedAsync;
         DownloadChanged += () =>
         {
             Logger.LogInformation("NavBar closed");
@@ -126,20 +123,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         {
             Logger.LogInformation("Got All Most Recent Shows");
         }
+        Task.Run(GetDownloadedShows);
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
     }
-
-    void IRecipient<DownloadStatusMessage>.Receive(DownloadStatusMessage message)
-    {
-        Logger.LogInformation("Received download status mesage: {Title} and value: {Value}", message.Now.Title, message.Value);
-        if (message is not null)
-        {
-            var item = message.Now;
-            item.IsDownloading = message.Value;
-            _ = Dnow.Update(item);
-        }
-    }
-    void IRecipient<FullScreenItemMessage>.Receive(FullScreenItemMessage message)
+    public void Receive(FullScreenItemMessage message)
     {
         var currentPage = BaseViewModel.CurrentPage;
         Logger.LogInformation("Recieved message {message}", message.Value);
@@ -167,8 +154,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
                 Shell.SetTabBarIsVisible(currentPage, true);
             });
         }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
     }
 
     /// <summary>
@@ -200,18 +185,26 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
         });
     }
-    private void DownloadNow_DownloadCompletedAsync(object sender, DownloadEventArgs e)
-    {
-        var show = e.Item;
-        Logger.LogInformation("BaseViewModel: Download now received status update: {Title}", show.Title);
-        SetProperties(show);
-    }
-    private void SetProperties(Show show)
+    public void SetProperties(Show show)
     {
         var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
         var recent = MostRecentShows.FirstOrDefault(x => x.Url == show.Url);
         var allShow = App.AllShows.Find(x => x.Url == show.Url);
+        var currentDownlaod = App.CurrenDownloads.Find(x => x.Url == show.Url);
+        var downlaods = DownloadedShows.ToList().Find(x => x.Url == show.Url);
         Logger.LogInformation("Set Properties received show: {show}: value: {value}", show.Title, show.IsDownloading);
+        if (currentDownlaod is not null)
+        {
+            show.IsDownloaded = false;
+            show.IsDownloading = true;
+            show.IsNotDownloaded = false;
+        }
+        if (downlaods is not null)
+        {
+            show.IsDownloaded = true;
+            show.IsDownloading = false;
+            show.IsNotDownloaded = false;
+        }
         if (recent is not null)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -246,9 +239,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         }
         var show = GetShowForDownload(url);
         Logger.LogInformation("Getting ready to send message about download starting");
-        show.IsDownloading = true;
         App.CurrenDownloads.Add(show);
-        WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(true, show));
+        SetProperties(show);
         while (IsDownloading)
         {
             Thread.Sleep(5000);
@@ -319,21 +311,29 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         IsDownloading = false;
         DownloadService.IsDownloading = false;
         var show = App.CurrenDownloads.Find(x => x.Title == download.Title);
-        Logger.LogInformation("Downloaded file: {file}", download.FileName);
-        if (DownloadService.CancelDownload)
+        var filename = DownloadService.GetFileName(download.Url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        if (File.Exists(tempFile) && DownloadService.CancelDownload)
         {
-            App.CurrenDownloads.Remove(show);
-            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
-            Debug.WriteLine("Download Cancelled in baseviewmodel");
+            var item = App.Message.Find(x => x.Url == show.Url);
+            if (item is not null)
+            {
+                App.Message.Remove(item);
+                System.Diagnostics.Debug.WriteLine("Remvoed message from Que");
+            }
+            Logger.LogInformation("Deleting file from cancelled download: {FileName}", download.FileName);
+            File.Delete(tempFile);
         }
         else
         {
+            Logger.LogInformation("Downloaded file: {file}", download.FileName);
             App.CurrenDownloads.Remove(show);
             await DownloadService.AddDownloadDatabase(download);
             DownloadedShows.Add(download);
+            show.IsDownloaded = true;
+            SetProperties(show);
             Logger.LogInformation("Settings shows status");
-            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, download.Title));
-            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
+            show.IsDownloaded = true;
         }
         TriggerProgressChanged();
     }
@@ -367,7 +367,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             var temp = FeedService.GetShows(url, getFirstOnly);
             var item = BaseViewModel.RemoveDuplicates(temp);
             item.ForEach(Shows.Add);
-            Shows.ToList().ForEach(async show => await Dnow.Update(show));
+            Shows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
         Logger.LogInformation("Got All Shows");
     }
@@ -387,9 +387,9 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             MostRecentShows.Clear();
             await App.GetMostRecent();
         }
-
-        App.AllShows.ToList().ForEach(MostRecentShows.Add);
-        MostRecentShows.ToList().ForEach(async (show) => await Dnow.Update(show));
+        var item = App.AllShows.OrderBy(x => x.Title).ToList();
+        item?.ForEach(MostRecentShows.Add);
+        item.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Logger.LogInformation("Got Most recent shows");
     }
 

@@ -15,7 +15,5 @@ public partial class ShowViewModel : SharedViewModel
     /// </summary>
     public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this);
     }
 }

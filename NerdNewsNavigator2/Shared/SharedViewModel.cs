@@ -98,11 +98,6 @@ public partial class SharedViewModel : BaseViewModel
         await App.PositionData.DeleteDownload(item);
         DownloadedShows.Remove(item);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
-        var show = GetShowForDownload(url);
-        if (show != null)
-        {
-            await Dnow.Update(show);
-        }
         Logger.LogInformation("Failed to find a show to update");
         _ = Task.Run(async () =>
         {
@@ -149,9 +144,15 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public static void Cancel()
+    public void Cancel(string url)
     {
         DownloadService.CancelDownload = true;
+        var temp = App.CurrenDownloads.ToList().Find(x => x.Url == url);
+        App.CurrenDownloads.Remove(temp);
+        temp.IsDownloading = false;
+        temp.IsNotDownloaded = true;
+        temp.IsDownloaded = false;
+        SetProperties(temp);
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();

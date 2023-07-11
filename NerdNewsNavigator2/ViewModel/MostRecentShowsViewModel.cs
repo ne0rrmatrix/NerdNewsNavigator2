@@ -15,8 +15,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<DownloadStatusMessage>(this);
 #if WINDOWS || ANDROID
         Task.Run(GetMostRecent);
 #endif

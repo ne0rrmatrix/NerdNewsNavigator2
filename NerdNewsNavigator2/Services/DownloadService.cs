@@ -74,7 +74,7 @@ public static class DownloadService
             {
                 if (favorites?.Find(x => x.Url == url) is null)
                 {
-                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {url}");
+                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
                     File.Delete(tempFile);
                 }
                 else
@@ -135,7 +135,6 @@ public static class DownloadService
             show.IsDownloading = false;
             show.IsDownloaded = true;
             show.IsNotDownloaded = true;
-            WeakReferenceMessenger.Default.Send(new DownloadStatusMessage(false, show));
         }
     }
 

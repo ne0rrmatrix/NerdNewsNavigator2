@@ -10,7 +10,6 @@ namespace NerdNewsNavigator2;
 public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
 {
     #region Properties
-    private static DownloadNow Dnow { get; set; } = new();
     public static Show ShowItem { get; set; } = new();
     public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
@@ -43,7 +42,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-        Task.Run(GetMostRecent);
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -104,18 +103,13 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         Started = true;
         AllShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        var item = temp.OrderBy(x => x.Title).ToList();
         List<Show> list = new();
-        item?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
             var item = FeedService.GetShows(show.Url, true);
             list.Add(item[0]);
         });
         var deDupe = BaseViewModel.RemoveDuplicates(list);
-        deDupe.ForEach(async item =>
-        {
-            await Dnow.Update(item);
-        });
         deDupe.ForEach(AllShows.Add);
         Started = false;
     }
@@ -221,14 +215,15 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             Message.Add(newMessage);
         }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
+        //WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
+        //WeakReferenceMessenger.Default.Reset();
+        //WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
     }
     public void Receive(UrlItemMessage message)
     {
         ShowItem = message.ShowItem;
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
+        //WeakReferenceMessenger.Default.Reset();
+        //WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
     }
     #endregion
 }
