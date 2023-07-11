@@ -215,15 +215,10 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             Message.Add(newMessage);
         }
-        //WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
-        //WeakReferenceMessenger.Default.Reset();
-        //WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
     }
     public void Receive(UrlItemMessage message)
     {
         ShowItem = message.ShowItem;
-        //WeakReferenceMessenger.Default.Reset();
-        //WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
     }
     #endregion
 }
