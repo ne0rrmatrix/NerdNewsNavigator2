@@ -9,11 +9,11 @@
     FlyoutWidth="200"
     Shell.BackgroundColor="#34AAD2"
     Shell.FlyoutBackgroundColor="LightGray"
-    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
+    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=false,
                                        Android=true,
                                        iOS=true,
                                        WinUI=false}"
-    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
+    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=false,
                                        Android=true,
                                        iOS=true,
                                        WinUI=false}">

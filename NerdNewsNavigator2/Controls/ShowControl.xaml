@@ -47,7 +47,8 @@
                                 <Label
                                     Grid.Row="0"
                                     FontAttributes="Bold"
-                                    FontSize="10"
+                                    FontSize="{OnPlatform Default=10,
+                                                          MacCatalyst=16}"
                                     LineBreakMode="WordWrap"
                                     Text="{Binding Title}"
                                     TextColor="Black"
@@ -108,13 +109,15 @@
 
                                     <Label
                                         FontAttributes="Bold"
-                                        FontSize="12"
+                                        FontSize="{OnPlatform Default=12,
+                                                              MacCatalyst=16}"
                                         Text="Published: "
                                         TextColor="Black"
                                         VerticalTextAlignment="Center" />
                                     <Label
                                         FontAttributes="Bold"
-                                        FontSize="12"
+                                        FontSize="{OnPlatform Default=12,
+                                                              MacCatalyst=16}"
                                         Text="{Binding PubDate}"
                                         TextColor="Black"
                                         VerticalTextAlignment="Center" />
@@ -123,7 +126,8 @@
                                         Margin="5"
                                         BackgroundColor="Green"
                                         FontAttributes="Bold"
-                                        FontSize="12"
+                                        FontSize="{OnPlatform Default=12,
+                                                              MacCatalyst=16}"
                                         HeightRequest="35"
                                         IsVisible="{Binding IsNotDownloaded}"
                                         Text="Download"
@@ -137,7 +141,8 @@
                                         Margin="5"
                                         BackgroundColor="Red"
                                         FontAttributes="Bold"
-                                        FontSize="12"
+                                        FontSize="{OnPlatform Default=12,
+                                                              MacCatalyst=16}"
                                         HeightRequest="35"
                                         IsVisible="{Binding IsDownloading}"
                                         Text="Cancel"
@@ -151,7 +156,8 @@
 
                                 <Label
                                     Grid.Row="3"
-                                    FontSize="10"
+                                    FontSize="{OnPlatform Default=12,
+                                                          MacCatalyst=16}"
                                     LineBreakMode="WordWrap"
                                     Text="{Binding Description}"
                                     TextColor="Black"

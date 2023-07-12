@@ -11,10 +11,11 @@
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform WinUI=False,
+                                       MacCatalyst=false,
                                        Default=True}">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, MacCatalyst=false, Default=True}" />
     </Shell.BackButtonBehavior>
 
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />

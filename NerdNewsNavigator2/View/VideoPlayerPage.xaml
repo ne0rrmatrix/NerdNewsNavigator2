@@ -10,6 +10,7 @@
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform Default=True,
+                                       MacCatalyst=false,
                                        WinUI=False}">
 
     <media:MediaControl
