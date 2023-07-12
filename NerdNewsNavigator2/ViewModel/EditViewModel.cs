@@ -19,6 +19,8 @@ public partial class EditViewModel : SharedViewModel
     public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
+        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
+        ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
     }
 
     #region Methods

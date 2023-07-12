@@ -37,6 +37,8 @@ public partial class SettingsViewModel : SharedViewModel
            App.AllShows.Clear();
            MostRecentShows.Clear();
            _ = Task.Run(App.GetMostRecent);
+           _ = Task.Run(GetMostRecent);
+           _ = Task.Run(GetUpdatedPodcasts);
            await MainThread.InvokeOnMainThreadAsync(async () =>
            {
                IsBusy = false;
