@@ -12,7 +12,7 @@
     Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
 
     <Grid
@@ -21,7 +21,7 @@
         HorizontalOptions="Center"
         RowDefinitions="*"
         VerticalOptions="Center">
-       
+
         <ScrollView
             Grid.Row="1"
             HorizontalOptions="Center"
