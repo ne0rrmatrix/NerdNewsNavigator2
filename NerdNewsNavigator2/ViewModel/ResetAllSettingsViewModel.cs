@@ -21,8 +21,8 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     {
         _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
-        _ = ResetAll();
         _messenger = messenger;
+        ThreadPool.QueueUserWorkItem(async state => await ResetAll());
     }
 
     #region Methods
@@ -41,10 +41,11 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
 
 #if WINDOWS || MACCATALYST
-        await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(PodcastPage)}"); });
 #endif
 #if IOS || ANDROID
-        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+
+        await MainThread.InvokeOnMainThreadAsync(async () => {await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");});
 #endif
     }
     private void DeleleFiles(string[] files)
