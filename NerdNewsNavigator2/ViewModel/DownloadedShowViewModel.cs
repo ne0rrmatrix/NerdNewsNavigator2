@@ -31,11 +31,9 @@ public partial class DownloadedShowViewModel : SharedViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
-        IsBusy = true;
         Task.Run(async () =>
         {
             await GetDownloadedShows();
-            IsBusy = false;
         });
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)

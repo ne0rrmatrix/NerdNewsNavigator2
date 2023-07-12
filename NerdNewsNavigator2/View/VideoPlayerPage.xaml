@@ -10,8 +10,7 @@
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform Default=True,
-                                       WinUI=False}"
-    Unloaded="ContentPage_Unloaded">
+                                       WinUI=False}">
 
     <media:MediaControl
         x:Name="mediaElement"

@@ -144,14 +144,6 @@ public partial class VideoPlayerPage : ContentPage
     }
 
 #nullable disable
-    private void ContentPage_Unloaded(object sender, EventArgs e)
-    {
-        if (mediaElement is not null)
-        {
-            _logger.LogInformation("Page unloaded. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-            mediaElement.Handler?.DisconnectHandler();
-        }
-    }
 
     #endregion
 

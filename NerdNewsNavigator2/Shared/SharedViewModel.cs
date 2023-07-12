@@ -29,10 +29,6 @@ public partial class SharedViewModel : BaseViewModel
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
-        if (App.AllShows.Count == 0 && !App.Started)
-        {
-            Task.Run(GetMostRecent);
-        }
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
@@ -46,7 +42,7 @@ public partial class SharedViewModel : BaseViewModel
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);
         Item = decodedUrl;
-        GetShowsAsync(decodedUrl, false);
+        ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
     }
 
     /// <summary>
@@ -113,7 +109,7 @@ public partial class SharedViewModel : BaseViewModel
     /// <returns></returns>
     [RelayCommand]
 #if ANDROID || IOS
-    public async Task Download(string url)
+    public void Download(string url)
 #endif
 #if WINDOWS || MACCATALYST
     public void Download(string url)
@@ -124,23 +120,10 @@ public partial class SharedViewModel : BaseViewModel
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
 
-#if WINDOWS || MACCATALYST
         _ = Task.Run(async () =>
         {
             await Downloading(url);
         });
-#endif
-#if ANDROID || IOS
-        DownloadService.CancelDownload = false;
-        var item = Shows.First(x => x.Url == url);
-        await NotificationService.CheckNotification();
-        var requests = await NotificationService.NotificationRequests(item);
-        NotificationService.AfterNotifications(requests);
-        _ = Task.Run(async () =>
-        {
-            await Downloading(url);
-        });
-#endif
     }
 
     [RelayCommand]
@@ -184,6 +167,21 @@ public partial class SharedViewModel : BaseViewModel
         var item = "ms-appdata:///LocalCache/Local/" + DownloadService.GetFileName(url);
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
+    }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task PlayGrid(string url)
+    {
+        var recentItem = MostRecentShows.FirstOrDefault(x => x.Url == url);
+        var showItem = Shows.FirstOrDefault(x => x.Url == url);
+        if ((showItem is not null && showItem.IsDownloaded) || (recentItem is not null && recentItem.IsDownloaded))
+        {
+            await Play(url);
+        }
     }
     #endregion
 }

@@ -64,14 +64,14 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             }));
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
-                new NotificationCategory(NotificationCategoryType.None)
+                new NotificationCategory(NotificationCategoryType.Status)
                 {
                     ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
                     {
-                        new NotificationAction(101)
+                        new NotificationAction(103)
                         {
-                            Title ="Close Notification",
-                        },
+                            Title = "Play",
+                        }
                     })
                 }
             }));
@@ -131,30 +131,9 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                     DownloadService.CancelDownload = true;
                 }
                 break;
-            case 101:
-                Stop = true;
-                LocalNotificationCenter.Current.Cancel(message.Id);
-                break;
-            default:
-                if (message.Cancel)
-                {
-                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
-                    break;
-                }
-                if (e.Request.Cancel())
-                {
-                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
-                    break;
-                }
-                if (e.Request.NotificationId == message.Id)
-                {
-                    var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
-                    Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-                }
-                else
-                {
-                    Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-                }
+            case 103:
+                var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
+                Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
                 break;
         }
     }
@@ -215,10 +194,12 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             Message.Add(newMessage);
         }
+        WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
     }
     public void Receive(UrlItemMessage message)
     {
         ShowItem = message.ShowItem;
+        WeakReferenceMessenger.Default.Unregister<UrlItemMessage>(message);
     }
     #endregion
 }

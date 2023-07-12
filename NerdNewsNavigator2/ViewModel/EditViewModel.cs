@@ -21,7 +21,7 @@ public partial class EditViewModel : SharedViewModel
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        _ = GetUpdatedPodcasts();
+        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
