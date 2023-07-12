@@ -19,6 +19,7 @@ public partial class SharedViewModel : BaseViewModel
     /// </summary>
     [ObservableProperty]
     private string _url;
+
     #endregion
     public SharedViewModel(ILogger<SharedViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
@@ -64,7 +65,7 @@ public partial class SharedViewModel : BaseViewModel
 
     }
 
-#endregion
+    #endregion
 
     #region Shared ViewModel code
 
@@ -113,13 +114,11 @@ public partial class SharedViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-#if ANDROID || IOS
     public void Download(string url)
-#endif
-#if WINDOWS || MACCATALYST
-    public void Download(string url)
-#endif
     {
+#if ANDROID
+        _ = EditViewModel.CheckAndRequestForeGroundPermission();
+#endif
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();

@@ -184,7 +184,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             IsDownloading = false;
             IsBusy = false;
             DownloadService.IsDownloading = false;
+            DownloadService.Progress = 0.00;
+            DownloadProgress = string.Empty;
+            Title = string.Empty;
+#if WINDOWS
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+#endif
         });
 
     }
