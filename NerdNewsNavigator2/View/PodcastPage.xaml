@@ -13,7 +13,7 @@
     Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, MacCatalyst=false, Default=True}" />
+        <BackButtonBehavior IsEnabled="false" IsVisible="false" />
     </Shell.BackButtonBehavior>
 
     <Grid>

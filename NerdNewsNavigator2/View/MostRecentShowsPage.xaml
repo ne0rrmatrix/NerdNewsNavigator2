@@ -10,10 +10,11 @@
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="{OnPlatform Default=false,
+                                       MacCatalyst=true}">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="{OnPlatform Default=false, MacCatalyst=true}" IsVisible="{OnPlatform Default=false, MacCatalyst=true}" />
     </Shell.BackButtonBehavior>
     <media:ShowControl Source="{Binding MostRecentShows}" />
 
