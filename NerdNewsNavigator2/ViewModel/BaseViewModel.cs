@@ -115,6 +115,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         Logger = logger;
         _connectivity = connectivity;
         _downloadProgress = string.Empty;
+        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
         DownloadChanged += () =>
         {
             Logger.LogInformation("NavBar closed");
@@ -154,6 +155,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
                 Shell.SetTabBarIsVisible(currentPage, true);
             });
         }
+        WeakReferenceMessenger.Default.Unregister<FullScreenItemMessage>(message);
     }
 
     /// <summary>
