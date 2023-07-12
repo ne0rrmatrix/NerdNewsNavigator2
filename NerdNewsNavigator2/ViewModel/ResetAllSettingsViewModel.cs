@@ -45,7 +45,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
 #endif
 #if IOS || ANDROID
 
-        await MainThread.InvokeOnMainThreadAsync(async () => {await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");});
+        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
 #endif
     }
     private void DeleleFiles(string[] files)
