@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Windows.Input;
+
 namespace NerdNewsNavigator2.Shared;
 
 [QueryProperty("Url", "Url")]
@@ -20,6 +22,9 @@ public partial class SharedViewModel : BaseViewModel
     [ObservableProperty]
     private string _url;
 
+    [ObservableProperty]
+    private bool _isRefreshing;
+
     #endregion
     public SharedViewModel(ILogger<SharedViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
@@ -37,6 +42,29 @@ public partial class SharedViewModel : BaseViewModel
         }
 #endif
     }
+    #region Commands
+    public ICommand PullToRefreshCommand => new Command(() =>
+    {
+        Debug.WriteLine("Starting refresh");
+        IsRefreshing = true;
+        RefreshData();
+        IsRefreshing = false;
+        Debug.WriteLine("Refresh done");
+    });
+    public Task RefreshData()
+    {
+        IsBusy = true;
+        App.AllShows.Clear();
+        Shows.Clear();
+        MostRecentShows.Clear();
+        Podcasts.Clear();
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
+        ThreadPool.QueueUserWorkItem(async state => await GetUpdatedPodcasts());
+        GetShowsAsync(Url, false);
+        IsBusy = false;
+        return Task.CompletedTask;
+    }
+    #endregion
 
     #region Events
     partial void OnUrlChanged(string oldValue, string newValue)

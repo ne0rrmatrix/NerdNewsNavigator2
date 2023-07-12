@@ -120,10 +120,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         {
             Logger.LogInformation("NavBar closed");
         };
-        if (Podcasts.Count > 0)
-        {
-            Logger.LogInformation("Got All Most Recent Shows");
-        }
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
     }
@@ -337,7 +333,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         {
             DownloadProgress = DownloadService.Status;
             ProgressInfos = DownloadService.Progress;
-            OnPropertyChanged(nameof(ProgressInfos));
             Title = DownloadProgress;
             Thread.Sleep(1000);
         }

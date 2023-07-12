@@ -15,106 +15,114 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <CollectionView
-        Margin="5"
-        HorizontalScrollBarVisibility="Never"
-        ItemsSource="{Binding DownloadedShows}"
-        VerticalScrollBarVisibility="Never">
+    <Grid>
 
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
-        </CollectionView.ItemsLayout>
+        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
 
-        <CollectionView.ItemTemplate>
+            <CollectionView
+                Margin="5"
+                HorizontalScrollBarVisibility="Never"
+                ItemsSource="{Binding DownloadedShows}"
+                VerticalScrollBarVisibility="Never">
 
-            <DataTemplate x:DataType="model:Download">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
+                </CollectionView.ItemsLayout>
 
-                <Frame
-                    Margin="{OnPlatform WinUI=90,
-                                        MacCatalyst=90,
-                                        Android=90,
-                                        iOS=90}"
-                    BackgroundColor="White"
-                    WidthRequest="{OnPlatform WinUI=370,
-                                              MacCatalyst=370,
-                                              Android=370,
-                                              iOS=320}">
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
-                        </Grid.GestureRecognizers>
-                        <Label
-                            Grid.Row="0"
-                            FontAttributes="Bold"
-                            FontSize="12"
-                            HeightRequest="35"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Title}"
-                            TextColor="Black"
-                            WidthRequest="300" />
-                        <Image
-                            Grid.Row="1"
-                            Margin="10"
-                            Aspect="AspectFit"
-                            HeightRequest="320"
-                            WidthRequest="320">
-                            <Image.Source>
-                                <UriImageSource
-                                    CacheValidity="10:00:00:00"
-                                    CachingEnabled="true"
-                                    Uri="{Binding Image}" />
-                            </Image.Source>
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
-                            </Image.GestureRecognizers>
-                        </Image>
+                <CollectionView.ItemTemplate>
 
-                        <HorizontalStackLayout Grid.Row="2" Padding="10">
+                    <DataTemplate x:DataType="model:Download">
 
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="Published: "
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                Text="{Binding PubDate}"
-                                TextColor="Black"
-                                VerticalTextAlignment="Center" />
-                            <Button
-                                Margin="20"
-                                BackgroundColor="Red"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                HeightRequest="35"
-                                Text="Delete"
-                                TextColor="White">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                        <Frame
+                            Margin="{OnPlatform WinUI=90,
+                                                MacCatalyst=90,
+                                                Android=90,
+                                                iOS=90}"
+                            BackgroundColor="White"
+                            WidthRequest="{OnPlatform WinUI=370,
+                                                      MacCatalyst=370,
+                                                      Android=370,
+                                                      iOS=320}">
+                            <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
+                                </Grid.GestureRecognizers>
+                                <Label
+                                    Grid.Row="0"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    HeightRequest="35"
+                                    LineBreakMode="WordWrap"
+                                    Text="{Binding Title}"
+                                    TextColor="Black"
+                                    WidthRequest="300" />
+                                <Image
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    Aspect="AspectFit"
+                                    HeightRequest="320"
+                                    WidthRequest="320">
+                                    <Image.Source>
+                                        <UriImageSource
+                                            CacheValidity="10:00:00:00"
+                                            CachingEnabled="true"
+                                            Uri="{Binding Image}" />
+                                    </Image.Source>
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
+                                    </Image.GestureRecognizers>
+                                </Image>
 
-                        </HorizontalStackLayout>
+                                <HorizontalStackLayout Grid.Row="2" Padding="10">
 
-                        <Label
-                            Grid.Row="3"
-                            Margin="10"
-                            FontSize="10"
-                            LineBreakMode="WordWrap"
-                            Text="{Binding Description}"
-                            TextColor="Black"
-                            TextType="Html"
-                            WidthRequest="300" />
-                    </Grid>
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="12"
+                                        Text="Published: "
+                                        TextColor="Black"
+                                        VerticalTextAlignment="Center" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="12"
+                                        Text="{Binding PubDate}"
+                                        TextColor="Black"
+                                        VerticalTextAlignment="Center" />
+                                    <Button
+                                        Margin="20"
+                                        BackgroundColor="Red"
+                                        FontAttributes="Bold"
+                                        FontSize="12"
+                                        HeightRequest="35"
+                                        Text="Delete"
+                                        TextColor="White">
+                                        <Button.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
+                                        </Button.GestureRecognizers>
+                                    </Button>
 
-                </Frame>
+                                </HorizontalStackLayout>
 
-            </DataTemplate>
+                                <Label
+                                    Grid.Row="3"
+                                    Margin="10"
+                                    FontSize="10"
+                                    LineBreakMode="WordWrap"
+                                    Text="{Binding Description}"
+                                    TextColor="Black"
+                                    TextType="Html"
+                                    WidthRequest="300" />
+                            </Grid>
 
-        </CollectionView.ItemTemplate>
+                        </Frame>
 
-    </CollectionView>
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </RefreshView>
+
+    </Grid>
 
 </ContentPage>
