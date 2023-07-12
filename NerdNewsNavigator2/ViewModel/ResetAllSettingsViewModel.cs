@@ -33,7 +33,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     private async Task ResetAll()
     {
         DownloadService.CancelDownload = true;
-        IsBusy = true;
         await DeleteAllAsync();
         SetVariables();
         await GetUpdatedPodcasts();
@@ -41,8 +40,12 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
 
-        IsBusy = false;
+#if WINDOWS || MACCATALYST
         await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
+#endif
+#if IOS || ANDROID
+        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
+#endif
     }
     private void DeleleFiles(string[] files)
     {
