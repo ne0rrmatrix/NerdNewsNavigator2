@@ -122,14 +122,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         switch (e.ActionId)
         {
             case 100:
-                if (e.Request.NotificationId == message.Id)
-                {
-                    DownloadService.CancelDownload = true;
-                }
-                else
-                {
-                    DownloadService.CancelDownload = true;
-                }
+                DownloadService.CancelDownload = true;
                 break;
             case 103:
                 var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));

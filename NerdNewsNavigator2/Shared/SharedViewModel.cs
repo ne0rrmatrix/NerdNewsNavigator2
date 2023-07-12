@@ -32,7 +32,7 @@ public partial class SharedViewModel : BaseViewModel
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+            ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
         }
 #endif
     }
@@ -123,6 +123,8 @@ public partial class SharedViewModel : BaseViewModel
         _ = Task.Run(async () =>
         {
             await Downloading(url);
+            await GetDownloadedShows();
+            await GetMostRecent();
         });
     }
 

@@ -15,12 +15,6 @@ public partial class SettingsViewModel : SharedViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
     }
 
     /// <summary>

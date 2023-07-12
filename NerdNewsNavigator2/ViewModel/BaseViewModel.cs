@@ -184,6 +184,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             DownloadService.IsDownloading = false;
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
         });
+
     }
     public void SetProperties(Show show)
     {
@@ -284,7 +285,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
 #endif
         IsBusy = true;
-        ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
+        ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
         Logger.LogInformation("Trying to start download of {URL}", show.Url);
         await ProcessDownloads(show);
         TriggerProgressChanged();
@@ -322,7 +323,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         await DownloadService.DownloadFile(download.Url);
         await DownloadSuccess(download);
     }
-    public void UpdatingDownload()
+    public void UpdatingDownloadAsync()
     {
         DownloadService.IsDownloading = true;
         while (DownloadService.IsDownloading)
@@ -332,6 +333,27 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             OnPropertyChanged(nameof(ProgressInfos));
             Title = DownloadProgress;
             Thread.Sleep(1000);
+        }
+        if (DownloadService.CancelDownload)
+        {
+            App.CurrenDownloads.Clear();
+            Logger.LogInformation("Starting cleanup");
+            Shows?.ToList().ForEach(x =>
+            {
+                if (x.IsDownloading)
+                {
+                    x.IsDownloading = false;
+                    SetProperties(x);
+                }
+            });
+            MostRecentShows?.ToList().ForEach(x =>
+            {
+                if (x.IsDownloading)
+                {
+                    x.IsDownloading = false;
+                    SetProperties(x);
+                }
+            });
         }
     }
     public async Task DownloadSuccess(Download download)
@@ -344,18 +366,21 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         if (File.Exists(tempFile) && DownloadService.CancelDownload)
         {
             Logger.LogInformation("Deleting file from cancelled download: {FileName}", download.FileName);
-            Shows?.ToList().ForEach(SetProperties);
-            MostRecentShows?.ToList().ForEach(SetProperties);
             File.Delete(tempFile);
         }
         else
         {
             Logger.LogInformation("Downloaded file: {file}", download.FileName);
-            App.CurrenDownloads.Remove(show);
+            App.CurrenDownloads.Clear();
+            show.IsNotDownloaded = false;
+            show.IsDownloaded = true;
+            show.IsDownloading = false;
             Logger.LogInformation("Removed show from current downloads");
             await DownloadService.AddDownloadDatabase(download);
             DownloadedShows.Add(download);
             SetProperties(show);
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+            MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         }
         TriggerProgressChanged();
     }
@@ -387,6 +412,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         var item = BaseViewModel.RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
         Shows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows.Where(x => App.CurrenDownloads.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Logger.LogInformation("Got All Shows");
     }
 
@@ -408,6 +434,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         var item = App.AllShows.OrderBy(x => x.Title).ToList();
         item?.ForEach(MostRecentShows.Add);
         item.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        item.Where(x => App.CurrenDownloads.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Logger.LogInformation("Got Most recent shows");
     }
 

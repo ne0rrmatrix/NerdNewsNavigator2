@@ -19,15 +19,6 @@ public partial class EditViewModel : SharedViewModel
     public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        Orientation = OnDeviceOrientationChange();
-        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
     }
 
     #region Methods

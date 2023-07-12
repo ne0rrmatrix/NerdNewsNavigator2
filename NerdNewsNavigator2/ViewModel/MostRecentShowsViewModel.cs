@@ -15,12 +15,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-#if WINDOWS || ANDROID
         ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
-#endif
-#if IOS || MACCATALYST
-        //_ = GetMostRecent();
-         ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
-#endif
     }
 }

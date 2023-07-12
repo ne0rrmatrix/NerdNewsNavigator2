@@ -36,7 +36,8 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         IsBusy = true;
         await DeleteAllAsync();
         SetVariables();
-
+        await GetUpdatedPodcasts();
+        await GetMostRecent();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
 
@@ -67,6 +68,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         App.AllShows.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
+        App.CurrenDownloads.Clear();
         _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()
