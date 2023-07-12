@@ -13,6 +13,8 @@ public partial class MediaControl : ContentView
     private static bool s_fullScreen = false;
 
     public bool FullScreen { get; set; } = false;
+    #endregion
+    #region Bindably Properties
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl));
     public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
@@ -135,6 +137,7 @@ public partial class MediaControl : ContentView
         _ = Moved();
         BtnPLay.Source = "pause.png";
     }
+    #region Methods
     public void SeekTo(TimeSpan position)
     {
         mediaElement.Pause();
@@ -156,6 +159,18 @@ public partial class MediaControl : ContentView
         mediaElement.Stop();
         BtnPLay.Source = "pause.png";
     }
+
+    /// <summary>
+    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    private static string TimeConverter(TimeSpan time)
+    {
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return interval.ToString();
+    }
+    #endregion
 
     #region Events
 
@@ -259,10 +274,14 @@ public partial class MediaControl : ContentView
     [RelayCommand]
     public void Tapped(string url)
     {
+#if ANDROID
         mediaElement.Stop();
-        mediaElement.Source = url;
+#endif
+        mediaElement.Source = new Uri(url);
         MenuIsVisible = false;
+#if ANDROID
         mediaElement.Play();
+#endif
         OnPropertyChanged(nameof(MenuIsVisible));
     }
 
@@ -284,10 +303,12 @@ public partial class MediaControl : ContentView
     {
         if (e.Direction == SwipeDirection.Up)
         {
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             DeviceService.FullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             DeviceService.RestoreScreen();
         }
     }
@@ -296,11 +317,13 @@ public partial class MediaControl : ContentView
         if (s_fullScreen)
         {
             DeviceService.RestoreScreen();
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             s_fullScreen = false;
         }
         else
         {
             DeviceService.FullScreen();
+            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             s_fullScreen = true;
         }
     }
@@ -334,15 +357,4 @@ public partial class MediaControl : ContentView
         }
     }
     #endregion
-
-    /// <summary>
-    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
-    /// </summary>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    private static string TimeConverter(TimeSpan time)
-    {
-        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
-        return interval.ToString();
-    }
 }

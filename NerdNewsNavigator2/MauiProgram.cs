@@ -23,10 +23,13 @@ public static class MauiProgram
         ;
 #endif
         #region Logging
-
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
         builder.Logging
 
 #if DEBUG
+           //.AddDebug()
            .AddTraceLogger(
                 options =>
                 {
@@ -97,6 +100,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
+        builder.Services.AddTransient<SharedViewModel>();
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);

@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="EditPage"/>
 /// </summary>
-public partial class EditViewModel : BaseViewModel
+public partial class EditViewModel : SharedViewModel
 {
     /// <summary>
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
@@ -19,17 +19,11 @@ public partial class EditViewModel : BaseViewModel
     public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        Orientation = OnDeviceOrientationChange();
-        _ = GetUpdatedPodcasts();
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
+        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
+        ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
     }
 
+    #region Methods
     /// <summary>
     /// Method checks for required Permission for Android Notifications and requests them if needed
     /// </summary>
@@ -48,30 +42,6 @@ public partial class EditViewModel : BaseViewModel
         status = await Permissions.RequestAsync<AndroidPermissions>();
         return status;
     }
-
-    /// <summary>
-    /// Method Deletes a Podcast from the database.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task DeletePodcast(string url)
-    {
-        var exists = Podcasts.ToList().Exists(x => x.Url == url);
-        if (exists)
-        {
-            var podcast = Podcasts.First(x => x.Url == url);
-            Podcasts?.Remove(podcast);
-            podcast.Deleted = true;
-            await App.PositionData.UpdatePodcast(podcast);
-        }
-        var favoriteShow = await App.PositionData.GetAllFavorites();
-        if (favoriteShow is null || favoriteShow.Count == 0)
-        {
-            return;
-        }
-        await DeleteFavorites(favoriteShow, url);
-    }
     private async Task DeleteFavorites(List<Favorites> favoriteShow, string url)
     {
         var item = favoriteShow.ToList().Exists(x => x.Url == url);
@@ -81,37 +51,6 @@ public partial class EditViewModel : BaseViewModel
             var fav = FavoriteShows.First(x => x.Url == url);
             favoriteShow?.Remove(fav);
         }
-    }
-    /// <summary>
-    /// A Method that adds a favourite to the database.
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task<bool> AddToFavorite(string url)
-    {
-        var status = await CheckAndRequestForeGroundPermission();
-        if (PermissionStatus.Granted == status)
-        {
-            Logger.LogInformation("Notification Permission Granted");
-        }
-        else if (PermissionStatus.Denied == status)
-        {
-            Logger.LogInformation("Notification Permission Denied");
-        }
-        if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
-        {
-            return false;
-        }
-        else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
-        {
-            var item = Podcasts.First(x => x.Url == url);
-            await ProcessFavoritesAsync(item);
-            await ProcessPodcastsAsync(item);
-
-            return SetPreferences();
-        }
-        return false;
     }
     private bool SetPreferences()
     {
@@ -144,6 +83,66 @@ public partial class EditViewModel : BaseViewModel
         FavoriteShows.Add(favorite);
         await FavoriteService.AddFavoriteToDatabase(favorite);
     }
+    #endregion
+
+    #region Events
+    /// <summary>
+    /// Method Deletes a Podcast from the database.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task DeletePodcast(string url)
+    {
+        var exists = Podcasts.ToList().Exists(x => x.Url == url);
+        if (exists)
+        {
+            var podcast = Podcasts.First(x => x.Url == url);
+            Podcasts?.Remove(podcast);
+            podcast.Deleted = true;
+            await App.PositionData.UpdatePodcast(podcast);
+            MostRecentShows.Clear();
+            App.AllShows.Clear();
+        }
+        var favoriteShow = await App.PositionData.GetAllFavorites();
+        if (favoriteShow is null || favoriteShow.Count == 0)
+        {
+            return;
+        }
+        await DeleteFavorites(favoriteShow, url);
+    }
+
+    /// <summary>
+    /// A Method that adds a favourite to the database.
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task<bool> AddToFavorite(string url)
+    {
+        var status = await CheckAndRequestForeGroundPermission();
+        if (PermissionStatus.Granted == status)
+        {
+            Logger.LogInformation("Notification Permission Granted");
+        }
+        else if (PermissionStatus.Denied == status)
+        {
+            Logger.LogInformation("Notification Permission Denied");
+        }
+        if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
+        {
+            return false;
+        }
+        else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
+        {
+            var item = Podcasts.First(x => x.Url == url);
+            await ProcessFavoritesAsync(item);
+            await ProcessPodcastsAsync(item);
+
+            return SetPreferences();
+        }
+        return false;
+    }
 
     /// <summary>
     /// A Method that removes a favourite from the database.
@@ -173,4 +172,5 @@ public partial class EditViewModel : BaseViewModel
         await FavoriteService.RemoveFavoriteFromDatabase(url);
         return true;
     }
+    #endregion
 }

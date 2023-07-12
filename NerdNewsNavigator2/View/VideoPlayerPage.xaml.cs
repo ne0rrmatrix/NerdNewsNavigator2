@@ -11,7 +11,6 @@ namespace NerdNewsNavigator2.View;
 public partial class VideoPlayerPage : ContentPage
 {
     #region Properties
-    public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
 
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
@@ -55,14 +54,18 @@ public partial class VideoPlayerPage : ContentPage
     private async void Seek(object? sender, EventArgs e)
     {
         Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = string.Empty;
+        Pos.Title = App.ShowItem.Title;
         var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
+        var result = positionList.ToList().Find(x => x.Title == App.ShowItem.Title);
         if (result is not null)
         {
             Pos = result;
+            Debug.WriteLine(result.Title);
+            Pos.Title = result.Title;
+            Pos.SavedPosition = result.SavedPosition;
             _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
             mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.Play();
         }
         else
         {
@@ -81,24 +84,25 @@ public partial class VideoPlayerPage : ContentPage
     /// <param name="e"></param>
     private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
     {
-        Pos.Title = string.Empty;
-        Pos.SavedPosition = TimeSpan.Zero;
-        var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.FirstOrDefault(x => x.Title == Pos.Title);
-        if (result is not null)
-        {
-            Pos = result;
-            _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
-        }
-        else
-        {
-            _logger.LogInformation("Could not find saved position");
-        }
-
         if (e.NewState == MediaElementState.Opening)
         {
-            mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.ShouldKeepScreenOn = true;
+            Pos.Title = string.Empty;
+            Pos.SavedPosition = TimeSpan.Zero;
+            var positionList = await App.PositionData.GetAllPositions();
+            var result = positionList.ToList().Find(x => x.Title == Pos.Title);
+            if (result is not null)
+            {
+                Pos = result;
+                mediaElement.Pause();
+                mediaElement.SeekTo(Pos.SavedPosition);
+                mediaElement.ShouldKeepScreenOn = true;
+                mediaElement.Play();
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+            }
+            else
+            {
+                _logger.LogInformation("Could not find saved position");
+            }
             _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
             mediaElement.StateChanged += MediaStopped;
         }
@@ -118,7 +122,6 @@ public partial class VideoPlayerPage : ContentPage
                 mediaElement.ShouldKeepScreenOn = false;
                 _logger.LogInformation("ShouldKeepScreenOn set to false.");
                 break;
-
             case MediaElementState.Paused:
                 if (mediaElement.Position > Pos.SavedPosition)
                 {
@@ -128,28 +131,9 @@ public partial class VideoPlayerPage : ContentPage
                 }
                 break;
         }
-        switch (e.PreviousState)
-        {
-            case MediaElementState.Playing:
-                if (mediaElement.Position < Pos.SavedPosition)
-                {
-                    Pos.SavedPosition = mediaElement.Position;
-                    _logger.LogInformation("Finished Seeking: {Position}", mediaElement.Position);
-                    await App.PositionData.UpdatePosition(Pos);
-                }
-                break;
-        }
     }
 
 #nullable disable
-    private void ContentPage_Unloaded(object sender, EventArgs e)
-    {
-        if (mediaElement is not null)
-        {
-            _logger.LogInformation("Page unloaded. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-            mediaElement.Handler?.DisconnectHandler();
-        }
-    }
 
     #endregion
 

@@ -25,6 +25,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
 
+    #region Events
     /// <summary>
     /// Method navigates user to Main Page.
     /// </summary>
@@ -88,4 +89,5 @@ public partial class AppShell : Shell
         FlyoutIsPresented = false;
         await Shell.Current.GoToAsync($"{nameof(DownloadedShowPage)}");
     }
+    #endregion
 }

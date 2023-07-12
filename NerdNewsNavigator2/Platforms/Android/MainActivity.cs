@@ -27,15 +27,17 @@ public class MainActivity : MauiAppCompatActivity
             }
         });
     }
-
     protected override void OnCreate(Bundle savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
     }
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-    { System.Diagnostics.Debug.WriteLine(e.ToString()); }
+    {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+    }
 
+    #region Notification Service Methods
     private void StartService()
     {
         var serviceIntent = new Intent(this, typeof(AutoStartService));
@@ -55,4 +57,5 @@ public class MainActivity : MauiAppCompatActivity
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }
+    #endregion
 }

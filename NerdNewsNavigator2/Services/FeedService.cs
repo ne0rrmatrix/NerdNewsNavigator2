@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Globalization;
+
 namespace NerdNewsNavigator2.Services;
 
 /// <summary>
@@ -125,6 +127,9 @@ public static class FeedService
                 Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
                 Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
                 Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+                IsDownloading = false,
+                IsNotDownloaded = true,
+                IsDownloaded = false,
             };
             shows.Add(show);
             if (getFirstOnly)
@@ -154,6 +159,6 @@ public static class FeedService
     /// <returns><see cref="DateTime"/></returns>
     public static DateTime ConvertToDateTime(string dateTime)
     {
-        return DateTime.Parse(dateTime.Remove(25));
+        return DateTime.Parse(dateTime.Remove(25), new CultureInfo("en-US"));
     }
 }

@@ -27,6 +27,7 @@ public static class DownloadService
         var items = await App.PositionData.GetAllDownloads();
         if (items.Exists(x => x.Url == download.Url))
         {
+            Debug.WriteLine("Download already exists. Not adding download to database");
             return false;
         }
         await App.PositionData.AddDownload(download);
@@ -73,7 +74,7 @@ public static class DownloadService
             {
                 if (favorites?.Find(x => x.Url == url) is null)
                 {
-                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {url}");
+                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
                     File.Delete(tempFile);
                 }
                 else
@@ -106,39 +107,35 @@ public static class DownloadService
     }
 
     /// <summary>
-    /// A method that download a show to device.
+    /// A method that download a Item to device.
     /// </summary>
     /// <param name="show"></param>
     /// <returns></returns>
-    public static async Task<bool> Downloading(Show show)
+    public static async Task Downloading(Show show)
     {
         Download download = new()
         {
             Title = show.Title,
             Url = show.Url,
             Image = show.Image,
+            IsDownloaded = true,
+            IsNotDownloaded = false,
+            Deleted = false,
             PubDate = show.PubDate,
             Description = show.Description,
             FileName = GetFileName(show.Url)
         };
 
         var downloaded = await DownloadFile(download.Url);
-        if (downloaded && !CancelDownload)
+        if (downloaded)
         {
-            download.IsDownloaded = true;
-            download.IsNotDownloaded = false;
-            download.Deleted = false;
-            await AddDownloadDatabase(download);
-            return true;
-        }
 
-        if (CancelDownload)
-        {
-            Debug.WriteLine("Deleting file");
-            DeleteFile(download.Url);
-            return false;
+            await AddDownloadDatabase(download);
+            Debug.WriteLine("Trying to Add Downlaoded Show to Database");
+            show.IsDownloading = false;
+            show.IsDownloaded = true;
+            show.IsNotDownloaded = true;
         }
-        return false;
     }
 
     /// <summary>
@@ -156,7 +153,7 @@ public static class DownloadService
         IsDownloading = false;
         _ = Task.Run(() =>
         {
-            favoriteShows.ForEach(x =>
+            favoriteShows.ForEach(async x =>
             {
                 var show = FeedService.GetShows(x.Url, true);
                 while (IsDownloading)
@@ -165,7 +162,6 @@ public static class DownloadService
                     if (CancelDownload)
                     {
                         IsDownloading = false;
-                        CancelDownload = false;
                         return;
                     }
                     Debug.WriteLine("Waiting for download to finish");
@@ -175,21 +171,22 @@ public static class DownloadService
                     Autodownloading = false;
                     return;
                 }
-                _ = Task.Run(async () =>
+                else if (!downloadedShows.Exists(y => y.Title == x.Title))
                 {
                     await ProcessDownloadAsync(downloadedShows, show[0]);
-                    IsDownloading = false;
-                });
+                }
+                IsDownloading = false;
             });
         });
     }
 
     private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
     {
-        if (!downloadedShows.Exists(y => y.Url == show.Url))
+        var item = downloadedShows.Find(x => x.Url == show.Url);
+        if (item is null)
         {
             IsDownloading = true;
-#if ANDROID
+#if ANDROID || IOS
             _ = Task.Run(async () =>
             {
                 await NotificationService.CheckNotification();

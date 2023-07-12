@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A Class that extends <see cref="BaseViewModel"/> for <see cref="SettingsViewModel"/>
 /// </summary>
-public partial class SettingsViewModel : BaseViewModel
+public partial class SettingsViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/>
@@ -15,13 +15,8 @@ public partial class SettingsViewModel : BaseViewModel
     public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
     }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
@@ -30,18 +25,21 @@ public partial class SettingsViewModel : BaseViewModel
     public async Task UpdatePodcasts()
     {
         await Toast.Make("Updating Podcasts.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        IsBusy = true;
         ThreadPool.QueueUserWorkItem(async (state) =>
        {
-           _ = await PodcastServices.UpdatePodcast();
+           var podcast = await PodcastServices.UpdatePodcast();
            Podcasts.Clear();
-
-           _ = await PodcastServices.UpdateFavoritesAsync();
+           podcast.ForEach(Podcasts.Add);
+           var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
-
-           await MainThread.InvokeOnMainThreadAsync(async () =>
-           {
-               await Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-           });
+           fav.ForEach(FavoriteShows.Add);
+           App.AllShows.Clear();
+           MostRecentShows.Clear();
+           _ = Task.Run(App.GetMostRecent);
+           _ = Task.Run(GetMostRecent);
+           _ = Task.Run(GetUpdatedPodcasts);
+           IsBusy = false;
        });
     }
 }

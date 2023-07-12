@@ -5,16 +5,13 @@
 namespace NerdNewsNavigator2.Services;
 public static class NotificationService
 {
-#if ANDROID
+#if ANDROID || IOS
     private static int Id { get; set; } = 0;
     public static async Task CheckNotification()
     {
-        var isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
-        await LocalNotificationCenter.Current.RequestNotificationPermission();
-        while (!isNotifified)
+        if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
         {
-            Thread.Sleep(100);
-            isNotifified = await LocalNotificationCenter.Current.AreNotificationsEnabled();
+            await LocalNotificationCenter.Current.RequestNotificationPermission();
         }
     }
     public static void AfterNotifications(NotificationRequest request)
@@ -28,11 +25,13 @@ public static class NotificationService
                 {
                     break;
                 }
+#if ANDROID
                 request.Description = $"Download Progress {(int)DownloadService.Progress}%";
                 request.Android.ProgressBarProgress = (int)DownloadService.Progress;
                 request.Silent = true;
                 request.NotificationId = Id;
                 await LocalNotificationCenter.Current.Show(request);
+#endif
                 Thread.Sleep(1000);
             }
             if (DownloadService.CancelDownload)
@@ -53,7 +52,7 @@ public static class NotificationService
                 request.Android.ProgressBarProgress = 100;
                 request.Android.Ongoing = false;
                 request.Description = "Download Complete";
-                request.CategoryType = NotificationCategoryType.None;
+                request.CategoryType = NotificationCategoryType.Status;
                 if (!App.Stop)
                 {
                     await LocalNotificationCenter.Current.Show(request);
@@ -70,6 +69,10 @@ public static class NotificationService
             NotificationId = Id,
             Title = item?.Title,
             CategoryType = NotificationCategoryType.Progress,
+#if IOS
+            Description = "Donwloading",
+#endif
+#if ANDROID
             Description = $"Download Progress {(int)DownloadService.Progress}",
             Android = new AndroidOptions
             {
@@ -84,6 +87,7 @@ public static class NotificationService
                 AutoCancel = true,
                 ProgressBarMax = 100,
             },
+#endif
         };
         await LocalNotificationCenter.Current.Show(request);
         return request;

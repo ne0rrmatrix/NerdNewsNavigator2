@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
-public partial class DownloadedShowViewModel : BaseViewModel
+public partial class DownloadedShowViewModel : SharedViewModel
 {
     #region Properties
     /// <summary>
@@ -24,19 +24,6 @@ public partial class DownloadedShowViewModel : BaseViewModel
         : base(logger, connectivity)
     {
         _logger = logger;
-        _logger.LogInformation("DownloadedShowViewModel started.");
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
-        Orientation = OnDeviceOrientationChange();
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-        }
-#if WINDOWS || MACCATALYST || IOS
-        if (DownloadService.IsDownloading)
-        {
-            ThreadPool.QueueUserWorkItem(state => { UpdatingDownload(); });
-        }
-#endif
     }
 
     /// <summary>
@@ -45,7 +32,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url)
+    public async Task PlayDownloadedShow(string url)
     {
 #if ANDROID || IOS || MACCATALYST
         var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
@@ -57,40 +44,6 @@ public partial class DownloadedShowViewModel : BaseViewModel
         _logger.LogInformation("Url being passed is: {name}", item);
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
 #endif
-    }
-
-    /// <summary>
-    /// Deletes file and removes it from database.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-
-    [RelayCommand]
-    public async Task Delete(string url)
-    {
-        var item = DownloadedShows.First(x => x.Url == url);
-        if (item is null)
-        {
-            return;
-        }
-        var filename = DownloadService.GetFileName(item.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            _logger.LogInformation("Deleted file {file}", tempFile);
-            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
-        }
-        else
-        {
-            _logger.LogInformation("File {file} was not found in file system.", tempFile);
-        }
-        item.IsDownloaded = false;
-        item.Deleted = true;
-        item.IsNotDownloaded = true;
-        await App.PositionData.UpdateDownload(item);
-        DownloadedShows.Remove(item);
-        _logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
     }
 }
 

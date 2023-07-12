@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="LivePage"/>
 /// </summary>
-public partial class LiveViewModel : BaseViewModel
+public partial class LiveViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LiveViewModel"/>
@@ -15,9 +15,5 @@ public partial class LiveViewModel : BaseViewModel
     /// </summary>
     public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-        }
     }
 }

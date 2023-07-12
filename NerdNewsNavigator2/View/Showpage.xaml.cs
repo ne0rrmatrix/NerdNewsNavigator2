@@ -18,10 +18,15 @@ public partial class ShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+    /// <summary>
+    /// Method sets screen to normal screen size.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-#if WINDOWS || IOS || MACCATALYST
+#if WINDOWS || MACCATALYST
         if (DownloadService.IsDownloading)
         {
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
