@@ -5,15 +5,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
     Title="NerdNewsNavigator"
-    FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="200"
-    Shell.NavBarIsVisible="False">
+    Shell.BackgroundColor="#34AAD2"
+    Shell.FlyoutBackgroundColor="LightGray"
+    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
+                                       Android=true,
+                                       iOS=true,
+                                       WinUI=false}"
+    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
+                                       Android=true,
+                                       iOS=true,
+                                       WinUI=false}">
 
     <Shell.MenuItemTemplate>
-
         <DataTemplate>
-
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
@@ -21,6 +27,8 @@
                 <Image
                     BackgroundColor="LightGray"
                     HeightRequest="50"
+                    IsVisible="{OnPlatform Default=True,
+                                           MacCatalyst=false}"
                     Source="{Binding Icon}"
                     WidthRequest="50" />
                 <Label
@@ -31,13 +39,34 @@
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>
-
         </DataTemplate>
 
     </Shell.MenuItemTemplate>
 
-    <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
+    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:PodcastPage}"
+            Icon="house.png" />
+        <ShellContent
+            Title="Recent"
+            ContentTemplate="{DataTemplate local:MostRecentShowsPage}"
+            Icon="history.png" />
+        <ShellContent
+            Title="Downloads"
+            ContentTemplate="{DataTemplate local:DownloadedShowPage}"
+            Icon="download.png" />
+        <ShellContent
+            Title="Live"
+            ContentTemplate="{DataTemplate local:LivePage}"
+            Icon="live_broadcasting.png" />
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Icon="settings.png" />
+    </TabBar>
 
+    <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
     <MenuItem
         Clicked="GotoFirstPage"
         IconImageSource="house.png"
@@ -58,5 +87,7 @@
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
         Text="Settings" />
+
+
 
 </Shell>

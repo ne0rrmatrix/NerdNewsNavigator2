@@ -9,11 +9,10 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
 
     <Grid
@@ -23,9 +22,28 @@
         RowDefinitions="*"
         VerticalOptions="Center">
 
+        <StackLayout
+            HorizontalOptions="CenterAndExpand"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="CenterAndExpand">
+
+            <Label
+                Padding="20"
+                FontSize="Large"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Loading..."
+                TextColor="Black"
+                VerticalOptions="Center" />
+
+            <ActivityIndicator IsRunning="True" Color="Red" />
+
+        </StackLayout>
+
         <ScrollView
             Grid.Row="1"
             HorizontalOptions="Center"
+            IsVisible="{Binding IsNotBusy}"
             VerticalOptions="FillAndExpand"
             VerticalScrollBarVisibility="Never">
 

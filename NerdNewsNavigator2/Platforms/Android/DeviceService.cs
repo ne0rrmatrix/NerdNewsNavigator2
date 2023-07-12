@@ -11,6 +11,7 @@ using Views = AndroidX.Core.View;
 namespace NerdNewsNavigator2.Services;
 internal static partial class DeviceService
 {
+    #region Full Screen Methods
     public static partial void RestoreScreen()
     {
         var activity = Platform.CurrentActivity;
@@ -43,4 +44,5 @@ internal static partial class DeviceService
         windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
         windowInsetsControllerCompat.Hide(types);
     }
+    #endregion
 }

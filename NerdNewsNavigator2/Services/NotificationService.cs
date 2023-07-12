@@ -52,7 +52,7 @@ public static class NotificationService
                 request.Android.ProgressBarProgress = 100;
                 request.Android.Ongoing = false;
                 request.Description = "Download Complete";
-                request.CategoryType = NotificationCategoryType.None;
+                request.CategoryType = NotificationCategoryType.Status;
                 if (!App.Stop)
                 {
                     await LocalNotificationCenter.Current.Show(request);

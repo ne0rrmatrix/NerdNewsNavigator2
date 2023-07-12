@@ -26,7 +26,6 @@ public static class PodcastServices
         item.ForEach(x => podcasts.Add(FeedService.GetFeed(x)));
         return podcasts;
     }
-
     #endregion
 
     #region Update Podcast list
@@ -60,11 +59,21 @@ public static class PodcastServices
     {
         var res = new List<Podcast>();
         await App.PositionData.DeleteAllPodcasts();
-
+        await App.PositionData.DeleteAll();
         // add all podcasts
         newPodcasts.ForEach(res.Add);
 
         AddToDatabase(res);
+        return res;
+    }
+    public static List<Show> UpdateAllShows(List<Podcast> newPodcasts)
+    {
+        var res = new List<Show>();
+        newPodcasts.ForEach((podcast) =>
+        {
+            var item = FeedService.GetShows(podcast.Url, false);
+            item.ForEach(res.Add);
+        });
         return res;
     }
     public static async Task<List<Favorites>> UpdateFavoritesAsync()
@@ -96,7 +105,21 @@ public static class PodcastServices
     /// <returns>nothing</returns>
     public static void AddToDatabase(List<Podcast> podcast)
     {
-        podcast.ForEach(async (x) => await App.PositionData.AddPodcast(x));
+        podcast.ForEach(async pod =>
+        {
+            Position pos = new()
+            {
+                Title = pod.Title,
+                Description = pod.Description,
+                Url = pod.Url,
+                Image = pod.Image,
+                Download = pod.Download,
+                Link = pod.Link,
+                PubDate = pod.PubDate
+            };
+            await App.PositionData.AddPosition(pos);
+            await App.PositionData.AddPodcast(pod);
+        });
     }
 
     /// <summary>

@@ -7,16 +7,22 @@ namespace NerdNewsNavigator2;
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
 {
+    #region Properties
+    public static Show ShowItem { get; set; } = new();
+    public static List<Show> AllShows { get; set; } = new();
     public static bool Stop { get; set; } = false;
+    public static bool Started { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
+    public static List<Show> CurrenDownloads { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
     public static PositionDataBase PositionData { get; private set; }
 
     private readonly IMessenger _messenger;
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
@@ -27,12 +33,16 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         InitializeComponent();
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-
+        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
         MainPage = new AppShell();
         _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
         // Database Dependancy Injection END
+        LogController.InitializeNavigation(
+           page => MainPage!.Navigation.PushModalAsync(page),
+           () => MainPage!.Navigation.PopModalAsync());
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -54,25 +64,54 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             }));
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
-                new NotificationCategory(NotificationCategoryType.None)
+                new NotificationCategory(NotificationCategoryType.Status)
                 {
                     ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
                     {
-                        new NotificationAction(101)
+                        new NotificationAction(103)
                         {
-                            Title ="Close Notification",
-                        },
+                            Title = "Play",
+                        }
                     })
                 }
             }));
 #endif
-        LogController.InitializeNavigation(
-            page => MainPage!.Navigation.PushModalAsync(page),
-            () => MainPage!.Navigation.PopModalAsync());
+
         ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
         });
+    }
+
+    protected override Window CreateWindow(IActivationState activationState)
+    {
+        var window = base.CreateWindow(activationState);
+        window.Destroying += (s, e) =>
+        {
+            DownloadService.CancelDownload = true;
+            Thread.Sleep(500);
+            Debug.WriteLine("Safe shutdown completed");
+        };
+        return window;
+    }
+    /// <summary>
+    /// Method gets most recent episode from each podcast on twit.tv
+    /// </summary>
+    /// <returns></returns>
+    public static async Task GetMostRecent()
+    {
+        Started = true;
+        AllShows.Clear();
+        var temp = await App.PositionData.GetAllPodcasts();
+        List<Show> list = new();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        {
+            var item = FeedService.GetShows(show.Url, true);
+            list.Add(item[0]);
+        });
+        var deDupe = BaseViewModel.RemoveDuplicates(list);
+        deDupe.ForEach(AllShows.Add);
+        Started = false;
     }
 
 #if ANDROID || IOS
@@ -83,39 +122,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         switch (e.ActionId)
         {
             case 100:
-                if (e.Request.NotificationId == message.Id)
-                {
-                    DownloadService.CancelDownload = true;
-                }
-                else
-                {
-                    DownloadService.CancelDownload = true;
-                }
+                DownloadService.CancelDownload = true;
                 break;
-            case 101:
-                Stop = true;
-                LocalNotificationCenter.Current.Cancel(message.Id);
-                break;
-            default:
-                if (message.Cancel)
-                {
-                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
-                    break;
-                }
-                if (e.Request.Cancel())
-                {
-                    LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
-                    break;
-                }
-                if (e.Request.NotificationId == message.Id)
-                {
-                    var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
-                    Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-                }
-                else
-                {
-                    Shell.Current.GoToAsync($"{nameof(PodcastPage)}");
-                }
+            case 103:
+                var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
+                Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
                 break;
         }
     }
@@ -176,10 +187,13 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             Message.Add(newMessage);
         }
-        WeakReferenceMessenger.Default.Reset();
-        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
     }
-
+    public void Receive(UrlItemMessage message)
+    {
+        ShowItem = message.ShowItem;
+        WeakReferenceMessenger.Default.Unregister<UrlItemMessage>(message);
+    }
     #endregion
 }
 

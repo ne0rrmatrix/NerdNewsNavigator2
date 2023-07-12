@@ -31,6 +31,7 @@ public partial class SettingsPage : ContentPage
 
     private LogController Log { get; set; } = new();
     #endregion
+
     /// <summary>
     /// Initializes a new instance of <see cref="SettingsPage"/>
     /// </summary>
@@ -42,7 +43,23 @@ public partial class SettingsPage : ContentPage
         _messenger = messenger;
     }
 
-    #region Buttons
+    /// <summary>
+    /// Method validates URL <see cref="Uri"/> <see cref="string"/>
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private static bool ValidateUrl(string url)
+    {
+        if (url == null || url.Trim() == string.Empty)
+        {
+            return false;
+        }
+        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
+        return rgx.IsMatch(url);
+    }
+
+    #region Events
     /// <summary>
     /// The Method controls Adding a <see cref="Podcast"/> to <see cref="List{T}"/> of class <see cref="Podcast"/>
     /// </summary>
@@ -202,21 +219,5 @@ public partial class SettingsPage : ContentPage
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         }
 #endif
-    }
-
-    /// <summary>
-    /// Method validates URL <see cref="Uri"/> <see cref="string"/>
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    private static bool ValidateUrl(string url)
-    {
-        if (url == null || url.Trim() == string.Empty)
-        {
-            return false;
-        }
-        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-        return rgx.IsMatch(url);
     }
 }

@@ -7,8 +7,7 @@ namespace NerdNewsNavigator2.Model;
 /// <summary>
 /// <c>Show</c> is a Class for storing Shows
 /// </summary>
-/// 
-[Table("Show")]
+[Table("AllShows")]
 public class Show : Shared
 {
     public bool IsDownloading { get; set; } = false;

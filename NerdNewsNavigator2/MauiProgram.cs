@@ -29,7 +29,7 @@ public static class MauiProgram
         builder.Logging
 
 #if DEBUG
-           .AddDebug()
+           //.AddDebug()
            .AddTraceLogger(
                 options =>
                 {
@@ -100,6 +100,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
+        builder.Services.AddTransient<SharedViewModel>();
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
