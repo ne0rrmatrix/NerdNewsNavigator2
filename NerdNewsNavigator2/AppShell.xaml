@@ -27,6 +27,8 @@
                 <Image
                     BackgroundColor="LightGray"
                     HeightRequest="50"
+                    IsVisible="{OnPlatform Default=True,
+                                           MacCatalyst=false}"
                     Source="{Binding Icon}"
                     WidthRequest="50" />
                 <Label
@@ -41,7 +43,7 @@
 
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true}">
+    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"

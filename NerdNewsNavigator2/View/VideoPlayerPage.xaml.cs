@@ -93,14 +93,16 @@ public partial class VideoPlayerPage : ContentPage
             if (result is not null)
             {
                 Pos = result;
+                mediaElement.Pause();
+                mediaElement.SeekTo(Pos.SavedPosition);
+                mediaElement.ShouldKeepScreenOn = true;
+                mediaElement.Play();
                 _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
             }
             else
             {
                 _logger.LogInformation("Could not find saved position");
             }
-            mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.ShouldKeepScreenOn = true;
             _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
             mediaElement.StateChanged += MediaStopped;
         }
@@ -120,23 +122,11 @@ public partial class VideoPlayerPage : ContentPage
                 mediaElement.ShouldKeepScreenOn = false;
                 _logger.LogInformation("ShouldKeepScreenOn set to false.");
                 break;
-
             case MediaElementState.Paused:
                 if (mediaElement.Position > Pos.SavedPosition)
                 {
                     Pos.SavedPosition = mediaElement.Position;
                     _logger.LogInformation("Paused: {Position}", mediaElement.Position);
-                    await App.PositionData.UpdatePosition(Pos);
-                }
-                break;
-        }
-        switch (e.PreviousState)
-        {
-            case MediaElementState.Playing:
-                if (mediaElement.Position < Pos.SavedPosition)
-                {
-                    Pos.SavedPosition = mediaElement.Position;
-                    _logger.LogInformation("Finished Seeking: {Position}", mediaElement.Position);
                     await App.PositionData.UpdatePosition(Pos);
                 }
                 break;

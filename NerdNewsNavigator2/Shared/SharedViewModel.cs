@@ -42,7 +42,12 @@ public partial class SharedViewModel : BaseViewModel
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);
         Item = decodedUrl;
+#if WINDOWS || MACCATALYST || ANDROID
         ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
+#endif
+#if IOS
+        GetShowsAsync(decodedUrl, false);
+#endif
     }
 
     /// <summary>
@@ -59,7 +64,7 @@ public partial class SharedViewModel : BaseViewModel
 
     }
 
-    #endregion
+#endregion
 
     #region Shared ViewModel code
 
