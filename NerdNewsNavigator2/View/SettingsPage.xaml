@@ -22,6 +22,24 @@
         RowDefinitions="*"
         VerticalOptions="Center">
 
+        <StackLayout
+            HorizontalOptions="CenterAndExpand"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="CenterAndExpand">
+
+            <Label
+                Padding="20"
+                FontSize="Large"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Loading..."
+                TextColor="Black"
+                VerticalOptions="Center" />
+
+            <ActivityIndicator IsRunning="True" Color="Red" />
+
+        </StackLayout>
+
         <ScrollView
             Grid.Row="1"
             HorizontalOptions="Center"
