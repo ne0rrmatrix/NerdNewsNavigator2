@@ -8,3 +8,33 @@ public class DownloadEventArgs : EventArgs
 {
     public Show Item { get; set; }
 }
+
+public class DownloaddCompleted
+{
+    public event EventHandler<DownloadEventArgs> DownloadFinished;
+
+    /// <summary>
+    /// Update Download Status of Current Download
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="isDownloading"></param> Is <see cref="Show"/> downloading
+    /// <param name="isDownloaded"></param> Is <see cref="Show"/> downloaded
+    public void Update(string url, bool isDownloading, bool isDownloaded)
+    {
+        DownloadEventArgs args = new();
+        args.Item.Url = url;
+        args.Item.IsDownloading = isDownloading;
+        args.Item.IsDownloaded = isDownloaded;
+        OnDownloadFinished(args);
+    }
+
+    protected virtual void OnDownloadFinished(DownloadEventArgs e)
+    {
+        var handler = DownloadFinished;
+        if (handler is not null)
+        {
+            handler(this, e);
+        }
+    }
+
+}

@@ -24,6 +24,7 @@ public partial class SharedViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _isRefreshing;
+    public static DownloaddCompleted CurrentDownload { get; set; } = new();
 
     #endregion
     public SharedViewModel(ILogger<SharedViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
@@ -31,6 +32,7 @@ public partial class SharedViewModel : BaseViewModel
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
+        CurrentDownload.DownloadFinished += Completed;
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -41,6 +43,12 @@ public partial class SharedViewModel : BaseViewModel
             ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
         }
 #endif
+    }
+
+    public void Completed(object sender, DownloadEventArgs e)
+    {
+        e.Item.IsDownloading = false;
+        SetProperties(e.Item);
     }
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>

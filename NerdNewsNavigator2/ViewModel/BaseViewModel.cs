@@ -12,10 +12,6 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItemMessage>
 {
     #region Properties
-    public delegate void DownloadCompletedEventHandler(object sender, DownloadEventArgs e);
-    public delegate void DownloadChangedHandler();
-
-    public event DownloadChangedHandler DownloadChanged;
 
     /// <summary>
     /// Gets the presented page.
@@ -116,10 +112,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         _connectivity = connectivity;
         _downloadProgress = string.Empty;
         WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
-        DownloadChanged += () =>
-        {
-            Logger.LogInformation("NavBar closed");
-        };
+
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
     }
@@ -174,7 +167,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     #region Download Tasks
     private void TriggerProgressChanged()
     {
-        DownloadChanged();
         MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsDownloading = false;

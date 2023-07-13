@@ -123,6 +123,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         {
             case 100:
                 DownloadService.CancelDownload = true;
+                SharedViewModel.CurrentDownload.Update(message.Url, false, false);
                 break;
             case 103:
                 var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
