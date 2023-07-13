@@ -200,14 +200,12 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
-            Logger.LogInformation("Finished setting properties for current downloads");
         }
         if (downloads is not null)
         {
             show.IsDownloaded = true;
             show.IsDownloading = false;
             show.IsNotDownloaded = false;
-            Logger.LogInformation("Finished setting properties for downloaded show");
         }
         if (recent is not null)
         {
@@ -222,7 +220,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             {
                 Shows[Shows.IndexOf(shows)] = show;
             });
-            Logger.LogInformation("Set Shows to - IsDownloading: {isDownlaoding}, IsNotdownloading: {IsNotDownloading}, IsDownloaded: {Isdownloaded} ", show.IsDownloading, show.IsNotDownloaded, show.IsDownloaded);
         }
         if (allShow is not null)
         {
@@ -243,7 +240,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             return;
         }
         var show = GetShowForDownload(url);
-        Logger.LogInformation("Getting ready to send message about download starting");
         App.CurrenDownloads.Add(show);
         SetProperties(show);
         while (IsDownloading)
@@ -281,7 +277,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
 #endif
         IsBusy = true;
         ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
-        Logger.LogInformation("Trying to start download of {URL}", show.Url);
         await ProcessDownloads(show);
         TriggerProgressChanged();
     }
@@ -331,7 +326,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         if (DownloadService.CancelDownload)
         {
             App.CurrenDownloads.Clear();
-            Logger.LogInformation("Starting cleanup");
             Shows?.ToList().ForEach(x =>
             {
                 if (x.IsDownloading)
@@ -369,7 +363,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             show.IsNotDownloaded = false;
             show.IsDownloaded = true;
             show.IsDownloading = false;
-            Logger.LogInformation("Removed show from current downloads");
             await DownloadService.AddDownloadDatabase(download);
             DownloadedShows.Add(download);
             SetProperties(show);

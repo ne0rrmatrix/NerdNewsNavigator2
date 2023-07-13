@@ -15,6 +15,9 @@ public partial class SharedViewModel : BaseViewModel
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     private ILogger<BaseViewModel> Logger { get; set; }
+
+    [ObservableProperty]
+    private string _downloadItem;
     private string Item { get; set; }
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
@@ -47,17 +50,19 @@ public partial class SharedViewModel : BaseViewModel
 
     public void Completed(object sender, DownloadEventArgs e)
     {
-        e.Item.IsDownloading = false;
-        SetProperties(e.Item);
+        DownloadItem = e.Item.Url;
+        var item = GetShowForDownload(DownloadItem);
+        item.IsDownloading = false;
+        item.IsDownloaded = false;
+        item.IsNotDownloaded = true;
+        SetProperties(item);
     }
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
     {
-        Debug.WriteLine("Starting refresh");
         IsRefreshing = true;
         RefreshData();
         IsRefreshing = false;
-        Debug.WriteLine("Refresh done");
     });
     public Task RefreshData()
     {
@@ -75,6 +80,14 @@ public partial class SharedViewModel : BaseViewModel
     #endregion
 
     #region Events
+    partial void OnDownloadItemChanged(string oldValue, string newValue)
+    {
+        var item = GetShowForDownload(DownloadItem);
+        item.IsDownloading = false;
+        item.IsDownloaded = false;
+        item.IsNotDownloaded = true;
+        SetProperties(item);
+    }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         var decodedUrl = HttpUtility.UrlDecode(newValue);

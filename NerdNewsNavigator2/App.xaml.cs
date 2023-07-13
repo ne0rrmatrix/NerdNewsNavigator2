@@ -122,6 +122,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         switch (e.ActionId)
         {
             case 100:
+                CurrenDownloads.Clear();
                 DownloadService.CancelDownload = true;
                 SharedViewModel.CurrentDownload.Update(message.Url, false, false);
                 break;

@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2;
 
 public class DownloadEventArgs : EventArgs
 {
-    public Show Item { get; set; }
+    public Show Item { get; set; } = new();
 }
 
 public class DownloaddCompleted
