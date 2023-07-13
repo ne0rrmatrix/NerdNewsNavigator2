@@ -55,6 +55,7 @@ public partial class SharedViewModel : BaseViewModel
         item.IsDownloading = false;
         item.IsDownloaded = false;
         item.IsNotDownloaded = true;
+        // Update for cancel button if navigating back to a page you have already navigated too.
         SetProperties(item);
     }
     #region Commands
@@ -86,6 +87,7 @@ public partial class SharedViewModel : BaseViewModel
         item.IsDownloading = false;
         item.IsDownloaded = false;
         item.IsNotDownloaded = true;
+        // set cancel button on page you have just navigated too for the first time
         SetProperties(item);
     }
     partial void OnUrlChanged(string oldValue, string newValue)
