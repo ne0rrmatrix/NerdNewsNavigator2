@@ -18,6 +18,12 @@ public partial class ShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        System.Diagnostics.Debug.WriteLine("Just navigated here");
+        SharedViewModel.CurrentDownload.Update("ShowViewModel", false, false);
+        base.OnNavigatedTo(args);
+    }
     /// <summary>
     /// Method sets screen to normal screen size.
     /// </summary>

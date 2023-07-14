@@ -35,7 +35,7 @@ public partial class SharedViewModel : BaseViewModel
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        CurrentDownload.DownloadFinished += Completed;
+        CurrentDownload.DownloadFinished += UpdatePage;
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -47,11 +47,21 @@ public partial class SharedViewModel : BaseViewModel
         }
 #endif
     }
-
-    public void Completed(object sender, DownloadEventArgs e)
+    public void UpdatePage(object sender, DownloadEventArgs e)
     {
         DownloadItem = e.Item.Url;
         var item = GetShowForDownload(DownloadItem);
+        if (e.Item.Url == "MostRecentViewModel")
+        {
+            MostRecentShows.ToList().ForEach(SetProperties);
+            return;
+        }
+        if (e.Item.Url == "ShowViewModel")
+        {
+            var test = GetShowForDownload(Item);
+            SetProperties(test);
+            return;
+        }
         item.IsDownloading = false;
         item.IsDownloaded = false;
         item.IsNotDownloaded = true;
@@ -84,11 +94,16 @@ public partial class SharedViewModel : BaseViewModel
     partial void OnDownloadItemChanged(string oldValue, string newValue)
     {
         var item = GetShowForDownload(DownloadItem);
+        if (item is null)
+        {
+            return;
+        }
         item.IsDownloading = false;
         item.IsDownloaded = false;
         item.IsNotDownloaded = true;
         // set cancel button on page you have just navigated too for the first time
         SetProperties(item);
+        DownloadItem = string.Empty;
     }
     partial void OnUrlChanged(string oldValue, string newValue)
     {

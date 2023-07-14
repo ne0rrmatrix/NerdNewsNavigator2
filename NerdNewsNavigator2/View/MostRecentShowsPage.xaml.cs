@@ -18,7 +18,12 @@ public partial class MostRecentShowsPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
-
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        System.Diagnostics.Debug.WriteLine("Just navigated here");
+        SharedViewModel.CurrentDownload.Update("MostRecentViewModel", false, false);
+        base.OnNavigatedTo(args);
+    }
     /// <summary>
     /// Method sets screen to normal screen size.
     /// </summary>
