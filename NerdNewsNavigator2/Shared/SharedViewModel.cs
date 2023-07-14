@@ -17,7 +17,7 @@ public partial class SharedViewModel : BaseViewModel
     private ILogger<BaseViewModel> Logger { get; set; }
 
     [ObservableProperty]
-    private string _downloadItem;
+    private string _downloadItem = string.Empty;
     private string Item { get; set; }
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
@@ -35,7 +35,7 @@ public partial class SharedViewModel : BaseViewModel
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-        CurrentDownload.DownloadFinished += UpdatePage;
+        CurrentDownload.DownloadFinished += UpdateDownloadStatus;
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -47,27 +47,68 @@ public partial class SharedViewModel : BaseViewModel
         }
 #endif
     }
-    public void UpdatePage(object sender, DownloadEventArgs e)
+
+    #region events that deal with Page changes
+
+    public void UpdateDownloadStatus(object sender, DownloadEventArgs e)
     {
-        DownloadItem = e.Item.Url;
-        var item = GetShowForDownload(DownloadItem);
-        if (e.Item.Url == "MostRecentViewModel")
+        if (e.Item.Url is null || e.Item.Url == string.Empty)
         {
-            MostRecentShows.ToList().ForEach(SetProperties);
+            Logger.LogInformation("Title was empty or null");
             return;
         }
-        if (e.Item.Url == "ShowViewModel")
+        Logger.LogInformation("Download status changed");
+        var show = GetShowForDownload(e.Item.Url);
+        var currentDownload = App.CurrenDownloads.FirstOrDefault();
+        if (currentDownload is not null)
         {
-            var test = GetShowForDownload(Item);
-            SetProperties(test);
+            SetProperties(currentDownload);
             return;
         }
-        item.IsDownloading = false;
-        item.IsDownloaded = false;
-        item.IsNotDownloaded = true;
-        // Update for cancel button if navigating back to a page you have already navigated too.
-        SetProperties(item);
+        if (show is not null && show.Url is not null)
+        {
+            Logger.LogInformation("Update downloads received: {title}", show.Url);
+            SetProperties(show);
+        }
     }
+    partial void OnDownloadItemChanged(string oldValue, string newValue)
+    {
+        // The following updates Shows and Most Recent shows with current status of current downloads, completed downloads, and updates the page.
+        Logger.LogInformation("Download item changing");
+        var item = App.CurrenDownloads.Find(x => x.Url == newValue);
+        if (item is not null)
+        {
+            CurrentDownload.Update(item.Url, true, false);
+            Logger.LogInformation("item is null or string is empty");
+            return;
+        }
+
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(show => CurrentDownload.Update(show.Url, false, true));
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url != x.Url)).ToList().ForEach(show => CurrentDownload.Update(show.Url, false, false));
+
+        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(show => CurrentDownload.Update(show.Url, false, true));
+        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url != x.Url)).ToList().ForEach(show => CurrentDownload.Update(show.Url, false, false));
+
+        CurrentDownload.Update(Item, false, false);
+    }
+    partial void OnUrlChanged(string oldValue, string newValue)
+    {
+        Logger.LogInformation("Url Changed");
+        var decodedUrl = HttpUtility.UrlDecode(newValue);
+
+        // Setting Item calls OnDownloadChanged and updates any items on page with regards to whether it is downloaded, not downloaded or currently downloading.
+        Item = decodedUrl;
+
+#if WINDOWS || MACCATALYST || ANDROID
+        ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
+#endif
+#if IOS
+        GetShowsAsync(decodedUrl, false);
+#endif
+    }
+
+    #endregion
+
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
     {
@@ -91,31 +132,6 @@ public partial class SharedViewModel : BaseViewModel
     #endregion
 
     #region Events
-    partial void OnDownloadItemChanged(string oldValue, string newValue)
-    {
-        var item = GetShowForDownload(DownloadItem);
-        if (item is null)
-        {
-            return;
-        }
-        item.IsDownloading = false;
-        item.IsDownloaded = false;
-        item.IsNotDownloaded = true;
-        // set cancel button on page you have just navigated too for the first time
-        SetProperties(item);
-        DownloadItem = string.Empty;
-    }
-    partial void OnUrlChanged(string oldValue, string newValue)
-    {
-        var decodedUrl = HttpUtility.UrlDecode(newValue);
-        Item = decodedUrl;
-#if WINDOWS || MACCATALYST || ANDROID
-        ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
-#endif
-#if IOS
-        GetShowsAsync(decodedUrl, false);
-#endif
-    }
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
@@ -128,7 +144,6 @@ public partial class SharedViewModel : BaseViewModel
         var item = Shows.FirstOrDefault(x => x.Url == url) ?? MostRecentShows.FirstOrDefault(x => x.Url == url);
         WeakReferenceMessenger.Default.Send(new UrlItemMessage(item));
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
-
     }
 
     #endregion
@@ -163,7 +178,8 @@ public partial class SharedViewModel : BaseViewModel
         item.IsDownloaded = false;
         item.Deleted = true;
         item.IsNotDownloaded = true;
-        await App.PositionData.DeleteDownload(item);
+
+        await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
         Logger.LogInformation("Failed to find a show to update");
@@ -180,10 +196,15 @@ public partial class SharedViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
+#if ANDROID || IOS
+    public async Task Download(string url)
+#endif
+#if WINDOWS || MACCATALYST
     public void Download(string url)
+#endif
     {
-#if ANDROID
-        _ = EditViewModel.CheckAndRequestForeGroundPermission();
+#if ANDROID || IOS
+        await EditViewModel.CheckAndRequestForeGroundPermission();
 #endif
         MainThread.BeginInvokeOnMainThread(async () =>
         {
@@ -193,21 +214,17 @@ public partial class SharedViewModel : BaseViewModel
         _ = Task.Run(async () =>
         {
             await Downloading(url);
-            await GetDownloadedShows();
-            await GetMostRecent();
         });
     }
 
     [RelayCommand]
     public void Cancel(string url)
     {
+        Logger.LogInformation("download is cancelled");
         DownloadService.CancelDownload = true;
-        var temp = App.CurrenDownloads.ToList().Find(x => x.Url == url);
-        App.CurrenDownloads.Remove(temp);
-        temp.IsDownloading = false;
-        temp.IsNotDownloaded = true;
-        temp.IsDownloaded = false;
-        SetProperties(temp);
+        var item = App.CurrenDownloads.Find(x => x.Url == url);
+        App.CurrenDownloads.Remove(item);
+        CurrentDownload.Update(url, false, false);
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();

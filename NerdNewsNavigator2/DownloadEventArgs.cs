@@ -25,6 +25,7 @@ public class DownloaddCompleted
         args.Item.Url = url;
         args.Item.IsDownloading = isDownloading;
         args.Item.IsDownloaded = isDownloaded;
+        args.Item.IsNotDownloaded = !isDownloaded;
         OnDownloadFinished(args);
     }
 
