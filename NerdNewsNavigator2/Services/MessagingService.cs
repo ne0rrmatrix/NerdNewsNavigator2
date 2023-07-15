@@ -18,12 +18,12 @@ public static class MessagingService
         if (value)
         {
 
-            await Toast.Make($"Download {title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make($"Download {title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
         else
         {
 
-            await Toast.Make($"Download {title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make($"Download {title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
         WeakReferenceMessenger.Default.Reset();
     }
@@ -37,7 +37,7 @@ public static class MessagingService
     {
         if (!value)
         {
-            await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
     }
 
@@ -50,11 +50,11 @@ public static class MessagingService
     {
         if (value)
         {
-            await Toast.Make("Download is Deleted.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make("Download is Deleted.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
         else
         {
-            await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
     }
 }

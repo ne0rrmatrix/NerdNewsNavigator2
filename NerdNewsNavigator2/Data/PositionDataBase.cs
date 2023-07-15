@@ -383,6 +383,7 @@ public class PositionDataBase
             {
                 await _connection.UpdateAsync(download);
                 _logger.LogInformation("Updated Download: {Title}", download.Title);
+                return true;
             }
             await _connection.InsertAsync(download);
             _logger.LogInformation("Added Download: {Title}", download.Title);

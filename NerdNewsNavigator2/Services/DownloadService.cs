@@ -153,7 +153,7 @@ public static class DownloadService
         IsDownloading = false;
         _ = Task.Run(() =>
         {
-            favoriteShows.ForEach(async x =>
+            favoriteShows.Where(y => !downloadedShows.Exists(d => d.Url == y.Url)).ToList().ForEach(async x =>
             {
                 var show = FeedService.GetShows(x.Url, true);
                 while (IsDownloading)

@@ -125,7 +125,7 @@ public partial class SharedViewModel : BaseViewModel
         item.IsDownloaded = false;
         item.Deleted = true;
         item.IsNotDownloaded = true;
-        await App.PositionData.DeleteDownload(item);
+        await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
         Logger.LogInformation("Failed to find a show to update");
@@ -144,12 +144,20 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public void Download(string url)
     {
+        if (App.Started)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Toast.Make("Please wait for the App to finish loading...", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            });
+            return;
+        }
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
 #endif
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
 
         _ = Task.Run(async () =>
@@ -165,6 +173,10 @@ public partial class SharedViewModel : BaseViewModel
     {
         DownloadService.CancelDownload = true;
         var temp = App.CurrenDownloads.ToList().Find(x => x.Url == url);
+        if (temp is null)
+        {
+            return;
+        }
         App.CurrenDownloads.Remove(temp);
         temp.IsDownloading = false;
         temp.IsNotDownloaded = true;
