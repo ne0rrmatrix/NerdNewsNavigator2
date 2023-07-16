@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
 using NerdNewsNavigator2.Extensions;
 
 namespace NerdNewsNavigator2.ViewModel;
@@ -106,6 +104,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
 
     [ObservableProperty]
     private double _progressInfos = 0;
+    public static string CancelUrl { get; set; }
+    public static bool CancelDownload { get; set; }
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {
@@ -182,28 +182,34 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         var show = GetShowForDownload(url);
         App.CurrenDownloads.Add(show);
         SetProperties(show);
-        while (IsDownloading)
+        while (DownloadService.IsDownloading)
         {
             Thread.Sleep(5000);
             Logger.LogInformation("Waiting for download to finish");
         }
-#if ANDROID || IOS
-        await SetAndroidNotificationStatus(url);
-#endif
-        await StartDownload(show);
+        if (App.CurrenDownloads.Count > 0 && App.CurrenDownloads.Exists(x => x.Url == show.Url))
+        {
+            await StartDownload(show);
+        }
     }
     public async Task StartDownload(Show show)
     {
 #if WINDOWS || MACCATALYST
         _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
 #endif
+#if ANDROID || IOS
+        await SetAndroidNotificationStatus(show.Url);
+#endif
         IsBusy = true;
-        IsDownloading = true;
         DownloadService.CancelDownload = false;
         DownloadService.IsDownloading = true;
+        DownloadService.CancelUrl = show.Url;
+
         ThreadPool.QueueUserWorkItem(async state => await UpdatingDownloadAsync());
+
         Logger.LogInformation("Trying to start download of {URL}", show.Url);
         await DownloadService.DownloadFile(show);
+        // If more than one download is qued this will cause second one to start.
         DownloadService.IsDownloading = false;
     }
     public async Task DownloadSuccess()
@@ -211,8 +217,8 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         Logger.LogInformation("Downloaded file: {file}", DownloadService.DownloadFileName);
         await App.PositionData.UpdateDownload(DownloadService.DownloadShow);
         DownloadedShows.Add(DownloadService.DownloadShow);
-        var item = App.CurrenDownloads.FirstOrDefault();
-        // This will updat button download status
+        var item = App.CurrenDownloads.Find(x => x.Url == DownloadService.CancelUrl);
+        // This will update button download status
         if (item is not null && App.CurrenDownloads.Count > 0)
         {
             App.CurrenDownloads?.Remove(item);
@@ -223,12 +229,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     }
     public void DownloadCanceled()
     {
-        if (File.Exists(DownloadService.DownloadFileName))
-        {
-            File.Delete(DownloadService.DownloadFileName);
-            Logger.LogInformation("Deleting file from cancelled download: {FileName}", DownloadService.DownloadFileName);
-        }
-        var item = App.CurrenDownloads.FirstOrDefault();
+        var item = App.CurrenDownloads.Find(x => x.Url == DownloadService.CancelUrl);
         // This will updat button download status
         if (item is not null && App.CurrenDownloads.Count > 0)
         {
@@ -236,6 +237,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             var temp = GetShowForDownload(item.Url);
             Logger.LogInformation("Removing show: {title} from current downloads", item.Title);
             SetProperties(temp);
+            IsDownloading = false;
         }
     }
     public async Task UpdatingDownloadAsync()
@@ -252,6 +254,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             await DownloadSuccess();
         }
         PostDownloadStatusUpdate();
+        IsDownloading = false;
         Logger.LogInformation("Finished updating Downlaod status.");
     }
     public Task UpdateDownloadStatus()
@@ -265,19 +268,36 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         DownloadService.IsDownloading = true;
         do
         {
+            CheckForCancel();
             DownloadProgress = DownloadService.Status;
             ProgressInfos = DownloadService.Progress;
             Title = DownloadProgress;
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
         } while (DownloadService.IsDownloading);
         return Task.CompletedTask;
     }
-
+    private void CheckForCancel()
+    {
+        if (CancelDownload)
+        {
+            var item = App.CurrenDownloads.Find(x => x.Url == CancelUrl);
+            if (CancelUrl == DownloadService.CancelUrl)
+            {
+                DownloadService.CancelDownload = true;
+            }
+            else if (item is not null)
+            {
+                App.CurrenDownloads?.Remove(item);
+                var temp = GetShowForDownload(item.Url);
+                SetProperties(temp);
+            }
+            CancelDownload = false;
+        }
+    }
     private void PostDownloadStatusUpdate()
     {
         MainThread.InvokeOnMainThreadAsync(() =>
         {
-            IsDownloading = false;
             IsBusy = false;
             Title = string.Empty;
             IsDownloading = false;

@@ -103,6 +103,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         Started = true;
         AllShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
+        while (temp.Count == 0)
+        {
+            Thread.Sleep(100);
+            temp = await App.PositionData.GetAllPodcasts();
+        }
         List<Show> list = new();
         temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
@@ -122,7 +127,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         switch (e.ActionId)
         {
             case 100:
-                DownloadService.CancelDownload = true;
+                CancelDownload(message.Url);
                 break;
             case 103:
                 var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
@@ -130,8 +135,15 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                 break;
         }
     }
-
+     private void CancelDownload(string url)
+    {
+        DownloadService.CancelUrl = url;
+        var item = App.CurrenDownloads.Find(x => x.Url == url);
+        BaseViewModel.CancelUrl = item?.Url;
+        BaseViewModel.CancelDownload = true;
+    }
 #endif
+
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);

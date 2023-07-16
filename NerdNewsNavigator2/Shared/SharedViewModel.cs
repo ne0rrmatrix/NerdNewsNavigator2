@@ -169,7 +169,8 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public static void Cancel(string url)
     {
-        DownloadService.CancelDownload = true;
+        CancelUrl = url;
+        CancelDownload = true;
     }
 
     /// <summary>

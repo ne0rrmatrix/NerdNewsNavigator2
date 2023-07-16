@@ -15,6 +15,7 @@ public static class DownloadService
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static double Progress { get; set; }
+    public static string CancelUrl { get; set; }
     public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
     #endregion
@@ -111,6 +112,11 @@ public static class DownloadService
             await client.StartDownload();
             if (CancelDownload)
             {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                    Debug.WriteLine($"Deleting file from cancelled download: {tempFile}");
+                }
                 return false;
             }
             return true;
