@@ -37,13 +37,15 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         SetVariables();
         await GetUpdatedPodcasts();
         await GetMostRecent();
+        await GetDownloadedShows();
+        await GetFavoriteShows();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
 
-#if WINDOWS || MACCATALYST
+#if WINDOWS
         await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(PodcastPage)}"); });
 #endif
-#if IOS || ANDROID
+#if IOS || ANDROID || MACCATALYST
 
         await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
 #endif

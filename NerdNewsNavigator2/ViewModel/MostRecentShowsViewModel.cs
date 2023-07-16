@@ -15,6 +15,5 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     /// </summary>
     public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
     }
 }

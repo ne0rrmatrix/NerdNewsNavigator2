@@ -15,7 +15,6 @@ public partial class SharedViewModel : BaseViewModel
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     private ILogger<BaseViewModel> Logger { get; set; }
-    private string Item { get; set; }
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
@@ -69,8 +68,8 @@ public partial class SharedViewModel : BaseViewModel
     #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
+        Debug.WriteLine("Url Changed");
         var decodedUrl = HttpUtility.UrlDecode(newValue);
-        Item = decodedUrl;
 #if WINDOWS || MACCATALYST || ANDROID
         ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
 #endif

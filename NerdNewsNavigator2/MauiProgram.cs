@@ -71,7 +71,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PodcastPage>();
         builder.Services.AddSingleton<PodcastViewModel>();
 
-        builder.Services.AddSingleton<ShowPage>();
+        builder.Services.AddTransient<ShowPage>();
         builder.Services.AddSingleton<ShowViewModel>();
 
 #if WINDOWS
