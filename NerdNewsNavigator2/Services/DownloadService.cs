@@ -9,7 +9,9 @@ namespace NerdNewsNavigator2.Services;
 public static class DownloadService
 {
     #region Properties
+    public static Download DownloadShow { get; set; } = new();
     public static bool CancelDownload { get; set; } = false;
+    public static string DownloadFileName { get; set; } = string.Empty;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static double Progress { get; set; }
@@ -60,19 +62,33 @@ public static class DownloadService
     /// <summary>
     /// Download a file to local filesystem from a URL
     /// </summary>
-    /// <param name="url"><see cref="string"/> Url to download file. </param>
+    /// <param name="item"><see cref="Show"/> Url to download file. </param>
     /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
-    public static async Task<bool> DownloadFile(string url)
+    public static async Task<bool> DownloadFile(Show item)
     {
         try
         {
-            var filename = GetFileName(url);
-            var downloadFileUrl = url;
+
+            Download download = new()
+            {
+                Title = item.Title,
+                Url = item.Url,
+                Image = item.Image,
+                IsDownloaded = true,
+                IsNotDownloaded = false,
+                Deleted = false,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = DownloadService.GetFileName(item.Url)
+            };
+            DownloadShow = download;
+            var filename = GetFileName(item.Url);
+            var downloadFileUrl = item.Url;
             var favorites = await App.PositionData.GetAllDownloads();
             var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
             if (File.Exists(tempFile))
             {
-                if (favorites?.Find(x => x.Url == url) is null)
+                if (favorites?.Find(x => x.Url == item.Url) is null)
                 {
                     Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
                     File.Delete(tempFile);
@@ -83,6 +99,7 @@ public static class DownloadService
                     return false;
                 }
             }
+            DownloadFileName = tempFile;
             var destinationFilePath = tempFile;
 
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
@@ -101,7 +118,7 @@ public static class DownloadService
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.Message}, Deleting file");
-            DeleteFile(url);
+            DeleteFile(item.Url);
             return false;
         }
     }
@@ -126,7 +143,7 @@ public static class DownloadService
             FileName = GetFileName(show.Url)
         };
 
-        var downloaded = await DownloadFile(download.Url);
+        var downloaded = await DownloadFile(show);
         if (downloaded)
         {
 

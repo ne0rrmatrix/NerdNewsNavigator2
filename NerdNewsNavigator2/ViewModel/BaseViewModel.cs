@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using NerdNewsNavigator2.Extensions;
 
 namespace NerdNewsNavigator2.ViewModel;
@@ -162,25 +164,171 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             return false;
         }
     }
+
     #region Download Tasks
-    private void TriggerProgressChanged()
+
+    /// <summary>
+    /// A method that download a Item to device.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    public async Task Downloading(string url)
+    {
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+            return;
+        }
+        var show = GetShowForDownload(url);
+        App.CurrenDownloads.Add(show);
+        SetProperties(show);
+        while (IsDownloading)
+        {
+            Thread.Sleep(5000);
+            Logger.LogInformation("Waiting for download to finish");
+        }
+#if ANDROID || IOS
+        await SetAndroidNotificationStatus(url);
+#endif
+        await StartDownload(show);
+    }
+    public async Task StartDownload(Show show)
+    {
+#if WINDOWS || MACCATALYST
+        _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
+#endif
+        IsBusy = true;
+        IsDownloading = true;
+        DownloadService.CancelDownload = false;
+        DownloadService.IsDownloading = true;
+        ThreadPool.QueueUserWorkItem(async state => await UpdatingDownloadAsync());
+        Logger.LogInformation("Trying to start download of {URL}", show.Url);
+        await DownloadService.DownloadFile(show);
+        DownloadService.IsDownloading = false;
+    }
+    public async Task DownloadSuccess()
+    {
+        Logger.LogInformation("Downloaded file: {file}", DownloadService.DownloadFileName);
+        await App.PositionData.UpdateDownload(DownloadService.DownloadShow);
+        DownloadedShows.Add(DownloadService.DownloadShow);
+        var item = App.CurrenDownloads.FirstOrDefault();
+        // This will updat button download status
+        if (item is not null && App.CurrenDownloads.Count > 0)
+        {
+            App.CurrenDownloads?.Remove(item);
+            var temp = GetShowForDownload(item.Url);
+            Logger.LogInformation("Removing show: {title} from current downloads", item.Title);
+            SetProperties(temp);
+        }
+    }
+    public void DownloadCanceled()
+    {
+        if (File.Exists(DownloadService.DownloadFileName))
+        {
+            File.Delete(DownloadService.DownloadFileName);
+            Logger.LogInformation("Deleting file from cancelled download: {FileName}", DownloadService.DownloadFileName);
+        }
+        var item = App.CurrenDownloads.FirstOrDefault();
+        // This will updat button download status
+        if (item is not null && App.CurrenDownloads.Count > 0)
+        {
+            App.CurrenDownloads?.Remove(item);
+            var temp = GetShowForDownload(item.Url);
+            Logger.LogInformation("Removing show: {title} from current downloads", item.Title);
+            SetProperties(temp);
+        }
+    }
+    public async Task UpdatingDownloadAsync()
+    {
+        Logger.LogInformation("Staring download tracking");
+        Title = string.Empty;
+        await UpdateDownloadStatus();
+        if (DownloadService.CancelDownload)
+        {
+            DownloadCanceled();
+        }
+        else
+        {
+            await DownloadSuccess();
+        }
+        PostDownloadStatusUpdate();
+        Logger.LogInformation("Finished updating Downlaod status.");
+    }
+    public Task UpdateDownloadStatus()
+    {
+#if WINDOWS
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        });
+#endif
+        DownloadService.IsDownloading = true;
+        do
+        {
+            DownloadProgress = DownloadService.Status;
+            ProgressInfos = DownloadService.Progress;
+            Title = DownloadProgress;
+            Thread.Sleep(1000);
+        } while (DownloadService.IsDownloading);
+        return Task.CompletedTask;
+    }
+
+    private void PostDownloadStatusUpdate()
     {
         MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsDownloading = false;
             IsBusy = false;
+            Title = string.Empty;
+            IsDownloading = false;
             DownloadService.IsDownloading = false;
             DownloadService.Progress = 0.00;
             DownloadProgress = string.Empty;
-            Title = string.Empty;
 #if WINDOWS
             Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
 #endif
         });
 
     }
+
+#if ANDROID || IOS
+    public async Task SetAndroidNotificationStatus(string url)
+    {
+        var item = new Show();
+        DownloadService.CancelDownload = false;
+        if (Shows.ToList().Exists(x => x.Url == url))
+        {
+            item = Shows.ToList().Find(x => x.Url == url);
+        }
+        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
+        {
+            item = MostRecentShows.ToList().Find(x => x.Url == url);
+        }
+        await NotificationService.CheckNotification();
+        if (item is not null)
+        {
+            var requests = await NotificationService.NotificationRequests(item);
+            NotificationService.AfterNotifications(requests);
+        }
+    }
+#endif
+    public Show GetShowForDownload(string url)
+    {
+        if (Shows.ToList().Exists(x => x.Url == url))
+        {
+            var showItem = Shows.ToList().Find(x => x.Url == url);
+            return showItem;
+        }
+        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
+        {
+            var showItem = MostRecentShows.ToList().Find(x => x.Url == url);
+            return showItem;
+        }
+        return new Show();
+    }
     public void SetProperties(Show show)
     {
+        Logger.LogInformation("Setting Properties received show: {show}: downloading: {isDownloading}, downloaded: {downloaded}", show.Title, show.IsDownloading, show.IsDownloaded);
         var shows = Shows.ToList().Find(x => x.Url == show.Url);
         var recent = MostRecentShows.ToList().Find(x => x.Url == show.Url);
         var allShow = App.AllShows.Find(x => x.Url == show.Url);
@@ -220,155 +368,15 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Shows[Shows.IndexOf(shows)] = shows;
+                Logger.LogInformation("Updating show: {title}, IsDownloading: {Isdownloading}, IsDownloaded: {IsDownloaded}", show.Title, show.IsDownloading, show.IsDownloaded);
             });
         }
         if (allShow is not null)
         {
             App.AllShows[App.AllShows.IndexOf(allShow)] = allShow;
         }
-        Logger.LogInformation("Set Properties received show: {show}: downloading: {isDownloading}, downloaded: {downloaded}", show.Title, show.IsDownloading, show.IsDownloaded);
     }
 
-    /// <summary>
-    /// A method that download a Item to device.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    public async Task Downloading(string url)
-    {
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-            return;
-        }
-        var show = GetShowForDownload(url);
-        App.CurrenDownloads.Add(show);
-        SetProperties(show);
-        while (IsDownloading)
-        {
-            Thread.Sleep(5000);
-            Logger.LogInformation("Waiting for download to finish");
-        }
-
-#if ANDROID || IOS
-        var item = new Show();
-        DownloadService.CancelDownload = false;
-        if (Shows.ToList().Exists(x => x.Url == url))
-        {
-            item = Shows.ToList().Find(x => x.Url == url);
-        }
-        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
-        {
-            item = MostRecentShows.ToList().Find(x => x.Url == url);
-        }
-        await NotificationService.CheckNotification();
-        if (item is not null)
-        {
-            var requests = await NotificationService.NotificationRequests(item);
-            NotificationService.AfterNotifications(requests);
-        }
-#endif
-        IsDownloading = true;
-        DownloadService.CancelDownload = false;
-        await StartDownload(show);
-    }
-    public async Task StartDownload(Show show)
-    {
-#if WINDOWS || MACCATALYST
-        _ = MainThread.InvokeOnMainThreadAsync(() => Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true));
-#endif
-        IsBusy = true;
-        ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
-        Logger.LogInformation("Trying to start download of {URL}", show.Url);
-        await ProcessDownloads(show);
-    }
-
-    public Show GetShowForDownload(string url)
-    {
-        if (Shows.ToList().Exists(x => x.Url == url))
-        {
-            var showItem = Shows.ToList().Find(x => x.Url == url);
-            return showItem;
-        }
-        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
-        {
-            var showItem = MostRecentShows.ToList().Find(x => x.Url == url);
-            return showItem;
-        }
-        return new Show();
-    }
-    public async Task ProcessDownloads(Show item)
-    {
-        Download download = new()
-        {
-            Title = item.Title,
-            Url = item.Url,
-            Image = item.Image,
-            IsDownloaded = true,
-            IsNotDownloaded = false,
-            Deleted = false,
-            PubDate = item.PubDate,
-            Description = item.Description,
-            FileName = DownloadService.GetFileName(item.Url)
-        };
-        DownloadService.IsDownloading = true;
-        ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
-        await DownloadService.DownloadFile(download.Url);
-        await DownloadSuccess(download);
-    }
-    public void UpdatingDownloadAsync()
-    {
-        Logger.LogInformation("Staring download tracking");
-        Title = string.Empty;
-#if WINDOWS
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        });
-#endif
-        DownloadService.IsDownloading = true;
-        while (DownloadService.IsDownloading)
-        {
-            DownloadProgress = DownloadService.Status;
-            ProgressInfos = DownloadService.Progress;
-            Title = DownloadProgress;
-            Thread.Sleep(1000);
-        }
-        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList()?.ForEach(SetProperties);
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList()?.ForEach(SetProperties);
-    }
-    public async Task DownloadSuccess(Download download)
-    {
-        IsDownloading = false;
-        var item = App.CurrenDownloads.FirstOrDefault();
-        var filename = DownloadService.GetFileName(download.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile) && DownloadService.CancelDownload)
-        {
-            Logger.LogInformation("Deleting file from cancelled download: {FileName}", download.FileName);
-            App.CurrenDownloads?.Remove(item);
-            Shows?.Where(x => x.Url == item.Url).ToList().ForEach(y => { y.IsDownloading = false; SetProperties(y); });
-            MostRecentShows?.Where(x => x.Url == item.Url).ToList().ForEach(y => { y.IsDownloading = false; SetProperties(y); });
-            File.Delete(tempFile);
-        }
-        else
-        {
-            Logger.LogInformation("Downloaded file: {file}", download.FileName);
-            await App.PositionData.UpdateDownload(download);
-            DownloadedShows.Add(download);
-            var temp = App.AllShows.Find(x => x.Url == download.Url);
-            if (temp is not null)
-            {
-                temp.IsNotDownloaded = false;
-                temp.IsDownloaded = true;
-                temp.IsDownloading = false;
-                App.AllShows[App.AllShows.IndexOf(temp)] = temp;
-            }
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-            MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        }
-        TriggerProgressChanged();
-    }
     #endregion
 
     #region Podcast data functions
@@ -397,7 +405,10 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
         var item = BaseViewModel.RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
         Shows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows.Where(x => App.CurrenDownloads.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        if (App.CurrenDownloads.Count > 0)
+        {
+            Shows.Where(x => App.CurrenDownloads.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        }
         Logger.LogInformation("Got All Shows");
     }
 

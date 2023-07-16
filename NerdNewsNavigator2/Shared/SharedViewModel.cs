@@ -38,7 +38,7 @@ public partial class SharedViewModel : BaseViewModel
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
-            ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
+            ThreadPool.QueueUserWorkItem(async state => await UpdatingDownloadAsync());
         }
 #endif
     }
@@ -163,29 +163,13 @@ public partial class SharedViewModel : BaseViewModel
         _ = Task.Run(async () =>
         {
             await Downloading(url);
-            await GetDownloadedShows();
-            await GetMostRecent();
         });
     }
 
     [RelayCommand]
-    public void Cancel(string url)
+    public static void Cancel(string url)
     {
         DownloadService.CancelDownload = true;
-        var temp = App.CurrenDownloads.ToList().Find(x => x.Url == url);
-        if (temp is null)
-        {
-            return;
-        }
-        App.CurrenDownloads.Remove(temp);
-        temp.IsDownloading = false;
-        temp.IsNotDownloaded = true;
-        temp.IsDownloaded = false;
-        SetProperties(temp);
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Toast.Make("Download Cancelled", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        });
     }
 
     /// <summary>
