@@ -259,12 +259,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
     }
     public Task UpdateDownloadStatus()
     {
-#if WINDOWS
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        });
-#endif
         DownloadService.IsDownloading = true;
         do
         {
@@ -284,6 +278,7 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             if (CancelUrl == DownloadService.CancelUrl)
             {
                 DownloadService.CancelDownload = true;
+                IsDownloading = false;
             }
             else if (item is not null)
             {
@@ -304,9 +299,6 @@ public partial class BaseViewModel : ObservableObject, IRecipient<FullScreenItem
             DownloadService.IsDownloading = false;
             DownloadService.Progress = 0.00;
             DownloadProgress = string.Empty;
-#if WINDOWS
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
-#endif
         });
 
     }

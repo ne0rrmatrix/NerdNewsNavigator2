@@ -68,11 +68,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton<BaseViewModel>();
 
-        builder.Services.AddTransient<PodcastPage>();
-        builder.Services.AddTransient<PodcastViewModel>();
+        builder.Services.AddSingleton<PodcastPage>();
+        builder.Services.AddSingleton<PodcastViewModel>();
 
-        builder.Services.AddTransient<ShowPage>();
-        builder.Services.AddTransient<ShowViewModel>();
+        builder.Services.AddSingleton<ShowPage>();
+        builder.Services.AddSingleton<ShowViewModel>();
 
 #if WINDOWS
         builder.Services.AddSingleton<VideoPlayerPage>();
@@ -94,13 +94,13 @@ public static class MauiProgram
         builder.Services.AddTransient<ResetAllSettingsPage>();
         builder.Services.AddTransient<ResetAllSettingsViewModel>();
 
-        builder.Services.AddTransient<MostRecentShowsPage>();
-        builder.Services.AddTransient<MostRecentShowsViewModel>();
+        builder.Services.AddSingleton<MostRecentShowsPage>();
+        builder.Services.AddSingleton<MostRecentShowsViewModel>();
 
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
-        builder.Services.AddTransient<SharedViewModel>();
+        builder.Services.AddSingleton<SharedViewModel>();
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);

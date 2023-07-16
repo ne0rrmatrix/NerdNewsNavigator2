@@ -18,6 +18,7 @@ public partial class ShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
     /// <summary>
     /// Method sets screen to normal screen size.
     /// </summary>
