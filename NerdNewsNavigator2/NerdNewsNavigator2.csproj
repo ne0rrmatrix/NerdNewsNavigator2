@@ -208,4 +208,6 @@
     </MauiXaml>
     </ItemGroup>
   
+    <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionNerdNewsNavigator2HideInfoBar="True" /></VisualStudio></ProjectExtensions>
+  
 </Project>

@@ -9,14 +9,11 @@ namespace NerdNewsNavigator2.Services;
 public static class DownloadService
 {
     #region Properties
-    public static Download DownloadShow { get; set; } = new();
     public static bool CancelDownload { get; set; } = false;
     public static string DownloadFileName { get; set; } = string.Empty;
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static double Progress { get; set; }
-    public static string CancelUrl { get; set; }
-    public static bool NotDownloading { get; set; } = !IsDownloading;
     public static string Status { get; set; } = string.Empty;
     #endregion
 
@@ -69,20 +66,6 @@ public static class DownloadService
     {
         try
         {
-
-            Download download = new()
-            {
-                Title = item.Title,
-                Url = item.Url,
-                Image = item.Image,
-                IsDownloaded = true,
-                IsNotDownloaded = false,
-                Deleted = false,
-                PubDate = item.PubDate,
-                Description = item.Description,
-                FileName = DownloadService.GetFileName(item.Url)
-            };
-            DownloadShow = download;
             var filename = GetFileName(item.Url);
             var downloadFileUrl = item.Url;
             var favorites = await App.PositionData.GetAllDownloads();

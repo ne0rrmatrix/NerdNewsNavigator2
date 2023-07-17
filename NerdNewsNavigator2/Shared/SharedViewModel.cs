@@ -37,7 +37,7 @@ public partial class SharedViewModel : BaseViewModel
 #if WINDOWS || MACCATALYST || IOS
         if (DownloadService.IsDownloading)
         {
-            ThreadPool.QueueUserWorkItem(async state => await UpdatingDownloadAsync());
+            ThreadPool.QueueUserWorkItem(state => UpdatingDownloadAsync());
         }
 #endif
     }
@@ -53,7 +53,6 @@ public partial class SharedViewModel : BaseViewModel
     public Task RefreshData()
     {
         IsBusy = true;
-        App.AllShows.Clear();
         Shows.Clear();
         MostRecentShows.Clear();
         Podcasts.Clear();
@@ -130,46 +129,8 @@ public partial class SharedViewModel : BaseViewModel
         Logger.LogInformation("Failed to find a show to update");
         _ = Task.Run(async () =>
         {
-            await App.GetMostRecent();
             await GetMostRecent();
         });
-    }
-
-    /// <summary>
-    /// A Method that passes a Url to <see cref="DownloadService"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public void Download(string url)
-    {
-        if (App.Started)
-        {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await Toast.Make("Please wait for the App to finish loading...", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            });
-            return;
-        }
-#if ANDROID
-        _ = EditViewModel.CheckAndRequestForeGroundPermission();
-#endif
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        });
-
-        _ = Task.Run(async () =>
-        {
-            await Downloading(url);
-        });
-    }
-
-    [RelayCommand]
-    public static void Cancel(string url)
-    {
-        CancelUrl = url;
-        CancelDownload = true;
     }
 
     /// <summary>

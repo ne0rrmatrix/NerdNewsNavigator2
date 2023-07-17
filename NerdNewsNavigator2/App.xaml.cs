@@ -11,9 +11,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
-    public static List<Show> AllShows { get; set; } = new();
-    public static bool Stop { get; set; } = false;
-    public static bool Started { get; set; } = false;
     public static List<Message> Message { get; set; } = new();
     public static List<Show> CurrenDownloads { get; set; } = new();
     /// <summary>
@@ -42,26 +39,10 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
-
-        LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
-            {
-                new NotificationCategory(NotificationCategoryType.Progress)
-                {
-                    ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
-                    {
-                        new NotificationAction(100)
-                        {
-                            Title = "Stop Download",
-                        },
-                    })
-                }
-
-            }));
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
                 new NotificationCategory(NotificationCategoryType.Status)
@@ -94,30 +75,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         };
         return window;
     }
-    /// <summary>
-    /// Method gets most recent episode from each podcast on twit.tv
-    /// </summary>
-    /// <returns></returns>
-    public static async Task GetMostRecent()
-    {
-        Started = true;
-        AllShows.Clear();
-        var temp = await App.PositionData.GetAllPodcasts();
-        while (temp.Count == 0)
-        {
-            Thread.Sleep(100);
-            temp = await App.PositionData.GetAllPodcasts();
-        }
-        List<Show> list = new();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
-        {
-            var item = FeedService.GetShows(show.Url, true);
-            list.Add(item[0]);
-        });
-        var deDupe = BaseViewModel.RemoveDuplicates(list);
-        deDupe.ForEach(AllShows.Add);
-        Started = false;
-    }
 
 #if ANDROID || IOS
 
@@ -126,14 +83,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         var message = Message.First(item => item.Id == e.Request.NotificationId);
         switch (e.ActionId)
         {
-            case 100:
-                BaseViewModel.CancelUrl = message.Url;
-                BaseViewModel.CancelDownload = true;
-                break;
             case 103:
                 var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
                 Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
                 break;
+
         }
     }
 

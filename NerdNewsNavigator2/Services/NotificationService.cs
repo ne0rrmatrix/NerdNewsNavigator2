@@ -21,10 +21,6 @@ public static class NotificationService
             DownloadService.IsDownloading = true;
             while (DownloadService.IsDownloading)
             {
-                if (App.Stop || DownloadService.CancelDownload)
-                {
-                    break;
-                }
 #if ANDROID
                 request.Description = $"Download Progress {(int)DownloadService.Progress}%";
                 request.Android.ProgressBarProgress = (int)DownloadService.Progress;
@@ -53,10 +49,7 @@ public static class NotificationService
                 request.Android.Ongoing = false;
                 request.Description = "Download Complete";
                 request.CategoryType = NotificationCategoryType.Status;
-                if (!App.Stop)
-                {
-                    await LocalNotificationCenter.Current.Show(request);
-                }
+                await LocalNotificationCenter.Current.Show(request);
             }
         });
     }

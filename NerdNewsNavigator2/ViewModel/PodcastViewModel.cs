@@ -14,7 +14,6 @@ public partial class PodcastViewModel : SharedViewModel
     public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-        ThreadPool.QueueUserWorkItem(async (state) => await GetMostRecent());
     }
 
     /// <summary>
