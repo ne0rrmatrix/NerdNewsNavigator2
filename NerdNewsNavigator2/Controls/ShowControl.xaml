@@ -39,11 +39,11 @@
                                                       MacCatalyst=370,
                                                       Android=370,
                                                       iOS=320}">
-
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                            </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=PlayGridCommand}" CommandParameter="{Binding Url}" />
-                                </Grid.GestureRecognizers>
+
                                 <Label
                                     Grid.Row="0"
                                     FontAttributes="Bold"
@@ -58,53 +58,8 @@
                                     Margin="10"
                                     Aspect="AspectFit"
                                     HeightRequest="320"
-                                    IsVisible="{Binding IsDownloaded}"
-                                    WidthRequest="320">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                                    </Image.GestureRecognizers>
-                                    <Image.Source>
-                                        <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="True"
-                                            Uri="{Binding Image}" />
-                                    </Image.Source>
-                                </Image>
-                                <Image
-                                    Grid.Row="1"
-                                    Margin="10"
-                                    Aspect="AspectFit"
-                                    HeightRequest="320"
-                                    IsVisible="{Binding IsDownloading}"
-                                    WidthRequest="320">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                                    </Image.GestureRecognizers>
-                                    <Image.Source>
-                                        <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="True"
-                                            Uri="{Binding Image}" />
-                                    </Image.Source>
-                                </Image>
-                                <Image
-                                    Grid.Row="1"
-                                    Margin="10"
-                                    Aspect="AspectFit"
-                                    HeightRequest="320"
-                                    IsVisible="{Binding IsNotDownloaded}"
-                                    WidthRequest="320">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                                    </Image.GestureRecognizers>
-                                    <Image.Source>
-                                        <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="True"
-                                            Uri="{Binding Image}" />
-                                    </Image.Source>
-                                </Image>
-
+                                    Source="{Binding ImageFileLocation}"
+                                    WidthRequest="320" />
                                 <HorizontalStackLayout Grid.Row="2" Padding="10">
 
                                     <Label

@@ -12,4 +12,5 @@ public class Show : Shared
 {
     public bool IsDownloading { get; set; } = false;
     public string Status { get; set; } = string.Empty;
+    public string ImageFileLocation { get; set; } = string.Empty;
 }

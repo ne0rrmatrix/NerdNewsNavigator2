@@ -61,7 +61,7 @@ public class HttpClientDownloadWithProgress : IDisposable
             totalBytesRead += bytesRead;
             readCount += 1;
 
-            if (DownloadService.CancelDownload)
+            if (CurrentDownloads.CancelDownload)
             {
                 isMoreToRead = false;
                 _downloadCancel.Cancel();

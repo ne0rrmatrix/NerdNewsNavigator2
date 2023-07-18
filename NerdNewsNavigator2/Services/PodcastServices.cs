@@ -7,11 +7,16 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A Class for managing Podcasts.
 /// </summary>
-public static class PodcastServices
+public class PodcastServices : IDisposable
 {
     #region Properties
     public static bool IsConnected { get; set; } = true;
+    private HttpClient _client = new();
     #endregion
+    public PodcastServices()
+    {
+
+    }
 
     #region Get Podcasts
 
@@ -40,6 +45,112 @@ public static class PodcastServices
         await App.PositionData.DeleteAllPodcasts();
         return await AddPodcastsToDBAsync(newPodcasts);
     }
+    public void ResetImages(List<Podcast> newPodcasts)
+    {
+        newPodcasts.ForEach(podcast =>
+        {
+            var item = FeedService.GetShows(podcast.Url, false);
+
+            item.ForEach(async item => { await SaveImage(item, true); Thread.Sleep(750); });
+        });
+    }
+    public async Task UpdateImage(Show show)
+    {
+        await SaveImage(show, false);
+    }
+    public static void DeletetAllImages()
+    {
+        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Images");
+        DeleleFiles(System.IO.Directory.GetFiles(path, "*.jpg"));
+    }
+    public static void DeleleFiles(string[] files)
+    {
+        try
+        {
+            foreach (var file in files)
+            {
+                System.IO.File.Delete(file);
+                Debug.WriteLine($"Deleted file {file}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"{ex.Message}");
+        }
+    }
+    private static void DeleteImage(Show show)
+    {
+        try
+        {
+            if (File.Exists(show.ImageFileLocation))
+            {
+                Debug.WriteLine($"Deleting Image: {show.ImageFileLocation}");
+                File.Delete(show.ImageFileLocation);
+            }
+        }
+        catch
+        {
+            Debug.WriteLine("Failed to delete Images");
+        }
+    }
+    private static void CheckDirectory()
+    {
+        var directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Images");
+        if (!Directory.Exists(directoryPath))
+        {
+            Debug.WriteLine($"Creating Directory path: {directoryPath}");
+            Directory.CreateDirectory(directoryPath);
+        }
+    }
+    private async Task SaveImage(Show show)
+    {
+        using var response = await _client.GetAsync(show.Image);
+        response.EnsureSuccessStatusCode();
+        using var result = await response.Content.ReadAsStreamAsync();
+        using var filestream = File.Create(show.ImageFileLocation);
+        await result.CopyToAsync(filestream);
+    }
+    private async Task SaveImage(Show show, bool delete)
+    {
+        try
+        {
+            CheckDirectory();
+            if (delete)
+            {
+                DeleteImage(show);
+            }
+            else
+            {
+                if (File.Exists(show.ImageFileLocation))
+                {
+                    return;
+                }
+            }
+            await SaveImage(show);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+    public static async Task<List<Favorites>> UpdateFavoritesAsync()
+    {
+        // get old favorites list
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+        var podcasts = await App.PositionData.GetAllPodcasts();
+        var temp = new List<Favorites>();
+
+        if (favoriteShows.Count == 0)
+        {
+            Debug.WriteLine("Did not find any stale Favorite Shows");
+            return favoriteShows;
+        }
+        var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
+        item.ForEach(temp.Add);
+        await App.PositionData.DeleteAllFavorites();
+        AddFavoritesToDatabase(temp);
+        return temp;
+    }
     private static List<Podcast> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
     {
         // get updated podcast list
@@ -66,34 +177,7 @@ public static class PodcastServices
         AddToDatabase(res);
         return res;
     }
-    public static List<Show> UpdateAllShows(List<Podcast> newPodcasts)
-    {
-        var res = new List<Show>();
-        newPodcasts.ForEach((podcast) =>
-        {
-            var item = FeedService.GetShows(podcast.Url, false);
-            item.ForEach(res.Add);
-        });
-        return res;
-    }
-    public static async Task<List<Favorites>> UpdateFavoritesAsync()
-    {
-        // get old favorites list
-        var favoriteShows = await App.PositionData.GetAllFavorites();
-        var podcasts = await App.PositionData.GetAllPodcasts();
-        var temp = new List<Favorites>();
 
-        if (favoriteShows.Count == 0)
-        {
-            Debug.WriteLine("Did not find any stale Favorite Shows");
-            return favoriteShows;
-        }
-        var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
-        item.ForEach(temp.Add);
-        await App.PositionData.DeleteAllFavorites();
-        AddFavoritesToDatabase(temp);
-        return temp;
-    }
     #endregion
 
     #region Manipulate Database
@@ -193,6 +277,21 @@ public static class PodcastServices
         }
         items.Where(x => x.Url == url).ToList().ForEach(async item => await App.PositionData.DeletePodcast(item));
         return true;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing && _client != null)
+        {
+            _client.Dispose();
+            _client = null;
+        }
     }
     #endregion
 }

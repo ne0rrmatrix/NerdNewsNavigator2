@@ -7,12 +7,14 @@ namespace NerdNewsNavigator2;
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
+public partial class App : Application, IRecipient<NotificationItemMessage>
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
+    public static bool Loading { get; set; } = false;
+    public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
-    public static List<Show> CurrenDownloads { get; set; } = new();
+    public static CurrentDownloads Downloads { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -28,9 +30,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
     public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
+
         MainPage = new AppShell();
         _messenger = messenger;
         // Database Dependancy Injection START
@@ -39,6 +39,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -63,13 +64,23 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             StartAutoDownloadService();
         });
     }
-
+    public static async Task GetMostRecent()
+    {
+        Loading = true;
+        MostRecentShows.Clear();
+        var temp = await App.PositionData.GetAllPodcasts();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        {
+            var item = FeedService.GetShows(show.Url, true);
+            MostRecentShows.Add(item[0]);
+        });
+        Loading = false;
+    }
     protected override Window CreateWindow(IActivationState activationState)
     {
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
-            DownloadService.CancelDownload = true;
             Thread.Sleep(500);
             Debug.WriteLine("Safe shutdown completed");
         };
@@ -105,31 +116,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 
     #region Messaging Service
 
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DownloadItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
-        });
-        WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
-        WeakReferenceMessenger.Default.Unregister<InternetItemMessage>(message);
-    }
     public void Receive(NotificationItemMessage message)
     {
         var newMessage = new Message
@@ -149,11 +135,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             Message.Add(newMessage);
         }
         WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
-    }
-    public void Receive(UrlItemMessage message)
-    {
-        ShowItem = message.ShowItem;
-        WeakReferenceMessenger.Default.Unregister<UrlItemMessage>(message);
     }
     #endregion
 }

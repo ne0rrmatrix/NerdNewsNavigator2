@@ -9,17 +9,12 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ResetAllSettingsViewModel : SharedViewModel
 {
     private readonly IMessenger _messenger;
-    /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
-    /// </summary>
-    private readonly ILogger<ResetAllSettingsViewModel> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
     public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
     {
-        _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         _messenger = messenger;
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
@@ -32,15 +27,17 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     /// </summary>
     private async Task ResetAll()
     {
+        _messenger.Send(new MessageData(false));
         DownloadService.CancelDownload = true;
-        await DeleteAllAsync();
         SetVariables();
+        PodcastServices.DeletetAllImages();
+        await DeleteAllAsync();
         await GetUpdatedPodcasts();
+        await App.GetMostRecent();
         await GetDownloadedShows();
         await GetFavoriteShows();
-        await GetMostRecent();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
+        PodcastServices.DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
 
 #if WINDOWS
         await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(PodcastPage)}"); });
@@ -50,21 +47,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
 #endif
     }
-    private void DeleleFiles(string[] files)
-    {
-        try
-        {
-            foreach (var file in files)
-            {
-                System.IO.File.Delete(file);
-                _logger.LogInformation("Deleted file {file}", file);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogInformation("{data}", ex.Message);
-        }
-    }
     private void SetVariables()
     {
         Preferences.Default.Clear();
@@ -73,7 +55,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         Podcasts.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
-        App.CurrenDownloads.Clear();
+        App.MostRecentShows.Clear();
         _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()

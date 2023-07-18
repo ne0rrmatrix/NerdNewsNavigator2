@@ -2,43 +2,30 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Extensions;
+
 namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class to manage Messaging between classes.
 /// </summary>
-public static class MessagingService
+public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<FullScreenItemMessage>
 {
     /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of deleted files.
+    /// Gets the presented page.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public static async Task RecievedDownloadMessage(bool value, string title)
+    protected static Page CurrentPage
     {
-        if (value)
+        get
         {
-
-            await Toast.Make($"Download {title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            return PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
         }
-        else
-        {
-
-            await Toast.Make($"Download {title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
-        WeakReferenceMessenger.Default.Reset();
     }
 
-    /// <summary>
-    /// Method displays a <see cref="Toast"/> about status of internet.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public static async Task RecievedInternetMessage(bool value)
+    public MessagingService()
     {
-        if (!value)
-        {
-            await Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
+        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
+        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
     }
 
     /// <summary>
@@ -51,10 +38,56 @@ public static class MessagingService
         if (value)
         {
             await Toast.Make("Download is Deleted.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            return;
+        }
+        await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+    }
+    public void Receive(FullScreenItemMessage message)
+    {
+        var currentPage = CurrentPage;
+        if (message.Value)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                NavigationPage.SetBackButtonTitle(currentPage, string.Empty);
+                NavigationPage.SetHasBackButton(currentPage, false);
+                Shell.SetFlyoutItemIsVisible(currentPage, false);
+                Shell.SetNavBarIsVisible(currentPage, false);
+                Shell.SetTabBarIsVisible(Shell.Current, false);
+                NavigationPage.SetHasNavigationBar(currentPage, false);
+                Shell.SetTabBarIsVisible(currentPage, false);
+            });
         }
         else
         {
-            await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                NavigationPage.SetHasNavigationBar(currentPage, true);
+                NavigationPage.SetHasBackButton(currentPage, true);
+                Shell.SetFlyoutItemIsVisible(currentPage, true);
+                Shell.SetNavBarIsVisible(currentPage, true);
+                Shell.SetTabBarIsVisible(currentPage, true);
+            });
+        }
+        WeakReferenceMessenger.Default.Unregister<FullScreenItemMessage>(message);
+    }
+    public void Receive(DownloadItemMessage message)
+    {
+        WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);
+        if (message.Value)
+        {
+            _ = Toast.Make($"Download {message.Title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            return;
+        }
+        _ = Toast.Make($"Download {message.Title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+    }
+
+    public void Receive(InternetItemMessage message)
+    {
+        WeakReferenceMessenger.Default.Unregister<InternetItemMessage>(message);
+        if (!message.Value)
+        {
+            _ = Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
     }
 }

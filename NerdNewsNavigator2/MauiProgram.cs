@@ -23,9 +23,7 @@ public static class MauiProgram
         ;
 #endif
         #region Logging
-#if DEBUG
-        //builder.Logging.AddDebug();
-#endif
+
         builder.Logging
 
 #if DEBUG
@@ -68,8 +66,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton<BaseViewModel>();
 
-        builder.Services.AddSingleton<PodcastPage>();
-        builder.Services.AddSingleton<PodcastViewModel>();
+        builder.Services.AddTransient<PodcastPage>();
+        builder.Services.AddTransient<PodcastViewModel>();
 
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
@@ -100,7 +98,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
-        builder.Services.AddSingleton<SharedViewModel>();
+        builder.Services.AddTransient<SharedViewModel>();
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);

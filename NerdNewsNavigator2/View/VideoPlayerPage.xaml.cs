@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.View;
 /// A class that Displays a Video from twit.tv.
 /// </summary>
 /// 
-public partial class VideoPlayerPage : ContentPage
+public partial class VideoPlayerPage : ContentPage, IRecipient<UrlItemMessage>
 {
     #region Properties
 
@@ -21,6 +21,7 @@ public partial class VideoPlayerPage : ContentPage
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
+    private Show ShowItem { get; set; } = new();
 
     #endregion
     /// <summary>
@@ -33,7 +34,14 @@ public partial class VideoPlayerPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         _logger = logger;
+        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
+    }
 
+    #region Events
+#nullable enable
+    public void Receive(UrlItemMessage message)
+    {
+        ShowItem = message.ShowItem;
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif
@@ -42,10 +50,6 @@ public partial class VideoPlayerPage : ContentPage
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
-
-    #region Events
-#nullable enable
-
     /// <summary>
     /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
     /// </summary>
@@ -54,9 +58,9 @@ public partial class VideoPlayerPage : ContentPage
     private async void Seek(object? sender, EventArgs e)
     {
         Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = App.ShowItem.Title;
+        Pos.Title = ShowItem.Title;
         var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == App.ShowItem.Title);
+        var result = positionList.ToList().Find(x => x.Title == ShowItem.Title);
         if (result is not null)
         {
             Pos = result;
