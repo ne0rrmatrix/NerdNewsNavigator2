@@ -104,6 +104,7 @@ public class PodcastServices : IDisposable
     }
     private async Task SaveImage(Show show)
     {
+        using var client = new HttpClient(new RetryHandler(new HttpClientHandler()));
         using var response = await _client.GetAsync(show.Image);
         response.EnsureSuccessStatusCode();
         using var result = await response.Content.ReadAsStreamAsync();

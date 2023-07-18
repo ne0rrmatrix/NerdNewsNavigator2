@@ -69,6 +69,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         Loading = true;
         MostRecentShows.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
+        while (temp.Count == 0)
+        {
+            Thread.Sleep(9000);
+            temp = await App.PositionData.GetAllPodcasts();
+        }
         temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
             var item = FeedService.GetShows(show.Url, true);
