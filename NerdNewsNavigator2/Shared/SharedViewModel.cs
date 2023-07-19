@@ -263,20 +263,6 @@ public partial class SharedViewModel : BaseViewModel
             MostRecentShows[number].IsNotDownloaded = show.IsNotDownloaded;
             OnPropertyChanged(nameof(MostRecentShows));
         }
-        if (recent is not null)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
-            });
-        }
-        if (shows is not null)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Shows[Shows.IndexOf(shows)] = shows;
-            });
-        }
     }
     public void SetCancelData(Show item)
     {

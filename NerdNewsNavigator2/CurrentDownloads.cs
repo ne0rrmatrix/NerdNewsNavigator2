@@ -37,6 +37,11 @@ public partial class CurrentDownloads : ObservableObject
             Debug.WriteLine("Cancel Firing");
             Shows.Remove(item);
             _hasStarted = false;
+            var next = Shows[^1];
+            if (next is not null)
+            {
+                Start(next);
+            }
             return item;
         }
         Shows.Remove(item);
