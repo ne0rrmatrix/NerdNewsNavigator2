@@ -222,8 +222,6 @@ public partial class SharedViewModel : BaseViewModel
         {
             return;
         }
-        var shows = Shows.ToList().Find(x => x.Url == item.Url);
-        var recent = MostRecentShows.ToList().Find(x => x.Url == item.Url);
         var currentDownload = App.Downloads.Shows.Find(x => x.Url == item.Url);
         var downloads = DownloadedShows.ToList().Find(x => x.Url == item.Url);
 
