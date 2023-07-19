@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Windows.Input;
+using NerdNewsNavigator2.Controls;
 
 namespace NerdNewsNavigator2.Shared;
 
@@ -28,7 +29,6 @@ public partial class SharedViewModel : BaseViewModel
     public SharedViewModel(ILogger<SharedViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         Logger = logger;
-        App.Downloads.DownloadStarted += DownloadStarted;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
@@ -54,13 +54,28 @@ public partial class SharedViewModel : BaseViewModel
         }
         App.Downloads.DownloadFinished -= DownloadCompleted;
         Debug.WriteLine("Downloaded event firing");
-        MainThread.InvokeOnMainThreadAsync(() =>
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsBusy = false;
             Title = string.Empty;
             DownloadProgress = string.Empty;
+            if (Shows.ToList().Exists(x => x.Url == e.Item.Url))
+            {
+                var number = Shows.IndexOf(e.Item);
+                Shows[number].IsDownloaded = true;
+                Shows[number].IsDownloading = false;
+                Shows[number].IsNotDownloaded = false;
+                OnPropertyChanged(nameof(Shows));
+            }
+            if (MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url))
+            {
+                var number = MostRecentShows.IndexOf(e.Item);
+                this.MostRecentShows[number].IsDownloaded = true;
+                this.MostRecentShows[number].IsDownloading = false;
+                this.MostRecentShows[number].IsNotDownloaded = false;
+                OnPropertyChanged(nameof(MostRecentShows));
+            }
         });
-        SetDownloadStatus(e.Item);
     }
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
@@ -163,6 +178,7 @@ public partial class SharedViewModel : BaseViewModel
         ThreadPool.QueueUserWorkItem(async state => await App.GetMostRecent());
         GetMostRecent();
     }
+
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
@@ -178,7 +194,6 @@ public partial class SharedViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
-        App.Downloads.DownloadFinished += DownloadCompleted;
         var item = GetShowForDownload(url);
         item.IsDownloaded = false;
         item.IsDownloading = true;
@@ -191,31 +206,15 @@ public partial class SharedViewModel : BaseViewModel
         {
             MostRecentShows[MostRecentShows.IndexOf(item)] = item;
         }
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += DownloadCompleted;
         App.Downloads.Add(item);
         App.Downloads.Start(item);
     }
 
     #endregion
     #region Download Status Methods
-    public void SetDownloadStatus(Show show)
-    {
-        if (Shows.ToList().Exists(x => x.Url == show.Url))
-        {
-            var item = Shows.ToList().Find(x => x.Url == show.Url);
-            item.IsDownloaded = true;
-            item.IsDownloading = false;
-            item.IsNotDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
-        }
-        if (MostRecentShows.ToList().Exists(x => x.Url == show.Url))
-        {
-            var item = MostRecentShows.ToList().Find(x => x.Url == show.Url);
-            item.IsDownloaded = true;
-            item.IsDownloading = false;
-            item.IsNotDownloaded = false;
-            MostRecentShows[MostRecentShows.IndexOf(item)] = item;
-        }
-    }
+
     public void SetProperties(Show show)
     {
         var item = GetShowForDownload(show.Url);
@@ -248,12 +247,27 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloading = false;
             show.IsNotDownloaded = false;
         }
+        if (Shows.ToList().Exists(x => x.Url == show.Url))
+        {
+            var number = Shows.IndexOf(show);
+            Shows[number].IsDownloaded = show.IsDownloaded;
+            Shows[number].IsDownloading = show.IsDownloading;
+            Shows[number].IsNotDownloaded = show.IsNotDownloaded;
+            OnPropertyChanged(nameof(Shows));
+        }
+        if (MostRecentShows.ToList().Exists(x => x.Url == show.Url))
+        {
+            var number = MostRecentShows.IndexOf(show);
+            MostRecentShows[number].IsDownloaded = show.IsDownloaded;
+            MostRecentShows[number].IsDownloading = show.IsDownloading;
+            MostRecentShows[number].IsNotDownloaded = show.IsNotDownloaded;
+            OnPropertyChanged(nameof(MostRecentShows));
+        }
         if (recent is not null)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 MostRecentShows[MostRecentShows.IndexOf(recent)] = recent;
-                Logger.LogInformation("Updating Most Recent Show: {title}, IsDownloading: {Isdownloading}, IsDownloaded: {IsDownloaded}", show.Title, show.IsDownloading, show.IsDownloaded);
             });
         }
         if (shows is not null)
@@ -261,30 +275,33 @@ public partial class SharedViewModel : BaseViewModel
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Shows[Shows.IndexOf(shows)] = shows;
-                Logger.LogInformation("Updating Show: {title}, IsDownloading: {Isdownloading}, IsDownloaded: {IsDownloaded}", show.Title, show.IsDownloading, show.IsDownloaded);
             });
         }
     }
-    public void SetCancelData(Show show, bool isShow)
+    public void SetCancelData(Show item)
     {
-        var temp = GetShowForDownload(show.Url);
-        var item = Shows.ToList().Find(x => x.Url == temp.Url);
-        var mostRecent = MostRecentShows.ToList().Find(x => x.Url == temp.Url);
-
-        if (isShow && item is not null)
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
-            item.IsDownloading = false;
-            item.IsNotDownloaded = true;
-            item.IsDownloaded = false;
-            Shows[Shows.IndexOf(item)] = item;
-        }
-        else if (!isShow && mostRecent is not null)
-        {
-            mostRecent.IsDownloading = false;
-            mostRecent.IsNotDownloaded = true;
-            mostRecent.IsDownloaded = false;
-            MostRecentShows[MostRecentShows.IndexOf(mostRecent)] = mostRecent;
-        }
+            IsBusy = false;
+            Title = string.Empty;
+            DownloadProgress = string.Empty;
+            if (Shows.ToList().Exists(x => x.Url == item.Url))
+            {
+                var number = Shows.IndexOf(item);
+                Shows[number].IsDownloaded = false;
+                Shows[number].IsDownloading = false;
+                Shows[number].IsNotDownloaded = true;
+                OnPropertyChanged(nameof(Shows));
+            }
+            if (MostRecentShows.ToList().Exists(x => x.Url == item.Url))
+            {
+                var number = MostRecentShows.IndexOf(item);
+                MostRecentShows[number].IsDownloaded = false;
+                MostRecentShows[number].IsDownloading = false;
+                this.MostRecentShows[number].IsNotDownloaded = true;
+                OnPropertyChanged(nameof(MostRecentShows));
+            }
+        });
     }
     #endregion
     /// <summary>

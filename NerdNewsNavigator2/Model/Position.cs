@@ -7,7 +7,8 @@ namespace NerdNewsNavigator2.Model;
 /// a Class for Storing <see cref="Position"/> in Database
 /// </summary>
 [Table("Positions")]
-public class Position : Shared
+public partial class Position : Shared
 {
-    public TimeSpan SavedPosition { get; set; }
+    [ObservableProperty]
+    private TimeSpan _savedPosition;
 }

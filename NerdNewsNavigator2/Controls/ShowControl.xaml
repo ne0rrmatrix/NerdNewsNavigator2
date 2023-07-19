@@ -84,7 +84,7 @@
                                         FontSize="{OnPlatform Default=12,
                                                               MacCatalyst=16}"
                                         HeightRequest="35"
-                                        IsVisible="{Binding IsNotDownloaded}"
+                                        IsVisible="{Binding Path=IsNotDownloaded}"
                                         Text="Download"
                                         TextColor="Black"
                                         WidthRequest="90">
@@ -99,7 +99,7 @@
                                         FontSize="{OnPlatform Default=12,
                                                               MacCatalyst=16}"
                                         HeightRequest="35"
-                                        IsVisible="{Binding IsDownloading}"
+                                        IsVisible="{Binding Path=IsDownloading}"
                                         Text="Cancel"
                                         TextColor="Black"
                                         WidthRequest="90">

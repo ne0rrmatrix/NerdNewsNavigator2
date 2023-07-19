@@ -30,6 +30,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
             Debug.WriteLine(item.Url);
         }
         Title = string.Empty;
-        SetCancelData(item, false);
+        SetCancelData(item);
     }
 }

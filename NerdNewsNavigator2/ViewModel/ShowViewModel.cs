@@ -15,6 +15,7 @@ public partial class ShowViewModel : SharedViewModel
     /// </summary>
     public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
+        Shows = new ObservableCollection<Show>();
     }
 
     [RelayCommand]
@@ -26,6 +27,6 @@ public partial class ShowViewModel : SharedViewModel
             Debug.WriteLine(item.Url);
         }
         Title = string.Empty;
-        SetCancelData(item, true);
+        SetCancelData(item);
     }
 }

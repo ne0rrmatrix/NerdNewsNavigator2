@@ -98,7 +98,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
-        builder.Services.AddTransient<SharedViewModel>();
+        builder.Services.AddSingleton<SharedViewModel>();
         builder.Services.AddSingleton<PositionDataBase>();
 
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);

@@ -8,6 +8,6 @@ namespace NerdNewsNavigator2.Model;
 /// A class for storing <see cref="Favorites"/> in a Database.
 /// </summary>
 [Table("Favorites")]
-public class Favorites : Shared
+public partial class Favorites : Shared
 {
 }

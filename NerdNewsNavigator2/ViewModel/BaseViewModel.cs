@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Maui.BindableProperty.Generator.Core;
+
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -19,17 +21,20 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Show> Shows { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Show> _shows;
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Show> MostRecentShows { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Show> _mostRecentShows;
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of downloaded <see cref="Download"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Download> DownloadedShows { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Download> _downloadedShows;
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
@@ -100,7 +105,10 @@ public partial class BaseViewModel : ObservableObject
     {
         Logger = logger;
         _connectivity = connectivity;
+        _shows = new();
         _downloadProgress = string.Empty;
+        _downloadedShows = new();
+        _mostRecentShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
     }

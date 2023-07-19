@@ -3,17 +3,21 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2;
-public class CurrentDownloads
+public partial class CurrentDownloads : ObservableObject
 {
     private static string Status { get; set; } = string.Empty;
     private bool _hasStarted = false;
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
-    public List<Show> Shows { get; set; } = new();
-    private Show Item { get; set; } = new();
+    [ObservableProperty]
+    private List<Show> _shows;
+    [ObservableProperty]
+    private Show _item;
     public static bool CancelDownload { get; set; } = false;
     public CurrentDownloads()
     {
+        _shows = new();
+        _item = new();
     }
     public void Add(Show show)
     {
@@ -40,28 +44,15 @@ public class CurrentDownloads
     }
     public void Start(Show show)
     {
+        if (_hasStarted || Shows.Count == 0)
+        {
+            return;
+        }
         ThreadPool.QueueUserWorkItem(state =>
         {
-            while (_hasStarted)
-            {
-                Debug.WriteLine("Waiting for dowload to complete");
-                if (Shows.Count == 0)
-                {
-                    _hasStarted = false;
-                    break;
-                }
-                Thread.Sleep(3000);
-            }
             CancelDownload = false;
             Debug.WriteLine("Starting Download");
-            if (Shows.Exists(x => x.Url == show.Url))
-            {
-                _ = StartDownload(show);
-            }
-            else
-            {
-                Debug.WriteLine("Download was cancelled while busy");
-            }
+            _ = StartDownload(show);
         });
     }
     private async Task StartDownload(Show item)
@@ -89,7 +80,7 @@ public class CurrentDownloads
             };
             await App.PositionData.UpdateDownload(download);
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title));
-            Completed();
+            Completed(item);
         }
         else
         {
@@ -105,16 +96,20 @@ public class CurrentDownloads
         };
         OnStarted(args);
     }
-    private void Completed()
+    private void Completed(Show item)
     {
         var args = new DownloadEventArgs
         {
-            Item = Shows.Find(item => item.Url == Item.Url) ?? throw new NullReferenceException()
+            Item = item
         };
         _hasStarted = false;
         Debug.WriteLine("Download Completed");
         OnDownloadFinished(args);
         Shows.Remove(Item);
+        if (Shows.Count > 0)
+        {
+            _ = StartDownload(Shows[^1]);
+        }
     }
     protected virtual void OnStarted(DownloadEventArgs args)
     {
