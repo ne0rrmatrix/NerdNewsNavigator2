@@ -2,10 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using CommunityToolkit.Maui.Core.Views;
-using NerdNewsNavigator2.Controls;
-
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -44,8 +40,7 @@ public partial class VideoPlayerPage : ContentPage
     private void Now(object sender, VideoNavigationEventArgs e)
     {
         ShowItem = e.CurrentShow;
-        var yourUri = new UriBuilder(e.CurrentShow.Url).Uri;
-        mediaElement.Source = yourUri;
+        mediaElement.Source = e.CurrentShow.Url;
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif

@@ -69,6 +69,7 @@ public partial class SharedViewModel : BaseViewModel
                         break;
                 }
             });
+            App.CurrentNavigation.NavigationCompleted -= OnNavigated;
         }
     }
     private void DownloadStarted(object sender, DownloadEventArgs e)
@@ -168,7 +169,7 @@ public partial class SharedViewModel : BaseViewModel
 #endif
             return;
         }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
         App.OnVideoNavigated.Add(item);
     }
 
