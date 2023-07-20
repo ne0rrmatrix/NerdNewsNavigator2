@@ -9,13 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class DownloadedShowViewModel : SharedViewModel
 {
-    #region Properties
-    /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
-    /// </summary>
-    private readonly ILogger<DownloadedShowViewModel> _logger;
-
-    #endregion
     /// <summary>
     /// Intilializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="logger"/>
@@ -23,7 +16,6 @@ public partial class DownloadedShowViewModel : SharedViewModel
     public DownloadedShowViewModel(ILogger<DownloadedShowViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
-        _logger = logger;
     }
 }
 
