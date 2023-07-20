@@ -8,6 +8,8 @@ public partial class VideoOnNavigated : ObservableObject
 {
     [ObservableProperty]
     private Show _currentShow;
+    [ObservableProperty]
+    private string _title;
     public EventHandler<VideoNavigationEventArgs> Navigation { get; set; }
     public VideoOnNavigated()
     {
@@ -17,7 +19,8 @@ public partial class VideoOnNavigated : ObservableObject
     {
         var args = new VideoNavigationEventArgs
         {
-            CurrentShow = show
+            CurrentShow = show,
+            Title = show.Title
         };
         OnVideoNavigation(args);
     }

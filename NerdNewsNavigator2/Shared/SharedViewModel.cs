@@ -156,23 +156,29 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public async Task Tap(string url)
     {
-        var item = Shows.FirstOrDefault(x => x.Url == url) ?? MostRecentShows.FirstOrDefault(x => x.Url == url);
-        if (DownloadedShows.Where(y => !y.Deleted).ToList().Exists(x => x.Url == item.Url))
+        if (DownloadedShows.Where(y => !y.Deleted).ToList().Exists(x => x.Url == url))
         {
-#if ANDROID || IOS || MACCATALYST
             var download = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
-            await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={download}");
+            await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+            var item = DownloadedShows.ToList().Find(x => x.Url == url);
+            Show show = new()
+            {
+                Url = download,
+                Title = item.Title,
+            };
+#if ANDROID || IOS || MACCATALYST
+            App.OnVideoNavigated.Add(show);
 #endif
 #if WINDOWS
-            var download = "ms-appdata:///LocalCache/Local/" + DownloadService.GetFileName(url);
-            await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={download}");
+            await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+            App.OnVideoNavigated.Add(show);
 #endif
             return;
         }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
-        App.OnVideoNavigated.Add(item);
+        var temp = Shows.ToList().Find(x => x.Url == url) ?? MostRecentShows.ToList().Find(y => y.Url == url) ?? throw new NullReferenceException();
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        App.OnVideoNavigated.Add(temp);
     }
-
     #endregion
 
     #region Shared ViewModel code

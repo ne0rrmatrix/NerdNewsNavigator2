@@ -7,4 +7,5 @@ namespace NerdNewsNavigator2.Primitives;
 public class VideoNavigationEventArgs : EventArgs
 {
     public Show CurrentShow { get; set; }
+    public string Title { get; set; }
 }
