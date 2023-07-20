@@ -33,7 +33,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         PodcastServices.DeletetAllImages();
         await DeleteAllAsync();
         await GetUpdatedPodcasts();
-        await App.GetMostRecent();
+        await GetMostRecent();
         await GetDownloadedShows();
         await GetFavoriteShows();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

@@ -13,9 +13,6 @@
                                        MacCatalyst=false,
                                        WinUI=False}">
 
-    <media:MediaControl
-        x:Name="mediaElement"
-        IsYoutube="False"
-        Source="{Binding Url}" />
+    <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
 
 </ContentPage>

@@ -11,10 +11,12 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
+    public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
     public static bool Loading { get; set; } = false;
     public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
+    public static CurrentNavigation CurrentNavigation { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -77,7 +79,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
         {
             var item = FeedService.GetShows(show.Url, true);
-            MostRecentShows.Add(item[0]);
+            if (item.Count > 0)
+            {
+
+                MostRecentShows.Add(item[0]);
+            }
         });
         Loading = false;
     }

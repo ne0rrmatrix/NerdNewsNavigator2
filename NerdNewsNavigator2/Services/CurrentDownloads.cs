@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2;
+namespace NerdNewsNavigator2.Services;
 public partial class CurrentDownloads : ObservableObject
 {
     private static string Status { get; set; } = string.Empty;
@@ -36,12 +36,13 @@ public partial class CurrentDownloads : ObservableObject
             CancelDownload = true;
             Debug.WriteLine("Cancel Firing");
             Shows.Remove(item);
-            _hasStarted = false;
-            var next = Shows[^1];
-            if (next is not null)
+            if (Shows.Count > 0)
             {
+                var next = Shows[^1];
                 Start(next);
             }
+
+            _hasStarted = false;
             return item;
         }
         Shows.Remove(item);

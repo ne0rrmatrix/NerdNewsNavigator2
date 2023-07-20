@@ -4,6 +4,7 @@
 
 using System.Windows.Input;
 using NerdNewsNavigator2.Controls;
+using NerdNewsNavigator2.Primitives;
 
 namespace NerdNewsNavigator2.Shared;
 
@@ -31,12 +32,45 @@ public partial class SharedViewModel : BaseViewModel
         Logger = logger;
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
+        App.CurrentNavigation.NavigationCompleted += OnNavigated;
+        App.Downloads.DownloadStarted += DownloadStarted;
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+    private void OnNavigated(object sender, Primitives.NavigationEventArgs e)
+    {
+        if (e.IsNavigating)
+        {
+            App.CurrentNavigation.IsNavigating = false;
+            Debug.WriteLine("OnNavigated event Firing");
+            ThreadPool.QueueUserWorkItem(async state =>
+            {
+                var downlaoded = await App.PositionData.GetAllDownloads();
+                switch (e.IsShows)
+                {
+                    case true:
+                        while (Shows.Count == 0)
+                        {
+                            Thread.Sleep(100);
+                        }
+                        Shows.Where(x => downlaoded.Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+                        Shows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+                        break;
 
+                    case false:
+                        while (MostRecentShows.Count == 0)
+                        {
+                            Thread.Sleep(100);
+                        }
+                        MostRecentShows.Where(x => downlaoded.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+                        MostRecentShows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+                        break;
+                }
+            });
+        }
+    }
     private void DownloadStarted(object sender, DownloadEventArgs e)
     {
         if (e.Status is null)
@@ -92,8 +126,8 @@ public partial class SharedViewModel : BaseViewModel
         Shows.Clear();
         MostRecentShows.Clear();
         Podcasts.Clear();
-        ThreadPool.QueueUserWorkItem(state => GetMostRecent());
         ThreadPool.QueueUserWorkItem(async state => await GetUpdatedPodcasts());
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
         GetShowsAsync(Url, false);
         IsBusy = false;
         return Task.CompletedTask;
@@ -122,7 +156,7 @@ public partial class SharedViewModel : BaseViewModel
     public async Task Tap(string url)
     {
         var item = Shows.FirstOrDefault(x => x.Url == url) ?? MostRecentShows.FirstOrDefault(x => x.Url == url);
-        if (DownloadedShows.ToList().Exists(x => x.Url == item.Url))
+        if (DownloadedShows.Where(y => !y.Deleted).ToList().Exists(x => x.Url == item.Url))
         {
 #if ANDROID || IOS || MACCATALYST
             var download = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
@@ -134,8 +168,8 @@ public partial class SharedViewModel : BaseViewModel
 #endif
             return;
         }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={url}");
-        WeakReferenceMessenger.Default.Send(new UrlItemMessage(item));
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        App.OnVideoNavigated.Add(item);
     }
 
     #endregion
@@ -175,8 +209,7 @@ public partial class SharedViewModel : BaseViewModel
         Logger.LogInformation("Removed {file} from Downloaded Shows list.", url);
         Logger.LogInformation("Failed to find a show to update");
         MostRecentShows.Clear();
-        ThreadPool.QueueUserWorkItem(async state => await App.GetMostRecent());
-        GetMostRecent();
+        await GetMostRecent();
     }
 
     /// <summary>
@@ -195,18 +228,23 @@ public partial class SharedViewModel : BaseViewModel
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
         var item = GetShowForDownload(url);
-        item.IsDownloaded = false;
         item.IsDownloading = true;
-        item.IsNotDownloaded = false;
         if (Shows.ToList().Exists(x => x.Url == item.Url))
         {
-            Shows[Shows.IndexOf(item)] = item;
+            var number = Shows.IndexOf(item);
+            Shows[number].IsDownloaded = false;
+            Shows[number].IsDownloading = true;
+            Shows[number].IsNotDownloaded = false;
+            OnPropertyChanged(nameof(Shows));
         }
         if (MostRecentShows.ToList().Exists(x => x.Url == item.Url))
         {
-            MostRecentShows[MostRecentShows.IndexOf(item)] = item;
+            var number = MostRecentShows.IndexOf(item);
+            this.MostRecentShows[number].IsDownloaded = false;
+            this.MostRecentShows[number].IsDownloading = true;
+            this.MostRecentShows[number].IsNotDownloaded = false;
+            OnPropertyChanged(nameof(MostRecentShows));
         }
-        App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadFinished += DownloadCompleted;
         App.Downloads.Add(item);
         App.Downloads.Start(item);
@@ -217,19 +255,18 @@ public partial class SharedViewModel : BaseViewModel
 
     public void SetProperties(Show show)
     {
-        var item = GetShowForDownload(show.Url);
-        if (item is null)
+        if (show is null)
         {
             return;
         }
-        var currentDownload = App.Downloads.Shows.Find(x => x.Url == item.Url);
-        var downloads = DownloadedShows.ToList().Find(x => x.Url == item.Url);
-
+        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
+        var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
         if (currentDownload is null)
         {
             show.IsDownloading = false;
             show.IsNotDownloaded = true;
             show.IsDownloaded = false;
+            Logger.LogInformation("Current show is not downloading and is not downloaded");
         }
 
         if (currentDownload is not null)
@@ -237,6 +274,7 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
+            Logger.LogInformation("current show is downloading");
         }
 
         if (downloads is not null)
@@ -244,22 +282,29 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloaded = true;
             show.IsDownloading = false;
             show.IsNotDownloaded = false;
+            Logger.LogInformation("Current show is downloaded");
         }
         if (Shows.ToList().Exists(x => x.Url == show.Url))
         {
             var number = Shows.IndexOf(show);
-            Shows[number].IsDownloaded = show.IsDownloaded;
-            Shows[number].IsDownloading = show.IsDownloading;
-            Shows[number].IsNotDownloaded = show.IsNotDownloaded;
-            OnPropertyChanged(nameof(Shows));
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shows[number].IsDownloaded = show.IsDownloaded;
+                Shows[number].IsDownloading = show.IsDownloading;
+                Shows[number].IsNotDownloaded = show.IsNotDownloaded;
+                OnPropertyChanged(nameof(Shows));
+            });
         }
         if (MostRecentShows.ToList().Exists(x => x.Url == show.Url))
         {
             var number = MostRecentShows.IndexOf(show);
-            MostRecentShows[number].IsDownloaded = show.IsDownloaded;
-            MostRecentShows[number].IsDownloading = show.IsDownloading;
-            MostRecentShows[number].IsNotDownloaded = show.IsNotDownloaded;
-            OnPropertyChanged(nameof(MostRecentShows));
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                this.MostRecentShows[number].IsDownloaded = show.IsDownloaded;
+                this.MostRecentShows[number].IsDownloading = show.IsDownloading;
+                this.MostRecentShows[number].IsNotDownloaded = show.IsNotDownloaded;
+                OnPropertyChanged(nameof(MostRecentShows));
+            });
         }
     }
     public void SetCancelData(Show item)
@@ -269,7 +314,9 @@ public partial class SharedViewModel : BaseViewModel
             IsBusy = false;
             Title = string.Empty;
             DownloadProgress = string.Empty;
-            if (Shows.ToList().Exists(x => x.Url == item.Url))
+            var exists = Shows.ToList().Exists(x => x.Url == item.Url);
+            item = Shows.ToList().Find(x => x.Url == item.Url);
+            if (exists)
             {
                 var number = Shows.IndexOf(item);
                 Shows[number].IsDownloaded = false;
@@ -277,7 +324,9 @@ public partial class SharedViewModel : BaseViewModel
                 Shows[number].IsNotDownloaded = true;
                 OnPropertyChanged(nameof(Shows));
             }
-            if (MostRecentShows.ToList().Exists(x => x.Url == item.Url))
+            exists = MostRecentShows.ToList().Exists(x => x.Url == item.Url);
+            item = MostRecentShows.ToList().Find(x => x.Url == item.Url);
+            if (exists)
             {
                 var number = MostRecentShows.IndexOf(item);
                 MostRecentShows[number].IsDownloaded = false;
@@ -301,8 +350,6 @@ public partial class SharedViewModel : BaseViewModel
         var item = BaseViewModel.RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
         item.ForEach(async x => await PodcastServices.UpdateImage(x));
-        Shows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Logger.LogInformation("Got All Shows");
     }
 
@@ -310,19 +357,30 @@ public partial class SharedViewModel : BaseViewModel
     /// Method gets most recent episode from each podcast on twit.tv
     /// </summary>
     /// <returns></returns>
-    public void GetMostRecent()
+    public async Task GetMostRecent()
     {
         while (App.Loading)
         {
             Thread.Sleep(500);
         }
+        if (MostRecentShows.Count > 0)
+        {
+            await CheckForNew();
+        }
         var deDupe = RemoveDuplicates(App.MostRecentShows);
         var item = deDupe.OrderBy(x => x.Title).ToList();
         item.ForEach(MostRecentShows.Add);
         item.ForEach(async x => await PodcastServices.UpdateImage(x));
-        MostRecentShows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        MostRecentShows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Logger.LogInformation("Got Most recent shows");
     }
-
+    public async Task CheckForNew()
+    {
+        if (App.Loading)
+        {
+            return;
+        }
+        Logger.LogInformation("Checking for new Most Recent Shows");
+        await App.GetMostRecent();
+        App.MostRecentShows.Where(x => !(MostRecentShows.ToList().Exists(y => y.Url == x.Url))).ToList().ForEach(MostRecentShows.Add);
+    }
 }

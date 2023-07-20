@@ -20,7 +20,7 @@ public partial class EditViewModel : SharedViewModel
     {
         Logger = logger;
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-        ThreadPool.QueueUserWorkItem((state) => GetMostRecent());
+        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
     }
 
     #region Methods

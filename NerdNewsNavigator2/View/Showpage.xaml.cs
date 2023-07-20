@@ -18,6 +18,11 @@ public partial class ShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        App.CurrentNavigation.StartedNavigation(true, true);
+        base.OnNavigatedTo(args);
+    }
 
     /// <summary>
     /// Method sets screen to normal screen size.

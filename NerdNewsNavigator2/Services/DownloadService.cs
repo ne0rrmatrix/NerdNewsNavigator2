@@ -18,23 +18,6 @@ public static class DownloadService
     #endregion
 
     /// <summary>
-    /// Method Adds Downloaded <see cref="Download"/> to Database.
-    /// </summary>
-    /// <param name="download">Is the Url of <see cref="Download"/> to Add to datbase.</param> 
-    /// <returns>nothing</returns>
-    public static async Task<bool> AddDownloadDatabase(Download download)
-    {
-        var items = await App.PositionData.GetAllDownloads();
-        if (items.Exists(x => x.Url == download.Url))
-        {
-            Debug.WriteLine("Download already exists. Not adding download to database");
-            return false;
-        }
-        await App.PositionData.AddDownload(download);
-        return true;
-    }
-
-    /// <summary>
     /// Get file name from Url <see cref="string"/>
     /// </summary>
     /// <param name="url">A URL <see cref="string"/></param>
@@ -113,38 +96,6 @@ public static class DownloadService
     }
 
     /// <summary>
-    /// A method that download a Item to device.
-    /// </summary>
-    /// <param name="show"></param>
-    /// <returns></returns>
-    public static async Task Downloading(Show show)
-    {
-        Download download = new()
-        {
-            Title = show.Title,
-            Url = show.Url,
-            Image = show.Image,
-            IsDownloaded = true,
-            IsNotDownloaded = false,
-            Deleted = false,
-            PubDate = show.PubDate,
-            Description = show.Description,
-            FileName = GetFileName(show.Url)
-        };
-
-        var downloaded = await DownloadFile(show);
-        if (downloaded)
-        {
-
-            await AddDownloadDatabase(download);
-            Debug.WriteLine("Trying to Add Downlaoded Show to Database");
-            show.IsDownloading = false;
-            show.IsDownloaded = true;
-            show.IsNotDownloaded = true;
-        }
-    }
-
-    /// <summary>
     /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
     public static async Task AutoDownload()
@@ -200,7 +151,23 @@ public static class DownloadService
                 NotificationService.AfterNotifications(requests);
             });
 #endif
-            await Downloading(show);
+            var result = await DownloadFile(show);
+            if (result)
+            {
+                Download download = new()
+                {
+                    Title = show.Title,
+                    Url = show.Url,
+                    Image = show.Image,
+                    IsDownloaded = true,
+                    IsNotDownloaded = false,
+                    Deleted = false,
+                    PubDate = show.PubDate,
+                    Description = show.Description,
+                    FileName = GetFileName(show.Url)
+                };
+                await App.PositionData.UpdateDownload(download);
+            }
         }
     }
 }

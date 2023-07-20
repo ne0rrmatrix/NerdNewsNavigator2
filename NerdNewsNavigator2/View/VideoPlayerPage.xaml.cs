@@ -2,13 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using CommunityToolkit.Maui.Core.Views;
+using NerdNewsNavigator2.Controls;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
 /// A class that Displays a Video from twit.tv.
 /// </summary>
 /// 
-public partial class VideoPlayerPage : ContentPage, IRecipient<UrlItemMessage>
+public partial class VideoPlayerPage : ContentPage
 {
     #region Properties
 
@@ -34,14 +38,14 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<UrlItemMessage>
         InitializeComponent();
         BindingContext = viewModel;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
+        App.OnVideoNavigated.Navigation += Now;
     }
 
-    #region Events
-#nullable enable
-    public void Receive(UrlItemMessage message)
+    private void Now(object sender, VideoNavigationEventArgs e)
     {
-        ShowItem = message.ShowItem;
+        ShowItem = e.CurrentShow;
+        var yourUri = new UriBuilder(e.CurrentShow.Url).Uri;
+        mediaElement.Source = yourUri;
 #if WINDOWS || ANDROID
         mediaElement.MediaOpened += Seek;
 #endif
@@ -50,6 +54,10 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<UrlItemMessage>
         mediaElement.StateChanged += SeekIOS;
 #endif
     }
+
+    #region Events
+#nullable enable
+
     /// <summary>
     /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
     /// </summary>
@@ -67,6 +75,7 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<UrlItemMessage>
             Debug.WriteLine(result.Title);
             Pos.Title = result.Title;
             Pos.SavedPosition = result.SavedPosition;
+            mediaElement.Pause();
             _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
             mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.Play();

@@ -17,7 +17,7 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     {
         if (MostRecentShows.ToList().Count == 0)
         {
-            ThreadPool.QueueUserWorkItem(state => GetMostRecent());
+            ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
         }
     }
 

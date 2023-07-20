@@ -18,6 +18,11 @@ public partial class MostRecentShowsPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        App.CurrentNavigation.StartedNavigation(true, false);
+        base.OnNavigatedTo(args);
+    }
 
     /// <summary>
     /// Method sets screen to normal screen size.
