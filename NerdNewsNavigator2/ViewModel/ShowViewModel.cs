@@ -24,32 +24,12 @@ public partial class ShowViewModel : SharedViewModel
 
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
-        if (e.Status == string.Empty)
-        {
-            Title = string.Empty;
-        }
         if (App.Downloads.Shows.Count == 0)
         {
-            Title = string.Empty;
             App.Downloads.DownloadFinished -= DownloadCompleted;
         }
         Debug.WriteLine("Shows View Model - Downloaded event firing");
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            var show = Shows.ToList().Exists(x => x.Url == e.Item.Url);
-            if (show)
-            {
-                var item = Shows.ToList().Find(x => x.Url == e.Item.Url);
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = true;
-                Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(Shows));
-            }
-        });
+        Completed(e.Item.Url);
     }
 
     [RelayCommand]

@@ -26,32 +26,12 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     }
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
-        if (e.Status == string.Empty)
-        {
-            Title = string.Empty;
-        }
         if (App.Downloads.Shows.Count == 0)
         {
-            Title = string.Empty;
             App.Downloads.DownloadFinished -= DownloadCompleted;
         }
         Debug.WriteLine("Most Recent Shows Viewmodel - Downloaded event firing");
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            var show = MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url);
-            if (show)
-            {
-                var item = MostRecentShows.ToList().Find(x => x.Url == e.Item.Url);
-                var number = MostRecentShows.IndexOf(item);
-                MostRecentShows[number].IsDownloaded = true;
-                MostRecentShows[number].IsDownloading = false;
-                MostRecentShows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(MostRecentShows));
-            }
-        });
+        Completed(e.Item.Url);
     }
 
     [RelayCommand]

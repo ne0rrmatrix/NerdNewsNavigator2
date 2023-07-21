@@ -78,39 +78,33 @@ public partial class SharedViewModel : BaseViewModel
         }
         Title = e.Status;
     }
-
-    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    public void Completed(string url)
     {
-        if (e.Item is null)
-        {
-            return;
-        }
         if (App.Downloads.Shows.Count == 0)
         {
             Title = string.Empty;
             App.Downloads.DownloadFinished -= DownloadCompleted;
         }
-        Title = string.Empty;
         Debug.WriteLine("Shared View model - Downloaded event firing");
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsBusy = false;
             Title = string.Empty;
             DownloadProgress = string.Empty;
-            var show = Shows.ToList().Exists(x => x.Url == e.Item.Url);
+            var show = Shows.ToList().Exists(x => x.Url == url);
             if (show)
             {
-                var item = Shows.ToList().Find(x => x.Url == e.Item.Url);
+                var item = Shows.ToList().Find(x => x.Url == url);
                 var number = Shows.IndexOf(item);
                 Shows[number].IsDownloaded = true;
                 Shows[number].IsDownloading = false;
                 Shows[number].IsNotDownloaded = false;
                 OnPropertyChanged(nameof(Shows));
             }
-            show = MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url);
+            show = MostRecentShows.ToList().Exists(x => x.Url == url);
             if (show)
             {
-                var item = MostRecentShows.ToList().Find(x => x.Url == e.Item.Url);
+                var item = MostRecentShows.ToList().Find(x => x.Url == url);
                 var number = MostRecentShows.IndexOf(item);
                 this.MostRecentShows[number].IsDownloaded = true;
                 this.MostRecentShows[number].IsDownloading = false;
@@ -118,6 +112,11 @@ public partial class SharedViewModel : BaseViewModel
                 OnPropertyChanged(nameof(MostRecentShows));
             }
         });
+    }
+
+    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    {
+        Completed(e.Item.Url);
     }
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
