@@ -53,4 +53,4 @@ jobs:
           dotnet workload install maui --source https://api.nuget.org/v3/index.json
           dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
           dotnet build ${{ env.PROJECT_PATH }} -f net7.0-windows10.0.19041.0 -c Release
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
