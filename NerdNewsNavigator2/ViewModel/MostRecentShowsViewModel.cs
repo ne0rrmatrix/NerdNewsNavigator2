@@ -24,25 +24,10 @@ public partial class MostRecentShowsViewModel : SharedViewModel
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
     }
-    private void DownloadCompleted(object sender, DownloadEventArgs e)
-    {
-        if (App.Downloads.Shows.Count == 0)
-        {
-            App.Downloads.DownloadFinished -= DownloadCompleted;
-        }
-        Debug.WriteLine("Most Recent Shows Viewmodel - Downloaded event firing");
-        Completed(e.Item.Url);
-    }
 
     [RelayCommand]
     public void Cancel(string url)
     {
-        var item = App.Downloads.Cancel(url);
-        if (item != null)
-        {
-            Debug.WriteLine(item.Url);
-        }
-        Title = string.Empty;
-        SetCancelData(item, false);
+        SetCancelData(url, false);
     }
 }

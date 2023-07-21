@@ -114,7 +114,7 @@ public partial class SharedViewModel : BaseViewModel
         });
     }
 
-    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    public void DownloadCompleted(object sender, DownloadEventArgs e)
     {
         Completed(e.Item.Url);
     }
@@ -320,13 +320,16 @@ public partial class SharedViewModel : BaseViewModel
             });
         }
     }
-    public void SetCancelData(Show item, bool isShow)
+    public void SetCancelData(string url, bool isShow)
     {
+        var item = App.Downloads.Cancel(url);
         if (item is null)
         {
             Logger.LogInformation("show was null");
             return;
         }
+        Debug.WriteLine(item.Url);
+        Title = string.Empty;
         IsBusy = false;
         Title = string.Empty;
         DownloadProgress = string.Empty;
