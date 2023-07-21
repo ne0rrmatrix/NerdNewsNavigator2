@@ -39,6 +39,8 @@ public partial class CurrentDownloads : ObservableObject
             if (Shows.Count > 0)
             {
                 var next = Shows[0];
+                Item = next;
+                _hasStarted = false;
                 Start(next);
             }
 
