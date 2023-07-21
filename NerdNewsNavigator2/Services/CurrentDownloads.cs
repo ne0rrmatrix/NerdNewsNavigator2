@@ -38,7 +38,7 @@ public partial class CurrentDownloads : ObservableObject
             Shows.Remove(item);
             if (Shows.Count > 0)
             {
-                var next = Shows[^1];
+                var next = Shows[0];
                 Start(next);
             }
 
@@ -91,6 +91,7 @@ public partial class CurrentDownloads : ObservableObject
         else
         {
             Debug.WriteLine("Download is Cancelled");
+            Status = string.Empty;
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title));
         }
     }

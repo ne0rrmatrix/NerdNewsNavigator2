@@ -19,6 +19,39 @@ public partial class MostRecentShowsViewModel : SharedViewModel
         {
             ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
         }
+        if (App.Downloads.Shows.Count > 0)
+        {
+            App.Downloads.DownloadFinished += DownloadCompleted;
+        }
+    }
+    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    {
+        if (e.Status == string.Empty)
+        {
+            Title = string.Empty;
+        }
+        if (App.Downloads.Shows.Count == 0)
+        {
+            Title = string.Empty;
+            App.Downloads.DownloadFinished -= DownloadCompleted;
+        }
+        Debug.WriteLine("Most Recent Shows Viewmodel - Downloaded event firing");
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsBusy = false;
+            Title = string.Empty;
+            DownloadProgress = string.Empty;
+            var show = MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url);
+            if (show)
+            {
+                var item = MostRecentShows.ToList().Find(x => x.Url == e.Item.Url);
+                var number = MostRecentShows.IndexOf(item);
+                MostRecentShows[number].IsDownloaded = true;
+                MostRecentShows[number].IsDownloading = false;
+                MostRecentShows[number].IsNotDownloaded = false;
+                OnPropertyChanged(nameof(MostRecentShows));
+            }
+        });
     }
 
     [RelayCommand]
@@ -30,6 +63,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
             Debug.WriteLine(item.Url);
         }
         Title = string.Empty;
-        SetCancelData(item);
+        SetCancelData(item, false);
     }
 }

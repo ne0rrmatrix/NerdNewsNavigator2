@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Windows.Input;
-using NerdNewsNavigator2.Controls;
-using NerdNewsNavigator2.Primitives;
 
 namespace NerdNewsNavigator2.Shared;
 
@@ -87,24 +85,33 @@ public partial class SharedViewModel : BaseViewModel
         {
             return;
         }
-        App.Downloads.DownloadFinished -= DownloadCompleted;
-        Debug.WriteLine("Downloaded event firing");
+        if (App.Downloads.Shows.Count == 0)
+        {
+            Title = string.Empty;
+            App.Downloads.DownloadFinished -= DownloadCompleted;
+        }
+        Title = string.Empty;
+        Debug.WriteLine("Shared View model - Downloaded event firing");
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsBusy = false;
             Title = string.Empty;
             DownloadProgress = string.Empty;
-            if (Shows.ToList().Exists(x => x.Url == e.Item.Url))
+            var show = Shows.ToList().Exists(x => x.Url == e.Item.Url);
+            if (show)
             {
-                var number = Shows.IndexOf(e.Item);
+                var item = Shows.ToList().Find(x => x.Url == e.Item.Url);
+                var number = Shows.IndexOf(item);
                 Shows[number].IsDownloaded = true;
                 Shows[number].IsDownloading = false;
                 Shows[number].IsNotDownloaded = false;
                 OnPropertyChanged(nameof(Shows));
             }
-            if (MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url))
+            show = MostRecentShows.ToList().Exists(x => x.Url == e.Item.Url);
+            if (show)
             {
-                var number = MostRecentShows.IndexOf(e.Item);
+                var item = MostRecentShows.ToList().Find(x => x.Url == e.Item.Url);
+                var number = MostRecentShows.IndexOf(item);
                 this.MostRecentShows[number].IsDownloaded = true;
                 this.MostRecentShows[number].IsDownloading = false;
                 this.MostRecentShows[number].IsNotDownloaded = false;
@@ -314,13 +321,18 @@ public partial class SharedViewModel : BaseViewModel
             });
         }
     }
-    public void SetCancelData(Show item)
+    public void SetCancelData(Show item, bool isShow)
     {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        if (item is null)
         {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
+            Logger.LogInformation("show was null");
+            return;
+        }
+        IsBusy = false;
+        Title = string.Empty;
+        DownloadProgress = string.Empty;
+        if (isShow)
+        {
             var exists = Shows.ToList().Exists(x => x.Url == item.Url);
             item = Shows.ToList().Find(x => x.Url == item.Url);
             if (exists)
@@ -331,9 +343,12 @@ public partial class SharedViewModel : BaseViewModel
                 Shows[number].IsNotDownloaded = true;
                 OnPropertyChanged(nameof(Shows));
             }
-            exists = MostRecentShows.ToList().Exists(x => x.Url == item.Url);
+        }
+        else
+        {
+            var recent = MostRecentShows.ToList().Exists(x => x.Url == item.Url);
             item = MostRecentShows.ToList().Find(x => x.Url == item.Url);
-            if (exists)
+            if (recent)
             {
                 var number = MostRecentShows.IndexOf(item);
                 MostRecentShows[number].IsDownloaded = false;
@@ -341,7 +356,7 @@ public partial class SharedViewModel : BaseViewModel
                 this.MostRecentShows[number].IsNotDownloaded = true;
                 OnPropertyChanged(nameof(MostRecentShows));
             }
-        });
+        }
     }
     #endregion
     /// <summary>

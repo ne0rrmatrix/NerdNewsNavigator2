@@ -69,18 +69,6 @@ public partial class BaseViewModel : ObservableObject
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
-    private bool _isDownloading;
-
-    /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    public bool IsNotDownloading => !IsDownloading;
-
-    /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    [ObservableProperty]
     private string _downloadProgress;
 
     /// <summary>
