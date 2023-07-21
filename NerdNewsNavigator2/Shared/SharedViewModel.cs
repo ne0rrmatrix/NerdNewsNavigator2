@@ -383,10 +383,6 @@ public partial class SharedViewModel : BaseViewModel
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        while (App.Loading)
-        {
-            Thread.Sleep(500);
-        }
         if (MostRecentShows.Count > 0)
         {
             await CheckForNew();
@@ -399,8 +395,9 @@ public partial class SharedViewModel : BaseViewModel
     }
     public async Task CheckForNew()
     {
-        if (App.Loading)
+        if (App.Loading || App.MostRecentShows.Count > 0)
         {
+            Logger.LogInformation("App loading. Returning");
             return;
         }
         Logger.LogInformation("Checking for new Most Recent Shows");

@@ -33,19 +33,10 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         PodcastServices.DeletetAllImages();
         await DeleteAllAsync();
         await GetUpdatedPodcasts();
-        await GetMostRecent();
         await GetDownloadedShows();
         await GetFavoriteShows();
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        PodcastServices.DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
-
-#if WINDOWS
-        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(PodcastPage)}"); });
-#endif
-#if IOS || ANDROID || MACCATALYST
-
-        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
-#endif
+        await App.GetMostRecent();
+        await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
     {

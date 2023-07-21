@@ -73,7 +73,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         var temp = await App.PositionData.GetAllPodcasts();
         while (temp.Count == 0)
         {
-            Thread.Sleep(9000);
+            Thread.Sleep(5000);
             temp = await App.PositionData.GetAllPodcasts();
         }
         temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
@@ -86,6 +86,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
             }
         });
         Loading = false;
+        Debug.WriteLine("Got App most recent shows");
     }
     protected override Window CreateWindow(IActivationState activationState)
     {
