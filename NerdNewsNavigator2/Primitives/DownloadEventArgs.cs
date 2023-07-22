@@ -7,4 +7,8 @@ public class DownloadEventArgs : EventArgs
 {
     public Show Item { get; set; }
     public string Status { get; set; }
+#if ANDROID || IOS
+    public NotificationRequest Notification { get; set; }
+#endif
+    public double Progress { get; set; }
 }

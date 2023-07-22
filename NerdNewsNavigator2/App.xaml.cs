@@ -12,6 +12,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
     #region Properties
     public static Show ShowItem { get; set; } = new();
     public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
+    public static NotificationService SetNotification { get; set; }
     public static bool Loading { get; set; } = false;
     public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
@@ -54,7 +55,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
                     {
                         new NotificationAction(103)
                         {
-                            Title = "Play",
+                            Title = "Close Notification",
                         }
                     })
                 }
@@ -103,14 +104,11 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
 
     private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
     {
-        var message = Message.First(item => item.Id == e.Request.NotificationId);
         switch (e.ActionId)
         {
             case 103:
-                var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
-                Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
+                e.Request.Cancel();
                 break;
-
         }
     }
 
@@ -134,7 +132,8 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         {
             Cancel = message.Cancel,
             Id = message.Id,
-            Url = message.Url
+            Url = message.Url,
+            ShowItem = message.ShowItem,
         };
         if (Message.Exists(x => x.Id == message.Id))
         {

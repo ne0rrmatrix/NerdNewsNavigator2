@@ -6,6 +6,7 @@ namespace NerdNewsNavigator2.Model;
 
 public class Message
 {
+    public Show ShowItem { get; set; }
     public int Id { get; set; }
     public string Url { get; set; }
     public bool Cancel { get; set; }

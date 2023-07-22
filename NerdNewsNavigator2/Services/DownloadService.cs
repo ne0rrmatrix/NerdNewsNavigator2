@@ -143,14 +143,6 @@ public static class DownloadService
         if (item is null)
         {
             IsDownloading = true;
-#if ANDROID || IOS
-            _ = Task.Run(async () =>
-            {
-                await NotificationService.CheckNotification();
-                var requests = await NotificationService.NotificationRequests(show);
-                NotificationService.AfterNotifications(requests);
-            });
-#endif
             var result = await DownloadFile(show);
             if (result)
             {
@@ -166,7 +158,7 @@ public static class DownloadService
                     Description = show.Description,
                     FileName = GetFileName(show.Url)
                 };
-                await App.PositionData.UpdateDownload(download);
+                await App.PositionData.AddDownload(download);
             }
         }
     }
