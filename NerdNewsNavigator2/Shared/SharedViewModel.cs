@@ -279,7 +279,6 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloading = false;
             show.IsNotDownloaded = true;
             show.IsDownloaded = false;
-            Logger.LogInformation("Current show is not downloading and is not downloaded");
         }
 
         if (currentDownload is not null)
@@ -287,15 +286,12 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
-            Logger.LogInformation("current show is downloading");
         }
 
         if (downloads is not null)
         {
             show.IsDownloaded = true;
             show.IsDownloading = false;
-            show.IsNotDownloaded = false;
-            Logger.LogInformation("Current show is downloaded");
         }
         if (Shows.ToList().Exists(x => x.Url == show.Url))
         {
@@ -373,7 +369,6 @@ public partial class SharedViewModel : BaseViewModel
         var temp = FeedService.GetShows(url, getFirstOnly);
         var item = BaseViewModel.RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
-        item.ForEach(async x => await PodcastServices.UpdateImage(x));
         Logger.LogInformation("Got All Shows");
     }
 
@@ -390,7 +385,6 @@ public partial class SharedViewModel : BaseViewModel
         var deDupe = RemoveDuplicates(App.MostRecentShows);
         var item = deDupe.OrderBy(x => x.Title).ToList();
         item.ForEach(MostRecentShows.Add);
-        item.ForEach(async x => await PodcastServices.UpdateImage(x));
         Logger.LogInformation("Got Most recent shows");
     }
     public async Task CheckForNew()

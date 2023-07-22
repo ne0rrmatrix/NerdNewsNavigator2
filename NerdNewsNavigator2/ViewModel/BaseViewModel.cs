@@ -232,7 +232,6 @@ public partial class BaseViewModel : ObservableObject
             Logger.LogInformation("Last Update Check is over 30 days ago. Updating now.");
             Preferences.Default.Remove("OldDate");
             Preferences.Default.Set("OldDate", currentdate);
-            PodcastServices.DeletetAllImages();
             var res = await PodcastServices.UpdatePodcast();
             Podcasts.Clear();
             var item = res.OrderBy(x => x.Title).ToList();
@@ -240,7 +239,6 @@ public partial class BaseViewModel : ObservableObject
             var fav = await PodcastServices.UpdateFavoritesAsync();
             FavoriteShows.Clear();
             fav.ForEach(FavoriteShows.Add);
-            PodServices.ResetImages(res);
             return true;
         }
         return false;

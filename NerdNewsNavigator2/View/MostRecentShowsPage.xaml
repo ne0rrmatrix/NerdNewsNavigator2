@@ -9,10 +9,7 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="{OnPlatform Default=false,
-                                       WinUI=true,
-                                       MacCatalyst=true}">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="{OnPlatform Default=false, MacCatalyst=true}" IsVisible="{OnPlatform Default=false, MacCatalyst=true}" />

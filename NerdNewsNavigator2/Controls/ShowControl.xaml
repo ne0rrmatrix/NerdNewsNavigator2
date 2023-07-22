@@ -58,8 +58,14 @@
                                     Margin="10"
                                     Aspect="AspectFit"
                                     HeightRequest="320"
-                                    Source="{Binding ImageFileLocation}"
-                                    WidthRequest="320" />
+                                    WidthRequest="320">
+                                    <Image.Source>
+                                        <UriImageSource
+                                            CacheValidity="10:00:00:00"
+                                            CachingEnabled="True"
+                                            Uri="{Binding Image}" />
+                                    </Image.Source>
+                                </Image>
                                 <HorizontalStackLayout Grid.Row="2" Padding="10">
 
                                     <Label

@@ -34,6 +34,8 @@ public partial class CurrentDownloads : ObservableObject
     {
         Shows.Clear();
         CancelDownload = true;
+        IsDownloading = false;
+        _hasStarted = false;
     }
     public Show Cancel(string url)
     {
@@ -116,6 +118,7 @@ public partial class CurrentDownloads : ObservableObject
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title, item));
         }
     }
+
     private void StartedDownload()
     {
         var args = new DownloadEventArgs

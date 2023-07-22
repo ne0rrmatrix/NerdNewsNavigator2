@@ -8,8 +8,7 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="True" />

@@ -131,9 +131,6 @@ public static class FeedService
                 IsNotDownloaded = true,
                 IsDownloaded = false,
             };
-            var directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Images");
-            var outputPath = Path.Combine(directoryPath, DownloadService.GetFileName(show.Image));
-            show.ImageFileLocation = outputPath;
             shows.Add(show);
             if (getFirstOnly)
             {

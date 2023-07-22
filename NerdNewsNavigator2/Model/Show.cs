@@ -14,6 +14,4 @@ public partial class Show : Shared
     private bool _isDownloading;
     [ObservableProperty]
     private string _status;
-    [ObservableProperty]
-    private string _imageFileLocation;
 }

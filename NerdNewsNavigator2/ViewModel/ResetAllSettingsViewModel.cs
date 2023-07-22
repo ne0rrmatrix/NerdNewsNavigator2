@@ -9,12 +9,16 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ResetAllSettingsViewModel : SharedViewModel
 {
     private readonly IMessenger _messenger;
-
+    /// <summary>
+    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// </summary>
+    private readonly ILogger<ResetAllSettingsViewModel> _logger;
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
     public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
     {
+        _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         _messenger = messenger;
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
@@ -29,18 +33,21 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     {
         _messenger.Send(new MessageData(false));
         DownloadService.CancelDownload = true;
+        App.Downloads.CancelAll();
         SetVariables();
-        PodcastServices.DeletetAllImages();
         await DeleteAllAsync();
         await GetUpdatedPodcasts();
         await GetDownloadedShows();
         await GetFavoriteShows();
-        await App.GetMostRecent();
+        ThreadPool.QueueUserWorkItem(async state => { Thread.Sleep(3000); await App.GetMostRecent(); });
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
     {
         Preferences.Default.Clear();
+        Title = string.Empty;
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
@@ -55,6 +62,21 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
+    }
+    private void DeleleFiles(string[] files)
+    {
+        try
+        {
+            foreach (var file in files)
+            {
+                System.IO.File.Delete(file);
+                _logger.LogInformation("Deleted file {file}", file);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation("{data}", ex.Message);
+        }
     }
     #endregion
 }
