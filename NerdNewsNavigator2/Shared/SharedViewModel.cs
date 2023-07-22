@@ -51,7 +51,7 @@ public partial class SharedViewModel : BaseViewModel
                     case true:
                         while (Shows.Count == 0)
                         {
-                            Thread.Sleep(100);
+                            Thread.Sleep(300);
                         }
                         Shows.Where(x => downlaoded.Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
                         Shows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
@@ -60,7 +60,7 @@ public partial class SharedViewModel : BaseViewModel
                     case false:
                         while (MostRecentShows.Count == 0)
                         {
-                            Thread.Sleep(100);
+                            Thread.Sleep(300);
                         }
                         MostRecentShows.Where(x => downlaoded.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
                         MostRecentShows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
@@ -265,57 +265,50 @@ public partial class SharedViewModel : BaseViewModel
 
     #endregion
     #region Download Status Methods
-
     public void SetProperties(Show show)
     {
-        if (show is null)
-        {
-            return;
-        }
+        var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
+        var recent = MostRecentShows.FirstOrDefault(x => x.Url == show.Url);
         var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
+        Logger.LogInformation("Set Properties received show: {show}: value: {value}", show.Title, show.IsDownloading);
         if (currentDownload is null)
         {
             show.IsDownloading = false;
             show.IsNotDownloaded = true;
             show.IsDownloaded = false;
         }
-
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
+            Logger.LogInformation("Finished setting properties for current downloads");
         }
-
         if (downloads is not null)
         {
             show.IsDownloaded = true;
             show.IsDownloading = false;
+            show.IsNotDownloaded = false;
+            Logger.LogInformation("Finished setting properties for downloaded show");
         }
-        if (Shows.ToList().Exists(x => x.Url == show.Url))
+        if (recent is not null)
         {
-            var number = Shows.IndexOf(show);
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Shows[number].IsDownloaded = show.IsDownloaded;
-                Shows[number].IsDownloading = show.IsDownloading;
-                Shows[number].IsNotDownloaded = show.IsNotDownloaded;
-                OnPropertyChanged(nameof(Shows));
+                MostRecentShows[MostRecentShows.IndexOf(recent)] = show;
             });
         }
-        if (MostRecentShows.ToList().Exists(x => x.Url == show.Url))
+        if (shows is not null)
         {
-            var number = MostRecentShows.IndexOf(show);
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                this.MostRecentShows[number].IsDownloaded = show.IsDownloaded;
-                this.MostRecentShows[number].IsDownloading = show.IsDownloading;
-                this.MostRecentShows[number].IsNotDownloaded = show.IsNotDownloaded;
-                OnPropertyChanged(nameof(MostRecentShows));
+                Shows[Shows.IndexOf(shows)] = show;
             });
+            Logger.LogInformation("Set Shows to - IsDownloading: {isDownlaoding}, IsNotdownloading: {IsNotDownloading}, IsDownloaded: {Isdownloaded} ", show.IsDownloading, show.IsNotDownloaded, show.IsDownloaded);
         }
     }
+
     public void SetCancelData(string url, bool isShow)
     {
         var item = App.Downloads.Cancel(url);

@@ -15,7 +15,6 @@ public partial class ShowViewModel : SharedViewModel
     /// </summary>
     public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        Shows = new ObservableCollection<Show>();
         if (App.Downloads.Shows.Count > 0)
         {
             App.Downloads.DownloadFinished += DownloadCompleted;

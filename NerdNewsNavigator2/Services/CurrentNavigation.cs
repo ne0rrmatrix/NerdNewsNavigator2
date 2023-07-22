@@ -14,8 +14,8 @@ public partial class CurrentNavigation : ObservableObject
     public EventHandler<NavigationEventArgs> NavigationCompleted { get; set; }
     public CurrentNavigation()
     {
-        IsNavigating = false;
-        IsShow = false;
+        IsNavigating = true;
+        IsShow = true;
     }
     public void StartedNavigation(bool isNavigating, bool isShows)
     {
