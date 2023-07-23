@@ -21,7 +21,7 @@ public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
     }
-    public Command VBackCommand
+    public static Command VBackCommand
     {
         get
         {
@@ -43,6 +43,10 @@ public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
     {
         WeakReferenceMessenger.Default.Unregister<PageMessage>(message);
         Debug.WriteLine("Received message on ShowViewModel");
+        if (message.Value == "true")
+        {
+            Title = string.Empty;
+        }
         await GetDownloadedShows();
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {

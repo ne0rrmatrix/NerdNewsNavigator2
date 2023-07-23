@@ -33,7 +33,7 @@ public partial class PodcastViewModel : SharedViewModel, IRecipient<PageMessage>
 
     public void Receive(PageMessage message)
     {
-        if(message.Value == "true")
+        if (message.Value == "true")
         {
             return;
         }
