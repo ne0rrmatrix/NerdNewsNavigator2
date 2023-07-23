@@ -21,18 +21,19 @@ public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
     }
+#pragma warning disable CA1822 // Cannot enable static - CTD in Release mode
     public Command VBackCommand
     {
         get
         {
             return new Command(() =>
             {
-                // if parameter are set, you could send a message to navigate
                 WeakReferenceMessenger.Default.Send(new PageMessage(App.Downloads.Status, true));
                 Shell.Current.GoToAsync("..");
             });
         }
     }
+#pragma warning restore CA1822
     [RelayCommand]
     public void Cancel(string url)
     {

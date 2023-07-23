@@ -94,17 +94,17 @@ public partial class SharedViewModel : BaseViewModel
             MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
             {
                 var number = MostRecentShows.IndexOf(item);
-                MostRecentShows[number].IsDownloaded = false;
+                MostRecentShows[number].IsDownloaded = true;
                 MostRecentShows[number].IsDownloading = false;
-                MostRecentShows[number].IsNotDownloaded = true;
+                MostRecentShows[number].IsNotDownloaded = false;
                 OnPropertyChanged(nameof(MostRecentShows));
             });
             Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
             {
                 var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = false;
+                Shows[number].IsDownloaded = true;
                 Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = true;
+                Shows[number].IsNotDownloaded = false;
                 OnPropertyChanged(nameof(Shows));
             });
         });

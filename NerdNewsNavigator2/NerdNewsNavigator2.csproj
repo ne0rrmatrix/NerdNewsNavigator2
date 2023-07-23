@@ -51,13 +51,15 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
 	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	    <RunAOTCompilation>False</RunAOTCompilation>
+	    <EnableLLVM>True</EnableLLVM>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidUseAapt2>True</AndroidUseAapt2>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-        <RunAOTCompilation>False</RunAOTCompilation>
+        <RunAOTCompilation>True</RunAOTCompilation>
+        <EnableLLVM>True</EnableLLVM>
 	</PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
