@@ -201,6 +201,7 @@ public partial class CurrentDownloads : ObservableObject
             await client.StartDownload();
             if (CancelDownload)
             {
+                Status = string.Empty;
                 if (File.Exists(tempFile))
                 {
                     File.Delete(tempFile);

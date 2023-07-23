@@ -7,16 +7,11 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A Class for managing Podcasts.
 /// </summary>
-public class PodcastServices : IDisposable
+public static class PodcastServices
 {
     #region Properties
     public static bool IsConnected { get; set; } = true;
-    private HttpClient _client = new();
     #endregion
-    public PodcastServices()
-    {
-
-    }
 
     #region Get Podcasts
 
@@ -189,21 +184,6 @@ public class PodcastServices : IDisposable
         }
         items.Where(x => x.Url == url).ToList().ForEach(async item => await App.PositionData.DeletePodcast(item));
         return true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing && _client != null)
-        {
-            _client.Dispose();
-            _client = null;
-        }
     }
     #endregion
 }

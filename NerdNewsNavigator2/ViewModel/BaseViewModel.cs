@@ -86,7 +86,6 @@ public partial class BaseViewModel : ObservableObject
     private double _progressInfos = 0;
     public static string CancelUrl { get; set; }
     public static bool CancelDownload { get; set; }
-    public PodcastServices PodServices { get; set; } = new();
     #endregion
     public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
     {

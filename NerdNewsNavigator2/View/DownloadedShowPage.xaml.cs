@@ -41,6 +41,5 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
     }
 }

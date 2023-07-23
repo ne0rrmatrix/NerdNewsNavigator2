@@ -19,11 +19,5 @@ public partial class ShowControl : ContentView
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-#if WINDOWS || MACCATALYST
-        if (DownloadService.IsDownloading)
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        }
-#endif
     }
 }

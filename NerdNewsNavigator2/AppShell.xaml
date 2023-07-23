@@ -9,9 +9,11 @@
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="200"
     Shell.BackgroundColor="#34AAD2"
-    Shell.NavBarIsVisible="False">
-
-
+    Shell.NavBarIsVisible="True"
+    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
+                                       Android=true,
+                                       iOS=true,
+                                       WinUI=false}">
     <Shell.MenuItemTemplate>
         <DataTemplate>
 
@@ -22,6 +24,8 @@
                 <Image
                     BackgroundColor="LightGray"
                     HeightRequest="50"
+                    IsVisible="{OnPlatform Default=True,
+                                           MacCatalyst=false}"
                     Source="{Binding Icon}"
                     WidthRequest="50" />
                 <Label
@@ -36,6 +40,29 @@
 
         </DataTemplate>
     </Shell.MenuItemTemplate>
+
+    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:PodcastPage}"
+            Icon="house.png" />
+        <ShellContent
+            Title="Recent"
+            ContentTemplate="{DataTemplate local:MostRecentShowsPage}"
+            Icon="history.png" />
+        <ShellContent
+            Title="Downloads"
+            ContentTemplate="{DataTemplate local:DownloadedShowPage}"
+            Icon="download.png" />
+        <ShellContent
+            Title="Live"
+            ContentTemplate="{DataTemplate local:LivePage}"
+            Icon="live_broadcasting.png" />
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Icon="settings.png" />
+    </TabBar>
 
     <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
     <MenuItem
@@ -58,7 +85,5 @@
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
         Text="Settings" />
-
-
 
 </Shell>

@@ -2,11 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Mvvm.Messaging;
+
 namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that manages displaying <see cref="Podcast"/> from twit.tv network.
 /// </summary>
-public partial class PodcastViewModel : SharedViewModel
+public partial class PodcastViewModel : SharedViewModel, IRecipient<PageMessage>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PodcastViewModel"/> class.
@@ -14,6 +16,7 @@ public partial class PodcastViewModel : SharedViewModel
     public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
+        WeakReferenceMessenger.Default.Register<PageMessage>(this);
     }
 
     /// <summary>
@@ -26,5 +29,14 @@ public partial class PodcastViewModel : SharedViewModel
     {
         var encodedUrl = HttpUtility.UrlEncode(url);
         await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
+    }
+
+    public void Receive(PageMessage message)
+    {
+        if(message.Value == "true")
+        {
+            return;
+        }
+        Title = message.Value;
     }
 }

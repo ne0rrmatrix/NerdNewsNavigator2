@@ -212,7 +212,6 @@ public partial class SettingsPage : ContentPage
         var start = Preferences.Default.Get("start", false);
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
-        DeviceService.RestoreScreen(); 
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        DeviceService.RestoreScreen();
     }
 }

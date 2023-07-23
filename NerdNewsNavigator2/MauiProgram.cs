@@ -104,6 +104,7 @@ public static class MauiProgram
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
+        builder.Services.AddSingleton<CurrentDownloads>();
         return builder.Build();
         #endregion
     }
