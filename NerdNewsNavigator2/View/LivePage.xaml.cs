@@ -109,12 +109,6 @@ public partial class LivePage : ContentPage, IDisposable
         return content;
     }
     #endregion
-    protected override void OnDisappearing()
-    {
-        mediaElement.ShouldKeepScreenOn = false;
-        mediaElement.Stop();
-        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
-    }
     protected override void OnAppearing()
     {
         mediaElement.Stop();
@@ -122,26 +116,25 @@ public partial class LivePage : ContentPage, IDisposable
         mediaElement.Play();
         base.OnAppearing();
     }
-    protected override void OnNavigatingFrom(NavigatingFromEventArgs args)
+    protected override void OnDisappearing()
     {
-        Debug.WriteLine("Leaving live video");
+        mediaElement.ShouldKeepScreenOn = false;
         mediaElement.Stop();
-        base.OnNavigatingFrom(args);
+        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         mediaElement.Stop();
         base.OnNavigatedFrom(args);
     }
-
+    private void ContentPage_Unfocused(object sender, FocusEventArgs e)
+    {
+        mediaElement.Stop();
+    }
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
         mediaElement?.Handler.DisconnectHandler();
     }
-
-    /// <summary>
-    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
-    /// </summary>
     public void Dispose()
     {
         Dispose(true);
@@ -155,10 +148,5 @@ public partial class LivePage : ContentPage, IDisposable
             Client.Dispose();
             Client = null;
         }
-    }
-
-    private void ContentPage_Unfocused(object sender, FocusEventArgs e)
-    {
-        mediaElement.Stop();
     }
 }
