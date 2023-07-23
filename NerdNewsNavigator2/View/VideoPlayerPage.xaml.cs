@@ -144,6 +144,13 @@ public partial class VideoPlayerPage : ContentPage
 #nullable disable
 
     #endregion
+
+    protected override void OnDisappearing()
+    {
+        mediaElement.ShouldKeepScreenOn = false;
+        mediaElement.Stop();
+        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+    }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         mediaElement.Stop();
@@ -157,15 +164,5 @@ public partial class VideoPlayerPage : ContentPage
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
         mediaElement.Stop();
-    }
-
-    /// <summary>
-    /// Method overrides <see cref="OnDisappearing"/> to stop playback when leaving a page.
-    /// </summary>
-    protected override void OnDisappearing()
-    {
-        mediaElement.ShouldKeepScreenOn = false;
-        mediaElement.Stop();
-        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
     }
 }
