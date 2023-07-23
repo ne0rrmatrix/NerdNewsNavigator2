@@ -133,7 +133,9 @@ public partial class LivePage : ContentPage, IDisposable
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
+#if ANDROID || IOS || MACCATALYST
         mediaElement?.Handler.DisconnectHandler();
+#endif
     }
     public void Dispose()
     {

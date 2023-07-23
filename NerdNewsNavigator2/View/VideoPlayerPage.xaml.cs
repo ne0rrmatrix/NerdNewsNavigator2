@@ -157,7 +157,9 @@ public partial class VideoPlayerPage : ContentPage
     }
     private void ContentPage_Unfocused(object sender, FocusEventArgs e)
     {
+#if ANDROID || IOS || MACCATALYST
         mediaElement?.Handler.DisconnectHandler();
+#endif
     }
 
     private void ContentPage_Unloaded(object sender, EventArgs e)
