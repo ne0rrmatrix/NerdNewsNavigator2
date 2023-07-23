@@ -21,7 +21,7 @@ public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
     }
-    public static Command VBackCommand
+    public Command VBackCommand
     {
         get
         {
