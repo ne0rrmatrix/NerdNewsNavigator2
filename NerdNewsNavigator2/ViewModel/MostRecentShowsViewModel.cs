@@ -31,6 +31,7 @@ public partial class MostRecentShowsViewModel : SharedViewModel, IRecipient<Page
     [RelayCommand]
     public void Cancel(string url)
     {
+        Title = string.Empty;
         SetCancelData(url, false);
     }
 

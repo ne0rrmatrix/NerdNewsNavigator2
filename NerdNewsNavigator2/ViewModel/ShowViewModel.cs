@@ -36,6 +36,7 @@ public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
     [RelayCommand]
     public void Cancel(string url)
     {
+        Title = string.Empty;
         SetCancelData(url, true);
     }
 
