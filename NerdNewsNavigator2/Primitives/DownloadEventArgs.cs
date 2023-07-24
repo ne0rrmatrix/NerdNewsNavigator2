@@ -6,6 +6,7 @@ namespace NerdNewsNavigator2.Primitives;
 public class DownloadEventArgs : EventArgs
 {
     public Show Item { get; set; }
+    public bool Cancelled { get; set; }
     public string Status { get; set; }
 #if ANDROID || IOS
     public NotificationRequest Notification { get; set; }

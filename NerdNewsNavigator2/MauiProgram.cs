@@ -63,9 +63,6 @@ public static class MauiProgram
         #endregion
         #region Services
 
-        builder.Services.AddSingleton<AndroidPermissions>();
-        builder.Services.AddSingleton<BaseViewModel>();
-
         builder.Services.AddTransient<PodcastPage>();
         builder.Services.AddTransient<PodcastViewModel>();
 
@@ -93,13 +90,19 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
+        builder.Services.AddSingleton<BaseViewModel>();
         builder.Services.AddSingleton<SharedViewModel>();
-        builder.Services.AddSingleton<PositionDataBase>();
 
+        builder.Services.AddSingleton<CurrentDownloads>();
+        builder.Services.AddSingleton<CurrentNavigation>();
+        builder.Services.AddSingleton<VideoOnNavigated>();
+        builder.Services.AddSingleton<NotificationService>();
+
+        builder.Services.AddSingleton<PositionDataBase>();
+        builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
-        builder.Services.AddSingleton<CurrentDownloads>();
         return builder.Build();
         #endregion
     }

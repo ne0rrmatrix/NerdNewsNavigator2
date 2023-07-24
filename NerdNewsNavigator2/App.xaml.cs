@@ -12,7 +12,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
     #region Properties
     public static Show ShowItem { get; set; } = new();
     public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
-    public static NotificationService SetNotification { get; set; }
     public static bool Loading { get; set; } = false;
     public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();

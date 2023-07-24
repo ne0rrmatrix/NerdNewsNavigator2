@@ -11,12 +11,18 @@ public partial class CurrentDownloads : ObservableObject
     private Show _item;
     [ObservableProperty]
     private string _status = string.Empty;
+    [ObservableProperty]
+    private bool _cancelled = false;
 #if ANDROID || IOS
     [ObservableProperty]
-    private static NotificationRequest s_notification;
+    private NotificationService _notify;
+    private int Id { get; set; } = 0;
+    private readonly Random _random = new();
+    [ObservableProperty]
+    private NotificationRequest _notification;
 #endif
     private static double Progress { get; set; }
-    private bool _hasStarted = false;
+    public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
     public static bool IsDownloading { get; set; } = false;
@@ -25,6 +31,10 @@ public partial class CurrentDownloads : ObservableObject
     {
         _shows = new();
         _item = new();
+#if ANDROID || IOS
+        Notify = new();
+        Notification = new();
+#endif
     }
     public void Add(Show show)
     {
@@ -35,26 +45,17 @@ public partial class CurrentDownloads : ObservableObject
         Shows.Clear();
         CancelDownload = true;
         IsDownloading = false;
-        _hasStarted = false;
     }
     public Show Cancel(string url)
     {
+        Cancelled = true;
         var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
-        if (item.Url.Contains(Item.Url))
+        if (item.Url == Item.Url)
         {
+            Cancel();
             CancelDownload = true;
-            IsDownloading = false;
-            Debug.WriteLine("Cancel Firing");
             Shows.Remove(item);
-            if (Shows.Count > 0)
-            {
-                var next = Shows[0];
-                Item = next;
-                _hasStarted = false;
-                Start(next);
-            }
-
-            _hasStarted = false;
+            IsDownloading = false;
             return item;
         }
         Shows.Remove(item);
@@ -62,34 +63,31 @@ public partial class CurrentDownloads : ObservableObject
     }
     public void Start(Show show)
     {
-        if (_hasStarted || Shows.Count == 0)
+        if (IsDownloading || Shows.Count == 0)
         {
             return;
         }
-        ThreadPool.QueueUserWorkItem(state =>
-        {
-            CancelDownload = false;
-            Debug.WriteLine("Starting Download");
-            _ = StartDownload(show);
-        });
+        Item = show;
+        CancelDownload = false;
+        IsDownloading = true;
+        Cancelled = false;
+        _ = StartDownload(show);
     }
     private async Task StartDownload(Show item)
     {
-        Item = item;
-        _hasStarted = true;
 #if ANDROID || IOS
-
-        App.SetNotification = new();
-        App.SetNotification.StartNotifications();
-        S_notification = new();
-        S_notification = await App.SetNotification.NotificationRequests(item);
+        Notify.StartNotifications();
+        Notification = await NotificationRequests(item);
 #endif
-        IsDownloading = true;
         var result = false;
         result = await DownloadFile(item);
-        if (!CancelDownload && result)
+        if (CancelDownload)
         {
-            IsDownloading = false;
+            Debug.WriteLine("Download is Cancelled");
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title, item));
+        }
+        else if (result)
+        {
             Debug.WriteLine("Download Succeeded event triggered");
             Download download = new()
             {
@@ -104,32 +102,69 @@ public partial class CurrentDownloads : ObservableObject
                 FileName = DownloadService.GetFileName(item.Url)
             };
             await App.PositionData.UpdateDownload(download);
+            Cancelled = false;
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
             Completed(item);
         }
-        else
-        {
-            Debug.WriteLine("Download is Cancelled");
-            IsDownloading = false;
-            CancelDownload = false;
-#if ANDROID || IOS
-            await App.SetNotification.Cancel(item);
-#endif
-            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title, item));
-        }
     }
-
+#if ANDROID || IOS
+    private async Task<NotificationRequest> NotificationRequests(Show item)
+    {
+        Id = _random.Next();
+        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(Id, item.Url, item, false));
+        var request = new Plugin.LocalNotification.NotificationRequest
+        {
+            NotificationId = Id,
+            Title = item.Title,
+            CategoryType = NotificationCategoryType.Progress,
+#if IOS
+            Description = "Donwloading",
+#endif
+#if ANDROID
+            Description = $"Download Progress {(int)DownloadService.Progress}",
+            Android = new AndroidOptions
+            {
+                IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                Ongoing = true,
+                ProgressBarProgress = (int)DownloadService.Progress,
+                IsProgressBarIndeterminate = false,
+                Color =
+                {
+                    ResourceName = "colorPrimary"
+                },
+                AutoCancel = true,
+                ProgressBarMax = 100,
+            },
+#endif
+        };
+        await LocalNotificationCenter.Current.Show(request);
+        Notification = request;
+        return request;
+    }
+#endif
     private void StartedDownload()
     {
         var args = new DownloadEventArgs
         {
             Status = Status,
             Progress = Progress,
+            Cancelled = Cancelled,
 #if ANDROID || IOS
-            Notification = S_notification
+            Notification = Notification
 #endif
         };
         OnStarted(args);
+    }
+    private void Cancel()
+    {
+        var args = new DownloadEventArgs
+        {
+#if ANDROID || IOS
+            Notification = Notification,
+            Cancelled = Cancelled,
+#endif
+        };
+        OnCancelled(args);
     }
     private void Completed(Show item)
     {
@@ -137,23 +172,29 @@ public partial class CurrentDownloads : ObservableObject
         {
             Item = item,
             Status = Status,
+            Cancelled = Cancelled,
             Progress = Progress,
 #if ANDROID || IOS
-            Notification = S_notification
+            Notification = Notification
 #endif
         };
-        _hasStarted = false;
+#if ANDROID || IOS
+        Notify.AfterDownloadNotifications(Notification);
+#endif
         Debug.WriteLine("Download Completed");
         OnDownloadFinished(args);
         Shows.Remove(Item);
+        IsDownloading = false;
+        CancelDownload = false;
         if (Shows.Count > 0)
         {
-            ThreadPool.QueueUserWorkItem(state =>
-            {
-                Thread.Sleep(500);
-                _ = StartDownload(Shows[^1]);
-            });
+            Thread.Sleep(1000);
+            Start(Shows[0]);
         }
+    }
+    protected virtual void OnCancelled(DownloadEventArgs args)
+    {
+        DownloadCancelled?.Invoke(this, args);
     }
     protected virtual void OnStarted(DownloadEventArgs args)
     {
