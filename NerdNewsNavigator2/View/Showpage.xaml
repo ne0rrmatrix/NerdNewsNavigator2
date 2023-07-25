@@ -11,9 +11,7 @@
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.BackgroundColor="#34AAD2">
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior Command="{Binding VBackCommand}" />
-    </Shell.BackButtonBehavior>
+
     <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
 
 </ContentPage>

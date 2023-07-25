@@ -16,6 +16,10 @@ public partial class DownloadedShowViewModel : SharedViewModel
     public DownloadedShowViewModel(ILogger<DownloadedShowViewModel> logger, IConnectivity connectivity)
         : base(logger, connectivity)
     {
+        if (App.Downloads.Shows.Count > 0)
+        {
+            App.Downloads.DownloadStarted += DownloadStarted;
+        }
     }
 }
 

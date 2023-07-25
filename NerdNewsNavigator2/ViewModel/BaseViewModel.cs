@@ -155,7 +155,7 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
+        temp.Where(x => x.IsDownloaded).ToList().ForEach(DownloadedShows.Add);
         Logger.LogInformation("Add all downloads to All Shows list");
     }
     public static List<Show> RemoveDuplicates(List<Show> items)
@@ -192,7 +192,6 @@ public partial class BaseViewModel : ObservableObject
         {
             return;
         }
-        Podcasts.Clear();
         var updates = await UpdateCheckAsync();
         var temp = await App.PositionData.GetAllPodcasts();
         if (!updates && temp.Count == 0)

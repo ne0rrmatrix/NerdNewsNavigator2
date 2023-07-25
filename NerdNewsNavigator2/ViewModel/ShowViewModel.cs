@@ -7,80 +7,45 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ShowViewModel"/>
 /// </summary>
-
-public partial class ShowViewModel : SharedViewModel, IRecipient<PageMessage>
+public partial class ShowViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
     /// </summary>
     public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
     {
-        WeakReferenceMessenger.Default.Register<PageMessage>(this);
+        App.Downloads.DownloadCancelled += UpdateOnCancel;
+        App.CurrentNavigation.NavigationCompleted += OnNavigated;
+        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
         if (App.Downloads.Shows.Count > 0)
         {
-            App.Downloads.DownloadFinished += DownloadCompleted;
+            App.Downloads.DownloadStarted += DownloadStarted;
         }
     }
-#pragma warning disable CA1822 // Cannot enable static - CTD in Release mode
-    public Command VBackCommand
+
+    private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
-        get
+        await GetDownloadedShows();
+        Debug.WriteLine("Shows View model - Downloaded event firing");
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
-            return new Command(() =>
+            IsBusy = false;
+            Title = string.Empty;
+            DownloadProgress = string.Empty;
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
             {
-                WeakReferenceMessenger.Default.Send(new PageMessage(App.Downloads.Status, true));
-                Shell.Current.GoToAsync("..");
+                var number = Shows.IndexOf(item);
+                Shows[number].IsDownloaded = true;
+                Shows[number].IsDownloading = false;
+                Shows[number].IsNotDownloaded = false;
+                OnPropertyChanged(nameof(Shows));
             });
-        }
+        });
     }
-#pragma warning restore CA1822
     [RelayCommand]
     public void Cancel(string url)
     {
         Title = string.Empty;
         SetCancelData(url, true);
-    }
-
-    public async void Receive(PageMessage message)
-    {
-        WeakReferenceMessenger.Default.Unregister<PageMessage>(message);
-        Debug.WriteLine("Received message on ShowViewModel");
-        if (message.Value == "true")
-        {
-            Title = string.Empty;
-        }
-        await GetDownloadedShows();
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Shows.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = false;
-                Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = true;
-                OnPropertyChanged(nameof(Shows));
-            });
-            Shows.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = false;
-                Shows[number].IsDownloading = true;
-                Shows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(Shows));
-            });
-            if (App.Downloads.Shows.Count == 0)
-            {
-                Shows.Where(x => !DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-                {
-                    var number = Shows.IndexOf(item);
-                    Shows[number].IsDownloaded = false;
-                    Shows[number].IsDownloading = false;
-                    Shows[number].IsNotDownloaded = true;
-                    OnPropertyChanged(nameof(Shows));
-                });
-
-                Title = string.Empty;
-            }
-        });
     }
 }
