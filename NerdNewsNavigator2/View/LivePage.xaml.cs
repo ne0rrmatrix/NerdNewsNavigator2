@@ -127,10 +127,6 @@ public partial class LivePage : ContentPage, IDisposable
         mediaElement.Stop();
         base.OnNavigatedFrom(args);
     }
-    private void ContentPage_Unfocused(object sender, FocusEventArgs e)
-    {
-        mediaElement.Stop();
-    }
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
 #if ANDROID || IOS || MACCATALYST

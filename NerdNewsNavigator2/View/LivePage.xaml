@@ -10,9 +10,8 @@
     x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Unloaded="ContentPage_Unloaded"
-    Unfocused="ContentPage_Unfocused"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="False"
+    Unloaded="ContentPage_Unloaded">
 
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
 
