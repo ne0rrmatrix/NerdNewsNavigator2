@@ -93,6 +93,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
+            Downloads.CancelAll();
             Thread.Sleep(500);
             Debug.WriteLine("Safe shutdown completed");
         };

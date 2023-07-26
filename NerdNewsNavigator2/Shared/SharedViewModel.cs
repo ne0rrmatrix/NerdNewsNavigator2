@@ -46,7 +46,7 @@ public partial class SharedViewModel : BaseViewModel
             App.Downloads.DownloadCancelled += DonwnloadCancelled;
             if (e.Shows.Count > 0)
             {
-                Debug.WriteLine("Starting Second Download");
+                Logger.LogInformation("Starting Second Download");
                 App.Downloads.Start(e.Shows[0]);
             }
         });
@@ -55,12 +55,12 @@ public partial class SharedViewModel : BaseViewModel
     {
         if (e.Shows.Count == 0)
         {
-            Debug.WriteLine($"Starting update for no current downloads");
+            Logger.LogInformation($"Starting update for no current downloads");
             Shows?.ToList().ForEach(SetProperties);
             MostRecentShows?.ToList().ForEach(SetProperties);
             return;
         }
-        Debug.WriteLine("Starting update for current downloads");
+        Logger.LogInformation("Starting update for current downloads");
     }
     public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
     {
@@ -86,7 +86,7 @@ public partial class SharedViewModel : BaseViewModel
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
         App.Downloads.DownloadFinished -= DownloadCompleted;
         await GetDownloadedShows();
-        Debug.WriteLine("Shared View model - Downloaded event firing");
+        Logger.LogInformation("Shared View model - Downloaded event firing");
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsBusy = false;
@@ -111,7 +111,7 @@ public partial class SharedViewModel : BaseViewModel
         });
         if (e.Shows.Count > 0)
         {
-            Debug.WriteLine($"Starting next show: {e.Shows[0].Title}");
+            Logger.LogInformation("Starting next show: {Title}", e.Shows[0].Title);
 #if ANDROID || IOS
             App.Downloads.Notify.StartNotifications();
 #endif
@@ -126,11 +126,11 @@ public partial class SharedViewModel : BaseViewModel
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
     {
-        Debug.WriteLine("Starting refresh");
+        Logger.LogInformation("Starting refresh");
         IsRefreshing = true;
         RefreshData();
         IsRefreshing = false;
-        Debug.WriteLine("Refresh done");
+        Logger.LogInformation("Refresh done");
     });
     public Task RefreshData()
     {
@@ -148,10 +148,10 @@ public partial class SharedViewModel : BaseViewModel
 
     partial void OnUrlChanged(string oldValue, string newValue)
     {
-        Debug.WriteLine("Url Changed");
+        Logger.LogInformation("Show Url changed. Updating Shows");
         var decodedUrl = HttpUtility.UrlDecode(newValue);
 #if WINDOWS || MACCATALYST || ANDROID
-        ThreadPool.QueueUserWorkItem((state) => GetShowsAsync(decodedUrl, false));
+        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
 #endif
 #if IOS
         GetShowsAsync(decodedUrl, false);
@@ -255,7 +255,7 @@ public partial class SharedViewModel : BaseViewModel
         }
         if (App.Downloads.Shows.Count == 0)
         {
-            Debug.WriteLine($"Current download count is: {App.Downloads.Shows.Count}");
+            Logger.LogInformation("Current download count is: {Count}", App.Downloads.Shows.Count);
 #if ANDROID || IOS
             App.Downloads.Notify.StartNotifications();
 #endif
@@ -322,7 +322,6 @@ public partial class SharedViewModel : BaseViewModel
             Logger.LogInformation("show was null");
             return;
         }
-        Debug.WriteLine(item.Url);
         IsBusy = false;
         Title = string.Empty;
         DownloadProgress = string.Empty;
@@ -360,14 +359,15 @@ public partial class SharedViewModel : BaseViewModel
     /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
     /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
     /// <returns><see cref="Show"/></returns>
-    public Task GetShowsAsync(string url, bool getFirstOnly)
+    public void GetShowsAsync(string url, bool getFirstOnly)
     {
         Shows.Clear();
         var temp = FeedService.GetShows(url, getFirstOnly);
         var item = BaseViewModel.RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
         Logger.LogInformation("Got All Shows");
-        return Task.CompletedTask;
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
     }
 
     /// <summary>
@@ -380,6 +380,7 @@ public partial class SharedViewModel : BaseViewModel
         {
             await CheckForNew();
         }
+        await GetDownloadedShows();
         var deDupe = RemoveDuplicates(App.MostRecentShows);
         var item = deDupe.OrderBy(x => x.Title).ToList();
         item.ForEach(MostRecentShows.Add);
