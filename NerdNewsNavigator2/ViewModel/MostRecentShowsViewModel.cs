@@ -32,26 +32,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     {
         await GetDownloadedShows();
         Debug.WriteLine("MostRecent View model - Downloaded event firing");
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = MostRecentShows.IndexOf(item);
-                MostRecentShows[number].IsDownloaded = true;
-                MostRecentShows[number].IsDownloading = false;
-                MostRecentShows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(MostRecentShows));
-            });
-        });
-    }
-
-    [RelayCommand]
-    public void Cancel(string url)
-    {
-        Title = string.Empty;
-        SetCancelData(url, false);
+        UpdateShows();
     }
 }

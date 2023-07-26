@@ -37,6 +37,12 @@ public partial class SharedViewModel : BaseViewModel
     }
     #region Events
 
+    [RelayCommand]
+    public void Cancel(string url)
+    {
+        Title = string.Empty;
+        SetCancelData(url, true);
+    }
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
@@ -53,14 +59,18 @@ public partial class SharedViewModel : BaseViewModel
     }
     public void UpdateOnCancel(object sender, Primitives.DownloadEventArgs e)
     {
-        if (e.Shows.Count == 0)
+        Shows?.ToList().ForEach(SetProperties);
+        MostRecentShows?.ToList().ForEach(SetProperties);
+        Logger.LogInformation("update for shows not downlaoding anymore");
+    }
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (App.Downloads.Shows.Count == 0)
         {
-            Logger.LogInformation($"Starting update for no current downloads");
-            Shows?.ToList().ForEach(SetProperties);
-            MostRecentShows?.ToList().ForEach(SetProperties);
-            return;
+            MostRecentShows?.Where(x => x.IsNotDownloaded).ToList()?.ForEach(SetProperties);
+            Shows?.Where(x => x.IsNotDownloaded).ToList().ForEach(SetProperties);
         }
-        Logger.LogInformation("Starting update for current downloads");
+        base.OnPropertyChanged(e);
     }
     public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
     {
@@ -77,16 +87,8 @@ public partial class SharedViewModel : BaseViewModel
         }
         Title = e.Status;
     }
-    public async void DownloadCompleted(object sender, DownloadEventArgs e)
+    public void UpdateShows()
     {
-#if ANDROID || IOS
-        App.Downloads.Notify.StopNotifications();
-#endif
-        App.Downloads.DownloadStarted -= DownloadStarted;
-        App.Downloads.DownloadCancelled -= DonwnloadCancelled;
-        App.Downloads.DownloadFinished -= DownloadCompleted;
-        await GetDownloadedShows();
-        Logger.LogInformation("Shared View model - Downloaded event firing");
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
             IsBusy = false;
@@ -109,6 +111,18 @@ public partial class SharedViewModel : BaseViewModel
                 OnPropertyChanged(nameof(Shows));
             });
         });
+    }
+    public async void DownloadCompleted(object sender, DownloadEventArgs e)
+    {
+#if ANDROID || IOS
+        App.Downloads.Notify.StopNotifications();
+#endif
+        App.Downloads.DownloadStarted -= DownloadStarted;
+        App.Downloads.DownloadCancelled -= DonwnloadCancelled;
+        App.Downloads.DownloadFinished -= DownloadCompleted;
+        await GetDownloadedShows();
+        Logger.LogInformation("Shared View model - Downloaded event firing");
+        UpdateShows();
         if (e.Shows.Count > 0)
         {
             Logger.LogInformation("Starting next show: {Title}", e.Shows[0].Title);
@@ -276,7 +290,6 @@ public partial class SharedViewModel : BaseViewModel
         var recent = MostRecentShows.FirstOrDefault(x => x.Url == show.Url);
         var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
-        Logger.LogInformation("Set Properties received show: {show}: value: {value}", show.Title, show.IsDownloading);
         if (currentDownload is null)
         {
             show.IsDownloading = false;
@@ -288,14 +301,12 @@ public partial class SharedViewModel : BaseViewModel
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
-            Logger.LogInformation("Finished setting properties for current downloads");
         }
         if (downloads is not null)
         {
             show.IsDownloaded = true;
             show.IsDownloading = false;
             show.IsNotDownloaded = false;
-            Logger.LogInformation("Finished setting properties for downloaded show");
         }
         if (recent is not null)
         {
@@ -310,7 +321,6 @@ public partial class SharedViewModel : BaseViewModel
             {
                 Shows[Shows.IndexOf(shows)] = show;
             });
-            Logger.LogInformation("Set Shows to - IsDownloading: {isDownlaoding}, IsNotdownloading: {IsNotDownloading}, IsDownloaded: {Isdownloaded} ", show.IsDownloading, show.IsNotDownloaded, show.IsDownloaded);
         }
     }
 
@@ -342,7 +352,7 @@ public partial class SharedViewModel : BaseViewModel
         {
             var recent = MostRecentShows.ToList().Exists(x => x.Url == item.Url);
             item = MostRecentShows.ToList().Find(x => x.Url == item.Url);
-            if (recent)
+            if (recent && item is not null)
             {
                 var number = MostRecentShows.IndexOf(item);
                 MostRecentShows[number].IsDownloaded = false;
@@ -395,6 +405,7 @@ public partial class SharedViewModel : BaseViewModel
         }
         Logger.LogInformation("Checking for new Most Recent Shows");
         await App.GetMostRecent();
+        MostRecentShows.Clear();
         App.MostRecentShows.Where(x => !(MostRecentShows.ToList().Exists(y => y.Url == x.Url))).ToList().ForEach(MostRecentShows.Add);
     }
 }

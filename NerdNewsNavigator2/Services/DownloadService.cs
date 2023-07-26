@@ -108,58 +108,46 @@ public static class DownloadService
     {
         var downloadedShows = await App.PositionData.GetAllDownloads();
         IsDownloading = false;
-        _ = Task.Run(() =>
+        _ = Task.Run(async () =>
         {
-            favoriteShows.Where(y => !downloadedShows.Exists(d => d.Url == y.Url)).ToList().ForEach(async x =>
+            var shows = new List<Show>();
+            favoriteShows.ForEach(x =>
             {
                 var show = FeedService.GetShows(x.Url, true);
-                while (IsDownloading)
+                if (show is not null && !downloadedShows.Exists(y => y.Url == show[0].Url))
                 {
-                    Thread.Sleep(8000);
-                    if (CancelDownload)
-                    {
-                        IsDownloading = false;
-                        return;
-                    }
-                    Debug.WriteLine("Waiting for download to finish");
+                    shows.Add(show[0]);
                 }
-                if (show is null || show.Count == 0 || CancelDownload)
-                {
-                    Autodownloading = false;
-                    return;
-                }
-                else if (!downloadedShows.Exists(y => y.Title == x.Title))
-                {
-                    await ProcessDownloadAsync(downloadedShows, show[0]);
-                }
-                IsDownloading = false;
             });
+            while (shows.Count > 0)
+            {
+                Debug.WriteLine($"downloading: {shows[0].Title}");
+                await StartDownload(shows[0]);
+                shows.RemoveAt(0);
+            }
         });
     }
-
-    private static async Task ProcessDownloadAsync(List<Download> downloadedShows, Show show)
+    private static async Task StartDownload(Show item)
     {
-        var item = downloadedShows.Find(x => x.Url == show.Url);
-        if (item is null)
+        Debug.WriteLine($"Starting Download of {item.Title}");
+        var result = await DownloadFile(item);
+        if (result)
         {
-            IsDownloading = true;
-            var result = await DownloadFile(show);
-            if (result)
+            Debug.WriteLine("Download Completed event triggered");
+            Download download = new()
             {
-                Download download = new()
-                {
-                    Title = show.Title,
-                    Url = show.Url,
-                    Image = show.Image,
-                    IsDownloaded = true,
-                    IsNotDownloaded = false,
-                    Deleted = false,
-                    PubDate = show.PubDate,
-                    Description = show.Description,
-                    FileName = GetFileName(show.Url)
-                };
-                await App.PositionData.AddDownload(download);
-            }
+                Title = item.Title,
+                Url = item.Url,
+                Image = item.Image,
+                IsDownloaded = true,
+                IsNotDownloaded = false,
+                Deleted = false,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = DownloadService.GetFileName(item.Url)
+            };
+            Debug.WriteLine($"Download completed: {item.Title}");
+            await App.PositionData.UpdateDownload(download);
         }
     }
 }

@@ -27,25 +27,6 @@ public partial class ShowViewModel : SharedViewModel
     {
         await GetDownloadedShows();
         Debug.WriteLine("Shows View model - Downloaded event firing");
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = true;
-                Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(Shows));
-            });
-        });
-    }
-    [RelayCommand]
-    public void Cancel(string url)
-    {
-        Title = string.Empty;
-        SetCancelData(url, true);
+        UpdateShows();
     }
 }
