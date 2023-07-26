@@ -205,6 +205,8 @@ public partial class CurrentDownloads : ObservableObject
         {
             Debug.WriteLine($"{ex.Message}, Deleting file");
             CurrentDownloads.DeleteFile(item.Url);
+            Cancel(item.Url);
+            await Toast.Make("Download failed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             return false;
         }
     }
