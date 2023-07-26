@@ -352,7 +352,7 @@ public partial class SharedViewModel : BaseViewModel
         {
             var recent = MostRecentShows.ToList().Exists(x => x.Url == item.Url);
             item = MostRecentShows.ToList().Find(x => x.Url == item.Url);
-            if (recent && item is not null)
+            if (recent)
             {
                 var number = MostRecentShows.IndexOf(item);
                 MostRecentShows[number].IsDownloaded = false;
