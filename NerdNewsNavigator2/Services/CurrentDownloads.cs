@@ -5,6 +5,7 @@
 namespace NerdNewsNavigator2.Services;
 public partial class CurrentDownloads : ObservableObject
 {
+    #region Properties
     [ObservableProperty]
     private List<Show> _shows;
     [ObservableProperty]
@@ -27,6 +28,7 @@ public partial class CurrentDownloads : ObservableObject
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
     public static bool IsDownloading { get; set; } = false;
     public static bool CancelDownload { get; set; } = false;
+    #endregion
     public CurrentDownloads()
     {
         _shows = new();
@@ -36,6 +38,7 @@ public partial class CurrentDownloads : ObservableObject
         Notification = new();
 #endif
     }
+    #region Methods
     public void Add(Show show)
     {
         Shows.Add(show);
@@ -113,63 +116,7 @@ public partial class CurrentDownloads : ObservableObject
             IsDownloading = false;
         }
     }
-    private void StartedDownload()
-    {
-        var args = new DownloadEventArgs
-        {
-            Status = Status,
-            Progress = Progress,
-            Cancelled = Cancelled,
-            Item = Item,
-            Shows = Shows,
-#if ANDROID || IOS
-            Notification = Notification
-#endif
-        };
-        OnStarted(args);
-    }
-    private void Cancel(Show item)
-    {
-        var args = new DownloadEventArgs
-        {
-            Item = item,
-            Status = Status,
-            Cancelled = Cancelled,
-            Shows = Shows,
-            Progress = Progress,
-#if ANDROID || IOS
-            Notification = Notification
-#endif
-        };
-        OnCancelled(args);
-    }
-    private void Completed(Show item)
-    {
-        var args = new DownloadEventArgs
-        {
-            Item = item,
-            Status = Status,
-            Cancelled = Cancelled,
-            Progress = Progress,
-            Shows = Shows,
-#if ANDROID || IOS
-            Notification = Notification
-#endif
-        };
-        OnDownloadFinished(args);
-    }
-    protected virtual void OnCancelled(DownloadEventArgs args)
-    {
-        DownloadCancelled?.Invoke(this, args);
-    }
-    protected virtual void OnStarted(DownloadEventArgs args)
-    {
-        DownloadStarted?.Invoke(this, args);
-    }
-    protected virtual void OnDownloadFinished(DownloadEventArgs e)
-    {
-        DownloadFinished?.Invoke(this, e);
-    }
+
 #if ANDROID || IOS
     private async Task<NotificationRequest> NotificationRequests(Show item)
     {
@@ -282,4 +229,65 @@ public partial class CurrentDownloads : ObservableObject
             File.Delete(tempFile);
         }
     }
+    #endregion
+
+    #region EventArgs
+    private void StartedDownload()
+    {
+        var args = new DownloadEventArgs
+        {
+            Status = Status,
+            Progress = Progress,
+            Cancelled = Cancelled,
+            Item = Item,
+            Shows = Shows,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnStarted(args);
+    }
+    private void Cancel(Show item)
+    {
+        var args = new DownloadEventArgs
+        {
+            Item = item,
+            Status = Status,
+            Cancelled = Cancelled,
+            Shows = Shows,
+            Progress = Progress,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnCancelled(args);
+    }
+    private void Completed(Show item)
+    {
+        var args = new DownloadEventArgs
+        {
+            Item = item,
+            Status = Status,
+            Cancelled = Cancelled,
+            Progress = Progress,
+            Shows = Shows,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnDownloadFinished(args);
+    }
+    protected virtual void OnCancelled(DownloadEventArgs args)
+    {
+        DownloadCancelled?.Invoke(this, args);
+    }
+    protected virtual void OnStarted(DownloadEventArgs args)
+    {
+        DownloadStarted?.Invoke(this, args);
+    }
+    protected virtual void OnDownloadFinished(DownloadEventArgs e)
+    {
+        DownloadFinished?.Invoke(this, e);
+    }
+    #endregion
 }

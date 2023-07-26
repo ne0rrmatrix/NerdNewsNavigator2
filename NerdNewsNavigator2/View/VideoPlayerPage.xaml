@@ -9,9 +9,8 @@
     x:DataType="vm:VideoPlayerViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Unfocused="ContentPage_Unfocused"
-    Unloaded="ContentPage_Unloaded"
-    Shell.TitleColor="White">
+    Shell.TitleColor="White"
+    Unloaded="ContentPage_Unloaded">
     <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
 
 </ContentPage>

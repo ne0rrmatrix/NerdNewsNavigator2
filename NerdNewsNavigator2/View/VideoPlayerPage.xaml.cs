@@ -37,43 +37,40 @@ public partial class VideoPlayerPage : ContentPage
         App.OnVideoNavigated.Navigation += Now;
     }
 
-    private void Now(object sender, VideoNavigationEventArgs e)
+    private async void Now(object sender, VideoNavigationEventArgs e)
     {
+        Debug.WriteLine($"Navigated: {e.CurrentShow.Url}");
+        App.OnVideoNavigated.Navigation -= Now;
         ShowItem = e.CurrentShow;
-        mediaElement.Source = e.CurrentShow.Url;
-#if WINDOWS || ANDROID
-        mediaElement.MediaOpened += Seek;
-#endif
-
-#if IOS || MACCATALYST
-        mediaElement.StateChanged += SeekIOS;
-#endif
+        mediaElement.Source = new Uri(e.CurrentShow.Url);
+        await Seek(ShowItem);
     }
 
     #region Events
 #nullable enable
-
     /// <summary>
-    /// Manages <see cref="mediaElement"/> seeking of <see cref="Position"/> at start of playback.
+    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void Seek(object? sender, EventArgs e)
+    /// <param name="show"></param>
+    private async Task Seek(Show show)
     {
         Pos.SavedPosition = TimeSpan.Zero;
-        Pos.Title = ShowItem.Title;
+        Pos.Title = show.Title;
+        _logger.LogInformation("Title: {Title}", show.Title);
         var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == ShowItem.Title);
+        var result = positionList.ToList().Find(x => x.Title == show.Title);
         if (result is not null)
         {
             Pos = result;
-            Debug.WriteLine(result.Title);
             Pos.Title = result.Title;
             Pos.SavedPosition = result.SavedPosition;
-            mediaElement.Pause();
-            _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
-            mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.Play();
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                mediaElement.Pause();
+                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+                mediaElement.SeekTo(Pos.SavedPosition);
+                mediaElement.Play();
+            });
         }
         else
         {
@@ -81,39 +78,7 @@ public partial class VideoPlayerPage : ContentPage
         }
 
         mediaElement.ShouldKeepScreenOn = true;
-        _logger.LogInformation("ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
         mediaElement.StateChanged += MediaStopped;
-    }
-
-    /// <summary>
-    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void SeekIOS(object? sender, MediaStateChangedEventArgs e)
-    {
-        if (e.NewState == MediaElementState.Opening)
-        {
-            Pos.Title = string.Empty;
-            Pos.SavedPosition = TimeSpan.Zero;
-            var positionList = await App.PositionData.GetAllPositions();
-            var result = positionList.ToList().Find(x => x.Title == Pos.Title);
-            if (result is not null)
-            {
-                Pos = result;
-                mediaElement.Pause();
-                mediaElement.SeekTo(Pos.SavedPosition);
-                mediaElement.ShouldKeepScreenOn = true;
-                mediaElement.Play();
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
-            }
-            else
-            {
-                _logger.LogInformation("Could not find saved position");
-            }
-            _logger.LogInformation("Media playback started. ShouldKeepScreenOn is set to true.");
-            mediaElement.StateChanged += MediaStopped;
-        }
     }
 
     /// <summary>
@@ -152,15 +117,10 @@ public partial class VideoPlayerPage : ContentPage
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
+        _logger.LogInformation("Navigating away form Video Player.");
         mediaElement.Stop();
-        base.OnNavigatedFrom(args);
-    }
-    private void ContentPage_Unfocused(object sender, FocusEventArgs e)
-    {
-        mediaElement.Stop();
-#if ANDROID || IOS || MACCATALYST
         mediaElement?.Handler.DisconnectHandler();
-#endif
+        base.OnNavigatedFrom(args);
     }
 
     private void ContentPage_Unloaded(object sender, EventArgs e)

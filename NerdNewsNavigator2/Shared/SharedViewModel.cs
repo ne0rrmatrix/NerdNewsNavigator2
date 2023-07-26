@@ -35,6 +35,7 @@ public partial class SharedViewModel : BaseViewModel
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+    #region Events
 
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
@@ -120,6 +121,8 @@ public partial class SharedViewModel : BaseViewModel
             App.Downloads.Start(e.Shows[0]);
         }
     }
+    #endregion
+
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
     {
@@ -143,7 +146,6 @@ public partial class SharedViewModel : BaseViewModel
     }
     #endregion
 
-    #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         Debug.WriteLine("Url Changed");
@@ -155,7 +157,7 @@ public partial class SharedViewModel : BaseViewModel
         GetShowsAsync(decodedUrl, false);
 #endif
     }
-
+    #region Relay Commands
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
     /// </summary>
@@ -164,7 +166,7 @@ public partial class SharedViewModel : BaseViewModel
     [RelayCommand]
     public async Task Tap(string url)
     {
-        if (DownloadedShows.Where(y => !y.Deleted).ToList().Exists(x => x.Url == url))
+        if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
         {
             var download = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(url));
             await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
@@ -174,22 +176,13 @@ public partial class SharedViewModel : BaseViewModel
                 Url = download,
                 Title = item.Title,
             };
-#if ANDROID || IOS || MACCATALYST
             App.OnVideoNavigated.Add(show);
-#endif
-#if WINDOWS
-            await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-            App.OnVideoNavigated.Add(show);
-#endif
             return;
         }
         var temp = Shows.ToList().Find(x => x.Url == url) ?? MostRecentShows.ToList().Find(y => y.Url == url) ?? throw new NullReferenceException();
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
         App.OnVideoNavigated.Add(temp);
     }
-    #endregion
-
-    #region Shared ViewModel code
 
     /// <summary>
     /// Deletes file and removes it from database.
@@ -275,6 +268,7 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     #endregion
+
     #region Download Status Methods
     public void SetProperties(Show show)
     {
