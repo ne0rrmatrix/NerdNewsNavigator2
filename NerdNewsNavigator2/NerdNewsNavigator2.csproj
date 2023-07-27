@@ -23,7 +23,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>19</ApplicationVersion>
+	    <ApplicationVersion>20</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -41,11 +41,10 @@
         <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppInstallerUri>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\bin\Release\net7.0-windows10.0.19041.0\win10-x64</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <PackageCertificateThumbprint>D2B5C6F044C764C5B848962C6A34A4002E174D64</PackageCertificateThumbprint>
+        <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
