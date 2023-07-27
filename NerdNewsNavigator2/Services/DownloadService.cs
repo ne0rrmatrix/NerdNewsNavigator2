@@ -121,6 +121,11 @@ public static class DownloadService
             });
             while (shows.Count > 0)
             {
+                if (CancelDownload)
+                {
+                    shows.Clear();
+                    break;
+                }
                 Debug.WriteLine($"downloading: {shows[0].Title}");
                 await StartDownload(shows[0]);
                 shows.RemoveAt(0);
