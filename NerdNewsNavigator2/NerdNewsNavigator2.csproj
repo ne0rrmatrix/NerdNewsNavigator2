@@ -39,11 +39,12 @@
         <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
         <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
