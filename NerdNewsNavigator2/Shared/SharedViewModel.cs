@@ -135,16 +135,6 @@ public partial class SharedViewModel : BaseViewModel
     }
     #endregion
 
-    #region Commands
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Cannot set ICommand to static. Breaks build. So suppressing warning about is required")]
-#pragma warning disable CA1822
-    public ICommand PullToRefreshCommand => new Command(() =>
-    {
-    });
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Same as above")]
-#pragma warning restore CA1822
-    #endregion
-
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         Logger.LogInformation("Show Url changed. Updating Shows");

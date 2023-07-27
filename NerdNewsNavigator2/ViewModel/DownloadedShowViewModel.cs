@@ -28,7 +28,7 @@ public partial class DownloadedShowViewModel : SharedViewModel
             App.Downloads.DownloadStarted += DownloadStarted;
         }
     }
-    public new ICommand PullToRefreshCommand => new Command(async () =>
+    public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.LogInformation("Starting refresh of Downloaded shows");
         IsRefreshing = true;

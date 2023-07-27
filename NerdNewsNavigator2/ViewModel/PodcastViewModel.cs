@@ -25,13 +25,13 @@ public partial class PodcastViewModel : SharedViewModel
             App.Downloads.DownloadStarted += DownloadStarted;
         }
     }
-    public new ICommand PullToRefreshCommand => new Command(async () =>
+    public ICommand PullToRefreshCommand => new Command(async () =>
     {
-        _logger.LogInformation("Refresh Most recent shows");
+        _logger.LogInformation("Refresh podcasts");
         IsRefreshing = true;
         await RefreshData();
         IsRefreshing = false;
-        _logger.LogInformation("Finished refreshing Most recent shows");
+        _logger.LogInformation("Finished refreshing podcasts");
     });
     public async Task RefreshData()
     {

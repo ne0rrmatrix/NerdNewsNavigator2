@@ -28,7 +28,7 @@ public partial class ShowViewModel : SharedViewModel
             App.Downloads.DownloadStarted += DownloadStarted;
         }
     }
-    public new ICommand PullToRefreshCommand => new Command(async () =>
+    public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.LogInformation("Starting Show refresh");
         IsRefreshing = true;
@@ -48,7 +48,6 @@ public partial class ShowViewModel : SharedViewModel
     private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
         await GetDownloadedShows();
-        Debug.WriteLine("Shows View model - Downloaded event firing");
         UpdateShows();
     }
 }

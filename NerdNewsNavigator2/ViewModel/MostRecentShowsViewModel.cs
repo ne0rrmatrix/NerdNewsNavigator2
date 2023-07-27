@@ -33,7 +33,7 @@ public partial class MostRecentShowsViewModel : SharedViewModel
             App.Downloads.DownloadStarted += DownloadStarted;
         }
     }
-    public new ICommand PullToRefreshCommand => new Command(async () =>
+    public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.LogInformation("Refresh Most recent shows");
         IsRefreshing = true;
@@ -54,7 +54,6 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     private async void MostRecentDownloadCompleted(object sender, DownloadEventArgs e)
     {
         await GetDownloadedShows();
-        Debug.WriteLine("MostRecent View model - Downloaded event firing");
         UpdateShows();
     }
 }

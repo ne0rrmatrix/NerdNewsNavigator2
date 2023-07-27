@@ -14,6 +14,9 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="{OnPlatform Default=false, MacCatalyst=true}" IsVisible="{OnPlatform Default=false, MacCatalyst=true}" />
     </Shell.BackButtonBehavior>
-    <media:ShowControl Source="{Binding MostRecentShows}" />
-
+    <Grid>
+        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <media:ShowControl Source="{Binding MostRecentShows}" />
+        </RefreshView>
+    </Grid>
 </ContentPage>
