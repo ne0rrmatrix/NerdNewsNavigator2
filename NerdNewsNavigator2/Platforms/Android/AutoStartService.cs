@@ -24,7 +24,7 @@ internal class AutoStartService : Service
     {
     }
     #region Foreground Service Methods
-    private void StartForegroundService()
+    private async Task StartForegroundServiceAsync()
     {
         AutoDownloadService.AcquireWakeLock();
         if (AutoDownloadService.CancellationTokenSource is null)
@@ -39,7 +39,7 @@ internal class AutoStartService : Service
             var cts = new CancellationTokenSource();
             AutoDownloadService.CancellationTokenSource = cts;
         }
-        AutoDownloadService.LongTask(AutoDownloadService.CancellationTokenSource.Token);
+        await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
 
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
@@ -82,7 +82,7 @@ internal class AutoStartService : Service
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
         System.Diagnostics.Debug.WriteLine("Staring Auto Download");
-        StartForegroundService();
+        _ = StartForegroundServiceAsync();
         return StartCommandResult.Sticky;
     }
 
