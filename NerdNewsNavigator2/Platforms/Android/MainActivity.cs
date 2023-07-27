@@ -48,7 +48,7 @@ public class MainActivity : MauiAppCompatActivity
         if (AutoDownloadService.CancellationTokenSource is not null)
         {
             AutoDownloadService.CancellationTokenSource.Cancel();
-            AutoDownloadService.LongTask(AutoDownloadService.CancellationTokenSource.Token);
+            _ = AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
             AutoDownloadService.CancellationTokenSource?.Dispose();
             AutoDownloadService.CancellationTokenSource = null;
         }

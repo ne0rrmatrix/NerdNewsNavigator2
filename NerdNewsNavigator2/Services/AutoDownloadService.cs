@@ -61,7 +61,7 @@ public class AutoDownloadService
             CancellationTokenSource = cts;
         }
         System.Diagnostics.Debug.WriteLine("Start Auto downloads");
-        LongTask(CancellationTokenSource.Token);
+        _ = LongTaskAsync(CancellationTokenSource.Token);
     }
 
     /// <summary>
@@ -73,13 +73,13 @@ public class AutoDownloadService
         {
             CancellationTokenSource.Cancel();
             DownloadService.CancelDownload = true;
-            LongTask(CancellationTokenSource.Token);
+            _ = LongTaskAsync(CancellationTokenSource.Token);
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;
         }
         System.Diagnostics.Debug.WriteLine("Stopped Auto Downloder");
     }
-    public void LongTask(CancellationToken cancellationToken)
+    public async Task LongTaskAsync(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
@@ -91,7 +91,7 @@ public class AutoDownloadService
         ATimer.Start();
         if (CheckIfWifiOnly())
         {
-            _ = DownloadService.AutoDownload();
+            await DownloadService.AutoDownload();
         }
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
