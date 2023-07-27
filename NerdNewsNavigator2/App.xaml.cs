@@ -7,15 +7,16 @@ namespace NerdNewsNavigator2;
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application, IRecipient<NotificationItemMessage>, IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<UrlItemMessage>
+public partial class App : Application, IRecipient<NotificationItemMessage>
 {
     #region Properties
     public static Show ShowItem { get; set; } = new();
-    public static List<Show> AllShows { get; set; } = new();
-    public static bool Stop { get; set; } = false;
-    public static bool Started { get; set; } = false;
+    public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
+    public static bool Loading { get; set; } = false;
+    public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
-    public static List<Show> CurrenDownloads { get; set; } = new();
+    public static CurrentDownloads Downloads { get; set; } = new();
+    public static CurrentNavigation CurrentNavigation { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -31,9 +32,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
     public App(PositionDataBase positionDataBase, IMessenger messenger)
     {
         InitializeComponent();
-        WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<UrlItemMessage>(this);
+
         MainPage = new AppShell();
         _messenger = messenger;
         // Database Dependancy Injection START
@@ -42,26 +41,10 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
-
-        LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
-            {
-                new NotificationCategory(NotificationCategoryType.Progress)
-                {
-                    ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
-                    {
-                        new NotificationAction(100)
-                        {
-                            Title = "Stop Download",
-                        },
-                    })
-                }
-
-            }));
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
                 new NotificationCategory(NotificationCategoryType.Status)
@@ -70,7 +53,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
                     {
                         new NotificationAction(103)
                         {
-                            Title = "Play",
+                            Title = "Close Notification",
                         }
                     })
                 }
@@ -82,56 +65,32 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             StartAutoDownloadService();
         });
     }
-
     protected override Window CreateWindow(IActivationState activationState)
     {
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
-            DownloadService.CancelDownload = true;
+            Downloads.CancelAll();
             Thread.Sleep(500);
             Debug.WriteLine("Safe shutdown completed");
         };
         return window;
-    }
-    /// <summary>
-    /// Method gets most recent episode from each podcast on twit.tv
-    /// </summary>
-    /// <returns></returns>
-    public static async Task GetMostRecent()
-    {
-        Started = true;
-        AllShows.Clear();
-        var temp = await App.PositionData.GetAllPodcasts();
-        List<Show> list = new();
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
-        {
-            var item = FeedService.GetShows(show.Url, true);
-            list.Add(item[0]);
-        });
-        var deDupe = BaseViewModel.RemoveDuplicates(list);
-        deDupe.ForEach(AllShows.Add);
-        Started = false;
     }
 
 #if ANDROID || IOS
 
     private void OnNotificationActionTapped(Plugin.LocalNotification.EventArgs.NotificationActionEventArgs e)
     {
-        var message = Message.First(item => item.Id == e.Request.NotificationId);
         switch (e.ActionId)
         {
-            case 100:
-                DownloadService.CancelDownload = true;
-                break;
             case 103:
-                var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DownloadService.GetFileName(message.Url));
-                Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
+                e.Request.Cancel();
                 break;
         }
     }
 
 #endif
+
     private void StartAutoDownloadService()
     {
         Thread.Sleep(5000);
@@ -144,38 +103,14 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
 
     #region Messaging Service
 
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedDownloadMessage(bool,string)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DownloadItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDownloadMessage(message.Value, message.Title);
-        });
-        WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);
-    }
-
-    /// <summary>
-    /// Method invokes <see cref="MessagingService.RecievedInternetMessage(bool)"/> for displaying <see cref="Toast"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(InternetItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedInternetMessage(message.Value);
-        });
-        WeakReferenceMessenger.Default.Unregister<InternetItemMessage>(message);
-    }
     public void Receive(NotificationItemMessage message)
     {
         var newMessage = new Message
         {
             Cancel = message.Cancel,
             Id = message.Id,
-            Url = message.Url
+            Url = message.Url,
+            ShowItem = message.ShowItem,
         };
         if (Message.Exists(x => x.Id == message.Id))
         {
@@ -188,11 +123,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>, IRe
             Message.Add(newMessage);
         }
         WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
-    }
-    public void Receive(UrlItemMessage message)
-    {
-        ShowItem = message.ShowItem;
-        WeakReferenceMessenger.Default.Unregister<UrlItemMessage>(message);
     }
     #endregion
 }

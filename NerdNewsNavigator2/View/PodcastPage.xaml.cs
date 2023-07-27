@@ -32,11 +32,5 @@ public partial class PodcastPage : ContentPage
             OnPropertyChanged(nameof(ItemLayout));
         }
         DeviceService.RestoreScreen();
-#if WINDOWS|| MACCATALYST
-        if (DownloadService.IsDownloading)
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        }
-#endif
     }
 }

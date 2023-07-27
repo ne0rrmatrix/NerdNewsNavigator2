@@ -33,6 +33,8 @@ global using YoutubeExplode;
 global using CommunityToolkit.Maui.Storage;
 global using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 global using NerdNewsNavigator2.Shared;
+global using NerdNewsNavigator2.Primitives;
+global using System.Windows.Input;
 #if ANDROID || IOS
 global using Plugin.LocalNotification;
 #endif

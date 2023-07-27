@@ -213,11 +213,5 @@ public partial class SettingsPage : ContentPage
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
         DeviceService.RestoreScreen();
-#if WINDOWS || IOS || MACCATALYST
-        if (DownloadService.IsDownloading)
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        }
-#endif
     }
 }

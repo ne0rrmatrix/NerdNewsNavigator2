@@ -40,6 +40,24 @@ public static class PodcastServices
         await App.PositionData.DeleteAllPodcasts();
         return await AddPodcastsToDBAsync(newPodcasts);
     }
+    public static async Task<List<Favorites>> UpdateFavoritesAsync()
+    {
+        // get old favorites list
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+        var podcasts = await App.PositionData.GetAllPodcasts();
+        var temp = new List<Favorites>();
+
+        if (favoriteShows.Count == 0)
+        {
+            Debug.WriteLine("Did not find any stale Favorite Shows");
+            return favoriteShows;
+        }
+        var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
+        item.ForEach(temp.Add);
+        await App.PositionData.DeleteAllFavorites();
+        AddFavoritesToDatabase(temp);
+        return temp;
+    }
     private static List<Podcast> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
     {
         // get updated podcast list
@@ -66,34 +84,7 @@ public static class PodcastServices
         AddToDatabase(res);
         return res;
     }
-    public static List<Show> UpdateAllShows(List<Podcast> newPodcasts)
-    {
-        var res = new List<Show>();
-        newPodcasts.ForEach((podcast) =>
-        {
-            var item = FeedService.GetShows(podcast.Url, false);
-            item.ForEach(res.Add);
-        });
-        return res;
-    }
-    public static async Task<List<Favorites>> UpdateFavoritesAsync()
-    {
-        // get old favorites list
-        var favoriteShows = await App.PositionData.GetAllFavorites();
-        var podcasts = await App.PositionData.GetAllPodcasts();
-        var temp = new List<Favorites>();
 
-        if (favoriteShows.Count == 0)
-        {
-            Debug.WriteLine("Did not find any stale Favorite Shows");
-            return favoriteShows;
-        }
-        var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
-        item.ForEach(temp.Add);
-        await App.PositionData.DeleteAllFavorites();
-        AddFavoritesToDatabase(temp);
-        return temp;
-    }
     #endregion
 
     #region Manipulate Database

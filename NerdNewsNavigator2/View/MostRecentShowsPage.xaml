@@ -9,13 +9,14 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:MostRecentShowsViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="{OnPlatform Default=false,
-                                       MacCatalyst=true}">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="{OnPlatform Default=false, MacCatalyst=true}" IsVisible="{OnPlatform Default=false, MacCatalyst=true}" />
     </Shell.BackButtonBehavior>
-    <media:ShowControl Source="{Binding MostRecentShows}" />
-
+    <Grid>
+        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <media:ShowControl Source="{Binding MostRecentShows}" />
+        </RefreshView>
+    </Grid>
 </ContentPage>

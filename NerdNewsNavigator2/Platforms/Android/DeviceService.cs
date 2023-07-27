@@ -14,6 +14,9 @@ internal static partial class DeviceService
     #region Full Screen Methods
     public static partial void RestoreScreen()
     {
+        Shell.Current.CurrentPage.Title = string.Empty;
+        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage, true);
+        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
         var activity = Platform.CurrentActivity;
 
         if (activity == null || activity.Window == null)
@@ -29,6 +32,8 @@ internal static partial class DeviceService
     }
     public static partial void FullScreen()
     {
+        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage, false);
+        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
         var activity = Platform.CurrentActivity;
 
         if (activity == null || activity.Window == null)

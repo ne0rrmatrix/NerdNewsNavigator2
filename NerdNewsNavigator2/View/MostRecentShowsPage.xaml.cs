@@ -18,6 +18,11 @@ public partial class MostRecentShowsPage : ContentPage
         InitializeComponent();
         BindingContext = viewmodel;
     }
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        App.CurrentNavigation.StartedNavigation(true, false);
+        base.OnNavigatedTo(args);
+    }
 
     /// <summary>
     /// Method sets screen to normal screen size.
@@ -27,11 +32,5 @@ public partial class MostRecentShowsPage : ContentPage
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         DeviceService.RestoreScreen();
-#if WINDOWS || MACCATALYST
-        if (DownloadService.IsDownloading)
-        {
-            Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        }
-#endif
     }
 }

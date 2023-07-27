@@ -9,13 +9,8 @@
     x:DataType="vm:VideoPlayerViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Shell.NavBarIsVisible="{OnPlatform Default=True,
-                                       MacCatalyst=false,
-                                       WinUI=False}">
-
-    <media:MediaControl
-        x:Name="mediaElement"
-        IsYoutube="False"
-        Source="{Binding Url}" />
+    Shell.TitleColor="White"
+    Unloaded="ContentPage_Unloaded">
+    <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
 
 </ContentPage>

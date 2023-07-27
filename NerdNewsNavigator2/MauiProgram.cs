@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Woka;
+
 namespace NerdNewsNavigator2;
 public static class MauiProgram
 {
@@ -16,16 +18,14 @@ public static class MauiProgram
             // fonts.AddFont("OpenSans-Medium.ttf", "OpenSansMedium"); !! Still throws error !!
             // Alias set to match error string
             fonts.AddFont("OpenSans-Medium.ttf", "sans-serif-medium");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement()
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement().ConfigureWorkarounds()
 #if ANDROID || IOS
         .UseLocalNotification();
 #else
         ;
 #endif
         #region Logging
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
+
         builder.Logging
 
 #if DEBUG
@@ -65,21 +65,13 @@ public static class MauiProgram
         #endregion
         #region Services
 
-        builder.Services.AddSingleton<AndroidPermissions>();
-        builder.Services.AddSingleton<BaseViewModel>();
-
         builder.Services.AddTransient<PodcastPage>();
         builder.Services.AddTransient<PodcastViewModel>();
 
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
 
-#if WINDOWS
-        builder.Services.AddSingleton<VideoPlayerPage>();
-#endif
-#if IOS || ANDROID || MACCATALYST
         builder.Services.AddTransient<VideoPlayerPage>();
-#endif
         builder.Services.AddTransient<VideoPlayerViewModel>();
 
         builder.Services.AddTransient<LivePage>();
@@ -100,9 +92,16 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
-        builder.Services.AddTransient<SharedViewModel>();
-        builder.Services.AddSingleton<PositionDataBase>();
+        builder.Services.AddSingleton<BaseViewModel>();
+        builder.Services.AddSingleton<SharedViewModel>();
 
+        builder.Services.AddSingleton<CurrentDownloads>();
+        builder.Services.AddSingleton<CurrentNavigation>();
+        builder.Services.AddSingleton<VideoOnNavigated>();
+        builder.Services.AddSingleton<NotificationService>();
+
+        builder.Services.AddSingleton<PositionDataBase>();
+        builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();

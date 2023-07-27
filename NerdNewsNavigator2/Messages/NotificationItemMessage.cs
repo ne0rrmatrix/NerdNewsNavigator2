@@ -6,13 +6,15 @@ namespace NerdNewsNavigator2.Messages;
 
 public class NotificationItemMessage : ValueChangedMessage<int>
 {
-    public NotificationItemMessage(int id, string url, bool cancel) : base(id)
+    public NotificationItemMessage(int id, string url, Show show, bool cancel) : base(id)
     {
         Id = id;
         Url = url;
+        ShowItem = show;
         Cancel = cancel;
     }
     public bool Cancel { get; }
     public int Id { get; }
     public string Url { get; }
+    public Show ShowItem { get; }
 }

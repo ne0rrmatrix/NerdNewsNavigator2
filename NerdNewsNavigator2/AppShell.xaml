@@ -5,21 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NerdNewsNavigator2.View"
     Title="NerdNewsNavigator"
+    FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="200"
     Shell.BackgroundColor="#34AAD2"
-    Shell.FlyoutBackgroundColor="LightGray"
-    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
-                                       Android=true,
-                                       iOS=true,
-                                       WinUI=false}"
+    Shell.NavBarIsVisible="True"
     Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
                                        Android=true,
                                        iOS=true,
                                        WinUI=false}">
-
     <Shell.MenuItemTemplate>
         <DataTemplate>
+
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
@@ -39,8 +36,9 @@
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>
-        </DataTemplate>
 
+
+        </DataTemplate>
     </Shell.MenuItemTemplate>
 
     <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
@@ -87,7 +85,5 @@
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
         Text="Settings" />
-
-
 
 </Shell>

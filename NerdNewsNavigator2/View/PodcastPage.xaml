@@ -3,19 +3,14 @@
     x:Class="NerdNewsNavigator2.View.PodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
-    ios:Page.UseSafeArea="True"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded">
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="false" IsVisible="false" />
-    </Shell.BackButtonBehavior>
-
+  
     <Grid>
 
         <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
