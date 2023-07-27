@@ -4,8 +4,10 @@
 
 namespace NerdNewsNavigator2.Model;
 
-public class YoutubeResolutions
+public partial class YoutubeResolutions : ObservableObject
 {
-    public string Title { get; set; }
-    public string Url { get; set; }
+    [ObservableProperty]
+    private string _title;
+    [ObservableProperty]
+    private string _url;
 }

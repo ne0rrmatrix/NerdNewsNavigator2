@@ -1,0 +1,295 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+namespace NerdNewsNavigator2.Services;
+public partial class CurrentDownloads : ObservableObject
+{
+    #region Properties
+    [ObservableProperty]
+    private List<Show> _shows;
+    [ObservableProperty]
+    private Show _item;
+    [ObservableProperty]
+    private string _status = string.Empty;
+    [ObservableProperty]
+    private bool _cancelled = false;
+#if ANDROID || IOS
+    [ObservableProperty]
+    private NotificationService _notify;
+    private int Id { get; set; } = 0;
+    private readonly Random _random = new();
+    [ObservableProperty]
+    private NotificationRequest _notification;
+#endif
+    private static double Progress { get; set; }
+    public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
+    public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
+    public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
+    public static bool IsDownloading { get; set; } = false;
+    public static bool CancelDownload { get; set; } = false;
+    #endregion
+    public CurrentDownloads()
+    {
+        _shows = new();
+        _item = new();
+#if ANDROID || IOS
+        Notify = new();
+        Notification = new();
+#endif
+    }
+    #region Methods
+    public void Add(Show show)
+    {
+        Shows.Add(show);
+    }
+    public void CancelAll()
+    {
+        Shows.Clear();
+        CancelDownload = true;
+        IsDownloading = false;
+    }
+    public Show Cancel(string url)
+    {
+        Cancelled = true;
+        var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
+        if (item.Url == Item.Url)
+        {
+            CancelDownload = true;
+            Shows.Remove(item);
+            IsDownloading = false;
+            return item;
+        }
+        Shows.Remove(item);
+        return item;
+    }
+    public void Start(Show show)
+    {
+        Debug.WriteLine($"Staring show: {show.Title}");
+        if (IsDownloading)
+        {
+            Debug.WriteLine("Download is not starting IDownloading is true");
+            return;
+        }
+#if ANDROID || IOS
+        _ = NotificationRequests(show);
+#endif
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
+        });
+    }
+    private async Task StartDownload(Show item)
+    {
+        Item = item;
+        CancelDownload = false;
+        IsDownloading = true;
+        Cancelled = false;
+        Debug.WriteLine($"Starting Download of {item.Title}");
+        var result = await DownloadFile(item);
+        if (CancelDownload)
+        {
+            Cancel(item);
+            Debug.WriteLine("Download is Cancelled");
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title, item));
+        }
+        else if (result)
+        {
+            Debug.WriteLine("Download Completed event triggered");
+            Download download = new()
+            {
+                Title = item.Title,
+                Url = item.Url,
+                Image = item.Image,
+                IsDownloaded = true,
+                IsNotDownloaded = false,
+                Deleted = false,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = DownloadService.GetFileName(item.Url)
+            };
+            Debug.WriteLine($"Download completed: {item.Title}");
+            await App.PositionData.UpdateDownload(download);
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
+            Completed(item);
+            Shows.Remove(item);
+            IsDownloading = false;
+        }
+    }
+
+#if ANDROID || IOS
+    private async Task<NotificationRequest> NotificationRequests(Show item)
+    {
+        Id = _random.Next();
+        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(Id, item.Url, item, false));
+        var request = new Plugin.LocalNotification.NotificationRequest
+        {
+            NotificationId = Id,
+            Title = item.Title,
+            CategoryType = NotificationCategoryType.Progress,
+#if IOS
+            Description = "Downloading",
+#endif
+#if ANDROID
+            Description = $"Download Progress {(int)DownloadService.Progress}",
+            Android = new AndroidOptions
+            {
+                IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                Ongoing = true,
+                ProgressBarProgress = (int)DownloadService.Progress,
+                IsProgressBarIndeterminate = false,
+                Color =
+                {
+                    ResourceName = "colorPrimary"
+                },
+                AutoCancel = true,
+                ProgressBarMax = 100,
+            },
+#endif
+        };
+        await LocalNotificationCenter.Current.Show(request);
+        Notification = request;
+        return request;
+    }
+#endif
+
+    /// <summary>
+    /// Download a file to local filesystem from a URL
+    /// </summary>
+    /// <param name="item"><see cref="Show"/> Url to download file. </param>
+    /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
+    private async Task<bool> DownloadFile(Show item)
+    {
+        try
+        {
+            var filename = GetFileName(item.Url);
+            var downloadFileUrl = item.Url;
+            var favorites = await App.PositionData.GetAllDownloads();
+            var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+            if (File.Exists(tempFile))
+            {
+                if (favorites?.Where(x => x.Deleted).ToList().Find(y => y.Url == item.Url) is not null || favorites?.Find(x => x.Url == item.Url) is null)
+                {
+                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
+                    File.Delete(tempFile);
+                }
+                else
+                {
+                    Debug.WriteLine("File exists stopping download");
+                    return false;
+                }
+            }
+            var destinationFilePath = tempFile;
+            Debug.WriteLine("Starting download Progress on TaskBar");
+            using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
+            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+            {
+                Status = $"Download Progress: {progressPercentage}%";
+                Progress = (double)progressPercentage;
+                StartedDownload();
+            };
+            await client.StartDownload();
+            if (CancelDownload)
+            {
+                Status = string.Empty;
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                    Debug.WriteLine($"Deleting file from cancelled download: {tempFile}");
+                }
+                return false;
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"{ex.Message}, Deleting file");
+            CurrentDownloads.DeleteFile(item.Url);
+            Cancel(item.Url);
+            await Toast.Make("Download failed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Get file name from Url <see cref="string"/>
+    /// </summary>
+    /// <param name="url">A URL <see cref="string"/></param>
+    /// <returns>Filename <see cref="string"/> with file extension</returns>
+    private static string GetFileName(string url)
+    {
+        var result = new Uri(url).LocalPath;
+        return System.IO.Path.GetFileName(result);
+
+    }
+    private static void DeleteFile(string url)
+    {
+        var filename = GetFileName(url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+        }
+    }
+    #endregion
+
+    #region EventArgs
+    private void StartedDownload()
+    {
+        var args = new DownloadEventArgs
+        {
+            Status = Status,
+            Progress = Progress,
+            Cancelled = Cancelled,
+            Item = Item,
+            Shows = Shows,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnStarted(args);
+    }
+    private void Cancel(Show item)
+    {
+        var args = new DownloadEventArgs
+        {
+            Item = item,
+            Status = Status,
+            Cancelled = Cancelled,
+            Shows = Shows,
+            Progress = Progress,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnCancelled(args);
+    }
+    private void Completed(Show item)
+    {
+        var args = new DownloadEventArgs
+        {
+            Item = item,
+            Status = Status,
+            Cancelled = Cancelled,
+            Progress = Progress,
+            Shows = Shows,
+#if ANDROID || IOS
+            Notification = Notification
+#endif
+        };
+        OnDownloadFinished(args);
+    }
+    protected virtual void OnCancelled(DownloadEventArgs args)
+    {
+        DownloadCancelled?.Invoke(this, args);
+    }
+    protected virtual void OnStarted(DownloadEventArgs args)
+    {
+        DownloadStarted?.Invoke(this, args);
+    }
+    protected virtual void OnDownloadFinished(DownloadEventArgs e)
+    {
+        DownloadFinished?.Invoke(this, e);
+    }
+    #endregion
+}

@@ -5,17 +5,16 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
+/// A class that inherits from <see cref="SharedViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
 public partial class DownloadedShowViewModel : SharedViewModel
 {
-    #region Properties
+
     /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
     /// </summary>
     private readonly ILogger<DownloadedShowViewModel> _logger;
 
-    #endregion
     /// <summary>
     /// Intilializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="logger"/>
@@ -24,26 +23,25 @@ public partial class DownloadedShowViewModel : SharedViewModel
         : base(logger, connectivity)
     {
         _logger = logger;
+        if (App.Downloads.Shows.Count > 0)
+        {
+            App.Downloads.DownloadStarted += DownloadStarted;
+        }
     }
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="VideoPlayerPage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task PlayDownloadedShow(string url)
+    public ICommand PullToRefreshCommand => new Command(async () =>
     {
-#if ANDROID || IOS || MACCATALYST
-        var item = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), url);
-        _logger.LogInformation("Url for file is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-#endif
-#if WINDOWS
-        var item = "ms-appdata:///LocalCache/Local/" + url;
-        _logger.LogInformation("Url being passed is: {name}", item);
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={item}");
-#endif
+        _logger.LogInformation("Starting refresh of Downloaded shows");
+        IsRefreshing = true;
+        await RefreshData();
+        IsRefreshing = false;
+        _logger.LogInformation("Finished refreshing of Downloaded shows");
+    });
+    public async Task RefreshData()
+    {
+        IsBusy = true;
+        DownloadedShows.Clear();
+        await GetDownloadedShows();
+        IsBusy = false;
     }
 }
 

@@ -8,8 +8,10 @@ namespace NerdNewsNavigator2.Model;
 /// <c>Show</c> is a Class for storing Shows
 /// </summary>
 [Table("AllShows")]
-public class Show : Shared
+public partial class Show : Shared
 {
-    public bool IsDownloading { get; set; } = false;
-    public string Status { get; set; } = string.Empty;
+    [ObservableProperty]
+    private bool _isDownloading;
+    [ObservableProperty]
+    private string _status;
 }

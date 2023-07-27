@@ -3,17 +3,26 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Model;
-public class Shared
+public partial class Shared : ObservableObject
 {
     [PrimaryKey, AutoIncrement, Column("Id")]
     public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Link { get; set; }
-    public string Image { get; set; }
-    public string Url { get; set; }
-    public DateTime PubDate { get; set; }
-    public bool Download { get; set; }
-    public bool IsDownloaded { get; set; }
-    public bool IsNotDownloaded { get; set; }
+    [ObservableProperty]
+    private string _title;
+    [ObservableProperty]
+    private string _description;
+    [ObservableProperty]
+    private string _link;
+    [ObservableProperty]
+    private string _image;
+    [ObservableProperty]
+    private string _url;
+    [ObservableProperty]
+    private DateTime _pubDate;
+    [ObservableProperty]
+    private bool _download;
+    [ObservableProperty]
+    private bool _isDownloaded;
+    [ObservableProperty]
+    private bool _isNotDownloaded;
 }

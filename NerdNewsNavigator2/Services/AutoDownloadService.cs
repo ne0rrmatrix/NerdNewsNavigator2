@@ -72,6 +72,7 @@ public class AutoDownloadService
         if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Cancel();
+            DownloadService.CancelDownload = true;
             LongTask(CancellationTokenSource.Token);
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;

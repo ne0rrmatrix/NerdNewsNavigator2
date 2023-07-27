@@ -25,7 +25,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(DownloadedShowPage), typeof(DownloadedShowPage));
     }
 
-    #region Events
+    #region Navigation
     /// <summary>
     /// Method navigates user to Main Page.
     /// </summary>

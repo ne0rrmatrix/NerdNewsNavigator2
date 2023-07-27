@@ -3,10 +3,70 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-public static class NotificationService
+public partial class NotificationService
 {
 #if ANDROID || IOS
-    private static int Id { get; set; } = 0;
+    private double Progress { get; set; } = 0;
+    public NotificationService()
+    {
+    }
+    public void StartNotifications()
+    {
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += DownloadCompleted;
+        App.Downloads.DownloadCancelled += DownloadCancelled;
+    }
+    public void StopNotifications()
+    {
+        App.Downloads.DownloadStarted -= DownloadStarted;
+        App.Downloads.DownloadFinished -= DownloadCompleted;
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
+    }
+    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    {
+        MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            DownloadService.Progress = 0;
+            e.Notification.Android.ProgressBarProgress = 100;
+            e.Notification.Android.Ongoing = false;
+            e.Notification.Description = "Download Complete";
+            e.Notification.CategoryType = NotificationCategoryType.Status;
+            await LocalNotificationCenter.Current.Show(e.Notification);
+        });
+    }
+    public void StopWaitingForCancel()
+    {
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            App.Downloads.DownloadCancelled -= DownloadCancelled;
+        });
+    }
+    public void StartWatiingForCancel()
+    {
+        App.Downloads.DownloadCancelled += DownloadCancelled;
+    }
+    private async void DownloadCancelled(object sender, DownloadEventArgs e)
+    {
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            e.Notification.Android.ProgressBarProgress = 0;
+            e.Notification.Android.Ongoing = false;
+            e.Notification.Description = "Download cancelled";
+            e.Notification.CategoryType = NotificationCategoryType.None;
+            DownloadService.Progress = 0;
+            await LocalNotificationCenter.Current.Show(e.Notification);
+        });
+        ThreadPool.QueueUserWorkItem(state =>
+        {
+            App.Downloads.DownloadCancelled += DownloadCancelled;
+        });
+    }
+    private void DownloadStarted(object sender, DownloadEventArgs e)
+    {
+        Progress = e.Progress;
+        _ = DownloadNotifications(e.Notification);
+    }
     public static async Task CheckNotification()
     {
         if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
@@ -14,83 +74,13 @@ public static class NotificationService
             await LocalNotificationCenter.Current.RequestNotificationPermission();
         }
     }
-    public static void AfterNotifications(NotificationRequest request)
+    public async Task DownloadNotifications(NotificationRequest request)
     {
-        _ = Task.Run(async () =>
-        {
-            DownloadService.IsDownloading = true;
-            while (DownloadService.IsDownloading)
-            {
-                if (App.Stop || DownloadService.CancelDownload)
-                {
-                    break;
-                }
-#if ANDROID
-                request.Description = $"Download Progress {(int)DownloadService.Progress}%";
-                request.Android.ProgressBarProgress = (int)DownloadService.Progress;
-                request.Silent = true;
-                request.NotificationId = Id;
-                await LocalNotificationCenter.Current.Show(request);
-#endif
-                Thread.Sleep(1000);
-            }
-            if (DownloadService.CancelDownload)
-            {
-                System.Diagnostics.Debug.WriteLine($"Id is: {request.NotificationId}, and sending true");
-                WeakReferenceMessenger.Default.Send(new NotificationItemMessage(request.NotificationId, request.Title, true));
-                request.Android.ProgressBarProgress = 0;
-                request.Android.Ongoing = false;
-                request.NotificationId = Id;
-                request.Description = "Download cancelled";
-                request.CategoryType = NotificationCategoryType.None;
-                DownloadService.Progress = 0;
-                await LocalNotificationCenter.Current.Show(request);
-            }
-            else
-            {
-                DownloadService.Progress = 0;
-                request.Android.ProgressBarProgress = 100;
-                request.Android.Ongoing = false;
-                request.Description = "Download Complete";
-                request.CategoryType = NotificationCategoryType.Status;
-                if (!App.Stop)
-                {
-                    await LocalNotificationCenter.Current.Show(request);
-                }
-            }
-        });
-    }
-    public static async Task<NotificationRequest> NotificationRequests(Show item)
-    {
-        Id += 1;
-        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(Id, item?.Url, false));
-        var request = new Plugin.LocalNotification.NotificationRequest
-        {
-            NotificationId = Id,
-            Title = item?.Title,
-            CategoryType = NotificationCategoryType.Progress,
-#if IOS
-            Description = "Donwloading",
-#endif
-#if ANDROID
-            Description = $"Download Progress {(int)DownloadService.Progress}",
-            Android = new AndroidOptions
-            {
-                IconSmallName = new AndroidIcon("ic_stat_alarm"),
-                Ongoing = true,
-                ProgressBarProgress = (int)DownloadService.Progress,
-                IsProgressBarIndeterminate = false,
-                Color =
-                    {
-                        ResourceName = "colorPrimary"
-                    },
-                AutoCancel = true,
-                ProgressBarMax = 100,
-            },
-#endif
-        };
+        CurrentDownloads.IsDownloading = true;
+        request.Description = $"Download Progress {(int)Progress}%";
+        request.Android.ProgressBarProgress = (int)Progress;
+        request.Silent = true;
         await LocalNotificationCenter.Current.Show(request);
-        return request;
     }
 #endif
 }

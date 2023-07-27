@@ -7,18 +7,8 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="VideoPlayerViewModel"/>
 /// </summary>
-[QueryProperty("Url", "Url")]
 public partial class VideoPlayerViewModel : BaseViewModel
 {
-    #region Properties
-
-    /// <summary>
-    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
-    /// </summary>
-    [ObservableProperty]
-    private string _url;
-
-    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.

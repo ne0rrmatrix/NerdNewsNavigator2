@@ -13,7 +13,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
     /// </summary>
     private readonly ILogger<ResetAllSettingsViewModel> _logger;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
@@ -32,21 +31,37 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     /// </summary>
     private async Task ResetAll()
     {
+        _messenger.Send(new MessageData(false));
         DownloadService.CancelDownload = true;
-        await DeleteAllAsync();
+        App.Downloads.CancelAll();
         SetVariables();
+        await DeleteAllAsync();
         await GetUpdatedPodcasts();
+        await GetDownloadedShows();
+        await GetFavoriteShows();
         await GetMostRecent();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
-
-#if WINDOWS || MACCATALYST
-        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(PodcastPage)}"); });
-#endif
-#if IOS || ANDROID
-
-        await MainThread.InvokeOnMainThreadAsync(async () => { await Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
-#endif
+        await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
+    }
+    private void SetVariables()
+    {
+        Preferences.Default.Clear();
+        Title = string.Empty;
+        FavoriteShows.Clear();
+        Shows.Clear();
+        Podcasts.Clear();
+        App.MostRecentShows.Clear();
+        MostRecentShows.Clear();
+        DownloadedShows.Clear();
+        _messenger.Send(new MessageData(false));
+    }
+    private static async Task DeleteAllAsync()
+    {
+        await App.PositionData.DeleteAll();
+        await App.PositionData.DeleteAllPodcasts();
+        await App.PositionData.DeleteAllDownloads();
+        await App.PositionData.DeleteAllFavorites();
     }
     private void DeleleFiles(string[] files)
     {
@@ -62,25 +77,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         {
             _logger.LogInformation("{data}", ex.Message);
         }
-    }
-    private void SetVariables()
-    {
-        Preferences.Default.Clear();
-        FavoriteShows.Clear();
-        Shows.Clear();
-        Podcasts.Clear();
-        App.AllShows.Clear();
-        MostRecentShows.Clear();
-        DownloadedShows.Clear();
-        App.CurrenDownloads.Clear();
-        _messenger.Send(new MessageData(false));
-    }
-    private static async Task DeleteAllAsync()
-    {
-        await App.PositionData.DeleteAll();
-        await App.PositionData.DeleteAllPodcasts();
-        await App.PositionData.DeleteAllDownloads();
-        await App.PositionData.DeleteAllFavorites();
     }
     #endregion
 }

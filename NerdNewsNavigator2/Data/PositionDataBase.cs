@@ -325,10 +325,11 @@ public class PositionDataBase
     {
         try
         {
-            var existingPodcast = await _connection.Table<Podcast>().FirstOrDefaultAsync(x => x.Title == podcast.Title);
-            if (existingPodcast is not null)
+            if (podcast.Id != 0)
             {
-                await _connection.UpdateAsync(podcast);
+                await _connection.DeleteAsync(podcast);
+                await _connection.InsertAsync(podcast);
+
                 _logger.LogInformation("Updated Podcast: {Title}", podcast.Title);
                 return true;
             }
@@ -352,11 +353,12 @@ public class PositionDataBase
     {
         try
         {
-            var existingFavorites = await _connection.Table<Favorites>().FirstOrDefaultAsync(x => x.Title == favorites.Title);
-            if (existingFavorites is not null)
+            if (favorites.Id != 0)
             {
-                await _connection.UpdateAsync(favorites);
-                _logger.LogInformation("Updated Favorite: {Title}", favorites.Title);
+                await _connection.DeleteAsync(favorites);
+                await _connection.InsertAsync(favorites);
+                _logger.LogInformation("Updated Favorite in database: {favorite}", favorites.Title);
+                return true;
             }
             await _connection.InsertAsync(favorites);
             _logger.LogInformation("Added Favorite: {Title}", favorites.Title);
@@ -378,11 +380,12 @@ public class PositionDataBase
     {
         try
         {
-            var existingFavorites = await _connection.Table<Download>().FirstOrDefaultAsync(x => x.Title == download.Title);
-            if (existingFavorites is not null)
+            if (download.Id != 0)
             {
-                await _connection.UpdateAsync(download);
+                await _connection.DeleteAsync(download);
+                await _connection.InsertAsync(download);
                 _logger.LogInformation("Updated Download: {Title}", download.Title);
+                return true;
             }
             await _connection.InsertAsync(download);
             _logger.LogInformation("Added Download: {Title}", download.Title);

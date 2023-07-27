@@ -23,7 +23,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>19</ApplicationVersion>
+	    <ApplicationVersion>20</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -41,23 +41,24 @@
         <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppInstallerUri>C:\Users\james\source\repos\NerdNewsNavigator2\NerdNewsNavigator2\bin\Release\net7.0-windows10.0.19041.0\win10-x64</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <PackageCertificateThumbprint>D2B5C6F044C764C5B848962C6A34A4002E174D64</PackageCertificateThumbprint>
+        <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
 	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	    <RunAOTCompilation>False</RunAOTCompilation>
+	    <EnableLLVM>True</EnableLLVM>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidUseAapt2>True</AndroidUseAapt2>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-        <RunAOTCompilation>False</RunAOTCompilation>
+        <RunAOTCompilation>True</RunAOTCompilation>
+        <EnableLLVM>True</EnableLLVM>
 	</PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
@@ -107,6 +108,7 @@
 	    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
 	    <PackageReference Include="M3U8Parser" Version="1.0.1" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
@@ -118,7 +120,8 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="YoutubeExplode" Version="6.2.16" />
+	    <PackageReference Include="Woka" Version="1.0.7" />
+	    <PackageReference Include="YoutubeExplode" Version="6.3.1" />
     </ItemGroup>
   
     <ItemGroup>
@@ -207,5 +210,7 @@
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     </ItemGroup>
+  
+    <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionNerdNewsNavigator2HideInfoBar="True" /></VisualStudio></ProjectExtensions>
   
 </Project>

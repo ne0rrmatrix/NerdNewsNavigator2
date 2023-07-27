@@ -8,11 +8,10 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="False">
+    Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="True" />
     </Shell.BackButtonBehavior>
 
     <Grid>
@@ -45,7 +44,7 @@
                                                       iOS=320}">
                             <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                                 </Grid.GestureRecognizers>
                                 <Label
                                     Grid.Row="0"
@@ -69,7 +68,7 @@
                                             Uri="{Binding Image}" />
                                     </Image.Source>
                                     <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayDownloadedShowCommand}" CommandParameter="{Binding FileName}" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                                     </Image.GestureRecognizers>
                                 </Image>
 
