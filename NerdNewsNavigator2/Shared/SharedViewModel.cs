@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Windows.Input;
-
 namespace NerdNewsNavigator2.Shared;
 
 [QueryProperty("Url", "Url")]
@@ -140,24 +138,7 @@ public partial class SharedViewModel : BaseViewModel
     #region Commands
     public ICommand PullToRefreshCommand => new Command(() =>
     {
-        Logger.LogInformation("Starting refresh");
-        IsRefreshing = true;
-        RefreshData();
-        IsRefreshing = false;
-        Logger.LogInformation("Refresh done");
     });
-    public Task RefreshData()
-    {
-        IsBusy = true;
-        Shows.Clear();
-        MostRecentShows.Clear();
-        DownloadedShows.Clear();
-        ThreadPool.QueueUserWorkItem(async state => await GetDownloadedShows());
-        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
-        GetShowsAsync(Url, false);
-        IsBusy = false;
-        return Task.CompletedTask;
-    }
     #endregion
 
     partial void OnUrlChanged(string oldValue, string newValue)
@@ -386,26 +367,35 @@ public partial class SharedViewModel : BaseViewModel
     /// <returns></returns>
     public async Task GetMostRecent()
     {
-        if (MostRecentShows.Count > 0)
+        if (App.MostRecentShows.Count > 0)
         {
-            await CheckForNew();
-        }
-        await GetDownloadedShows();
-        var deDupe = RemoveDuplicates(App.MostRecentShows);
-        var item = deDupe.OrderBy(x => x.Title).ToList();
-        item.ForEach(MostRecentShows.Add);
-        Logger.LogInformation("Got Most recent shows");
-    }
-    public async Task CheckForNew()
-    {
-        if (App.Loading || App.MostRecentShows.Count > 0)
-        {
-            Logger.LogInformation("App loading. Returning");
+            App.MostRecentShows.ForEach(MostRecentShows.Add);
+            MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+            MostRecentShows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
             return;
         }
-        Logger.LogInformation("Checking for new Most Recent Shows");
-        await App.GetMostRecent();
-        MostRecentShows.Clear();
-        App.MostRecentShows.Where(x => !(MostRecentShows.ToList().Exists(y => y.Url == x.Url))).ToList().ForEach(MostRecentShows.Add);
+        var temp = await UpdateMostRecentShows();
+        var deDupe = RemoveDuplicates(temp);
+        var item = deDupe.OrderBy(x => x.Title).ToList();
+        item.ForEach(App.MostRecentShows.Add);
+        item.ForEach(MostRecentShows.Add);
+        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        MostRecentShows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Logger.LogInformation("Got Most recent shows");
+    }
+    public static async Task<List<Show>> UpdateMostRecentShows()
+    {
+        var shows = new List<Show>();
+        var temp = await App.PositionData.GetAllPodcasts();
+        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
+        {
+            var item = FeedService.GetShows(show.Url, true);
+            if (item.Count > 0)
+            {
+
+                shows.Add(item[0]);
+            }
+        });
+        return shows;
     }
 }

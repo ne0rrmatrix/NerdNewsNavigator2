@@ -39,7 +39,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         await GetUpdatedPodcasts();
         await GetDownloadedShows();
         await GetFavoriteShows();
-        ThreadPool.QueueUserWorkItem(async state => { Thread.Sleep(3000); await App.GetMostRecent(); });
+        await GetMostRecent();
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
@@ -51,9 +51,9 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
+        App.MostRecentShows.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
-        App.MostRecentShows.Clear();
         _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()

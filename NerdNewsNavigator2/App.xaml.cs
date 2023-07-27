@@ -41,7 +41,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
-        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
 #if ANDROID || IOS
         // Local Notification tap event listener
         WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
@@ -65,28 +64,6 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         {
             StartAutoDownloadService();
         });
-    }
-    public static async Task GetMostRecent()
-    {
-        Loading = true;
-        MostRecentShows.Clear();
-        var temp = await App.PositionData.GetAllPodcasts();
-        while (temp.Count == 0)
-        {
-            Thread.Sleep(5000);
-            temp = await App.PositionData.GetAllPodcasts();
-        }
-        temp?.Where(x => !x.Deleted).ToList().ForEach(show =>
-        {
-            var item = FeedService.GetShows(show.Url, true);
-            if (item.Count > 0)
-            {
-
-                MostRecentShows.Add(item[0]);
-            }
-        });
-        Loading = false;
-        Debug.WriteLine("Got App most recent shows");
     }
     protected override Window CreateWindow(IActivationState activationState)
     {
