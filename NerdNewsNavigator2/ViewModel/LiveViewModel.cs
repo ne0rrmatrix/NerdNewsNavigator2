@@ -11,9 +11,9 @@ public partial class LiveViewModel : SharedViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LiveViewModel"/>
-    /// <paramref name="logger"/>
+    /// <paramref name="connectivity"/>
     /// </summary>
-    public LiveViewModel(ILogger<LiveViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public LiveViewModel(IConnectivity connectivity) : base(connectivity)
     {
     }
 }

@@ -10,15 +10,14 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
 {
     private readonly IMessenger _messenger;
     /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
-    private readonly ILogger<ResetAllSettingsViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ResetAllSettingsViewModel));
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
-    public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
+    public ResetAllSettingsViewModel(IConnectivity connectivity, IMessenger messenger) : base(connectivity)
     {
-        _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         _messenger = messenger;
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
@@ -40,6 +39,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         await GetDownloadedShows();
         await GetFavoriteShows();
         await GetMostRecent();
+        DownloadService.CancelDownload = false;
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
@@ -52,6 +52,7 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         Shows.Clear();
         Podcasts.Clear();
         App.MostRecentShows.Clear();
+        App.Downloads.Shows.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
         _messenger.Send(new MessageData(false));
@@ -70,12 +71,12 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
             foreach (var file in files)
             {
                 System.IO.File.Delete(file);
-                _logger.LogInformation("Deleted file {file}", file);
+                _logger.Info($"Deleted file {file}");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("{data}", ex.Message);
+            _logger.Info($"{ex.Message}");
         }
     }
     #endregion

@@ -14,6 +14,8 @@ public class AppDelegate : MauiUIApplicationDelegate
     private bool IsRunning { get; set; }
 
     private IConnectivity _connectivity;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(AppDelegate));
+    private DownloadService DownloadService { get; set; } = new();
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
     // Next line is for SqlLite
@@ -59,7 +61,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     public override void WillEnterForeground(UIApplication application)
     {
-        Console.WriteLine("App will enter foreground");
+        _logger.Info("App will enter foreground");
         AutoDownload();
         base.WillEnterForeground(application);
     }

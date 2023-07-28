@@ -9,16 +9,15 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class PodcastViewModel : SharedViewModel
 {
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<PodcastViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(PodcastViewModel));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PodcastViewModel"/> class.
     /// </summary>
-    public PodcastViewModel(ILogger<PodcastViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public PodcastViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        _logger = logger;
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
         if (App.Downloads.Shows.Count > 0)
         {
@@ -27,11 +26,11 @@ public partial class PodcastViewModel : SharedViewModel
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
-        _logger.LogInformation("Refresh podcasts");
+        _logger.Info("Refresh podcasts");
         IsRefreshing = true;
         await RefreshData();
         IsRefreshing = false;
-        _logger.LogInformation("Finished refreshing podcasts");
+        _logger.Info("Finished refreshing podcasts");
     });
     public async Task RefreshData()
     {

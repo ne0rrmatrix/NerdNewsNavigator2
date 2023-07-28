@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
-public static class DownloadService
+public class DownloadService
 {
     #region Properties
     public static bool CancelDownload { get; set; } = false;
@@ -14,9 +14,13 @@ public static class DownloadService
     public static bool IsDownloading { get; set; } = false;
     public static bool Autodownloading { get; set; } = false;
     public static double Progress { get; set; }
+    private CurrentDownloads Downloads { get; set; } = new();
     public static string Status { get; set; } = string.Empty;
+    private static readonly ILogger s_log = LoggerFactory.GetLogger(nameof(DownloadService));
     #endregion
-
+    public DownloadService()
+    {
+    }
     /// <summary>
     /// Get file name from Url <see cref="string"/>
     /// </summary>
@@ -29,10 +33,10 @@ public static class DownloadService
 
     }
 
-    public static void DeleteFile(string url)
+    private static void DeleteFile(string url)
     {
         CancelDownload = true;
-        var filename = GetFileName(url);
+        var filename = DownloadService.GetFileName(url);
         var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
         if (File.Exists(tempFile))
         {
@@ -49,7 +53,7 @@ public static class DownloadService
     {
         try
         {
-            var filename = GetFileName(item.Url);
+            var filename = DownloadService.GetFileName(item.Url);
             var downloadFileUrl = item.Url;
             var favorites = await App.PositionData.GetAllDownloads();
             var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
@@ -57,12 +61,12 @@ public static class DownloadService
             {
                 if (favorites?.Find(x => x.Url == item.Url) is null)
                 {
-                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
+                    s_log.Info($"Item is Partially downloaded, Deleting: {filename}");
                     File.Delete(tempFile);
                 }
                 else
                 {
-                    Debug.WriteLine("File exists stopping download");
+                    s_log.Info("File exists stopping download");
                     return false;
                 }
             }
@@ -81,7 +85,7 @@ public static class DownloadService
                 if (File.Exists(tempFile))
                 {
                     File.Delete(tempFile);
-                    Debug.WriteLine($"Deleting file from cancelled download: {tempFile}");
+                    s_log.Info($"Deleting file from cancelled download: {tempFile}");
                 }
                 return false;
             }
@@ -89,7 +93,7 @@ public static class DownloadService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"{ex.Message}, Deleting file");
+            s_log.Error($"{ex.Message}, Deleting file");
             DeleteFile(item.Url);
             return false;
         }
@@ -98,61 +102,60 @@ public static class DownloadService
     /// <summary>
     /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
-    public static async Task AutoDownload()
+    public async Task AutoDownload()
     {
         CancelDownload = false;
         var favoriteShows = await App.PositionData.GetAllFavorites();
         await ProccessShowAsync(favoriteShows);
     }
-    private static async Task ProccessShowAsync(List<Favorites> favoriteShows)
+    private async Task ProccessShowAsync(List<Favorites> favoriteShows)
     {
         var downloadedShows = await App.PositionData.GetAllDownloads();
         IsDownloading = false;
-        _ = Task.Run(async () =>
+        _ = Task.Run(() =>
         {
-            var shows = new List<Show>();
             favoriteShows.ForEach(x =>
             {
                 var show = FeedService.GetShows(x.Url, true);
                 if (show is not null && !downloadedShows.Exists(y => y.Url == show[0].Url))
                 {
-                    shows.Add(show[0]);
+                    Downloads.Add(show[0]);
                 }
             });
-            while (shows.Count > 0)
+            Downloads.DownloadStarted += DownloadStarted;
+            Downloads.DownloadFinished += DownloadCompleted;
+            if (Downloads.Shows.Count > 0)
             {
-                if (CancelDownload)
-                {
-                    shows.Clear();
-                    break;
-                }
-                Debug.WriteLine($"downloading: {shows[0].Title}");
-                await StartDownload(shows[0]);
-                shows.RemoveAt(0);
+                Downloads.Start(Downloads.Shows[0]);
             }
         });
     }
-    private static async Task StartDownload(Show item)
+
+    private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
-        Debug.WriteLine($"Starting Download of {item.Title}");
-        var result = await DownloadFile(item);
-        if (result)
+        Downloads.DownloadStarted -= DownloadStarted;
+        Downloads.DownloadFinished -= DownloadCompleted;
+        MainThread.InvokeOnMainThreadAsync(() =>
         {
-            Debug.WriteLine("Download Completed event triggered");
-            Download download = new()
-            {
-                Title = item.Title,
-                Url = item.Url,
-                Image = item.Image,
-                IsDownloaded = true,
-                IsNotDownloaded = false,
-                Deleted = false,
-                PubDate = item.PubDate,
-                Description = item.Description,
-                FileName = DownloadService.GetFileName(item.Url)
-            };
-            Debug.WriteLine($"Download completed: {item.Title}");
-            await App.PositionData.UpdateDownload(download);
+            Shell.Current.CurrentPage.Title = string.Empty;
+        });
+        if (e.Shows.Count > 0)
+        {
+            Downloads.DownloadStarted += DownloadStarted;
+            Downloads.DownloadFinished += DownloadCompleted;
+            Downloads.Start(e.Shows[0]);
         }
+    }
+
+    private void DownloadStarted(object sender, DownloadEventArgs e)
+    {
+        if (e.Status is null || e.Shows.Count == 0)
+        {
+            return;
+        }
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shell.Current.CurrentPage.Title = e.Status;
+        });
     }
 }

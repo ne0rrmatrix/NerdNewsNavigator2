@@ -13,11 +13,13 @@ public class AutoDownloadService
 {
     private string Status { get; set; }
     private string WifiOnlyDownloading { get; set; }
+    private DownloadService DownloadService { get; set; } = new();
 #if ANDROID
     public WakeLock WLock { get; set; }
 #endif
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
+    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     public AutoDownloadService()
     {
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
@@ -38,7 +40,7 @@ public class AutoDownloadService
             WLock.Acquire();
         }
         var item = WLock.IsHeld;
-        System.Diagnostics.Debug.WriteLine($"Wake Lock On: {item}");
+        s_logger.Info($"Wake Lock On: {item}");
 
     }
 #endif
@@ -60,7 +62,7 @@ public class AutoDownloadService
             var cts = new CancellationTokenSource();
             CancellationTokenSource = cts;
         }
-        System.Diagnostics.Debug.WriteLine("Start Auto downloads");
+        s_logger.Info("Start Auto downloads");
         _ = LongTaskAsync(CancellationTokenSource.Token);
     }
 
@@ -77,7 +79,7 @@ public class AutoDownloadService
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;
         }
-        System.Diagnostics.Debug.WriteLine("Stopped Auto Downloder");
+        s_logger.Info("Stopped Auto Downloder");
     }
     public async Task LongTaskAsync(CancellationToken cancellationToken)
     {
@@ -96,9 +98,9 @@ public class AutoDownloadService
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Connection status has changed");
+        s_logger.Info("Connection status has changed");
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        System.Diagnostics.Debug.WriteLine(Status);
+        s_logger.Info(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         if (WifiOnlyDownloading == "No" && !CheckIfWifiOnly())
         {
@@ -109,26 +111,26 @@ public class AutoDownloadService
     {
         if (CheckIfWifiOnly())
         {
-            System.Diagnostics.Debug.WriteLine($"Timed event: {e} Started");
+            s_logger.Info($"Timed event: {e} Started");
             DownloadService.CancelDownload = false;
             _ = DownloadService.AutoDownload();
             return;
         }
-        System.Diagnostics.Debug.WriteLine("Auto Downloader not started");
+        s_logger.Info("Auto Downloader not started");
     }
 
     public bool CheckIfWifiOnly()
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        System.Diagnostics.Debug.WriteLine(Status);
+        s_logger.Info(Status);
         if (Status == string.Empty)
         {
-            System.Diagnostics.Debug.WriteLine("No wifi or cell service");
+            s_logger.Info("No wifi or cell service");
             return false;
         }
         if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
         {
-            System.Diagnostics.Debug.WriteLine("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
+            s_logger.Info("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
             return false;
         }
         return true;

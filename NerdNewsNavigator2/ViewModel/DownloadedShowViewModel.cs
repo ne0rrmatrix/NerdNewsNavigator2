@@ -11,18 +11,17 @@ public partial class DownloadedShowViewModel : SharedViewModel
 {
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<DownloadedShowViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(DownloadedShowViewModel));
 
     /// <summary>
     /// Intilializes an instance of <see cref="DownloadedShowViewModel"/>
-    /// <paramref name="logger"/>
+    /// <paramref name="connectivity"/>
     /// </summary>
-    public DownloadedShowViewModel(ILogger<DownloadedShowViewModel> logger, IConnectivity connectivity)
-        : base(logger, connectivity)
+    public DownloadedShowViewModel(IConnectivity connectivity)
+        : base(connectivity)
     {
-        _logger = logger;
         if (App.Downloads.Shows.Count > 0)
         {
             App.Downloads.DownloadStarted += DownloadStarted;
@@ -30,11 +29,11 @@ public partial class DownloadedShowViewModel : SharedViewModel
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
-        _logger.LogInformation("Starting refresh of Downloaded shows");
+        _logger.Info("Starting refresh of Downloaded shows");
         IsRefreshing = true;
         await RefreshData();
         IsRefreshing = false;
-        _logger.LogInformation("Finished refreshing of Downloaded shows");
+        _logger.Info("Finished refreshing of Downloaded shows");
     });
     public async Task RefreshData()
     {

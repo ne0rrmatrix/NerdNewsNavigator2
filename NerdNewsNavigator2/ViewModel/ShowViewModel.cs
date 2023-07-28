@@ -11,15 +11,14 @@ public partial class ShowViewModel : SharedViewModel
 {
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<SharedViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowViewModel));
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
     /// </summary>
-    public ShowViewModel(ILogger<ShowViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        _logger = logger;
         App.Downloads.DownloadCancelled += UpdateOnCancel;
         App.CurrentNavigation.NavigationCompleted += OnNavigated;
         App.Downloads.DownloadFinished += ShowsDownloadCompleted;
@@ -30,11 +29,11 @@ public partial class ShowViewModel : SharedViewModel
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
-        _logger.LogInformation("Starting Show refresh");
+        _logger.Info("Starting Show refresh");
         IsRefreshing = true;
         await RefreshData();
         IsRefreshing = false;
-        _logger.LogInformation("Show Refresh is done");
+        _logger.Info("Show Refresh is done");
     });
     public async Task RefreshData()
     {

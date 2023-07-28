@@ -12,8 +12,8 @@ public partial class SettingsViewModel : SharedViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/>
     /// </summary>
-    public SettingsViewModel(ILogger<SettingsViewModel> logger, IConnectivity connectivity)
-        : base(logger, connectivity)
+    public SettingsViewModel(IConnectivity connectivity)
+        : base(connectivity)
     {
     }
 
