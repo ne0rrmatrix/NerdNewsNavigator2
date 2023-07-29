@@ -13,7 +13,7 @@ public class PositionDataBase
     /// <summary>
     /// A variable to manage logs.
     /// </summary>
-    private readonly ILogger<PositionDataBase> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(PositionDataBase));
 
     /// <summary>
     /// A variable to manage <see cref="SQLiteAsyncConnection"/>
@@ -26,10 +26,8 @@ public class PositionDataBase
     /// <summary>
     /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
     /// </summary>
-    /// <param name="logger">This classes <see cref="ILogger{TCategoryName}"/> instance variable</param>
-    public PositionDataBase(ILogger<PositionDataBase> logger)
+    public PositionDataBase()
     {
-        _logger = logger;
         try
         {
 #if WINDOWS || IOS || MACCATALYST
@@ -38,21 +36,21 @@ public class PositionDataBase
 #if ANDROID 
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
 #endif
-            _logger.LogInformation("Database path is: {Path}", databasePath);
+            _logger.Info($"Database path is: {databasePath}");
             _connection = new SQLiteAsyncConnection(databasePath, Flags);
 
             _connection.CreateTableAsync<Position>();
-            _logger.LogInformation("Position Init {DatabasePath}", databasePath);
+            _logger.Info($"Position Init {databasePath}");
             _connection.CreateTableAsync<Podcast>();
-            _logger.LogInformation("Podcast Init {DataBasePath}", databasePath);
+            _logger.Info($"Podcast Init {databasePath}");
             _connection.CreateTableAsync<Download>();
-            _logger.LogInformation("Download Init {DatabasePath}", databasePath);
+            _logger.Info($"Download Init {databasePath}");
             _connection.CreateTableAsync<Favorites>();
-            _logger.LogInformation("Favorites Init {DatabasePath}", databasePath);
+            _logger.Info($"Favorites Init {databasePath}");
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to start Database: {Message}", ex.Message);
+            _logger.Error("Failed to start Database: {Message}", ex.Message);
         }
     }
 
@@ -66,10 +64,10 @@ public class PositionDataBase
         var test = await _connection.Table<Position>().ToListAsync();
         if (test is null)
         {
-            _logger.LogInformation("Returning empty collection");
+            _logger.Info("Returning empty collection");
             return new List<Position>();
         }
-        _logger.LogInformation("Got all Positions from Database.");
+        _logger.Info("Got all Positions from Database.");
         return test;
     }
 
@@ -82,10 +80,10 @@ public class PositionDataBase
         var temp = await _connection.Table<Podcast>().ToListAsync();
         if (temp is null)
         {
-            _logger.LogInformation("Returning empty collection");
+            _logger.Info("Returning empty collection");
             return new List<Podcast>();
         }
-        _logger.LogInformation("Got all Podcasts from Database.");
+        _logger.Info("Got all Podcasts from Database.");
         return temp;
     }
 
@@ -98,10 +96,10 @@ public class PositionDataBase
         var temp = await _connection.Table<Favorites>().ToListAsync();
         if (temp is null)
         {
-            _logger.LogInformation("Returning empty collection");
+            _logger.Info("Returning empty collection");
             return new List<Favorites>();
         }
-        _logger.LogInformation("Got all Favorites from Database.");
+        _logger.Info("Got all Favorites from Database.");
         return temp;
     }
 
@@ -114,10 +112,10 @@ public class PositionDataBase
         var temp = await _connection.Table<Download>().ToListAsync();
         if (temp is null)
         {
-            _logger.LogInformation("Returning empty collection");
+            _logger.Info("Returning empty collection");
             return new List<Download>();
         }
-        _logger.LogInformation("Got all Downloads from Database.");
+        _logger.Info("Got all Downloads from Database.");
         return temp;
     }
 
@@ -134,12 +132,12 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAllAsync<Position>();
-            _logger.LogInformation($"Deleted All Position data.");
+            _logger.Info("Deleted All Position data.");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to delete Position data from database: {Message}", ex.Message);
+            _logger.Error("Failed to delete Position data from database: {Message}", ex.Message);
             return false;
         }
     }
@@ -154,12 +152,12 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Podcast>();
-            _logger.LogInformation("Succesfully Deleted all Podcasts.");
+            _logger.Info("Succesfully Deleted all Podcasts.");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to delete all Podcasts. {Message}", ex.Message);
+            _logger.Error($"Failed to delete all Podcasts. {ex.Message}");
             return false;
         }
     }
@@ -174,12 +172,12 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Favorites>();
-            _logger.LogInformation("Succesfully Deleted all Favorites.");
+            _logger.Info("Succesfully Deleted all Favorites.");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to delete all Favorites. {Message}", ex.Message);
+            _logger.Error($"Failed to delete all Favorites. {ex.Message}");
             return false;
         }
     }
@@ -194,12 +192,12 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Download>();
-            _logger.LogInformation("Succesfully Deleted all Downloads.");
+            _logger.Info("Succesfully Deleted all Downloads.");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to delete all Downloads. {Message}", ex.Message);
+            _logger.Error($"Failed to delete all Downloads. {ex.Message}");
             return false;
         }
     }
@@ -216,12 +214,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(position);
-            _logger.LogInformation("Saved to database: {Title} {Position}", position.Title, position.SavedPosition);
+            _logger.Info($"Saved to database: {position.Title} {position.SavedPosition}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to save to Database: {Message}", ex.Message);
+            _logger.Error($"Failed to save to Database: {ex.Message}");
             return false;
         }
     }
@@ -236,12 +234,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(podcast);
-            _logger.LogInformation("Saved to Database Podcast: {Title}", podcast.Title);
+            _logger.Info($"Saved to Database Podcast: {podcast.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("Failed to save Podcast to Database: {Message}", ex.Message);
+            _logger.Info($"$Failed to save Podcast to Database: {ex.Message}");
             return false;
         }
     }
@@ -256,12 +254,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(download);
-            _logger.LogInformation("Saved to Database Download: {Title}", download.Title);
+            _logger.Info($"Saved to Database Download: {download.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("Failed to save Download to Database: {Message}", ex.Message);
+            _logger.Info($"Failed to save Download to Database: {ex.Message}");
             return false;
         }
     }
@@ -276,12 +274,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(favorites);
-            _logger.LogInformation("Saved to Database Favorites: {Title}", favorites.Title);
+            _logger.Info($"Saved to Database Favorites: {favorites.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("Failed to save Favorites to Database: {Message}", ex.Message);
+            _logger.Error($"Failed to save Favorites to Database: {ex.Message}");
             return false;
         }
     }
@@ -302,16 +300,16 @@ public class PositionDataBase
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(position);
-                _logger.LogInformation("Updated Database: {Title} {Position}", position.Title, position.SavedPosition);
+                _logger.Info($"Updated Database: {position.Title} {position.SavedPosition}");
                 return true;
             }
             await _connection.InsertAsync(position);
-            _logger.LogInformation("Adding to Database: {Title} {Position}", position.Title, position.SavedPosition);
+            _logger.Info($"Adding to Database: {position.Title} {position.SavedPosition}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Update Position from Database {Message}", ex.Message);
+            _logger.Error($"Failed to Update Position from Database {ex.Message}");
             return false;
         }
     }
@@ -330,16 +328,16 @@ public class PositionDataBase
                 await _connection.DeleteAsync(podcast);
                 await _connection.InsertAsync(podcast);
 
-                _logger.LogInformation("Updated Podcast: {Title}", podcast.Title);
+                _logger.Info($"Updated Podcast: {podcast.Title}");
                 return true;
             }
             await _connection.InsertAsync(podcast);
-            _logger.LogInformation("Added Podcast: {Title}", podcast.Title);
+            _logger.Info($"Added Podcast: {podcast.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Update Podcast from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Update Podcast from Database: {ex.Message}");
             return false;
         }
     }
@@ -357,16 +355,16 @@ public class PositionDataBase
             {
                 await _connection.DeleteAsync(favorites);
                 await _connection.InsertAsync(favorites);
-                _logger.LogInformation("Updated Favorite in database: {favorite}", favorites.Title);
+                _logger.Info($"Updated Favorite in database: {favorites.Title}");
                 return true;
             }
             await _connection.InsertAsync(favorites);
-            _logger.LogInformation("Added Favorite: {Title}", favorites.Title);
+            _logger.Info($"Added Favorite: {favorites.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Update favorite from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Update favorite from Database: {ex.Message}");
             return false;
         }
     }
@@ -384,16 +382,16 @@ public class PositionDataBase
             {
                 await _connection.DeleteAsync(download);
                 await _connection.InsertAsync(download);
-                _logger.LogInformation("Updated Download: {Title}", download.Title);
+                _logger.Info($"Updated Download: {download.Title}");
                 return true;
             }
             await _connection.InsertAsync(download);
-            _logger.LogInformation("Added Download: {Title}", download.Title);
+            _logger.Info($"Added Download: {download.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Download favorite from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Download favorite from Database: {ex.Message}");
             return false;
         }
     }
@@ -411,12 +409,12 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(position);
-            _logger.LogInformation("Deleted from Database: {Title} {Position}", position.Title, position.SavedPosition);
+            _logger.Info($"Deleted from Database: {position.Title} {position.SavedPosition}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Delete Position from Database {Message}", ex.Message);
+            _logger.Error($"Failed to Delete Position from Database {ex.Message}");
             return false;
         }
     }
@@ -431,12 +429,12 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(podcast);
-            _logger.LogInformation("Deleted Podcast: {Title}", podcast.Title);
+            _logger.Info($"Deleted Podcast: {podcast.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Delete Podcast from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Delete Podcast from Database: {ex.Message}");
             return false;
         }
     }
@@ -451,12 +449,12 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(favorites);
-            _logger.LogInformation("Deleted Favorite: {Title}", favorites.Title);
+            _logger.Info($"Deleted Favorite: {favorites.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Delete favorite from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Delete favorite from Database: {ex.Message}");
             return false;
         }
     }
@@ -471,12 +469,12 @@ public class PositionDataBase
         try
         {
             await _connection.DeleteAsync(download);
-            _logger.LogInformation("Deleted Podcast: {Title}", download.Title);
+            _logger.Info($"Deleted Podcast: {download.Title}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to Delete Download from Database: {Message}", ex.Message);
+            _logger.Error($"Failed to Delete Download from Database: {ex.Message}");
             return false;
         }
     }

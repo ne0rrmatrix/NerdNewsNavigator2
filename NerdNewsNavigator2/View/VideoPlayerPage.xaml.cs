@@ -13,9 +13,9 @@ public partial class VideoPlayerPage : ContentPage
     #region Properties
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<VideoPlayerPage> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(VideoPlayerPage));
 
     /// <summary>
     /// Initilizes a new instance of the <see cref="Position"/> class
@@ -29,17 +29,16 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 
-    public VideoPlayerPage(ILogger<VideoPlayerPage> logger, VideoPlayerViewModel viewModel)
+    public VideoPlayerPage(VideoPlayerViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
-        _logger = logger;
         App.OnVideoNavigated.Navigation += Now;
     }
 
     private async void Now(object sender, VideoNavigationEventArgs e)
     {
-        Debug.WriteLine($"Navigated: {e.CurrentShow.Url}");
+        _logger.Info($"Navigated: {e.CurrentShow.Url}");
         App.OnVideoNavigated.Navigation -= Now;
         ShowItem = e.CurrentShow;
         mediaElement.Source = new Uri(e.CurrentShow.Url);
@@ -56,7 +55,7 @@ public partial class VideoPlayerPage : ContentPage
     {
         Pos.SavedPosition = TimeSpan.Zero;
         Pos.Title = show.Title;
-        _logger.LogInformation("Title: {Title}", show.Title);
+        _logger.Info("Title: {Title}", show.Title);
         var positionList = await App.PositionData.GetAllPositions();
         var result = positionList.ToList().Find(x => x.Title == show.Title);
         if (result is not null)
@@ -67,14 +66,14 @@ public partial class VideoPlayerPage : ContentPage
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 mediaElement.Pause();
-                _logger.LogInformation("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+                _logger.Info("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
                 mediaElement.SeekTo(Pos.SavedPosition);
                 mediaElement.Play();
             });
         }
         else
         {
-            _logger.LogInformation("Could not find saved position");
+            _logger.Info("Could not find saved position");
         }
 
         mediaElement.ShouldKeepScreenOn = true;
@@ -91,15 +90,15 @@ public partial class VideoPlayerPage : ContentPage
         switch (e.NewState)
         {
             case MediaElementState.Stopped:
-                _logger.LogInformation("Media has finished playing.");
+                _logger.Info("Media has finished playing.");
                 mediaElement.ShouldKeepScreenOn = false;
-                _logger.LogInformation("ShouldKeepScreenOn set to false.");
+                _logger.Info("ShouldKeepScreenOn set to false.");
                 break;
             case MediaElementState.Paused:
                 if (mediaElement.Position > Pos.SavedPosition)
                 {
                     Pos.SavedPosition = mediaElement.Position;
-                    _logger.LogInformation("Paused: {Position}", mediaElement.Position);
+                    _logger.Info("Paused: {Position}", mediaElement.Position);
                     await App.PositionData.UpdatePosition(Pos);
                 }
                 break;
@@ -117,7 +116,7 @@ public partial class VideoPlayerPage : ContentPage
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
-        _logger.LogInformation("Navigating away form Video Player.");
+        _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
         mediaElement?.Handler.DisconnectHandler();
         base.OnNavigatedFrom(args);

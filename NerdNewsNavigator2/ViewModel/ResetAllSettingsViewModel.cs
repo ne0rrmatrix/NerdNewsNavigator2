@@ -10,15 +10,14 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
 {
     private readonly IMessenger _messenger;
     /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
-    private readonly ILogger<ResetAllSettingsViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ResetAllSettingsViewModel));
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
-    public ResetAllSettingsViewModel(ILogger<ResetAllSettingsViewModel> logger, IConnectivity connectivity, IMessenger messenger) : base(logger, connectivity)
+    public ResetAllSettingsViewModel(IConnectivity connectivity, IMessenger messenger) : base(connectivity)
     {
-        _logger = logger;
         Shell.Current.FlyoutIsPresented = false;
         _messenger = messenger;
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
@@ -32,16 +31,17 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     private async Task ResetAll()
     {
         _messenger.Send(new MessageData(false));
-        DownloadService.CancelDownload = true;
         App.Downloads.CancelAll();
-        SetVariables();
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await DeleteAllAsync();
+        SetVariables();
+        Thread.Sleep(500);
         await GetUpdatedPodcasts();
         await GetDownloadedShows();
         await GetFavoriteShows();
+        Thread.Sleep(1000);
         await GetMostRecent();
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
@@ -54,7 +54,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         App.MostRecentShows.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
-        _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()
     {
@@ -70,12 +69,12 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
             foreach (var file in files)
             {
                 System.IO.File.Delete(file);
-                _logger.LogInformation("Deleted file {file}", file);
+                _logger.Info($"Deleted file {file}");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("{data}", ex.Message);
+            _logger.Info($"{ex.Message}");
         }
     }
     #endregion

@@ -18,6 +18,7 @@ internal class AutoStartService : Service
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
+    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoStartService));
     #endregion
 
     public AutoStartService()
@@ -81,7 +82,7 @@ internal class AutoStartService : Service
     }
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
-        System.Diagnostics.Debug.WriteLine("Staring Auto Download");
+        s_logger.Info("Staring Auto Download");
         _ = StartForegroundServiceAsync();
         return StartCommandResult.Sticky;
     }
@@ -105,7 +106,7 @@ internal class AutoStartService : Service
         {
             AutoDownloadService.WLock.Release();
         }
-        System.Diagnostics.Debug.WriteLine($"Wake Lock Status: {AutoDownloadService.WLock.IsHeld}");
+        s_logger.Info($"Wake Lock Status: {AutoDownloadService.WLock.IsHeld}");
         if (AutoDownloadService.CancellationTokenSource is not null)
         {
             AutoDownloadService.CancellationTokenSource = null;

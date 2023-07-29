@@ -15,20 +15,19 @@ public partial class LivePage : ContentPage, IDisposable
     private HttpClient Client { get; set; } = new();
     public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<LivePage> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(LivePage));
     #endregion
 
     /// <summary>
     /// Initializes a new instance of <see cref="LivePage"/> class.
     /// </summary>
     /// <param name="liveViewModel">This classes <see cref="ViewModel"/> from <see cref="LiveViewModel"/></param>
-    public LivePage(LiveViewModel liveViewModel, ILogger<LivePage> logger)
+    public LivePage(LiveViewModel liveViewModel)
     {
         InitializeComponent();
         BindingContext = liveViewModel;
-        _logger = logger;
         _ = LoadVideo(_item);
     }
 
@@ -43,7 +42,7 @@ public partial class LivePage : ContentPage, IDisposable
         if (m3u != string.Empty)
         {
             mediaElement.Source = ParseM3UPLaylist(await GetM3U_Url(m3u));
-            _logger.LogInformation("Set media element source {source}", mediaElement.Source);
+            _logger.Info("Set media element source {source}", mediaElement.Source);
             mediaElement.Play();
         }
     }
@@ -120,7 +119,7 @@ public partial class LivePage : ContentPage, IDisposable
     {
         mediaElement.ShouldKeepScreenOn = false;
         mediaElement.Stop();
-        _logger.LogInformation("Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {data}", mediaElement.ShouldKeepScreenOn);
+        _logger.Info($"Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {mediaElement.ShouldKeepScreenOn}");
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {

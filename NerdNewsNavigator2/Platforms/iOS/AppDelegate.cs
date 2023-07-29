@@ -15,6 +15,8 @@ public class AppDelegate : MauiUIApplicationDelegate
     private bool IsRunning { get; set; }
 
     private IConnectivity _connectivity;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(AppDelegate));
+    private AutoDownloadService AutoDownloadService { get; set; } = new();
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
     // Next line is for SqlLite
@@ -39,12 +41,11 @@ public class AppDelegate : MauiUIApplicationDelegate
     {
         return _connectivity.NetworkAccess == NetworkAccess.Internet;
     }
-    private void HandleDownload(BGTask task)
+    private static void HandleDownload(BGTask task)
     {
-        AutoDownload();
         task.SetTaskCompleted(true);
     }
-    private void HandleAppRefresh(BGAppRefreshTask task)
+    private static void HandleAppRefresh(BGAppRefreshTask task)
     {
         task.ExpirationHandler = () =>
         {
@@ -60,22 +61,32 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     public override void WillEnterForeground(UIApplication application)
     {
-        Console.WriteLine("App will enter foreground");
-        AutoDownload();
+
+        _logger.Info("App will enter foreground");
+        _ = AutoDownloadAsync();
         base.WillEnterForeground(application);
     }
     public AppDelegate() : base()
     {
     }
-    public void AutoDownload()
+    public async Task AutoDownloadAsync()
     {
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            ThreadPool.QueueUserWorkItem(async state =>
-        {
-            await DownloadService.AutoDownload();
-        });
+            if (AutoDownloadService.CancellationTokenSource is null)
+            {
+                var cts = new CancellationTokenSource();
+                AutoDownloadService.CancellationTokenSource = cts;
+            }
+            else if (AutoDownloadService.CancellationTokenSource is not null)
+            {
+                AutoDownloadService.CancellationTokenSource.Dispose();
+                AutoDownloadService.CancellationTokenSource = null;
+                var cts = new CancellationTokenSource();
+                AutoDownloadService.CancellationTokenSource = cts;
+            }
+            await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
         }
     }
 }

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using MetroLog.Targets;
 using Woka;
 
 namespace NerdNewsNavigator2;
@@ -25,43 +26,35 @@ public static class MauiProgram
         ;
 #endif
         #region Logging
+        var config = new LoggingConfiguration();
 
-        builder.Logging
-
-#if DEBUG
-           //.AddDebug()
-           .AddTraceLogger(
-                options =>
-                {
-                    options.MinLevel = LogLevel.Trace;
-                    options.MaxLevel = LogLevel.Critical;
-                }) // Will write to the Debug Output
+#if RELEASE
+        config.AddTarget(
+            LogLevel.Info,
+            LogLevel.Fatal,
+            new StreamingFileTarget(Path.Combine(
+                FileSystem.CacheDirectory,
+                "MetroLogs"), retainDays: 2));
+#else
+        // Will write logs to the Debug output
+        config.AddTarget(
+            LogLevel.Trace,
+            LogLevel.Fatal,
+            new TraceTarget());
 #endif
-            .AddInMemoryLogger(
-                options =>
-                {
-                    options.MaxLines = 1024;
-                    options.MinLevel = LogLevel.Debug;
-                    options.MaxLevel = LogLevel.Critical;
-                })
 
-            .AddStreamingFileLogger(
-                options =>
-                {
-                    options.MinLevel = LogLevel.Trace;
-                    options.MaxLevel = LogLevel.Critical;
-                    options.RetainDays = 2;
-                    options.FolderPath = Path.Combine(
-                        FileSystem.CacheDirectory,
-                        "MetroLogs");
-                })
+        // will write logs to the console output (Logcat for android)
+        config.AddTarget(
+            LogLevel.Info,
+            LogLevel.Fatal,
+            new ConsoleTarget());
 
-            .AddConsoleLogger(
-                options =>
-                {
-                    options.MinLevel = LogLevel.Information;
-                    options.MaxLevel = LogLevel.Critical;
-                }); // Will write to the Console Output (logcat for android)
+        config.AddTarget(
+            LogLevel.Info,
+            LogLevel.Fatal,
+            new MemoryTarget(2048));
+
+        LoggerFactory.Initialize(config);
         #endregion
         #region Services
 

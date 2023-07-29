@@ -23,6 +23,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
     public static PositionDataBase PositionData { get; private set; }
 
     private readonly IMessenger _messenger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(App));
     #endregion
 
     /// <summary>
@@ -71,8 +72,8 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         window.Destroying += (s, e) =>
         {
             Downloads.CancelAll();
-            Thread.Sleep(500);
-            Debug.WriteLine("Safe shutdown completed");
+            Thread.Sleep(50);
+            _logger.Info("Safe shutdown completed");
         };
         return window;
     }

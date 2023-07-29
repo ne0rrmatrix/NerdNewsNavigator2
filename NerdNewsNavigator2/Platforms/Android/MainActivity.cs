@@ -12,6 +12,7 @@ namespace NerdNewsNavigator2.Platforms.Android;
 public class MainActivity : MauiAppCompatActivity
 {
     private AutoDownloadService AutoDownloadService { get; set; } = new();
+    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(MainActivity));
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
@@ -34,7 +35,7 @@ public class MainActivity : MauiAppCompatActivity
     }
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
+        s_logger.Info(e.ToString());
     }
 
     #region Notification Service Methods
@@ -53,7 +54,7 @@ public class MainActivity : MauiAppCompatActivity
             AutoDownloadService.CancellationTokenSource = null;
         }
 
-        System.Diagnostics.Debug.WriteLine("Stopping AutoDownload");
+        s_logger.Info("Stopping AutoDownload");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }

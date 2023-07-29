@@ -13,7 +13,7 @@ public partial class VideoPlayerViewModel : BaseViewModel
     /// <summary>
     /// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.
     /// </summary>
-    public VideoPlayerViewModel(ILogger<VideoPlayerViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public VideoPlayerViewModel(IConnectivity connectivity) : base(connectivity)
     {
     }
 }

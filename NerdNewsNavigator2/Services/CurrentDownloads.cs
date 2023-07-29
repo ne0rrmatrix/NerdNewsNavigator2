@@ -6,6 +6,7 @@ namespace NerdNewsNavigator2.Services;
 public partial class CurrentDownloads : ObservableObject
 {
     #region Properties
+    private static bool IsDownloading { get; set; } = false;
     [ObservableProperty]
     private List<Show> _shows;
     [ObservableProperty]
@@ -23,11 +24,12 @@ public partial class CurrentDownloads : ObservableObject
     private NotificationRequest _notification;
 #endif
     private static double Progress { get; set; }
+
+    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(CurrentDownloads));
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
-    public static bool IsDownloading { get; set; } = false;
-    public static bool CancelDownload { get; set; } = false;
+
     #endregion
     public CurrentDownloads()
     {
@@ -45,17 +47,21 @@ public partial class CurrentDownloads : ObservableObject
     }
     public void CancelAll()
     {
-        Shows.Clear();
-        CancelDownload = true;
         IsDownloading = false;
+        if (Shows.Count > 0)
+        {
+            Cancelled = true;
+            var item = Shows[0];
+            Cancel(item.Url);
+            Shows.Clear();
+        }
     }
     public Show Cancel(string url)
     {
-        Cancelled = true;
         var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
         if (item.Url == Item.Url)
         {
-            CancelDownload = true;
+            Cancelled = true;
             Shows.Remove(item);
             IsDownloading = false;
             return item;
@@ -65,13 +71,14 @@ public partial class CurrentDownloads : ObservableObject
     }
     public void Start(Show show)
     {
-        Debug.WriteLine($"Staring show: {show.Title}");
+        s_logger.Info($"Staring show: {show.Title}");
         if (IsDownloading)
         {
-            Debug.WriteLine("Download is not starting IDownloading is true");
+            s_logger.Info("Download is not starting IDownloading is true");
             return;
         }
 #if ANDROID || IOS
+        Notify.StartNotifications();
         _ = NotificationRequests(show);
 #endif
         ThreadPool.QueueUserWorkItem(async state =>
@@ -82,20 +89,13 @@ public partial class CurrentDownloads : ObservableObject
     private async Task StartDownload(Show item)
     {
         Item = item;
-        CancelDownload = false;
         IsDownloading = true;
         Cancelled = false;
-        Debug.WriteLine($"Starting Download of {item.Title}");
+        s_logger.Info($"Starting Download of {item.Title}");
         var result = await DownloadFile(item);
-        if (CancelDownload)
+        if (result)
         {
-            Cancel(item);
-            Debug.WriteLine("Download is Cancelled");
-            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(false, item.Title, item));
-        }
-        else if (result)
-        {
-            Debug.WriteLine("Download Completed event triggered");
+            s_logger.Info("Download Completed event triggered");
             Download download = new()
             {
                 Title = item.Title,
@@ -106,14 +106,14 @@ public partial class CurrentDownloads : ObservableObject
                 Deleted = false,
                 PubDate = item.PubDate,
                 Description = item.Description,
-                FileName = DownloadService.GetFileName(item.Url)
+                FileName = Services.DownloadService.GetFileName(item.Url)
             };
-            Debug.WriteLine($"Download completed: {item.Title}");
+            s_logger.Info($"Download completed: {item.Title}");
             await App.PositionData.UpdateDownload(download);
-            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
-            Completed(item);
             Shows.Remove(item);
             IsDownloading = false;
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
+            Completed(item);
         }
     }
 
@@ -131,12 +131,12 @@ public partial class CurrentDownloads : ObservableObject
             Description = "Downloading",
 #endif
 #if ANDROID
-            Description = $"Download Progress {(int)DownloadService.Progress}",
+            Description = $"Download Progress {(int)Progress}",
             Android = new AndroidOptions
             {
                 IconSmallName = new AndroidIcon("ic_stat_alarm"),
                 Ongoing = true,
-                ProgressBarProgress = (int)DownloadService.Progress,
+                ProgressBarProgress = (int)Progress,
                 IsProgressBarIndeterminate = false,
                 Color =
                 {
@@ -170,43 +170,49 @@ public partial class CurrentDownloads : ObservableObject
             {
                 if (favorites?.Where(x => x.Deleted).ToList().Find(y => y.Url == item.Url) is not null || favorites?.Find(x => x.Url == item.Url) is null)
                 {
-                    Debug.WriteLine($"Item is Partially downloaded, Deleting: {filename}");
+                    s_logger.Info($"Item is Partially downloaded, Deleting: {filename}");
                     File.Delete(tempFile);
                 }
                 else
                 {
-                    Debug.WriteLine("File exists stopping download");
+                    s_logger.Info("File exists stopping download");
                     return false;
                 }
             }
             var destinationFilePath = tempFile;
-            Debug.WriteLine("Starting download Progress on TaskBar");
+            s_logger.Info("Starting download Progress on TaskBar");
             using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
-            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
             {
-                Status = $"Download Progress: {progressPercentage}%";
+                Status = $"        Download Progress: {progressPercentage}%";
                 Progress = (double)progressPercentage;
                 StartedDownload();
+                if (Cancelled)
+                {
+                    client.DownloadCancel.Cancel();
+                }
             };
             await client.StartDownload();
-            if (CancelDownload)
+            if (Cancelled)
             {
-                Status = string.Empty;
-                if (File.Exists(tempFile))
+                DeleteFile(item.Url);
+                Cancel(item);
+                _ = MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    File.Delete(tempFile);
-                    Debug.WriteLine($"Deleting file from cancelled download: {tempFile}");
-                }
+                    await Toast.Make("Download cancelled", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                });
                 return false;
             }
             return true;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"{ex.Message}, Deleting file");
-            CurrentDownloads.DeleteFile(item.Url);
-            Cancel(item.Url);
-            await Toast.Make("Download failed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            s_logger.Info($"{ex.Message}, Deleting file");
+            DeleteFile(item.Url);
+            _ = MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await Toast.Make($"Download error: {ex.Message}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            });
             return false;
         }
     }
@@ -229,6 +235,7 @@ public partial class CurrentDownloads : ObservableObject
         if (File.Exists(tempFile))
         {
             File.Delete(tempFile);
+            s_logger.Info($"Deleted file {tempFile}");
         }
     }
     #endregion
