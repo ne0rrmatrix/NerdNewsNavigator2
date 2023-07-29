@@ -7,7 +7,6 @@ public partial class CurrentDownloads : ObservableObject
 {
     #region Properties
     private static bool IsDownloading { get; set; } = false;
-    #endregion
     [ObservableProperty]
     private List<Show> _shows;
     [ObservableProperty]
@@ -30,6 +29,8 @@ public partial class CurrentDownloads : ObservableObject
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
+
+    #endregion
     public CurrentDownloads()
     {
         _shows = new();

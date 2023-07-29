@@ -15,18 +15,7 @@ public class DownloadService
     public DownloadService()
     {
     }
-    /// <summary>
-    /// Get file name from Url <see cref="string"/>
-    /// </summary>
-    /// <param name="url">A URL <see cref="string"/></param>
-    /// <returns>Filename <see cref="string"/> with file extension</returns>
-    public static string GetFileName(string url)
-    {
-        var result = new Uri(url).LocalPath;
-        return System.IO.Path.GetFileName(result);
-
-    }
-
+    #region Download Methods
     /// <summary>
     /// Method Auto downloads <see cref="Show"/> from Database.
     /// </summary>
@@ -78,7 +67,9 @@ public class DownloadService
             }
         });
     }
+    #endregion
 
+    #region Events
     private void DownloadStarted(object sender, DownloadEventArgs e)
     {
         if (CancellationTokenSource.IsCancellationRequested)
@@ -110,5 +101,18 @@ public class DownloadService
             App.Downloads.DownloadStarted -= DownloadStarted;
             App.Downloads.DownloadFinished -= DownloadCompleted;
         }
+    }
+    #endregion
+
+    /// <summary>
+    /// Get file name from Url <see cref="string"/>
+    /// </summary>
+    /// <param name="url">A URL <see cref="string"/></param>
+    /// <returns>Filename <see cref="string"/> with file extension</returns>
+    public static string GetFileName(string url)
+    {
+        var result = new Uri(url).LocalPath;
+        return System.IO.Path.GetFileName(result);
+
     }
 }

@@ -32,38 +32,20 @@ public partial class SharedViewModel : BaseViewModel
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+    partial void OnUrlChanged(string oldValue, string newValue)
+    {
+        _logger.Info("Show Url changed. Updating Shows");
+        var decodedUrl = HttpUtility.UrlDecode(newValue);
+#if WINDOWS || MACCATALYST || ANDROID
+        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
+#endif
+#if IOS
+        GetShowsAsync(decodedUrl, false);
+#endif
+    }
+
     #region Events
 
-    [RelayCommand]
-    public void Cancel(string url)
-    {
-        Title = string.Empty;
-        var item = App.Downloads.Cancel(url);
-        if (item is null)
-        {
-            _logger.Info("show was null");
-            return;
-        }
-        var show = Shows.ToList().Find(x => x.Url == item.Url);
-        if (show is not null)
-        {
-            var number = Shows.IndexOf(show);
-            Shows[number].IsDownloaded = false;
-            Shows[number].IsDownloading = false;
-            Shows[number].IsNotDownloaded = true;
-            OnPropertyChanged(nameof(Shows));
-        }
-        var mostRecent = MostRecentShows.ToList().Find(x => x.Url == item.Url);
-        if (mostRecent is not null)
-        {
-            var number = MostRecentShows.IndexOf(mostRecent);
-            MostRecentShows[number].IsDownloaded = false;
-            MostRecentShows[number].IsDownloading = false;
-            MostRecentShows[number].IsNotDownloaded = true;
-            OnPropertyChanged(nameof(MostRecentShows));
-        }
-        DownloadProgress = string.Empty;
-    }
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
@@ -161,17 +143,6 @@ public partial class SharedViewModel : BaseViewModel
     }
     #endregion
 
-    partial void OnUrlChanged(string oldValue, string newValue)
-    {
-        _logger.Info("Show Url changed. Updating Shows");
-        var decodedUrl = HttpUtility.UrlDecode(newValue);
-#if WINDOWS || MACCATALYST || ANDROID
-        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
-#endif
-#if IOS
-        GetShowsAsync(decodedUrl, false);
-#endif
-    }
     #region Relay Commands
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
@@ -279,6 +250,36 @@ public partial class SharedViewModel : BaseViewModel
         App.Downloads.Start(item);
     }
 
+    [RelayCommand]
+    public void Cancel(string url)
+    {
+        Title = string.Empty;
+        var item = App.Downloads.Cancel(url);
+        if (item is null)
+        {
+            _logger.Info("show was null");
+            return;
+        }
+        var show = Shows.ToList().Find(x => x.Url == item.Url);
+        if (show is not null)
+        {
+            var number = Shows.IndexOf(show);
+            Shows[number].IsDownloaded = false;
+            Shows[number].IsDownloading = false;
+            Shows[number].IsNotDownloaded = true;
+            OnPropertyChanged(nameof(Shows));
+        }
+        var mostRecent = MostRecentShows.ToList().Find(x => x.Url == item.Url);
+        if (mostRecent is not null)
+        {
+            var number = MostRecentShows.IndexOf(mostRecent);
+            MostRecentShows[number].IsDownloaded = false;
+            MostRecentShows[number].IsDownloading = false;
+            MostRecentShows[number].IsNotDownloaded = true;
+            OnPropertyChanged(nameof(MostRecentShows));
+        }
+        DownloadProgress = string.Empty;
+    }
     #endregion
 
     #region Download Status Methods
@@ -323,6 +324,8 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     #endregion
+
+    #region Update Shows
     /// <summary>
     /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
     /// </summary>
@@ -377,4 +380,5 @@ public partial class SharedViewModel : BaseViewModel
         });
         return shows;
     }
+    #endregion
 }
