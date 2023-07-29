@@ -18,6 +18,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     private DownloadService DownloadService { get; set; } = new();
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
+    private AutoDownloadService AutoDownloadService { get; set; } = new();
     // Next line is for SqlLite
     protected override MauiApp CreateMauiApp()
     {
@@ -42,7 +43,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     private void HandleDownload(BGTask task)
     {
-        AutoDownload();
+        _ = AutoDownloadAsync();
         task.SetTaskCompleted(true);
     }
     private void HandleAppRefresh(BGAppRefreshTask task)
@@ -62,21 +63,30 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void WillEnterForeground(UIApplication application)
     {
         _logger.Info("App will enter foreground");
-        AutoDownload();
+        _ = AutoDownloadAsync();
         base.WillEnterForeground(application);
     }
     public AppDelegate() : base()
     {
     }
-    public void AutoDownload()
+    public async Task AutoDownloadAsync()
     {
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            ThreadPool.QueueUserWorkItem(async state =>
+            if (AutoDownloadService.CancellationTokenSource is null)
             {
-                await DownloadService.AutoDownload();
-            });
+                var cts = new CancellationTokenSource();
+                AutoDownloadService.CancellationTokenSource = cts;
+            }
+            else if (AutoDownloadService.CancellationTokenSource is not null)
+            {
+                AutoDownloadService.CancellationTokenSource.Dispose();
+                AutoDownloadService.CancellationTokenSource = null;
+                var cts = new CancellationTokenSource();
+                AutoDownloadService.CancellationTokenSource = cts;
+            }
+            await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
         }
     }
 }
