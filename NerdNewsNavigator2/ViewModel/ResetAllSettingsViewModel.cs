@@ -31,17 +31,17 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
     private async Task ResetAll()
     {
         _messenger.Send(new MessageData(false));
-        DownloadService.CancelDownload = true;
         App.Downloads.CancelAll();
-        SetVariables();
+        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await DeleteAllAsync();
+        SetVariables();
+        Thread.Sleep(500);
         await GetUpdatedPodcasts();
         await GetDownloadedShows();
         await GetFavoriteShows();
+        Thread.Sleep(1000);
         await GetMostRecent();
-        DownloadService.CancelDownload = false;
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
@@ -52,10 +52,8 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         Shows.Clear();
         Podcasts.Clear();
         App.MostRecentShows.Clear();
-        App.Downloads.Shows.Clear();
         MostRecentShows.Clear();
         DownloadedShows.Clear();
-        _messenger.Send(new MessageData(false));
     }
     private static async Task DeleteAllAsync()
     {

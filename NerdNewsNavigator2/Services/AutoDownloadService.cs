@@ -74,7 +74,7 @@ public class AutoDownloadService
         if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Cancel();
-            DownloadService.CancelDownload = true;
+            DownloadService.CancellationTokenSource.Cancel();
             _ = LongTaskAsync(CancellationTokenSource.Token);
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;
@@ -86,6 +86,7 @@ public class AutoDownloadService
         if (cancellationToken.IsCancellationRequested)
         {
             ATimer.Stop();
+            DownloadService.CancellationTokenSource?.Cancel();
             ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
@@ -104,7 +105,7 @@ public class AutoDownloadService
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         if (WifiOnlyDownloading == "No" && !CheckIfWifiOnly())
         {
-            DownloadService.CancelDownload = true;
+            DownloadService.CancellationTokenSource.Cancel();
         }
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
@@ -112,7 +113,6 @@ public class AutoDownloadService
         if (CheckIfWifiOnly())
         {
             s_logger.Info($"Timed event: {e} Started");
-            DownloadService.CancelDownload = false;
             _ = DownloadService.AutoDownload();
             return;
         }

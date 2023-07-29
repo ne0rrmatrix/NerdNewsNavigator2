@@ -72,7 +72,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         window.Destroying += (s, e) =>
         {
             Downloads.CancelAll();
-            Thread.Sleep(500);
+            Thread.Sleep(50);
             _logger.Info("Safe shutdown completed");
         };
         return window;

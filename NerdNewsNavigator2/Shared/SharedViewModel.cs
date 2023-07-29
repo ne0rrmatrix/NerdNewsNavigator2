@@ -44,6 +44,24 @@ public partial class SharedViewModel : BaseViewModel
             _logger.Info("show was null");
             return;
         }
+        var show = Shows.ToList().Find(x => x.Url == item.Url);
+        if (show is not null)
+        {
+            var number = Shows.IndexOf(show);
+            Shows[number].IsDownloaded = false;
+            Shows[number].IsDownloading = false;
+            Shows[number].IsNotDownloaded = true;
+            OnPropertyChanged(nameof(Shows));
+        }
+        var mostRecent = MostRecentShows.ToList().Find(x => x.Url == item.Url);
+        if (mostRecent is not null)
+        {
+            var number = MostRecentShows.IndexOf(mostRecent);
+            MostRecentShows[number].IsDownloaded = false;
+            MostRecentShows[number].IsDownloading = false;
+            MostRecentShows[number].IsNotDownloaded = true;
+            OnPropertyChanged(nameof(MostRecentShows));
+        }
         DownloadProgress = string.Empty;
     }
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
@@ -253,9 +271,6 @@ public partial class SharedViewModel : BaseViewModel
         if (App.Downloads.Shows.Count == 0)
         {
             _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");
-#if ANDROID || IOS
-            App.Downloads.Notify.StartNotifications();
-#endif
             App.Downloads.DownloadStarted += DownloadStarted;
             App.Downloads.DownloadCancelled += DonwnloadCancelled;
             App.Downloads.DownloadFinished += DownloadCompleted;
