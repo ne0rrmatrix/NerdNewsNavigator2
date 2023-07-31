@@ -38,7 +38,10 @@
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+                    <Grid
+                        ColumnDefinitions="Auto"
+                        HorizontalOptions="Center"
+                        RowDefinitions="Auto,Auto,Auto,Auto">
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
