@@ -63,7 +63,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     public override void WillEnterForeground(UIApplication application)
     {
-        _logger.Info("App will enter foreground");
+        Logger.Info("App will enter foreground");
         _ = AutoDownloadAsync();
         base.WillEnterForeground(application);
     }
