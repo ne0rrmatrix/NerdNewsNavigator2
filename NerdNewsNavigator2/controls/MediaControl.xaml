@@ -3,15 +3,17 @@
     x:Class="NerdNewsNavigator2.Controls.MediaControl"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
     xmlns:data="clr-namespace:NerdNewsNavigator2.View"
     xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
-    x:DataType="item:MediaControl">
+    x:DataType="item:MediaControl"
+    mc:Ignorable="d">
 
     <Grid>
-
         <Grid.GestureRecognizers>
             <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_DoubleTapped" />
             <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
@@ -32,7 +34,6 @@
             Opacity="0.3" />
 
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
-
             <ImageButton
                 x:Name="ImageSettings"
                 Margin="40"
@@ -43,7 +44,6 @@
                 Source="gear.png"
                 VerticalOptions="End"
                 WidthRequest="40" />
-
             <ImageButton
                 x:Name="btnFullScreen"
                 Margin="10"
@@ -71,9 +71,7 @@
                 </CollectionView.GestureRecognizers>
 
                 <CollectionView.ItemTemplate>
-
                     <DataTemplate x:DataType="model:YoutubeResolutions">
-
                         <VerticalStackLayout>
 
                             <Label
@@ -90,15 +88,11 @@
                             </Label>
 
                         </VerticalStackLayout>
-
                     </DataTemplate>
-
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
 
             <VerticalStackLayout Margin="{OnIdiom Default=35, Phone=5}" VerticalOptions="{OnPlatform WinUI=End, MacCatalyst=End, Default=Center}">
-
                 <HorizontalStackLayout HorizontalOptions="Center">
 
                     <ImageButton
@@ -181,7 +175,6 @@
                         WidthRequest="{OnIdiom Phone=40,
                                                Default=80}" />
                 </HorizontalStackLayout>
-
             </VerticalStackLayout>
 
             <Label
@@ -191,7 +184,6 @@
                 Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
                 VerticalOptions="End" />
-
             <Slider
                 x:Name="PositionSlider"
                 Margin="10"
@@ -200,9 +192,6 @@
                 MaximumTrackColor="LightGray"
                 MinimumTrackColor="Red"
                 VerticalOptions="End" />
-
         </Grid>
-
     </Grid>
-
 </ContentView>

@@ -56,6 +56,7 @@ public static class MauiProgram
 
         LoggerFactory.Initialize(config);
         #endregion
+
         #region Services
 
         builder.Services.AddTransient<PodcastPage>();

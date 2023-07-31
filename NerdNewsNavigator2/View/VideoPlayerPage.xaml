@@ -12,5 +12,4 @@
     Shell.TitleColor="White"
     Unloaded="ContentPage_Unloaded">
     <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
-
 </ContentPage>
