@@ -10,15 +10,14 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class EditViewModel : SharedViewModel
 {
     /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
-    private ILogger<EditViewModel> Logger { get; set; }
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(EditViewModel));
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public EditViewModel(ILogger<EditViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public EditViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        Logger = logger;
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
         ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
     }
@@ -57,7 +56,7 @@ public partial class EditViewModel : SharedViewModel
         var start = Preferences.Default.Get("start", false);
         if (start)
         {
-            Logger.LogInformation("Auto Download is already set to start Automatically");
+            _logger.Info("Auto Download is already set to start Automatically");
             return true;
         }
         return true;
@@ -122,11 +121,11 @@ public partial class EditViewModel : SharedViewModel
         var status = await CheckAndRequestForeGroundPermission();
         if (PermissionStatus.Granted == status)
         {
-            Logger.LogInformation("Notification Permission Granted");
+            _logger.Info("Notification Permission Granted");
         }
         else if (PermissionStatus.Denied == status)
         {
-            Logger.LogInformation("Notification Permission Denied");
+            _logger.Info("Notification Permission Denied");
         }
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {

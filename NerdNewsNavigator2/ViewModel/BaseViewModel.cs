@@ -46,9 +46,9 @@ public partial class BaseViewModel : ObservableObject
     public DisplayInfo MyMainDisplay { get; set; } = new();
 
     /// <summary>
-    /// An <see cref="ILogger{TCategoryName}"/> instance managed by this class.
+    /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
-    private ILogger<BaseViewModel> Logger { get; set; }
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(BaseViewModel));
 
     /// <summary>
     /// an <see cref="IConnectivity"/> instance managed by this class.
@@ -87,9 +87,8 @@ public partial class BaseViewModel : ObservableObject
     public static string CancelUrl { get; set; }
     public static bool CancelDownload { get; set; }
     #endregion
-    public BaseViewModel(ILogger<BaseViewModel> logger, IConnectivity connectivity)
+    public BaseViewModel(IConnectivity connectivity)
     {
-        Logger = logger;
         _connectivity = connectivity;
         _shows = new();
         _downloadProgress = string.Empty;
@@ -145,7 +144,7 @@ public partial class BaseViewModel : ObservableObject
         FavoriteShows.Clear();
         var temp = await App.PositionData.GetAllFavorites();
         temp?.ForEach(FavoriteShows.Add);
-        Logger.LogInformation("Got all Favorite Shows");
+        _logger.Info("Got all Favorite Shows");
     }
 
     /// <summary>
@@ -156,7 +155,7 @@ public partial class BaseViewModel : ObservableObject
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
         temp.Where(x => x.IsDownloaded).ToList().ForEach(DownloadedShows.Add);
-        Logger.LogInformation("Add all downloads to All Shows list");
+        _logger.Info("Add all downloads to All Shows list");
     }
     public static List<Show> RemoveDuplicates(List<Show> items)
     {
@@ -217,16 +216,16 @@ public partial class BaseViewModel : ObservableObject
     {
         var currentdate = DateTime.Now;
         var oldDate = Preferences.Default.Get("OldDate", DateTime.Now);
-        Logger.LogInformation("Total day since last Update check for new Podcasts: {numberOfDays}", (currentdate - oldDate).Days.ToString());
+        _logger.Info($"Total day since last Update check for new Podcasts: {(currentdate - oldDate).Days}");
         if ((currentdate - oldDate).Days <= 0)
         {
             Preferences.Default.Set("OldDate", DateTime.Now);
-            Logger.LogInformation("Setting current date as Last Update Check");
+            _logger.Info("Setting current date as Last Update Check");
             return false;
         }
         if ((oldDate - currentdate).Days > 30)
         {
-            Logger.LogInformation("Last Update Check is over 30 days ago. Updating now.");
+            _logger.Info("Last Update Check is over 30 days ago. Updating now.");
             Preferences.Default.Remove("OldDate");
             Preferences.Default.Set("OldDate", currentdate);
             var res = await PodcastServices.UpdatePodcast();

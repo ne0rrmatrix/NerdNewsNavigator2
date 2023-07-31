@@ -11,10 +11,10 @@ public class HttpClientDownloadWithProgress : IDisposable
     private readonly string _destinationFilePath;
     private HttpClient _httpClient;
 
-    public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage);
+    public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage, CancellationToken token);
     public event ProgressChangedHandler ProgressChanged;
 
-    private readonly CancellationTokenSource _downloadCancel = new();
+    public CancellationTokenSource DownloadCancel { get; set; } = null;
     #endregion
     public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
     {
@@ -23,22 +23,33 @@ public class HttpClientDownloadWithProgress : IDisposable
     }
     public async Task StartDownload()
     {
+        if (DownloadCancel is null)
+        {
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
+        }
+        else if (DownloadCancel is not null)
+        {
+            DownloadCancel.Dispose();
+            DownloadCancel = null;
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
+        }
         _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
         using var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead);
-        await DownloadFileFromHttpResponseMessage(response);
+        await DownloadFileFromHttpResponseMessage(response, DownloadCancel.Token);
     }
 
-    private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response)
+    private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)
     {
         response.EnsureSuccessStatusCode();
-
         var totalBytes = response.Content.Headers.ContentLength;
 
-        using var contentStream = await response.Content.ReadAsStreamAsync();
-        await ProcessContentStream(totalBytes, contentStream);
+        using var contentStream = await response.Content.ReadAsStreamAsync(token);
+        await ProcessContentStream(totalBytes, contentStream, token);
     }
 
-    private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream)
+    private async Task ProcessContentStream(long? totalDownloadSize, Stream contentStream, CancellationToken token)
     {
         var totalBytesRead = 0L;
         var readCount = 0L;
@@ -48,35 +59,38 @@ public class HttpClientDownloadWithProgress : IDisposable
         using var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         do
         {
-            var bytesRead = await contentStream.ReadAsync(buffer);
+            var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: CancellationToken.None);
             if (bytesRead == 0)
             {
                 isMoreToRead = false;
-                TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+                TriggerProgressChanged(totalDownloadSize, totalBytesRead, token);
                 continue;
             }
 
-            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken: CancellationToken.None);
 
             totalBytesRead += bytesRead;
             readCount += 1;
-
-            if (CurrentDownloads.CancelDownload || DownloadService.CancelDownload)
+            if (token.IsCancellationRequested)
             {
+                Debug.WriteLine("Cancelling");
                 isMoreToRead = false;
-                _downloadCancel.Cancel();
-                DownloadService.CancelDownload = false;
             }
-
             if (readCount % 100 == 0)
             {
-                TriggerProgressChanged(totalDownloadSize, totalBytesRead);
+                TriggerProgressChanged(totalDownloadSize, totalBytesRead, token);
             }
         }
         while (isMoreToRead);
+        if (DownloadCancel is not null)
+        {
+            DownloadCancel.Cancel();
+            DownloadCancel?.Dispose();
+            DownloadCancel = null;
+        }
     }
 
-    private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
+    private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead, CancellationToken token)
     {
         if (ProgressChanged == null)
         {
@@ -89,7 +103,7 @@ public class HttpClientDownloadWithProgress : IDisposable
             progressPercentage = Math.Round((double)totalBytesRead / totalDownloadSize.Value * 100, 2);
         }
 
-        ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
+        ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage, token);
     }
 
     public void Dispose()

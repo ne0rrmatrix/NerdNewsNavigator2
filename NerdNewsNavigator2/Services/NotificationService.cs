@@ -26,13 +26,14 @@ public partial class NotificationService
     {
         MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            DownloadService.Progress = 0;
+            e.Progress = 0;
             e.Notification.Android.ProgressBarProgress = 100;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download Complete";
             e.Notification.CategoryType = NotificationCategoryType.Status;
             await LocalNotificationCenter.Current.Show(e.Notification);
         });
+        StopNotifications();
     }
     public void StopWaitingForCancel()
     {
@@ -47,6 +48,7 @@ public partial class NotificationService
     }
     private async void DownloadCancelled(object sender, DownloadEventArgs e)
     {
+        Debug.WriteLine("Notification cancelled");
         App.Downloads.DownloadCancelled -= DownloadCancelled;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
@@ -54,12 +56,12 @@ public partial class NotificationService
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download cancelled";
             e.Notification.CategoryType = NotificationCategoryType.None;
-            DownloadService.Progress = 0;
+            e.Progress = 0;
             await LocalNotificationCenter.Current.Show(e.Notification);
-        });
-        ThreadPool.QueueUserWorkItem(state =>
-        {
-            App.Downloads.DownloadCancelled += DownloadCancelled;
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                App.Downloads.DownloadCancelled += DownloadCancelled;
+            });
         });
     }
     private void DownloadStarted(object sender, DownloadEventArgs e)
@@ -76,7 +78,6 @@ public partial class NotificationService
     }
     public async Task DownloadNotifications(NotificationRequest request)
     {
-        CurrentDownloads.IsDownloading = true;
         request.Description = $"Download Progress {(int)Progress}%";
         request.Android.ProgressBarProgress = (int)Progress;
         request.Silent = true;

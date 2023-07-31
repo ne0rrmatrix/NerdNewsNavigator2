@@ -11,6 +11,7 @@ public static class PodcastServices
 {
     #region Properties
     public static bool IsConnected { get; set; } = true;
+    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(PodcastServices));
     #endregion
 
     #region Get Podcasts
@@ -52,7 +53,7 @@ public static class PodcastServices
 
         if (favoriteShows.Count == 0)
         {
-            Debug.WriteLine("Did not find any stale Favorite Shows");
+            s_logger.Info("Did not find any stale Favorite Shows");
             return favoriteShows;
         }
         var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
@@ -68,7 +69,7 @@ public static class PodcastServices
 
         if (stalePodcasts.Count == 0)
         {
-            Debug.WriteLine("Did not find any deleted podcasts");
+            s_logger.Info("Did not find any deleted podcasts");
             return newPodcasts;
         }
 

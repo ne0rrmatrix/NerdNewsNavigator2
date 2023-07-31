@@ -10,17 +10,16 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class MostRecentShowsViewModel : SharedViewModel
 {
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger{TCategoryName}"/> class
+    /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
-    private readonly ILogger<MostRecentShowsViewModel> _logger;
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(MostRecentShowsViewModel));
 
     /// <summary>
     /// Initializes a new instance of <see cref="MostRecentShowsViewModel"/>
-    /// <paramref name="logger"/>
+    /// <paramref name="connectivity"/>
     /// </summary>
-    public MostRecentShowsViewModel(ILogger<MostRecentShowsViewModel> logger, IConnectivity connectivity) : base(logger, connectivity)
+    public MostRecentShowsViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        _logger = logger;
         App.Downloads.DownloadCancelled += UpdateOnCancel;
         App.CurrentNavigation.NavigationCompleted += OnNavigated;
         App.Downloads.DownloadFinished += MostRecentDownloadCompleted;
@@ -35,11 +34,11 @@ public partial class MostRecentShowsViewModel : SharedViewModel
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
-        _logger.LogInformation("Refresh Most recent shows");
+        _logger.Info("Refresh Most recent shows");
         IsRefreshing = true;
         await RefreshData();
         IsRefreshing = false;
-        _logger.LogInformation("Finished refreshing Most recent shows");
+        _logger.Info("Finished refreshing Most recent shows");
     });
     public async Task RefreshData()
     {
