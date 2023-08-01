@@ -33,7 +33,9 @@
                                         Android=40,
                                         iOS=40}"
                     BackgroundColor="White"
-                    HorizontalOptions="Center">
+                    HorizontalOptions="Center"
+                    SemanticProperties.Description="A frame for all downloaded shows listed."
+                    SemanticProperties.Hint="A frame of all downloaded shows listed.">
 
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
