@@ -43,7 +43,7 @@
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375}" />
+                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375, MacCatalyst=310}" />
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
