@@ -3,19 +3,16 @@
     x:Class="NerdNewsNavigator2.View.PodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    mc:Ignorable="d">
-    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-        <Grid>
+    Loaded="ContentPage_Loaded">
 
+    <Grid>
+        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <CollectionView
                 Margin="5"
                 HorizontalScrollBarVisibility="Never"
@@ -30,15 +27,30 @@
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Podcast">
+                        <Frame
+                            Margin="{OnPlatform WinUI=90,
+                                                MacCatalyst=90,
+                                                Android=90,
+                                                iOS=90}"
+                            Padding="{OnPlatform Default=20,
+                                                 iOS=10}"
+                            BackgroundColor="White"
+                            WidthRequest="{OnPlatform WinUI=370,
+                                                      MacCatalyst=370,
+                                                      Android=370,
+                                                      iOS=340}">
 
-                    <DataTemplate x:DataType="model:Show">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375}" />
+                                </Grid.ColumnDefinitions>
 
-                        <Frame Margin="{OnPlatform WinUI=30, MacCatalyst=40, Android=10, iOS=10}" BackgroundColor="White">
-                            <Grid
-                                Padding="5"
-                                ColumnDefinitions="Auto"
-                                HorizontalOptions="Center"
-                                RowDefinitions="Auto,Auto,Auto">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto, MacCatalyst=Auto}" />
+                                    <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350, MacCatalyst=350}" />
+                                    <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=350}" />
+                                </Grid.RowDefinitions>
 
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
@@ -46,28 +58,23 @@
 
                                 <Label
                                     Grid.Row="0"
-                                    Margin="0"
+                                    Margin="5"
                                     Padding="10"
                                     FontAttributes="Bold"
+                                    FontSize="10"
+                                    HorizontalOptions="Center"
                                     HorizontalTextAlignment="Center"
                                     LineBreakMode="WordWrap"
-                                    SemanticProperties.Description="The show title."
                                     Text="{Binding Title}"
-                                    TextColor="Black"
-                                    WidthRequest="{OnPlatform WinUI=350,
-                                                              Android=340,
-                                                              iOS=310,
-                                                              MacCatalyst=320}" />
+                                    TextColor="Black" />
                                 <Image
                                     Grid.Row="1"
-                                    HeightRequest="{OnPlatform WinUI=350,
-                                                               Android=340,
-                                                               iOS=310,
-                                                               MacCatalyst=320}"
-                                    WidthRequest="{OnPlatform WinUI=350,
-                                                              Android=340,
-                                                              iOS=310,
-                                                              MacCatalyst=320}">
+                                    Margin="10"
+                                    Aspect="AspectFit"
+                                    HorizontalOptions="Center"
+                                    WidthRequest="{OnIdiom Phone=350,
+                                                           Tablet=340,
+                                                           Desktop=350}">
                                     <Image.Source>
                                         <UriImageSource
                                             CacheValidity="10:00:00:00"
@@ -78,23 +85,18 @@
                                 <Label
                                     Grid.Row="2"
                                     Margin="10"
-                                    FontSize="12"
-                                    HeightRequest="320"
+                                    FontSize="10"
                                     LineBreakMode="WordWrap"
-                                    SemanticProperties.Description="The show description"
                                     Text="{Binding Description}"
                                     TextColor="Black"
-                                    WidthRequest="{OnPlatform WinUI=340,
-                                                              Android=340,
-                                                              iOS=310,
-                                                              MacCatalyst=320}" />
+                                    WidthRequest="{OnIdiom Phone=290,
+                                                           Tablet=300,
+                                                           Default=290,
+                                                           Desktop=340}" />
 
                             </Grid>
-
                         </Frame>
-
                     </DataTemplate>
-
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.EmptyView>
@@ -112,9 +114,8 @@
                         </StackLayout>
                     </ContentView>
                 </CollectionView.EmptyView>
-
             </CollectionView>
 
-        </Grid>
-    </RefreshView>
+        </RefreshView>
+    </Grid>
 </ContentPage>
