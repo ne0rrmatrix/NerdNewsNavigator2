@@ -12,7 +12,6 @@ namespace NerdNewsNavigator2.Platforms.Android;
 public class MainActivity : MauiAppCompatActivity
 {
     private AutoDownloadService AutoDownloadService { get; set; } = new();
-    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(MainActivity));
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
@@ -35,7 +34,7 @@ public class MainActivity : MauiAppCompatActivity
     }
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        s_logger.Info(e.ToString());
+        System.Diagnostics.Debug.WriteLine(e.ToString());
     }
 
     #region Notification Service Methods
