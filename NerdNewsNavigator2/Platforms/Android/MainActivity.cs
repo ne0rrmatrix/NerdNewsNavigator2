@@ -53,7 +53,6 @@ public class MainActivity : MauiAppCompatActivity
             AutoDownloadService.CancellationTokenSource = null;
         }
 
-        s_logger.Info("Stopping AutoDownload");
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }
