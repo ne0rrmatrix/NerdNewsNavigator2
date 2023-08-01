@@ -26,7 +26,6 @@
             HorizontalOptions="CenterAndExpand"
             IsVisible="{Binding IsBusy}"
             VerticalOptions="CenterAndExpand">
-
             <Label
                 Padding="20"
                 FontSize="Large"
@@ -35,9 +34,7 @@
                 Text="Loading..."
                 TextColor="Black"
                 VerticalOptions="Center" />
-
             <ActivityIndicator IsRunning="True" Color="Red" />
-
         </StackLayout>
 
         <ScrollView
@@ -46,11 +43,9 @@
             IsVisible="{Binding IsNotBusy}"
             VerticalOptions="FillAndExpand"
             VerticalScrollBarVisibility="Never">
-
             <VerticalStackLayout Margin="10">
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -67,18 +62,17 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button for opening url to dontate to developer"
                         Text="Click Me"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -95,9 +89,10 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Set auto download status to on or off. Default is off."
                         Text="{Binding Source={RelativeSource AncestorType={x:Type page:SettingsPage}}, Path=SetAutoDownload}"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
@@ -106,7 +101,6 @@
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -124,17 +118,16 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button sets auto download to only download using wifi. Default is off."
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -151,18 +144,17 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button resets app to defaults."
                         Text="Reset"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -179,18 +171,17 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button updates podcasts and removes stale favorites."
                         Text="Update"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -207,18 +198,17 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button allows you to edit podcast list."
                         Text="Edit"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -235,18 +225,17 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button shows application logs."
                         Text="View"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -263,9 +252,10 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="button adds default podcasts if any have been removed."
                         Text="Enable"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
@@ -277,23 +267,23 @@
                         FontAutoScalingEnabled="True"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button removes default podcasts if at least one club twit stream has been added."
                         Text="Disable"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
-
                     <Label
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
                         HorizontalOptions="Start"
+                        SemanticProperties.Description="Label for adding an item."
                         Text="Add Item:"
                         TextColor="Black"
                         VerticalOptions="Center"
@@ -307,6 +297,7 @@
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         SelectionLength="1400"
+                        SemanticProperties.Description="Input an html link here for club twit show."
                         TextColor="Black"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Default=140,
@@ -317,19 +308,16 @@
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
+                        SemanticProperties.Description="Button lets you add url to club twit stream "
                         Text="Add"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
-
                 </HorizontalStackLayout>
-
             </VerticalStackLayout>
-
         </ScrollView>
-
     </Grid>
 </ContentPage>

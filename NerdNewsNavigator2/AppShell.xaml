@@ -23,16 +23,17 @@
                 RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"
-                    HeightRequest="50"
                     IsVisible="{OnPlatform Default=True,
                                            MacCatalyst=false}"
-                    Source="{Binding Icon}"
-                    WidthRequest="50" />
+                    MinimumHeightRequest="50"
+                    MinimumWidthRequest="50"
+                    Source="{Binding Icon}" />
                 <Label
                     Grid.Column="1"
                     FontAttributes="Bold"
-                    FontSize="16"
-                    HeightRequest="40"
+                    FontAutoScalingEnabled="True"
+                    FontSize="20"
+                    MinimumHeightRequest="48"
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>

@@ -69,15 +69,6 @@ public partial class SharedViewModel : BaseViewModel
             _logger.Info("update for shows not downlaoding anymore");
         });
     }
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        if (App.Downloads.Shows.Count == 0)
-        {
-            MostRecentShows?.Where(x => x.IsNotDownloaded).ToList()?.ForEach(SetProperties);
-            Shows?.Where(x => x.IsNotDownloaded).ToList().ForEach(SetProperties);
-        }
-        base.OnPropertyChanged(e);
-    }
     public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
     {
         Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
@@ -234,9 +225,9 @@ public partial class SharedViewModel : BaseViewModel
         if (MostRecentShows.ToList().Exists(x => x.Url == item.Url))
         {
             var number = MostRecentShows.IndexOf(item);
-            this.MostRecentShows[number].IsDownloaded = false;
-            this.MostRecentShows[number].IsDownloading = true;
-            this.MostRecentShows[number].IsNotDownloaded = false;
+            MostRecentShows[number].IsDownloaded = false;
+            MostRecentShows[number].IsDownloading = true;
+            MostRecentShows[number].IsNotDownloaded = false;
             OnPropertyChanged(nameof(MostRecentShows));
         }
         if (App.Downloads.Shows.Count == 0)

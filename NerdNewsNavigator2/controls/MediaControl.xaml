@@ -3,15 +3,17 @@
     x:Class="NerdNewsNavigator2.Controls.MediaControl"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
     xmlns:data="clr-namespace:NerdNewsNavigator2.View"
     xmlns:item="clr-namespace:NerdNewsNavigator2.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
-    x:DataType="item:MediaControl">
+    x:DataType="item:MediaControl"
+    mc:Ignorable="d">
 
     <Grid>
-
         <Grid.GestureRecognizers>
             <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_DoubleTapped" />
             <TapGestureRecognizer x:Name="tapped" Tapped="TapGestureRecognizer_Tapped" />
@@ -32,28 +34,28 @@
             Opacity="0.3" />
 
         <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
-
             <ImageButton
                 x:Name="ImageSettings"
                 Margin="40"
                 BackgroundColor="Transparent"
-                HeightRequest="40"
+                HeightRequest="48"
                 HorizontalOptions="End"
                 Pressed="Button_Pressed"
+                SemanticProperties.Description="Button opens menu allows you to select video resolution."
                 Source="gear.png"
                 VerticalOptions="End"
-                WidthRequest="40" />
-
+                WidthRequest="48" />
             <ImageButton
                 x:Name="btnFullScreen"
                 Margin="10"
                 BackgroundColor="Transparent"
                 Clicked="BtnFullScreen_Clicked"
-                HeightRequest="40"
+                HeightRequest="48"
                 HorizontalOptions="End"
+                SemanticProperties.Description="Button sets video full screen status. Default is not full screen."
                 Source="whitefs.png"
                 VerticalOptions="Start"
-                WidthRequest="40" />
+                WidthRequest="48" />
 
             <CollectionView
                 Margin="80"
@@ -63,6 +65,7 @@
                 IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
                 ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
                 SelectionMode="Single"
+                SemanticProperties.Description="You can select a resoltion from this menu."
                 VerticalOptions="End"
                 WidthRequest="120">
 
@@ -71,15 +74,14 @@
                 </CollectionView.GestureRecognizers>
 
                 <CollectionView.ItemTemplate>
-
                     <DataTemplate x:DataType="model:YoutubeResolutions">
-
                         <VerticalStackLayout>
 
                             <Label
                                 FontSize="26"
                                 HorizontalOptions="End"
                                 HorizontalTextAlignment="Center"
+                                SemanticProperties.Description="Label shows selection menu for playback resolution."
                                 Text="{Binding Title}"
                                 TextColor="White"
                                 WidthRequest="90">
@@ -90,15 +92,11 @@
                             </Label>
 
                         </VerticalStackLayout>
-
                     </DataTemplate>
-
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
 
             <VerticalStackLayout Margin="{OnIdiom Default=35, Phone=5}" VerticalOptions="{OnPlatform WinUI=End, MacCatalyst=End, Default=Center}">
-
                 <HorizontalStackLayout HorizontalOptions="Center">
 
                     <ImageButton
@@ -107,12 +105,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnRewind_Clicked"
-                        HeightRequest="{OnIdiom Phone=40,
+                        HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
+                        SemanticProperties.Description="button rewinds video 15 seconds."
                         Source="rewind.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone=40,
+                        WidthRequest="{OnIdiom Phone=48,
                                                Default=80}" />
 
                     <ImageButton
@@ -121,12 +120,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnPlay_Clicked"
-                        HeightRequest="{OnIdiom Phone=40,
+                        HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
+                        SemanticProperties.Description="Button plays video."
                         Source="pause.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone=40,
+                        WidthRequest="{OnIdiom Phone=48,
                                                Default=80}" />
 
                     <ImageButton
@@ -135,12 +135,13 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="BtnForward_Clicked"
-                        HeightRequest="{OnIdiom Phone=40,
+                        HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
+                        SemanticProperties.Description="button fast forwards video 15 seconds."
                         Source="fastforward.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone=40,
+                        WidthRequest="{OnIdiom Phone=48,
                                                Default=80}" />
 
                     <ImageButton
@@ -149,10 +150,11 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="OnMuteClicked"
-                        HeightRequest="{OnIdiom Phone=40,
+                        HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
+                        SemanticProperties.Description="Button allows you to mute a steam."
                         Source="muted.png"
-                        WidthRequest="{OnIdiom Phone=40,
+                        WidthRequest="{OnIdiom Phone=48,
                                                Default=80}">
 
                         <ImageButton.Triggers>
@@ -173,25 +175,25 @@
                                          Default=10}"
                         BackgroundColor="Transparent"
                         Clicked="AspectButton"
-                        HeightRequest="{OnIdiom Phone=40,
+                        HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
+                        SemanticProperties.Description="Button allows you to change aspect ratio."
                         Source="aspect.png"
                         VerticalOptions="End"
-                        WidthRequest="{OnIdiom Phone=40,
+                        WidthRequest="{OnIdiom Phone=48,
                                                Default=80}" />
                 </HorizontalStackLayout>
-
             </VerticalStackLayout>
 
             <Label
                 Margin="30"
                 FontSize="12"
                 HorizontalOptions="Start"
+                SemanticProperties.Description="Label shows playback position for video"
                 Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
                 VerticalOptions="End" />
-
             <Slider
                 x:Name="PositionSlider"
                 Margin="10"
@@ -199,10 +201,8 @@
                 DragStarted="Slider_DragStarted"
                 MaximumTrackColor="LightGray"
                 MinimumTrackColor="Red"
+                SemanticProperties.Description="Slider shows current playback position for video."
                 VerticalOptions="End" />
-
         </Grid>
-
     </Grid>
-
 </ContentView>

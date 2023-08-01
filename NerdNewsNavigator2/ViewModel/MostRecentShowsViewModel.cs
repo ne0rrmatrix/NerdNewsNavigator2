@@ -23,10 +23,15 @@ public partial class MostRecentShowsViewModel : SharedViewModel
         App.Downloads.DownloadCancelled += UpdateOnCancel;
         App.CurrentNavigation.NavigationCompleted += OnNavigated;
         App.Downloads.DownloadFinished += MostRecentDownloadCompleted;
+#if MACCATALYST || IOS
+        _ = GetMostRecent();
+#endif
+#if WINDOWS || ANDROID
         if (MostRecentShows.ToList().Count == 0)
         {
             ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
         }
+#endif
         if (App.Downloads.Shows.Count > 0)
         {
             App.Downloads.DownloadStarted += DownloadStarted;

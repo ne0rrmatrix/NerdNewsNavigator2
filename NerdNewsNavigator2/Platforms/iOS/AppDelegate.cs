@@ -15,11 +15,13 @@ public class AppDelegate : MauiUIApplicationDelegate
     private bool IsRunning { get; set; }
 
     private IConnectivity _connectivity;
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(AppDelegate));
-    private AutoDownloadService AutoDownloadService { get; set; } = new();
+    private static ILogger Logger { get; set; }
+    private AutoDownloadService AutoDownloadService { get; set; }
     public static string DownloadTaskId { get; } = "com.yourappname.upload";
     public static string RefreshTaskId { get; } = "com.yourappname.refresh";
-    // Next line is for SqlLite
+    public AppDelegate() : base()
+    {
+    }
     protected override MauiApp CreateMauiApp()
     {
         raw.SetProvider(new SQLite3Provider_sqlite3());
@@ -30,6 +32,8 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void OnActivated(UIApplication application)
     {
         base.OnActivated(application);
+        Logger = LoggerFactory.GetLogger(nameof(AppDelegate));
+        AutoDownloadService = new AutoDownloadService();
         _connectivity = Current.Services.GetService<IConnectivity>();
     }
 
@@ -62,12 +66,9 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void WillEnterForeground(UIApplication application)
     {
 
-        _logger.Info("App will enter foreground");
+        Logger.Info("App will enter foreground");
         _ = AutoDownloadAsync();
         base.WillEnterForeground(application);
-    }
-    public AppDelegate() : base()
-    {
     }
     public async Task AutoDownloadAsync()
     {
