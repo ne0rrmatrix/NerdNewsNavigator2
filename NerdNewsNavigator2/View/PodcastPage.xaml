@@ -51,6 +51,7 @@
                                     FontAttributes="Bold"
                                     HorizontalTextAlignment="Center"
                                     LineBreakMode="WordWrap"
+                                    SemanticProperties.Description="The show title."
                                     Text="{Binding Title}"
                                     TextColor="Black"
                                     WidthRequest="{OnPlatform WinUI=350,
@@ -80,6 +81,7 @@
                                     FontSize="12"
                                     HeightRequest="320"
                                     LineBreakMode="WordWrap"
+                                    SemanticProperties.Description="The show description"
                                     Text="{Binding Description}"
                                     TextColor="Black"
                                     WidthRequest="{OnPlatform WinUI=340,

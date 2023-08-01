@@ -47,6 +47,7 @@
                             FontAttributes="Bold"
                             HeightRequest="40"
                             LineBreakMode="WordWrap"
+                            SemanticProperties.Description="Shows title of show"
                             Text="{Binding Title}"
                             TextColor="Black"
                             WidthRequest="{OnPlatform WinUI=350,
@@ -80,6 +81,7 @@
                                 VerticalTextAlignment="Center" />
                             <Label
                                 FontAttributes="Bold"
+                                SemanticProperties.Description="Shows the date the episode was published."
                                 Text="{Binding PubDate}"
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
@@ -89,8 +91,9 @@
                                 FontAttributes="Bold"
                                 FontSize="{OnPlatform Default=12,
                                                       MacCatalyst=16}"
-                                HeightRequest="35"
+                                HeightRequest="48"
                                 IsVisible="{Binding Path=IsNotDownloaded}"
+                                SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
                                 TextColor="White"
                                 WidthRequest="90">
@@ -104,8 +107,9 @@
                                 FontAttributes="Bold"
                                 FontSize="{OnPlatform Default=12,
                                                       MacCatalyst=16}"
-                                HeightRequest="35"
+                                HeightRequest="48"
                                 IsVisible="{Binding Path=IsDownloading}"
+                                SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
                                 TextColor="White"
                                 WidthRequest="90">
@@ -121,6 +125,7 @@
                             HeightRequest="980"
                             IsVisible="True"
                             LineBreakMode="WordWrap"
+                            SemanticProperties.Description="A description of episode."
                             Text="{Binding Description}"
                             TextColor="Black"
                             TextType="Html"

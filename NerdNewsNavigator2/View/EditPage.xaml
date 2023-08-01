@@ -92,13 +92,14 @@
                                 Margin="10"
                                 BackgroundColor="Red"
                                 FontAttributes="Bold"
-                                FontSize="Micro"
-                                HeightRequest="35"
+                                FontSize="Small"
+                                HeightRequest="48"
                                 HorizontalOptions="Start"
+                                SemanticProperties.Description="Button for deleting podcast"
                                 Text="Delete"
                                 TextColor="White"
-                                WidthRequest="{OnIdiom Default=70,
-                                                       Tablet=80}">
+                                WidthRequest="{OnIdiom Default=90,
+                                                       Tablet=90}">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
@@ -108,10 +109,11 @@
                                 Margin="10"
                                 BackgroundColor="Blue"
                                 FontAttributes="Bold"
-                                FontSize="Micro"
-                                HeightRequest="35"
+                                FontSize="Small"
+                                HeightRequest="48"
                                 HorizontalOptions="End"
                                 IsVisible="{Binding IsNotDownloaded}"
+                                SemanticProperties.Description="Button for adding favorite podcast"
                                 Text="Add Favorite"
                                 TextColor="White"
                                 WidthRequest="125">
@@ -121,17 +123,18 @@
                             </Button>
                             <Button
                                 Grid.Row="2"
-                                Margin="30"
+                                Margin="10"
                                 BackgroundColor="Blue"
                                 FontAttributes="Bold"
-                                FontSize="Micro"
-                                HeightRequest="35"
+                                FontSize="Small"
+                                HeightRequest="48"
                                 HorizontalOptions="End"
                                 IsVisible="{Binding Download}"
+                                SemanticProperties.Description="Button for removing favorite podcast"
                                 Text="Remove"
                                 TextColor="White"
-                                WidthRequest="{OnIdiom Default=90,
-                                                       Tablet=90}">
+                                WidthRequest="{OnIdiom Default=125,
+                                                       Tablet=125}">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>

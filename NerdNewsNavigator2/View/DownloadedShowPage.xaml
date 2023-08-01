@@ -52,6 +52,7 @@
                                     FontSize="12"
                                     HeightRequest="35"
                                     LineBreakMode="WordWrap"
+                                    SemanticProperties.Description="Show title."
                                     Text="{Binding Title}"
                                     TextColor="Black"
                                     WidthRequest="300" />
@@ -83,6 +84,7 @@
                                     <Label
                                         FontAttributes="Bold"
                                         FontSize="12"
+                                        SemanticProperties.Description="The date the show was published."
                                         Text="{Binding PubDate}"
                                         TextColor="Black"
                                         VerticalTextAlignment="Center" />
@@ -91,7 +93,8 @@
                                         BackgroundColor="Red"
                                         FontAttributes="Bold"
                                         FontSize="12"
-                                        HeightRequest="35"
+                                        HeightRequest="48"
+                                        SemanticProperties.Description="Button allows you to delete a show."
                                         Text="Delete"
                                         TextColor="White">
                                         <Button.GestureRecognizers>
@@ -106,6 +109,7 @@
                                     Margin="10"
                                     FontSize="10"
                                     LineBreakMode="WordWrap"
+                                    SemanticProperties.Description="A description of what the show is about."
                                     Text="{Binding Description}"
                                     TextColor="Black"
                                     TextType="Html"
