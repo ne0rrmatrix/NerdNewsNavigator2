@@ -16,98 +16,117 @@
     mc:Ignorable="d">
 
     <CollectionView
-                Margin="5"
-                HorizontalScrollBarVisibility="Never"
-                ItemsSource="{Binding Source, Source={x:Reference showControl}}"
-                VerticalScrollBarVisibility="Never">
+        Margin="5"
+        HorizontalScrollBarVisibility="Never"
+        ItemsSource="{Binding Source, Source={x:Reference showControl}}"
+        VerticalScrollBarVisibility="Never">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
-
             <DataTemplate x:DataType="model:Show">
-
                 <Frame
-                            Margin="{OnPlatform WinUI=90,
-                                                MacCatalyst=90,
-                                                Android=90,
-                                                iOS=90}"
-                            BackgroundColor="White"
-                            WidthRequest="{OnPlatform WinUI=370,
-                                                      MacCatalyst=370,
-                                                      Android=370,
-                                                      iOS=320}">
+                    Margin="{OnPlatform WinUI=40,
+                                        MacCatalyst=40,
+                                        Android=40,
+                                        iOS=40}"
+                    BackgroundColor="White"
+                    HorizontalOptions="Center">
+
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
-                    <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,870">
-
+                    <Grid
+                        ColumnDefinitions="Auto"
+                        HorizontalOptions="Center"
+                        RowDefinitions="Auto,Auto,Auto,Auto">
                         <Label
-                                    Grid.Row="0"
-                                    FontAttributes="Bold"
-                                    FontSize="{OnPlatform Default=10,
-                                                          MacCatalyst=16}"
-                                    LineBreakMode="WordWrap"
-                                    Text="{Binding Title}"
-                                    TextColor="Black"
-                                    WidthRequest="300" />
+                            Grid.Row="0"
+                            FontAttributes="Bold"
+                            HeightRequest="40"
+                            LineBreakMode="WordWrap"
+                            SemanticProperties.Description="Shows title of show"
+                            Text="{Binding Title}"
+                            TextColor="Black"
+                            WidthRequest="{OnPlatform WinUI=350,
+                                                      Android=340,
+                                                      iOS=320,
+                                                      MacCatalyst=320}" />
                         <Image
-                                    Grid.Row="1"
-                                    Margin="10"
-                                    Aspect="AspectFit"
-                                    HeightRequest="320"
-                                    WidthRequest="320">
+                            Grid.Row="1"
+                            Aspect="AspectFit"
+                            HeightRequest="{OnPlatform WinUI=350,
+                                                       Android=340,
+                                                       iOS=320,
+                                                       MacCatalyst=320}"
+                            WidthRequest="{OnPlatform WinUI=350,
+                                                      Android=340,
+                                                      iOS=320,
+                                                      MacCatalyst=320}">
                             <Image.Source>
                                 <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="True"
-                                            Uri="{Binding Image}" />
+                                    CacheValidity="10:00:00:00"
+                                    CachingEnabled="True"
+                                    Uri="{Binding Image}" />
                             </Image.Source>
                         </Image>
-                        <HorizontalStackLayout Grid.Row="2" Padding="10">
+                        <HorizontalStackLayout Grid.Row="2">
 
                             <Label
-                                        FontAttributes="Bold"
-                                        FontSize="{OnPlatform Default=12,
-                                                              MacCatalyst=16}"
-                                        Text="Published: "
-                                        TextColor="Black"
-                                        VerticalTextAlignment="Center" />
+                                FontAttributes="Bold"
+                                Text="Published: "
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Label
-                                        FontAttributes="Bold"
-                                        FontSize="{OnPlatform Default=12,
-                                                              MacCatalyst=16}"
-                                        Text="{Binding PubDate}"
-                                        TextColor="Black"
-                                        VerticalTextAlignment="Center" />
+                                FontAttributes="Bold"
+                                SemanticProperties.Description="Shows the date the episode was published."
+                                Text="{Binding PubDate}"
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                             <Button
-                                        Margin="5"
-                                        BackgroundColor="Green"
-                                        FontAttributes="Bold"
-                                        FontSize="{OnPlatform Default=12,
-                                                              MacCatalyst=16}"
-                                        HeightRequest="35"
-                                        IsVisible="{Binding Path=IsNotDownloaded}"
-                                        Text="Download"
-                                        TextColor="Black"
-                                        WidthRequest="90">
+                                Margin="5"
+                                BackgroundColor="Green"
+                                FontAttributes="Bold"
+                                FontSize="{OnPlatform Default=12,
+                                                      MacCatalyst=16}"
+                                HeightRequest="48"
+                                SemanticProperties.Description="Button allows you to download a show."
+                                Text="Download"
+                                TextColor="White"
+                                WidthRequest="90">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding Path=IsNotDownloaded}"
+                                        TargetType="Button"
+                                        Value="False">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Button
-                                        Margin="5"
-                                        BackgroundColor="Red"
-                                        FontAttributes="Bold"
-                                        FontSize="{OnPlatform Default=12,
-                                                              MacCatalyst=16}"
-                                        HeightRequest="35"
-                                        IsVisible="{Binding Path=IsDownloading}"
-                                        Text="Cancel"
-                                        TextColor="Black"
-                                        WidthRequest="90">
+                                Margin="5"
+                                BackgroundColor="Red"
+                                FontAttributes="Bold"
+                                FontSize="{OnPlatform Default=12,
+                                                      MacCatalyst=16}"
+                                HeightRequest="48"
+                                SemanticProperties.Description="Button allows you to cancel a current download."
+                                Text="Cancel"
+                                TextColor="White"
+                                WidthRequest="90">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding Path=IsDownloading}"
+                                        TargetType="Button"
+                                        Value="False">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
@@ -115,42 +134,40 @@
                         </HorizontalStackLayout>
 
                         <Label
-                                    Grid.Row="3"
-                                    FontSize="{OnPlatform Default=12,
-                                                          MacCatalyst=16}"
-                                    LineBreakMode="WordWrap"
-                                    Text="{Binding Description}"
-                                    TextColor="Black"
-                                    TextType="Html"
-                                    WidthRequest="300" />
+                            Grid.Row="3"
+                            FontSize="12"
+                            HeightRequest="980"
+                            IsVisible="True"
+                            LineBreakMode="WordWrap"
+                            SemanticProperties.Description="A description of episode."
+                            Text="{Binding Description}"
+                            TextColor="Black"
+                            TextType="Html"
+                            WidthRequest="{OnPlatform WinUI=340,
+                                                      Android=340,
+                                                      iOS=320,
+                                                      MacCatalyst=320}" />
                     </Grid>
-
                 </Frame>
-
             </DataTemplate>
-
         </CollectionView.ItemTemplate>
+
         <CollectionView.EmptyView>
-
             <ContentView>
-
                 <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-
                     <Label
-                                Padding="20"
-                                FontSize="Large"
-                                HorizontalOptions="Center"
-                                HorizontalTextAlignment="Center"
-                                Text="Loading..."
-                                TextColor="Black"
-                                VerticalOptions="Center" />
+                        Padding="20"
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="Loading..."
+                        TextColor="Black"
+                        VerticalOptions="Center" />
                     <ActivityIndicator IsRunning="True" Color="Red" />
-
                 </StackLayout>
-
             </ContentView>
-
         </CollectionView.EmptyView>
+
     </CollectionView>
 
 </ContentView>
