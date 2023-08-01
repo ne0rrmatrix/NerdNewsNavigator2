@@ -92,7 +92,7 @@
                                 HeightRequest="35"
                                 IsVisible="{Binding Path=IsNotDownloaded}"
                                 Text="Download"
-                                TextColor="Black"
+                                TextColor="White"
                                 WidthRequest="90">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
@@ -107,7 +107,7 @@
                                 HeightRequest="35"
                                 IsVisible="{Binding Path=IsDownloading}"
                                 Text="Cancel"
-                                TextColor="Black"
+                                TextColor="White"
                                 WidthRequest="90">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
@@ -117,7 +117,7 @@
 
                         <Label
                             Grid.Row="3"
-                            FontSize="Small"
+                            FontSize="12"
                             HeightRequest="980"
                             IsVisible="True"
                             LineBreakMode="WordWrap"

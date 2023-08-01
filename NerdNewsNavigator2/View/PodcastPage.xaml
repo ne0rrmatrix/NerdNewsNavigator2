@@ -77,8 +77,8 @@
                                 <Label
                                     Grid.Row="2"
                                     Margin="10"
-                                    FontSize="Small"
-                                    HeightRequest="380"
+                                    FontSize="12"
+                                    HeightRequest="320"
                                     LineBreakMode="WordWrap"
                                     Text="{Binding Description}"
                                     TextColor="Black"
