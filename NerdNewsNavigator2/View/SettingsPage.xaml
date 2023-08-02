@@ -293,7 +293,7 @@
                         x:Name="Url"
                         BackgroundColor="White"
                         FontSize="Micro"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         SelectionLength="1400"

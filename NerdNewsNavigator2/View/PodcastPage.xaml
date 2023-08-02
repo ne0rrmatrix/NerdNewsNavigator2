@@ -31,19 +31,19 @@
                         <Frame
                             Margin="{OnPlatform WinUI=90,
                                                 MacCatalyst=90,
-                                                Android=90,
+                                                Android=5,
                                                 iOS=90}"
                             Padding="{OnPlatform Default=20,
                                                  iOS=10}"
                             BackgroundColor="White"
                             WidthRequest="{OnPlatform WinUI=370,
                                                       MacCatalyst=370,
-                                                      Android=370,
+                                                      Android=340,
                                                       iOS=340}">
 
-                            <Grid>
+                            <Grid HorizontalOptions="Center">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=310, iOS=375, MacCatalyst=310}" />
+                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=320, iOS=375, MacCatalyst=310}" />
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
@@ -71,7 +71,7 @@
                                     Margin="10"
                                     Aspect="AspectFit"
                                     HorizontalOptions="Center"
-                                    WidthRequest="{OnIdiom Phone=350,
+                                    WidthRequest="{OnIdiom Phone=290,
                                                            Tablet=340,
                                                            Desktop=350}">
                                     <Image.Source>
