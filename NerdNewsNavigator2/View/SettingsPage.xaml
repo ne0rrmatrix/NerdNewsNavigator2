@@ -58,6 +58,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="OpenUrlForDonation"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -67,6 +68,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button for opening url to dontate to developer"
                         Text="Click Me"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -85,6 +87,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="AutoDownload"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -94,6 +97,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Set auto download status to on or off. Default is off."
                         Text="{Binding Source={RelativeSource AncestorType={x:Type page:SettingsPage}}, Path=SetAutoDownload}"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -114,6 +118,7 @@
                     <Button
                         x:Name="WifiBtn"
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="WifiOnly"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -122,6 +127,7 @@
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button sets auto download to only download using wifi. Default is off."
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -140,6 +146,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="ResetPodcasts"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -149,6 +156,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button resets app to defaults."
                         Text="Reset"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -167,6 +175,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=UpdatePodcastsCommand}"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -176,6 +185,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button updates podcasts and removes stale favorites."
                         Text="Update"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -194,6 +204,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="EditPodcasts"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -203,6 +214,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button allows you to edit podcast list."
                         Text="Edit"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -221,6 +233,7 @@
                                                Tablet=360}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="ShowLogs"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -230,6 +243,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button shows application logs."
                         Text="View"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -248,6 +262,7 @@
                                                Tablet=170}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="AddDefault"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -257,11 +272,13 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="button adds default podcasts if any have been removed."
                         Text="Enable"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="RemoveDefault"
                         FontAttributes="Bold"
                         FontAutoScalingEnabled="True"
@@ -272,6 +289,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button removes default podcasts if at least one club twit stream has been added."
                         Text="Disable"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />
@@ -293,7 +311,7 @@
                         x:Name="Url"
                         BackgroundColor="White"
                         FontSize="Micro"
-                        HeightRequest="{OnIdiom Default=35,
+                        HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
                         HorizontalOptions="End"
                         SelectionLength="1400"
@@ -304,6 +322,7 @@
                                                Tablet=190}" />
                     <Button
                         Margin="10"
+                        BackgroundColor="#205493"
                         Clicked="AddPodcast"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
@@ -313,6 +332,7 @@
                         HorizontalOptions="End"
                         SemanticProperties.Description="Button lets you add url to club twit stream "
                         Text="Add"
+                        TextColor="#FFFFFF"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Tablet=170,
                                                Default=80}" />

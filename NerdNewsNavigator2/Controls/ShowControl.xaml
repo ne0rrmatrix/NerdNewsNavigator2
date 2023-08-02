@@ -30,10 +30,12 @@
                 <Frame
                     Margin="{OnPlatform WinUI=40,
                                         MacCatalyst=40,
-                                        Android=40,
+                                        Android=10,
                                         iOS=40}"
                     BackgroundColor="White"
-                    HorizontalOptions="Center">
+                    HorizontalOptions="Center"
+                    SemanticProperties.Description="A frame for all downloaded shows listed."
+                    SemanticProperties.Hint="A frame of all downloaded shows listed.">
 
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
@@ -51,18 +53,18 @@
                             Text="{Binding Title}"
                             TextColor="Black"
                             WidthRequest="{OnPlatform WinUI=350,
-                                                      Android=340,
+                                                      Android=320,
                                                       iOS=320,
                                                       MacCatalyst=320}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
                             HeightRequest="{OnPlatform WinUI=350,
-                                                       Android=340,
+                                                       Android=320,
                                                        iOS=320,
                                                        MacCatalyst=320}"
                             WidthRequest="{OnPlatform WinUI=350,
-                                                      Android=340,
+                                                      Android=320,
                                                       iOS=320,
                                                       MacCatalyst=320}">
                             <Image.Source>
@@ -94,7 +96,7 @@
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
-                                TextColor="White"
+                                TextColor="#FFFFFF"
                                 WidthRequest="90">
                                 <Button.Triggers>
                                     <DataTrigger
@@ -110,14 +112,14 @@
                             </Button>
                             <Button
                                 Margin="5"
-                                BackgroundColor="Red"
+                                BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
                                 FontSize="{OnPlatform Default=12,
                                                       MacCatalyst=16}"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
-                                TextColor="White"
+                                TextColor="#FFFFFF"
                                 WidthRequest="90">
                                 <Button.Triggers>
                                     <DataTrigger
@@ -144,7 +146,7 @@
                             TextColor="Black"
                             TextType="Html"
                             WidthRequest="{OnPlatform WinUI=340,
-                                                      Android=340,
+                                                      Android=320,
                                                       iOS=320,
                                                       MacCatalyst=320}" />
                     </Grid>

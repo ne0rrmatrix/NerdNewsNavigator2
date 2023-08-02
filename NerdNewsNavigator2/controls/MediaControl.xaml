@@ -42,6 +42,7 @@
                 HorizontalOptions="End"
                 Pressed="Button_Pressed"
                 SemanticProperties.Description="Button opens menu allows you to select video resolution."
+                SemanticProperties.Hint="Button opens menu allows you to select video resolution."
                 Source="gear.png"
                 VerticalOptions="End"
                 WidthRequest="48" />
@@ -53,6 +54,7 @@
                 HeightRequest="48"
                 HorizontalOptions="End"
                 SemanticProperties.Description="Button sets video full screen status. Default is not full screen."
+                SemanticProperties.Hint="Button sets video full screen status. Default is not full screen."
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="48" />
@@ -66,6 +68,7 @@
                 ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
                 SelectionMode="Single"
                 SemanticProperties.Description="You can select a resoltion from this menu."
+                SemanticProperties.Hint="You can select a resolution from this menu."
                 VerticalOptions="End"
                 WidthRequest="120">
 
@@ -82,6 +85,7 @@
                                 HorizontalOptions="End"
                                 HorizontalTextAlignment="Center"
                                 SemanticProperties.Description="Label shows selection menu for playback resolution."
+                                SemanticProperties.Hint="Label shows selection menu for playback resolution."
                                 Text="{Binding Title}"
                                 TextColor="White"
                                 WidthRequest="90">
@@ -109,6 +113,7 @@
                                                 Default=80}"
                         HorizontalOptions="Center"
                         SemanticProperties.Description="button rewinds video 15 seconds."
+                        SemanticProperties.Hint="button rewinds video 15 seconds."
                         Source="rewind.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -124,6 +129,7 @@
                                                 Default=80}"
                         HorizontalOptions="Center"
                         SemanticProperties.Description="Button plays video."
+                        SemanticProperties.Hint="Button plays video."
                         Source="pause.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -139,6 +145,7 @@
                                                 Default=80}"
                         HorizontalOptions="Center"
                         SemanticProperties.Description="button fast forwards video 15 seconds."
+                        SemanticProperties.Hint="button fast forwards video 15 seconds."
                         Source="fastforward.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -153,6 +160,7 @@
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         SemanticProperties.Description="Button allows you to mute a steam."
+                        SemanticProperties.Hint="Button allows you to mute a steam."
                         Source="muted.png"
                         WidthRequest="{OnIdiom Phone=48,
                                                Default=80}">
@@ -179,6 +187,7 @@
                                                 Default=80}"
                         HorizontalOptions="Center"
                         SemanticProperties.Description="Button allows you to change aspect ratio."
+                        SemanticProperties.Hint="Button allows you to change aspect ratio."
                         Source="aspect.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -196,12 +205,13 @@
                 VerticalOptions="End" />
             <Slider
                 x:Name="PositionSlider"
-                Margin="10"
+                Margin="15"
                 DragCompleted="Slider_DragCompleted"
                 DragStarted="Slider_DragStarted"
                 MaximumTrackColor="LightGray"
                 MinimumTrackColor="Red"
                 SemanticProperties.Description="Slider shows current playback position for video."
+                SemanticProperties.Hint="Slider shows current playback position for video."
                 VerticalOptions="End" />
         </Grid>
     </Grid>
