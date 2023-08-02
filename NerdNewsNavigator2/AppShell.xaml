@@ -10,10 +10,13 @@
     FlyoutWidth="200"
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True"
+    Shell.TabBarBackgroundColor="#FFFFFF"
     Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
                                        Android=true,
                                        iOS=true,
-                                       WinUI=false}">
+                                       WinUI=false}"
+    Shell.TabBarTitleColor="#205493"
+    Shell.TabBarUnselectedColor="#212121">
     <Shell.MenuItemTemplate>
         <DataTemplate>
 
@@ -37,12 +40,11 @@
                     Text="{Binding Title}"
                     TextColor="Black" />
             </Grid>
-
-
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
     <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
+
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"
