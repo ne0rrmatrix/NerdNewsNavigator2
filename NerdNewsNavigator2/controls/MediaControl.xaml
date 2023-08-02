@@ -205,7 +205,7 @@
                 VerticalOptions="End" />
             <Slider
                 x:Name="PositionSlider"
-                Margin="10"
+                Margin="15"
                 DragCompleted="Slider_DragCompleted"
                 DragStarted="Slider_DragStarted"
                 MaximumTrackColor="LightGray"
