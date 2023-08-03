@@ -60,7 +60,7 @@
                             Grid.Row="1"
                             Aspect="AspectFit"
                             HeightRequest="{OnPlatform WinUI=350,
-                                                       Android=320,
+                                                       Android=290,
                                                        iOS=320,
                                                        MacCatalyst=320}"
                             WidthRequest="{OnPlatform WinUI=350,
