@@ -30,14 +30,14 @@
                 <DataTemplate x:DataType="model:Podcast">
                     <Frame
                         Margin="{OnPlatform WinUI=80,
-                                            MacCatalyst=90,
+                                            MacCatalyst=10,
                                             Android=5,
                                             iOS=90}"
                         Padding="{OnPlatform Default=20,
                                              iOS=10}"
                         BackgroundColor="White"
                         WidthRequest="{OnPlatform WinUI=370,
-                                                  MacCatalyst=370,
+                                                  MacCatalyst=340,
                                                   Android=320,
                                                   iOS=340}">
 
