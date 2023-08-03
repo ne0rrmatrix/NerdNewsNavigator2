@@ -9,6 +9,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.Shared"
+    xmlns:woka="clr-namespace:Woka.Controls;assembly=Woka"
     x:Name="showControl"
     x:DataType="viewmodel:SharedViewModel"
     BackgroundColor="#34AAD2"
@@ -16,7 +17,6 @@
     mc:Ignorable="d">
 
     <CollectionView
-        Margin="5"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Source, Source={x:Reference showControl}}"
         VerticalScrollBarVisibility="Never">
@@ -28,43 +28,45 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame
-                    Margin="{OnPlatform WinUI=40,
-                                        MacCatalyst=40,
-                                        Android=10,
-                                        iOS=40}"
+                    Margin="10"
                     BackgroundColor="White"
                     HorizontalOptions="Center"
                     SemanticProperties.Description="A frame for all downloaded shows listed."
-                    SemanticProperties.Hint="A frame of all downloaded shows listed.">
+                    SemanticProperties.Hint="A frame of all downloaded shows listed."
+                    WidthRequest="{OnPlatform WinUI=390,
+                                              MacCatalyst=370,
+                                              Android=320,
+                                              iOS=340}">
 
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
                     <Grid
+                        Margin="5"
                         ColumnDefinitions="Auto"
-                        HorizontalOptions="Center"
-                        RowDefinitions="Auto,Auto,Auto,Auto">
+                        RowDefinitions="Auto,Auto,Auto,980">
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            HeightRequest="40"
+                            HeightRequest="0"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="Shows title of show"
                             Text="{Binding Title}"
                             TextColor="Black"
                             WidthRequest="{OnPlatform WinUI=350,
-                                                      Android=320,
+                                                      Android=260,
                                                       iOS=320,
                                                       MacCatalyst=320}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
-                            HeightRequest="{OnPlatform WinUI=350,
-                                                       Android=290,
+                            HeightRequest="{OnPlatform WinUI=340,
+                                                       Android=270,
                                                        iOS=320,
                                                        MacCatalyst=320}"
-                            WidthRequest="{OnPlatform WinUI=350,
-                                                      Android=320,
+                            HorizontalOptions="Start"
+                            WidthRequest="{OnPlatform WinUI=340,
+                                                      Android=270,
                                                       iOS=320,
                                                       MacCatalyst=320}">
                             <Image.Source>
@@ -78,11 +80,13 @@
 
                             <Label
                                 FontAttributes="Bold"
+                                FontSize="Micro"
                                 Text="Published: "
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
                             <Label
                                 FontAttributes="Bold"
+                                FontSize="Micro"
                                 SemanticProperties.Description="Shows the date the episode was published."
                                 Text="{Binding PubDate}"
                                 TextColor="Black"
@@ -114,8 +118,7 @@
                                 Margin="5"
                                 BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=12,
-                                                      MacCatalyst=16}"
+                                FontSize="Small"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
@@ -138,17 +141,16 @@
                         <Label
                             Grid.Row="3"
                             FontSize="12"
-                            HeightRequest="980"
-                            IsVisible="True"
+                            HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="A description of episode."
                             Text="{Binding Description}"
                             TextColor="Black"
                             TextType="Html"
-                            WidthRequest="{OnPlatform WinUI=340,
-                                                      Android=320,
-                                                      iOS=320,
-                                                      MacCatalyst=320}" />
+                            WidthRequest="{OnPlatform WinUI=320,
+                                                      Android=260,
+                                                      iOS=310,
+                                                      MacCatalyst=310}" />
                     </Grid>
                 </Frame>
             </DataTemplate>
@@ -158,7 +160,6 @@
             <ContentView>
                 <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                     <Label
-                        Padding="20"
                         FontSize="Large"
                         HorizontalOptions="Center"
                         HorizontalTextAlignment="Center"

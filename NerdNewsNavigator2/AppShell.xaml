@@ -11,7 +11,7 @@
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True"
     Shell.TabBarBackgroundColor="#FFFFFF"
-    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
+    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=false,
                                        Android=true,
                                        iOS=true,
                                        WinUI=false}"
@@ -23,6 +23,8 @@
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
+                IsEnabled="{OnPlatform MacCatalyst=false}"
+                IsVisible="{OnPlatform MacCatalyst=false}"
                 RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"

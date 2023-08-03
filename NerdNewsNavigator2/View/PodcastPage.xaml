@@ -6,6 +6,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    xmlns:woka="clr-namespace:Woka.Controls;assembly=Woka"
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
@@ -28,7 +29,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Podcast">
                     <Frame
-                        Margin="{OnPlatform WinUI=90,
+                        Margin="{OnPlatform WinUI=80,
                                             MacCatalyst=90,
                                             Android=5,
                                             iOS=90}"
@@ -37,18 +38,18 @@
                         BackgroundColor="White"
                         WidthRequest="{OnPlatform WinUI=370,
                                                   MacCatalyst=370,
-                                                  Android=340,
+                                                  Android=320,
                                                   iOS=340}">
 
                         <Grid HorizontalOptions="Center">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{OnPlatform WinUI=310, Android=320, iOS=375, MacCatalyst=310}" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto, MacCatalyst=Auto}" />
-                                <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350, MacCatalyst=350}" />
-                                <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=350}" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="320" />
                             </Grid.RowDefinitions>
 
                             <Grid.GestureRecognizers>
@@ -60,6 +61,7 @@
                                 Margin="5"
                                 Padding="10"
                                 FontAttributes="Bold"
+                                FontSize="Small"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 LineBreakMode="WordWrap"
@@ -69,9 +71,12 @@
                                 Grid.Row="1"
                                 Margin="10"
                                 Aspect="AspectFit"
+                                HeightRequest="{OnIdiom Phone=280,
+                                                        Tablet=290,
+                                                        Desktop=350}"
                                 HorizontalOptions="Center"
-                                WidthRequest="{OnIdiom Phone=290,
-                                                       Tablet=340,
+                                WidthRequest="{OnIdiom Phone=280,
+                                                       Tablet=290,
                                                        Desktop=350}">
                                 <Image.Source>
                                     <UriImageSource
@@ -82,13 +87,12 @@
                             </Image>
                             <Label
                                 Grid.Row="2"
-                                Margin="12"
-                                FontSize="10"
+                                FontSize="Micro"
                                 LineBreakMode="WordWrap"
                                 Text="{Binding Description}"
                                 TextColor="Black"
                                 WidthRequest="{OnIdiom Phone=290,
-                                                       Tablet=300,
+                                                       Tablet=290,
                                                        Default=290,
                                                        Desktop=340}" />
 
