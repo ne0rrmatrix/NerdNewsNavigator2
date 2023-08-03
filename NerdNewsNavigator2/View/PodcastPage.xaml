@@ -41,16 +41,16 @@
                                                   Android=320,
                                                   iOS=340}">
 
-                        <Grid HorizontalOptions="Center">
-                            <Grid.ColumnDefinitions>
+                        <woka:WokaGrid HorizontalOptions="Center">
+                            <woka:WokaGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            </woka:WokaGrid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
+                            <woka:WokaGrid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="320" />
-                            </Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </woka:WokaGrid.RowDefinitions>
 
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
@@ -65,6 +65,7 @@
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 LineBreakMode="WordWrap"
+                                MinimumHeightRequest="60"
                                 Text="{Binding Title}"
                                 TextColor="Black" />
                             <Image
@@ -96,7 +97,7 @@
                                                        Default=290,
                                                        Desktop=340}" />
 
-                        </Grid>
+                        </woka:WokaGrid>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

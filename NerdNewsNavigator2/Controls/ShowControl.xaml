@@ -41,14 +41,15 @@
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
-                    <Grid
+                    <woka:WokaGrid
                         Margin="5"
                         ColumnDefinitions="Auto"
                         RowDefinitions="Auto,Auto,Auto,980">
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            HeightRequest="0"
+                            FontSize="Small"
+                            HeightRequest="60"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="Shows title of show"
                             Text="{Binding Title}"
@@ -140,7 +141,7 @@
 
                         <Label
                             Grid.Row="3"
-                            FontSize="12"
+                            FontSize="Micro"
                             HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="A description of episode."
@@ -151,7 +152,7 @@
                                                       Android=260,
                                                       iOS=310,
                                                       MacCatalyst=310}" />
-                    </Grid>
+                    </woka:WokaGrid>
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
