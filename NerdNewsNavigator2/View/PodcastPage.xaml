@@ -3,6 +3,8 @@
     x:Class="NerdNewsNavigator2.View.PodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
@@ -10,11 +12,13 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded">
+    Loaded="ContentPage_Loaded"
+    mc:Ignorable="d">
 
     <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <CollectionView
-            Margin="5"
+            Margin="15"
+            HorizontalOptions="Center"
             HorizontalScrollBarVisibility="Never"
             ItemsSource="{Binding Podcasts}"
             VerticalScrollBarVisibility="Never">
@@ -29,28 +33,22 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Podcast">
                     <Frame
-                        Margin="{OnPlatform WinUI=80,
+                        Margin="{OnPlatform WinUI=10,
                                             MacCatalyst=10,
-                                            Android=5,
+                                            Android=10,
                                             iOS=90}"
                         Padding="{OnPlatform Default=20,
                                              iOS=10}"
                         BackgroundColor="White"
-                        WidthRequest="{OnPlatform WinUI=370,
+                        WidthRequest="{OnPlatform WinUI=390,
                                                   MacCatalyst=340,
                                                   Android=320,
                                                   iOS=340}">
 
-                        <woka:WokaGrid HorizontalOptions="Center">
-                            <woka:WokaGrid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                            </woka:WokaGrid.ColumnDefinitions>
-
-                            <woka:WokaGrid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </woka:WokaGrid.RowDefinitions>
+                        <woka:WokaGrid
+                            Margin="0"
+                            ColumnDefinitions="Auto"
+                            RowDefinitions="Auto,Auto,360">
 
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
@@ -61,7 +59,7 @@
                                 Margin="5"
                                 Padding="10"
                                 FontAttributes="Bold"
-                                FontSize="Small"
+                                FontSize="Micro"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 LineBreakMode="WordWrap"
@@ -70,15 +68,16 @@
                                 TextColor="Black" />
                             <Image
                                 Grid.Row="1"
-                                Margin="10"
                                 Aspect="AspectFit"
-                                HeightRequest="{OnIdiom Phone=280,
-                                                        Tablet=290,
-                                                        Desktop=350}"
+                                HeightRequest="{OnPlatform WinUI=370,
+                                                           Android=270,
+                                                           iOS=320,
+                                                           MacCatalyst=340}"
                                 HorizontalOptions="Center"
-                                WidthRequest="{OnIdiom Phone=280,
-                                                       Tablet=290,
-                                                       Desktop=350}">
+                                WidthRequest="{OnPlatform WinUI=370,
+                                                          Android=270,
+                                                          iOS=320,
+                                                          MacCatalyst=340}">
                                 <Image.Source>
                                     <UriImageSource
                                         CacheValidity="10:00:00:00"
@@ -92,10 +91,10 @@
                                 LineBreakMode="WordWrap"
                                 Text="{Binding Description}"
                                 TextColor="Black"
-                                WidthRequest="{OnIdiom Phone=290,
-                                                       Tablet=290,
-                                                       Default=290,
-                                                       Desktop=340}" />
+                                WidthRequest="{OnPlatform WinUI=340,
+                                                          Android=280,
+                                                          iOS=290,
+                                                          MacCatalyst=340}" />
 
                         </woka:WokaGrid>
                     </Frame>

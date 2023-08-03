@@ -28,14 +28,14 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Show">
                 <Frame
-                    Margin="10"
+                    Margin="5"
                     BackgroundColor="White"
                     HorizontalOptions="Center"
                     SemanticProperties.Description="A frame for all downloaded shows listed."
                     SemanticProperties.Hint="A frame of all downloaded shows listed."
-                    WidthRequest="{OnPlatform WinUI=390,
+                    WidthRequest="{OnPlatform WinUI=430,
                                               MacCatalyst=340,
-                                              Android=320,
+                                              Android=330,
                                               iOS=340}">
 
                     <Frame.GestureRecognizers>
@@ -48,28 +48,28 @@
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            FontSize="Small"
+                            FontSize="Micro"
                             HeightRequest="60"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="Shows title of show"
                             Text="{Binding Title}"
                             TextColor="Black"
-                            WidthRequest="{OnPlatform WinUI=350,
+                            WidthRequest="{OnPlatform WinUI=380,
                                                       Android=260,
                                                       iOS=320,
-                                                      MacCatalyst=310}" />
+                                                      MacCatalyst=380}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
-                            HeightRequest="{OnPlatform WinUI=340,
+                            HeightRequest="{OnPlatform WinUI=370,
                                                        Android=270,
                                                        iOS=320,
-                                                       MacCatalyst=310}"
+                                                       MacCatalyst=380}"
                             HorizontalOptions="Start"
-                            WidthRequest="{OnPlatform WinUI=340,
+                            WidthRequest="{OnPlatform WinUI=370,
                                                       Android=270,
                                                       iOS=320,
-                                                      MacCatalyst=310}">
+                                                      MacCatalyst=380}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
@@ -96,12 +96,12 @@
                                 Margin="5"
                                 BackgroundColor="Green"
                                 FontAttributes="Bold"
-                                FontSize="12"
+                                FontSize="Small"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
                                 TextColor="#FFFFFF"
-                                WidthRequest="90">
+                                WidthRequest="120">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsNotDownloaded}"
@@ -123,7 +123,7 @@
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
                                 TextColor="#FFFFFF"
-                                WidthRequest="90">
+                                WidthRequest="120">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsDownloading}"
@@ -147,10 +147,10 @@
                             Text="{Binding Description}"
                             TextColor="Black"
                             TextType="Html"
-                            WidthRequest="{OnPlatform WinUI=320,
+                            WidthRequest="{OnPlatform WinUI=340,
                                                       Android=260,
                                                       iOS=310,
-                                                      MacCatalyst=310}" />
+                                                      MacCatalyst=370}" />
                     </woka:WokaGrid>
                 </Frame>
             </DataTemplate>
