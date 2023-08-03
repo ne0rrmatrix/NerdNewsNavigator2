@@ -96,8 +96,7 @@
                                 Margin="5"
                                 BackgroundColor="Green"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=12,
-                                                      MacCatalyst=12}"
+                                FontSize="12"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
