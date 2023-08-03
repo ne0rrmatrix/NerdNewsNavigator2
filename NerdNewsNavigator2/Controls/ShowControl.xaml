@@ -34,7 +34,7 @@
                     SemanticProperties.Description="A frame for all downloaded shows listed."
                     SemanticProperties.Hint="A frame of all downloaded shows listed."
                     WidthRequest="{OnPlatform WinUI=390,
-                                              MacCatalyst=370,
+                                              MacCatalyst=390,
                                               Android=320,
                                               iOS=340}">
 
@@ -57,19 +57,19 @@
                             WidthRequest="{OnPlatform WinUI=350,
                                                       Android=260,
                                                       iOS=320,
-                                                      MacCatalyst=320}" />
+                                                      MacCatalyst=350}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
                             HeightRequest="{OnPlatform WinUI=340,
                                                        Android=270,
                                                        iOS=320,
-                                                       MacCatalyst=320}"
+                                                       MacCatalyst=350}"
                             HorizontalOptions="Start"
                             WidthRequest="{OnPlatform WinUI=340,
                                                       Android=270,
                                                       iOS=320,
-                                                      MacCatalyst=320}">
+                                                      MacCatalyst=340}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
@@ -151,7 +151,7 @@
                             WidthRequest="{OnPlatform WinUI=320,
                                                       Android=260,
                                                       iOS=310,
-                                                      MacCatalyst=310}" />
+                                                      MacCatalyst=320}" />
                     </woka:WokaGrid>
                 </Frame>
             </DataTemplate>
