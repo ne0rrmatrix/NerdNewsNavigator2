@@ -10,7 +10,8 @@
     x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Shell.NavBarIsVisible="False"
+    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
+                                       Default=false}"
     Unloaded="ContentPage_Unloaded">
 
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />

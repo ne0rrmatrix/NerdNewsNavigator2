@@ -11,9 +11,7 @@
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.BackgroundColor="#34AAD2">
-    <Grid>
-        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
-        </RefreshView>
-    </Grid>
+    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
+    </RefreshView>
 </ContentPage>
