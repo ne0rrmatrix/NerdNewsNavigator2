@@ -3,118 +3,120 @@
     x:Class="NerdNewsNavigator2.View.PodcastPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
+    xmlns:woka="clr-namespace:Woka.Controls;assembly=Woka"
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded">
+    Loaded="ContentPage_Loaded"
+    mc:Ignorable="d">
 
-    <Grid>
-        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <CollectionView
-                Margin="5"
-                HorizontalScrollBarVisibility="Never"
-                ItemsSource="{Binding Podcasts}"
-                VerticalScrollBarVisibility="Never">
+    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <CollectionView
+            Margin="15"
+            HorizontalOptions="Center"
+            HorizontalScrollBarVisibility="Never"
+            ItemsSource="{Binding Podcasts}"
+            VerticalScrollBarVisibility="Never">
 
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout
-                        x:Name="ItemLayout"
-                        Orientation="Vertical"
-                        Span="{Binding Orientation}" />
-                </CollectionView.ItemsLayout>
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    x:Name="ItemLayout"
+                    Orientation="Vertical"
+                    Span="{Binding Orientation}" />
+            </CollectionView.ItemsLayout>
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Podcast">
-                        <Frame
-                            Margin="{OnPlatform WinUI=90,
-                                                MacCatalyst=90,
-                                                Android=5,
-                                                iOS=90}"
-                            Padding="{OnPlatform Default=20,
-                                                 iOS=10}"
-                            BackgroundColor="White"
-                            WidthRequest="{OnPlatform WinUI=370,
-                                                      MacCatalyst=370,
-                                                      Android=340,
-                                                      iOS=340}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Podcast">
+                    <Frame
+                        Margin="{OnPlatform WinUI=10,
+                                            MacCatalyst=10,
+                                            Android=10,
+                                            iOS=90}"
+                        Padding="{OnPlatform Default=20,
+                                             iOS=10}"
+                        BackgroundColor="White"
+                        WidthRequest="{OnPlatform WinUI=390,
+                                                  MacCatalyst=340,
+                                                  Android=320,
+                                                  iOS=340}">
 
-                            <Grid HorizontalOptions="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="{OnPlatform WinUI=310, Android=320, iOS=375, MacCatalyst=310}" />
-                                </Grid.ColumnDefinitions>
+                        <woka:WokaGrid
+                            Margin="0"
+                            ColumnDefinitions="Auto"
+                            RowDefinitions="Auto,Auto,360">
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, iOS=Auto, MacCatalyst=Auto}" />
-                                    <RowDefinition Height="{OnPlatform WinUI=350, Android=350, iOS=350, MacCatalyst=350}" />
-                                    <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=350}" />
-                                </Grid.RowDefinitions>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
+                            </Grid.GestureRecognizers>
 
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
-                                </Grid.GestureRecognizers>
-
-                                <Label
-                                    Grid.Row="0"
-                                    Margin="5"
-                                    Padding="10"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="Center"
-                                    HorizontalTextAlignment="Center"
-                                    LineBreakMode="WordWrap"
-                                    Text="{Binding Title}"
-                                    TextColor="Black" />
-                                <Image
-                                    Grid.Row="1"
-                                    Margin="10"
-                                    Aspect="AspectFit"
-                                    HorizontalOptions="Center"
-                                    WidthRequest="{OnIdiom Phone=290,
-                                                           Tablet=340,
-                                                           Desktop=350}">
-                                    <Image.Source>
-                                        <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="true"
-                                            Uri="{Binding Image}" />
-                                    </Image.Source>
-                                </Image>
-                                <Label
-                                    Grid.Row="2"
-                                    Margin="12"
-                                    FontSize="10"
-                                    LineBreakMode="WordWrap"
-                                    Text="{Binding Description}"
-                                    TextColor="Black"
-                                    WidthRequest="{OnIdiom Phone=290,
-                                                           Tablet=300,
-                                                           Default=290,
-                                                           Desktop=340}" />
-
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-
-                <CollectionView.EmptyView>
-                    <ContentView>
-                        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                             <Label
-                                Padding="20"
-                                FontSize="Large"
+                                Grid.Row="0"
+                                Margin="5"
+                                Padding="10"
+                                FontAttributes="Bold"
+                                FontSize="Micro"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
-                                Text="Loading..."
+                                LineBreakMode="WordWrap"
+                                MinimumHeightRequest="60"
+                                Text="{Binding Title}"
+                                TextColor="Black" />
+                            <Image
+                                Grid.Row="1"
+                                Aspect="AspectFit"
+                                HeightRequest="{OnPlatform WinUI=370,
+                                                           Android=270,
+                                                           iOS=320,
+                                                           MacCatalyst=340}"
+                                HorizontalOptions="Center"
+                                WidthRequest="{OnPlatform WinUI=370,
+                                                          Android=270,
+                                                          iOS=320,
+                                                          MacCatalyst=340}">
+                                <Image.Source>
+                                    <UriImageSource
+                                        CacheValidity="10:00:00:00"
+                                        CachingEnabled="true"
+                                        Uri="{Binding Image}" />
+                                </Image.Source>
+                            </Image>
+                            <Label
+                                Grid.Row="2"
+                                FontSize="Micro"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding Description}"
                                 TextColor="Black"
-                                VerticalOptions="Center" />
-                            <ActivityIndicator IsRunning="True" Color="Red" />
-                        </StackLayout>
-                    </ContentView>
-                </CollectionView.EmptyView>
-            </CollectionView>
+                                WidthRequest="{OnPlatform WinUI=340,
+                                                          Android=280,
+                                                          iOS=290,
+                                                          MacCatalyst=340}" />
 
-        </RefreshView>
-    </Grid>
+                        </woka:WokaGrid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                        <Label
+                            Padding="20"
+                            FontSize="Large"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Text="Loading..."
+                            TextColor="Black"
+                            VerticalOptions="Center" />
+                        <ActivityIndicator IsRunning="True" Color="Red" />
+                    </StackLayout>
+                </ContentView>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+    </RefreshView>
 </ContentPage>

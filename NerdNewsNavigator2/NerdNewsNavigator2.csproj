@@ -22,7 +22,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>26</ApplicationVersion>
+	    <ApplicationVersion>29</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -116,7 +116,7 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.7" />
+	    <PackageReference Include="Woka" Version="1.0.8" />
 	    <PackageReference Include="YoutubeExplode" Version="6.3.1" />
     </ItemGroup>
   
