@@ -31,6 +31,5 @@ public partial class PodcastPage : ContentPage
             ItemLayout.Span = 2;
             OnPropertyChanged(nameof(ItemLayout));
         }
-        CustomControls.RestoreScreen();
     }
 }

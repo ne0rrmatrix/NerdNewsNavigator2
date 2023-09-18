@@ -124,7 +124,6 @@ public partial class LivePage : ContentPage, IDisposable
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         mediaElement.Stop();
-        CustomControls.RestoreScreen();
         base.OnNavigatedFrom(args);
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)

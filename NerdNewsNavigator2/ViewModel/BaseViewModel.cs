@@ -200,7 +200,7 @@ public partial class BaseViewModel : ObservableObject
         else
         {
             var item = temp.OrderBy(x => x.Title).ToList();
-            item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+            item.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
         }
     }
     private async Task ProcessPodcasts()

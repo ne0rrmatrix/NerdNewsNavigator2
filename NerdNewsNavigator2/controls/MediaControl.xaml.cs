@@ -303,12 +303,10 @@ public partial class MediaControl : ContentView
     {
         if (e.Direction == SwipeDirection.Up)
         {
-            //WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             CustomControls.FullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
-            //WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             CustomControls.RestoreScreen();
         }
     }
@@ -317,13 +315,11 @@ public partial class MediaControl : ContentView
         if (s_fullScreen)
         {
             CustomControls.RestoreScreen();
-            //WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
             s_fullScreen = false;
         }
         else
         {
             CustomControls.FullScreen();
-            //WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
             s_fullScreen = true;
         }
     }
@@ -357,4 +353,12 @@ public partial class MediaControl : ContentView
         }
     }
     #endregion
+
+    private void MediaControl_Unloaded(object sender, EventArgs e)
+    {
+        if (s_fullScreen)
+        {
+            CustomControls.RestoreScreen();
+        }
+    }
 }

@@ -7,15 +7,11 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A Class that extends <see cref="BaseViewModel"/> for <see cref="SettingsViewModel"/>
 /// </summary>
-public partial class SettingsViewModel : SharedViewModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="SettingsViewModel"/>
+/// </remarks>
+public partial class SettingsViewModel(IConnectivity connectivity) : SharedViewModel(connectivity)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsViewModel"/>
-    /// </summary>
-    public SettingsViewModel(IConnectivity connectivity)
-        : base(connectivity)
-    {
-    }
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>

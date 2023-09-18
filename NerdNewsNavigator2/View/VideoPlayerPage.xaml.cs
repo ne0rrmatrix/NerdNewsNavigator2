@@ -121,7 +121,6 @@ public partial class VideoPlayerPage : ContentPage
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
         mediaElement.Handler.DisconnectHandler();
-        CustomControls.RestoreScreen();
         base.OnNavigatedFrom(args);
     }
 

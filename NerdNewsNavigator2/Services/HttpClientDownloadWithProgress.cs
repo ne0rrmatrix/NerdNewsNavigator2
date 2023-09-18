@@ -4,23 +4,18 @@
 
 namespace NerdNewsNavigator2.Services;
 
-public class HttpClientDownloadWithProgress : IDisposable
+public class HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath) : IDisposable
 {
+
     #region Properties
-    private readonly string _downloadUrl;
-    private readonly string _destinationFilePath;
     private HttpClient _httpClient;
 
     public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage, CancellationToken token);
     public event ProgressChangedHandler ProgressChanged;
 
     public CancellationTokenSource DownloadCancel { get; set; } = null;
+
     #endregion
-    public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
-    {
-        _downloadUrl = downloadUrl;
-        _destinationFilePath = destinationFilePath;
-    }
     public async Task StartDownload()
     {
         if (DownloadCancel is null)
@@ -36,7 +31,7 @@ public class HttpClientDownloadWithProgress : IDisposable
             DownloadCancel = cts;
         }
         _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
-        using var response = await _httpClient.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead);
+        using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead);
         await DownloadFileFromHttpResponseMessage(response, DownloadCancel.Token);
     }
 
@@ -56,7 +51,7 @@ public class HttpClientDownloadWithProgress : IDisposable
         var buffer = new byte[8192];
         var isMoreToRead = true;
 
-        using var fileStream = new FileStream(_destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
+        using var fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         do
         {
             var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: CancellationToken.None);

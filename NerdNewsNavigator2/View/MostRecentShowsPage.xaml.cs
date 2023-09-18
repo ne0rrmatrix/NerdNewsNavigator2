@@ -23,14 +23,4 @@ public partial class MostRecentShowsPage : ContentPage
         App.CurrentNavigation.StartedNavigation(true, false);
         base.OnNavigatedTo(args);
     }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        CustomControls.RestoreScreen();
-    }
 }

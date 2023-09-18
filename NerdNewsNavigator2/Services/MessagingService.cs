@@ -25,7 +25,6 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
     {
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-        // WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
     }
 
     /// <summary>
@@ -42,37 +41,7 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
         }
         await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
     }
-    /*
-    public void Receive(FullScreenItemMessage message)
-    {
-        var currentPage = CurrentPage;
-        if (message.Value)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                NavigationPage.SetBackButtonTitle(currentPage, string.Empty);
-                NavigationPage.SetHasBackButton(currentPage, false);
-                Shell.SetFlyoutItemIsVisible(currentPage, false);
-                Shell.SetNavBarIsVisible(currentPage, false);
-                Shell.SetTabBarIsVisible(Shell.Current, false);
-                NavigationPage.SetHasNavigationBar(currentPage, false);
-                Shell.SetTabBarIsVisible(currentPage, false);
-            });
-        }
-        else
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                NavigationPage.SetHasNavigationBar(currentPage, true);
-                NavigationPage.SetHasBackButton(currentPage, true);
-                Shell.SetFlyoutItemIsVisible(currentPage, true);
-                Shell.SetNavBarIsVisible(currentPage, true);
-                Shell.SetTabBarIsVisible(currentPage, true);
-            });
-        }
-        WeakReferenceMessenger.Default.Unregister<FullScreenItemMessage>(message);
-    }
-    */
+
     public void Receive(DownloadItemMessage message)
     {
         WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);

@@ -16,8 +16,4 @@ public partial class ShowControl : ContentView
     {
         InitializeComponent();
     }
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        CustomControls.RestoreScreen();
-    }
 }
