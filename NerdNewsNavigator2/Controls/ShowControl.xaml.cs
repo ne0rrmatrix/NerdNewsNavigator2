@@ -18,6 +18,6 @@ public partial class ShowControl : ContentView
     }
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        DeviceService.RestoreScreen();
+        CustomControls.RestoreScreen();
     }
 }

@@ -2,16 +2,22 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if WINDOWS
+using NerdNewsNavigator2.Interface;
 using Microsoft.UI.Windowing;
+using NerdNewsNavigator2.Extensions;
+#endif
 
-namespace NerdNewsNavigator2.Services;
-internal static partial class DeviceService
+namespace NerdNewsNavigator2.Devices;
+internal class DeviceServices : IDeviceServices
 {
-    public static Page CurrentPage { get; private set; }
-    public static partial AppWindow FullScreen()
+    public static Page CurrentPage =>
+        PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
+    public AppWindow FullScreen()
     {
-        CurrentPage = Shell.Current.CurrentPage;
-        var item = CurrentPage.GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        var currentPage = CurrentPage;
+        PageExtensions.SetBarStatus(true);
+        var item = currentPage.GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
         var currentWindow = GetAppWindow(item);
         switch (currentWindow.Presenter)
         {
@@ -22,10 +28,12 @@ internal static partial class DeviceService
         }
         return currentWindow;
     }
-    public static partial AppWindow RestoreScreen()
+
+    public AppWindow RestoreScreen()
     {
-        CurrentPage = Shell.Current.CurrentPage;
-        var item = CurrentPage.GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
+        var currentPage = CurrentPage;
+        PageExtensions.SetBarStatus(false);
+        var item = currentPage.GetParentWindow().Handler.PlatformView as MauiWinUIWindow;
         var currentWindow = GetAppWindow(item);
         switch (currentWindow.Presenter)
         {

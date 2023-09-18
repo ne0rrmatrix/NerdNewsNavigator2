@@ -3,10 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-
+/*
 public class FullScreenItemMessage : ValueChangedMessage<bool>
 {
     public FullScreenItemMessage(bool value) : base(value)
     {
     }
 }
+*/

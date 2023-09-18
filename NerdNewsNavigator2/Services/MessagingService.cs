@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class to manage Messaging between classes.
 /// </summary>
-public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>, IRecipient<FullScreenItemMessage>
+public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
     /// <summary>
     /// Gets the presented page.
@@ -25,7 +25,7 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
     {
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
         WeakReferenceMessenger.Default.Register<InternetItemMessage>(this);
-        WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
+        // WeakReferenceMessenger.Default.Register<FullScreenItemMessage>(this);
     }
 
     /// <summary>
@@ -42,6 +42,7 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
         }
         await Toast.Make("Failed to Delete Download.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
     }
+    /*
     public void Receive(FullScreenItemMessage message)
     {
         var currentPage = CurrentPage;
@@ -71,6 +72,7 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
         }
         WeakReferenceMessenger.Default.Unregister<FullScreenItemMessage>(message);
     }
+    */
     public void Receive(DownloadItemMessage message)
     {
         WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);

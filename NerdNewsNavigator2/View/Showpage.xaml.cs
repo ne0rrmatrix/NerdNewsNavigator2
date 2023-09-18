@@ -31,7 +31,7 @@ public partial class ShowPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        DeviceService.RestoreScreen();
+        CustomControls.RestoreScreen();
         Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
     }
 }

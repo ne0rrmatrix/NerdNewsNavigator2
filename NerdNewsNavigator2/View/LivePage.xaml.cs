@@ -42,7 +42,7 @@ public partial class LivePage : ContentPage, IDisposable
         if (m3u != string.Empty)
         {
             mediaElement.Source = ParseM3UPLaylist(await GetM3U_Url(m3u));
-            _logger.Info("Set media element source {source}", mediaElement.Source);
+            _logger.Info($"Set media element source {mediaElement.Source}");
             mediaElement.Play();
         }
     }
@@ -124,6 +124,7 @@ public partial class LivePage : ContentPage, IDisposable
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         mediaElement.Stop();
+        CustomControls.RestoreScreen();
         base.OnNavigatedFrom(args);
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)
