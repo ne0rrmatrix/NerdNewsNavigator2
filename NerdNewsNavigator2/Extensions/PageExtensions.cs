@@ -40,23 +40,17 @@ static class PageExtensions
         }
         else
         {
-            if (!NavigationPage.GetHasNavigationBar(currentPage) && s_navBarIsVisible)
+            if (s_navBarIsVisible)
             {
                 NavigationPage.SetHasNavigationBar(currentPage, s_navBarIsVisible);
-            }
-            if (!NavigationPage.GetHasBackButton(currentPage) || s_backButton)
-            {
-                NavigationPage.SetHasBackButton(currentPage, s_backButton);
-            }
-            if (s_backButtonTitle != string.Empty)
-            {
-                NavigationPage.SetBackButtonTitle(currentPage, s_backButtonTitle);
-            }
-            if (!Shell.GetNavBarIsVisible(currentPage) && s_navBarIsVisible)
-            {
                 Shell.SetNavBarIsVisible(currentPage, s_navBarIsVisible);
             }
-            if (!Shell.GetTabBarIsVisible(currentPage) && s_tabBarIsVisible)
+            if (s_backButton)
+            {
+                NavigationPage.SetHasBackButton(currentPage, s_backButton);
+                NavigationPage.SetBackButtonTitle(currentPage, s_backButtonTitle);
+            }
+            if (s_tabBarIsVisible)
             {
                 Shell.SetTabBarIsVisible(currentPage, s_tabBarIsVisible);
             }
