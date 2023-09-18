@@ -23,15 +23,13 @@
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
-                IsEnabled="{OnPlatform MacCatalyst=false,
-                                       Android=true}"
-                IsVisible="{OnPlatform MacCatalyst=false,
-                                       Android=true}"
+                IsEnabled="{OnPlatform MacCatalyst=false}"
+                IsVisible="{OnPlatform MacCatalyst=false}"
                 RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"
-                    IsVisible="{OnPlatform MacCatalyst=false,
-                                           Android=true}"
+                    IsVisible="{OnPlatform Default=True,
+                                           MacCatalyst=false}"
                     MinimumHeightRequest="50"
                     MinimumWidthRequest="50"
                     Source="{Binding Icon}" />
@@ -47,7 +45,7 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Android=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Android=true, iOS=False}">
+    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
 
         <ShellContent
             Title="Home"
