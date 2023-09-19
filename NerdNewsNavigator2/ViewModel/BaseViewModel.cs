@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Maui.BindableProperty.Generator.Core;
+using System.Collections;
 
 namespace NerdNewsNavigator2.ViewModel;
 
@@ -96,6 +96,19 @@ public partial class BaseViewModel : ObservableObject
         _mostRecentShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
+        BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(MostRecentShows, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(FavoriteShows, null, ObservableCollectionCallback);
+    }
+    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+    {
+        // `lock` ensures that only one thread access the collection at a time
+        lock (collection)
+        {
+            accessMethod?.Invoke();
+        }
     }
 
     /// <summary>

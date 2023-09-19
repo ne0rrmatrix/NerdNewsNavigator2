@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
-public class DownloadService
+public partial class DownloadService
 {
     #region Properties
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
@@ -89,6 +89,10 @@ public class DownloadService
 
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shell.Current.CurrentPage.Title = string.Empty;
+        });
         if (e.Shows.Count > 0)
         {
 #if ANDROID || IOS

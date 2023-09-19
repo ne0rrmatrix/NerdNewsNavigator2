@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.Shared;
 
 [QueryProperty("Url", "Url")]
-public partial class SharedViewModel : BaseViewModel
+public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMessage>
 {
     #region Properties
     /// <summary>
@@ -26,11 +26,23 @@ public partial class SharedViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
+    }
+    public void Receive(NavigatedItemMessage message)
+    {
+        _logger.Info("Recieved Navigated message");
+#if ANDROID
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        if (App.Downloads.Shows.Count == 0)
+        {
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
+        }
+#endif
     }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
@@ -48,6 +60,7 @@ public partial class SharedViewModel : BaseViewModel
 
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
+        WeakReferenceMessenger.Default.Unregister<NavigatedItemMessage>(this);
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
         ThreadPool.QueueUserWorkItem(state =>
         {
@@ -111,6 +124,7 @@ public partial class SharedViewModel : BaseViewModel
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        WeakReferenceMessenger.Default.Unregister<NavigatedItemMessage>(this);
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
@@ -239,12 +253,14 @@ public partial class SharedViewModel : BaseViewModel
         }
         App.Downloads.Add(item);
         App.Downloads.Start(item);
+        WeakReferenceMessenger.Default.Register<NavigatedItemMessage>(this);
     }
 
     [RelayCommand]
     public void Cancel(string url)
     {
         Title = string.Empty;
+        OnPropertyChanged(nameof(Title));
         var item = App.Downloads.Cancel(url);
         if (item is null)
         {

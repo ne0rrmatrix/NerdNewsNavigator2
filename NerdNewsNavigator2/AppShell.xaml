@@ -7,7 +7,7 @@
     Title="NerdNewsNavigator"
     FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
-    FlyoutWidth="200"
+    FlyoutWidth="220"
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True"
     Shell.TabBarBackgroundColor="#FFFFFF"

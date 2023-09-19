@@ -14,7 +14,8 @@ namespace NerdNewsNavigator2.Platforms.Android;
 internal class AutoStartService : Service
 {
     #region Properties
-    private AutoDownloadService AutoDownloadService { get; set; } = new();
+    private AutoDownloadService AutoDownloadService { get; set; }
+    public WakeLock WLock { get; set; }
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
     private const string NOTIFICATION_CHANNEL_NAME = "notification";
@@ -23,11 +24,12 @@ internal class AutoStartService : Service
 
     public AutoStartService()
     {
+        AutoDownloadService = App.AutoDownloadService;
     }
     #region Foreground Service Methods
     private async Task StartForegroundServiceAsync()
     {
-        AutoDownloadService.AcquireWakeLock();
+        AcquireWakeLock();
         if (AutoDownloadService.CancellationTokenSource is null)
         {
             var cts = new CancellationTokenSource();
@@ -98,15 +100,32 @@ internal class AutoStartService : Service
             StartForegroundService(intent);
         }
     }
+    public void AcquireWakeLock()
+    {
+        WLock?.Release();
+
+        var wakeFlags = WakeLockFlags.Partial;
+
+        var pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
+        WLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
+        if (!WLock.IsHeld)
+        {
+            WLock.Acquire();
+        }
+        var item = WLock.IsHeld;
+        s_logger.Info($"Wake Lock On: {item}");
+
+    }
     #endregion
 
     public override void OnDestroy()
     {
-        if (AutoDownloadService.WLock.IsHeld)
+        if (WLock.IsHeld)
         {
-            AutoDownloadService.WLock.Release();
+            WLock.Release();
+            s_logger.Info("Wake lock is being released");
         }
-        s_logger.Info($"Wake Lock Status: {AutoDownloadService.WLock.IsHeld}");
+        s_logger.Info($"Wake Lock Status: {WLock.IsHeld}");
         if (AutoDownloadService.CancellationTokenSource is not null)
         {
             AutoDownloadService.CancellationTokenSource = null;

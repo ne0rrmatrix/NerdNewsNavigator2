@@ -26,6 +26,11 @@ public partial class AppShell : Shell
     }
 
     #region Navigation
+    protected override void OnNavigated(ShellNavigatedEventArgs args)
+    {
+        WeakReferenceMessenger.Default.Send(new NavigatedItemMessage(true));
+        base.OnNavigated(args);
+    }
     /// <summary>
     /// Method navigates user to Main Page.
     /// </summary>

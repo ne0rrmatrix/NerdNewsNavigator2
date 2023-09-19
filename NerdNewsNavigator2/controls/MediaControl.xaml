@@ -54,6 +54,8 @@
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="48"
                 HorizontalOptions="End"
+                IsVisible="{OnPlatform Default=true,
+                                       MacCatalyst=false}"
                 SemanticProperties.Description="Button sets video full screen status. Default is not full screen."
                 SemanticProperties.Hint="Button sets video full screen status. Default is not full screen."
                 Source="whitefs.png"

@@ -95,6 +95,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<CurrentNavigation>();
         builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
+        builder.Services.AddSingleton<DownloadService>();
+        builder.Services.AddSingleton<AutoDownloadService>();
 
         builder.Services.AddSingleton<PositionDataBase>();
         builder.Services.AddSingleton<AndroidPermissions>();

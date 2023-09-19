@@ -9,41 +9,23 @@ using static Android.OS.PowerManager;
 
 namespace NerdNewsNavigator2.Services;
 
-public class AutoDownloadService
+public partial class AutoDownloadService
 {
     private string Status { get; set; }
     private string WifiOnlyDownloading { get; set; }
-    private DownloadService DownloadService { get; set; } = new();
+    private DownloadService DownloadService { get; set; }
 #if ANDROID
-    public WakeLock WLock { get; set; }
 #endif
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     public AutoDownloadService()
     {
+        DownloadService = App.DownloadService;
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
     }
-#if ANDROID
-    public void AcquireWakeLock()
-    {
-        WLock?.Release();
-
-        var wakeFlags = WakeLockFlags.Partial;
-
-        var pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
-        WLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
-        if (!WLock.IsHeld)
-        {
-            WLock.Acquire();
-        }
-        var item = WLock.IsHeld;
-        s_logger.Info($"Wake Lock On: {item}");
-
-    }
-#endif
 
     /// <summary>
     /// A method that Auto starts Downloads
