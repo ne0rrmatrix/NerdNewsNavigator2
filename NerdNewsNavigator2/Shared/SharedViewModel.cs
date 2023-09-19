@@ -208,7 +208,6 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
         _logger.Info($"Removed {url} from Downloaded Shows list.");
         _logger.Info("Failed to find a show to update");
         MostRecentShows.Clear();
-        await GetMostRecent();
     }
 
     /// <summary>

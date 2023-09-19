@@ -52,5 +52,5 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"ne0rrmatrix_NerdNewsNavigator2" /o:"ne0rrmatrix" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet workload install maui --source https://api.nuget.org/v3/index.json
           dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
-          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-windows10.0.19041.0 -c Release
+          dotnet build ${{ env.PROJECT_PATH }} -c Release
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
