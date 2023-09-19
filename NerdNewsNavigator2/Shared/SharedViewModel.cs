@@ -5,7 +5,7 @@
 namespace NerdNewsNavigator2.Shared;
 
 [QueryProperty("Url", "Url")]
-public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMessage>
+public partial class SharedViewModel : BaseViewModel
 {
     #region Properties
     /// <summary>
@@ -31,19 +31,6 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
-    public void Receive(NavigatedItemMessage message)
-    {
-        _logger.Info("Recieved Navigated message");
-#if ANDROID
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        MostRecentShows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        if (App.Downloads.Shows.Count == 0)
-        {
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        }
-#endif
-    }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         _logger.Info("Show Url changed. Updating Shows");
@@ -57,10 +44,8 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
     }
 
     #region Events
-
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
-        WeakReferenceMessenger.Default.Unregister<NavigatedItemMessage>(this);
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
         ThreadPool.QueueUserWorkItem(state =>
         {
@@ -124,7 +109,8 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
-        WeakReferenceMessenger.Default.Unregister<NavigatedItemMessage>(this);
+        Title = string.Empty;
+        OnPropertyChanged(nameof(Title));
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
@@ -194,7 +180,6 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
         {
             File.Delete(tempFile);
             _logger.Info($"Deleted file {tempFile}");
-            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
         }
         else
         {
@@ -206,8 +191,8 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
         _logger.Info($"Removed {url} from Downloaded Shows list.");
-        _logger.Info("Failed to find a show to update");
         MostRecentShows.Clear();
+        App.MostRecentShows.Clear();
     }
 
     /// <summary>
@@ -252,7 +237,6 @@ public partial class SharedViewModel : BaseViewModel, IRecipient<NavigatedItemMe
         }
         App.Downloads.Add(item);
         App.Downloads.Start(item);
-        WeakReferenceMessenger.Default.Register<NavigatedItemMessage>(this);
     }
 
     [RelayCommand]
