@@ -51,8 +51,15 @@ public partial class CurrentDownloads : ObservableObject
         Shows.Clear();
         IsDownloading = false;
     }
+    public void Cancelling()
+    {
+        Cancelled = true;
+        Shows.Remove(Item);
+        IsDownloading = false;
+    }
     public Show Cancel(string url)
     {
+        Debug.WriteLine("Cancel called");
         var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
         if (item.Url == Item.Url)
         {
@@ -187,7 +194,10 @@ public partial class CurrentDownloads : ObservableObject
                     client.DownloadCancel.Cancel();
                 }
             };
-            await client.StartDownload();
+            if (!Cancelled)
+            {
+                await client.StartDownload();
+            }
             if (Cancelled)
             {
                 DeleteFile(item.Url);
