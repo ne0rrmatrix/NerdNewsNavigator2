@@ -9,7 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+.sonarqube/
+start.bat
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
