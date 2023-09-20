@@ -47,14 +47,9 @@ public partial class CurrentDownloads : ObservableObject
     }
     public void CancelAll()
     {
+        Cancelled = true;
+        Shows.Clear();
         IsDownloading = false;
-        if (Shows.Count > 0)
-        {
-            Cancelled = true;
-            var item = Shows[0];
-            Cancel(item.Url);
-            Shows.Clear();
-        }
     }
     public Show Cancel(string url)
     {

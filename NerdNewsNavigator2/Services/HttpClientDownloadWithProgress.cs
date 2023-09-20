@@ -18,21 +18,42 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
     #endregion
     public async Task StartDownload()
     {
-        if (DownloadCancel is null)
-        {
-            var cts = new CancellationTokenSource();
-            DownloadCancel = cts;
-        }
-        else if (DownloadCancel is not null)
+        if (DownloadCancel is not null)
         {
             DownloadCancel.Dispose();
             DownloadCancel = null;
-            var cts = new CancellationTokenSource();
-            DownloadCancel = cts;
+            var Cts = new CancellationTokenSource();
+            DownloadCancel = Cts;
         }
-        _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
-        using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead);
-        await DownloadFileFromHttpResponseMessage(response, DownloadCancel.Token);
+        else if (DownloadCancel is null)
+        {
+            var Cts = new CancellationTokenSource();
+            DownloadCancel = Cts;
+        }
+        _httpClient = new HttpClient();
+        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
+        try
+        {
+            using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead);
+            await DownloadFileFromHttpResponseMessage(response, DownloadCancel.Token);
+        }
+        catch
+        {
+            Debug.WriteLine("Http Client error");
+            App.Downloads.Cancelled = true;
+            App.Downloads.CancelAll();
+        }
+        Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
+    }
+
+    private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
+    {
+        if (e.NetworkAccess != NetworkAccess.Internet)
+        {
+            Debug.WriteLine("Internet access has been lost.");
+            DownloadCancel.Cancel();
+            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
+        }
     }
 
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)
@@ -54,7 +75,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         using var fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         do
         {
-            var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: CancellationToken.None);
+            var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: token);
             if (bytesRead == 0)
             {
                 isMoreToRead = false;
@@ -62,7 +83,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
                 continue;
             }
 
-            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken: CancellationToken.None);
+            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken: token);
 
             totalBytesRead += bytesRead;
             readCount += 1;

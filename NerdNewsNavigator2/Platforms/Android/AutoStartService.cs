@@ -30,15 +30,15 @@ internal class AutoStartService : Service
     private async Task StartForegroundServiceAsync()
     {
         AcquireWakeLock();
-        if (AutoDownloadService.CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            AutoDownloadService.CancellationTokenSource = cts;
-        }
-        else if (AutoDownloadService.CancellationTokenSource is not null)
+        if (AutoDownloadService.CancellationTokenSource is not null)
         {
             AutoDownloadService.CancellationTokenSource.Dispose();
             AutoDownloadService.CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            AutoDownloadService.CancellationTokenSource = cts;
+        }
+        else if (AutoDownloadService.CancellationTokenSource is null)
+        {
             var cts = new CancellationTokenSource();
             AutoDownloadService.CancellationTokenSource = cts;
         }

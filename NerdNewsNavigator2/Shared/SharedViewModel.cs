@@ -65,6 +65,8 @@ public partial class SharedViewModel : BaseViewModel
             Shows?.ToList().ForEach(SetProperties);
             MostRecentShows?.ToList().ForEach(SetProperties);
             _logger.Info("update for shows not downlaoding anymore");
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
         });
     }
     public void OnNavigated(object sender, Primitives.NavigationEventArgs e)

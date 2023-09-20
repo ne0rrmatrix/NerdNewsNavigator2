@@ -9,16 +9,12 @@
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="220"
     Shell.BackgroundColor="#34AAD2">
+
     <Shell.MenuItemTemplate>
         <DataTemplate>
-
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
-                IsEnabled="{OnPlatform MacCatalyst=false,
-                                       Default=true}"
-                IsVisible="{OnPlatform MacCatalyst=false,
-                                       Default=true}"
                 RowDefinitions="50">
                 <Image
                     BackgroundColor="LightGray"

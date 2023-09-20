@@ -13,15 +13,11 @@ public partial class AutoDownloadService
 {
     private string Status { get; set; }
     private string WifiOnlyDownloading { get; set; }
-    private DownloadService DownloadService { get; set; }
-#if ANDROID
-#endif
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     public AutoDownloadService()
     {
-        DownloadService = App.DownloadService;
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
@@ -32,15 +28,15 @@ public partial class AutoDownloadService
     /// </summary>
     public void Start()
     {
-        if (CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
-        }
-        else if (CancellationTokenSource is not null)
+        if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Dispose();
             CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        else if (CancellationTokenSource is null)
+        {
             var cts = new CancellationTokenSource();
             CancellationTokenSource = cts;
         }
@@ -56,7 +52,7 @@ public partial class AutoDownloadService
         if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Cancel();
-            DownloadService.CancellationTokenSource.Cancel();
+            App.DownloadService.CancellationTokenSource.Cancel();
             _ = LongTaskAsync(CancellationTokenSource.Token);
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;
@@ -68,7 +64,7 @@ public partial class AutoDownloadService
         if (cancellationToken.IsCancellationRequested)
         {
             ATimer.Stop();
-            DownloadService.CancellationTokenSource?.Cancel();
+            App.DownloadService.CancellationTokenSource?.Cancel();
             ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
@@ -76,7 +72,7 @@ public partial class AutoDownloadService
         ATimer.Start();
         if (CheckIfWifiOnly())
         {
-            await DownloadService.AutoDownload();
+            await App.DownloadService.AutoDownload();
         }
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
@@ -85,17 +81,13 @@ public partial class AutoDownloadService
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         s_logger.Info(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        if (WifiOnlyDownloading == "No" && !CheckIfWifiOnly())
-        {
-            DownloadService.CancellationTokenSource.Cancel();
-        }
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
         if (CheckIfWifiOnly())
         {
             s_logger.Info($"Timed event: {e} Started");
-            _ = DownloadService.AutoDownload();
+            _ = App.DownloadService.AutoDownload();
             return;
         }
         s_logger.Info("Auto Downloader not started");

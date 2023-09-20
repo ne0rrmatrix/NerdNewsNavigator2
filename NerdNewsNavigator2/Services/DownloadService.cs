@@ -26,6 +26,19 @@ public partial class DownloadService
     }
     private async Task ProccessShowAsync(List<Favorites> favoriteShows)
     {
+        if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        else if
+        (CancellationTokenSource is null)
+        {
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
         var downloadedShows = await App.PositionData.GetAllDownloads();
         _ = Task.Run(() =>
         {
@@ -43,18 +56,6 @@ public partial class DownloadService
                     App.Downloads.Add(show[0]);
                 }
             });
-            if (CancellationTokenSource is null)
-            {
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
-            else if (CancellationTokenSource is not null)
-            {
-                CancellationTokenSource.Dispose();
-                CancellationTokenSource = null;
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
 #if ANDROID || IOS
             App.Downloads.Notify.StartNotifications();
 #endif
