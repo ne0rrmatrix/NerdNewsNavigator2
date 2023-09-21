@@ -8,15 +8,11 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:MostRecentShowsViewModel"
-    BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded">
-
+    BackgroundColor="#34AAD2">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="{OnPlatform Default=false, MacCatalyst=true}" IsVisible="{OnPlatform Default=false, MacCatalyst=true}" />
+        <BackButtonBehavior IsEnabled="{OnPlatform Default=false, Android=true}" IsVisible="{OnPlatform Default=false, Android=true}" />
     </Shell.BackButtonBehavior>
-    <Grid>
-        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <media:ShowControl Source="{Binding MostRecentShows}" />
-        </RefreshView>
-    </Grid>
+    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <media:ShowControl Source="{Binding MostRecentShows}" />
+    </RefreshView>
 </ContentPage>

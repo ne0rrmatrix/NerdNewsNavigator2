@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Devices;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -55,7 +57,7 @@ public partial class VideoPlayerPage : ContentPage
     {
         Pos.SavedPosition = TimeSpan.Zero;
         Pos.Title = show.Title;
-        _logger.Info("Title: {Title}", show.Title);
+        _logger.Info($"Title: {show.Title}");
         var positionList = await App.PositionData.GetAllPositions();
         var result = positionList.ToList().Find(x => x.Title == show.Title);
         if (result is not null)
@@ -66,7 +68,7 @@ public partial class VideoPlayerPage : ContentPage
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 mediaElement.Pause();
-                _logger.Info("Retrieved Saved position from database is: {Title} - {TotalSeconds}", Pos.Title, Pos.SavedPosition);
+                _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
                 mediaElement.SeekTo(Pos.SavedPosition);
                 mediaElement.Play();
             });
@@ -98,7 +100,7 @@ public partial class VideoPlayerPage : ContentPage
                 if (mediaElement.Position > Pos.SavedPosition)
                 {
                     Pos.SavedPosition = mediaElement.Position;
-                    _logger.Info("Paused: {Position}", mediaElement.Position);
+                    _logger.Info($"Paused: {mediaElement.Position}");
                     await App.PositionData.UpdatePosition(Pos);
                 }
                 break;
@@ -118,7 +120,7 @@ public partial class VideoPlayerPage : ContentPage
     {
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
-        mediaElement?.Handler.DisconnectHandler();
+        mediaElement.Handler.DisconnectHandler();
         base.OnNavigatedFrom(args);
     }
 

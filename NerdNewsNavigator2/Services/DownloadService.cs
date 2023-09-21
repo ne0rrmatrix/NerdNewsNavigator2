@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
-public class DownloadService
+public partial class DownloadService
 {
     #region Properties
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
@@ -26,6 +26,19 @@ public class DownloadService
     }
     private async Task ProccessShowAsync(List<Favorites> favoriteShows)
     {
+        if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        else if
+        (CancellationTokenSource is null)
+        {
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
         var downloadedShows = await App.PositionData.GetAllDownloads();
         _ = Task.Run(() =>
         {
@@ -43,18 +56,6 @@ public class DownloadService
                     App.Downloads.Add(show[0]);
                 }
             });
-            if (CancellationTokenSource is null)
-            {
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
-            else if (CancellationTokenSource is not null)
-            {
-                CancellationTokenSource.Dispose();
-                CancellationTokenSource = null;
-                var cts = new CancellationTokenSource();
-                CancellationTokenSource = cts;
-            }
 #if ANDROID || IOS
             App.Downloads.Notify.StartNotifications();
 #endif
@@ -89,6 +90,10 @@ public class DownloadService
 
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shell.Current.CurrentPage.Title = string.Empty;
+        });
         if (e.Shows.Count > 0)
         {
 #if ANDROID || IOS

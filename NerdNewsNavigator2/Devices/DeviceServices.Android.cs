@@ -2,21 +2,21 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Extensions;
+using NerdNewsNavigator2.Interface;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
 #if ANDROID
 using Views = AndroidX.Core.View;
 #endif
 
-namespace NerdNewsNavigator2.Services;
-internal static partial class DeviceService
+namespace NerdNewsNavigator2.Devices;
+
+internal class DeviceServices : IDeviceServices
 {
-    #region Full Screen Methods
-    public static partial void RestoreScreen()
+    public void RestoreScreen()
     {
-        Shell.Current.CurrentPage.Title = string.Empty;
-        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage, true);
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
+        PageExtensions.SetBarStatus(false);
         var activity = Platform.CurrentActivity;
 
         if (activity == null || activity.Window == null)
@@ -30,10 +30,9 @@ internal static partial class DeviceService
                     Views.WindowInsetsCompat.Type.NavigationBars();
         windowInsetsControllerCompat.Show(types);
     }
-    public static partial void FullScreen()
+    public void FullScreen()
     {
-        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage, false);
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, false);
+        PageExtensions.SetBarStatus(true);
         var activity = Platform.CurrentActivity;
 
         if (activity == null || activity.Window == null)
@@ -49,5 +48,4 @@ internal static partial class DeviceService
         windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
         windowInsetsControllerCompat.Hide(types);
     }
-    #endregion
 }

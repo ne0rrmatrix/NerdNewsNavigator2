@@ -26,7 +26,6 @@ public partial class SharedViewModel : BaseViewModel
     {
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
-
         if (!InternetConnected())
         {
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
@@ -45,7 +44,6 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     #region Events
-
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
@@ -67,6 +65,8 @@ public partial class SharedViewModel : BaseViewModel
             Shows?.ToList().ForEach(SetProperties);
             MostRecentShows?.ToList().ForEach(SetProperties);
             _logger.Info("update for shows not downlaoding anymore");
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
         });
     }
     public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
@@ -111,6 +111,8 @@ public partial class SharedViewModel : BaseViewModel
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        Title = string.Empty;
+        OnPropertyChanged(nameof(Title));
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
@@ -180,7 +182,6 @@ public partial class SharedViewModel : BaseViewModel
         {
             File.Delete(tempFile);
             _logger.Info($"Deleted file {tempFile}");
-            WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
         }
         else
         {
@@ -192,9 +193,8 @@ public partial class SharedViewModel : BaseViewModel
         await App.PositionData.UpdateDownload(item);
         DownloadedShows.Remove(item);
         _logger.Info($"Removed {url} from Downloaded Shows list.");
-        _logger.Info("Failed to find a show to update");
         MostRecentShows.Clear();
-        await GetMostRecent();
+        App.MostRecentShows.Clear();
     }
 
     /// <summary>
@@ -245,6 +245,7 @@ public partial class SharedViewModel : BaseViewModel
     public void Cancel(string url)
     {
         Title = string.Empty;
+        OnPropertyChanged(nameof(Title));
         var item = App.Downloads.Cancel(url);
         if (item is null)
         {

@@ -3,12 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-/// <summary>
-/// A class that manages Messages for deleting items.
-/// </summary>
-public class DeletedItemMessage : ValueChangedMessage<bool>
+
+public class NavigatedItemMessage(bool value) : ValueChangedMessage<bool>(value)
 {
-    public DeletedItemMessage(bool value) : base(value)
-    {
-    }
 }

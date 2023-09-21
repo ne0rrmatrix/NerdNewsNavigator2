@@ -11,9 +11,10 @@
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     Shell.BackgroundColor="#34AAD2">
-    <Grid>
-        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
-        </RefreshView>
-    </Grid>
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="{OnPlatform Default=false, Android=true}" IsVisible="{OnPlatform Default=false, Android=true}" />
+    </Shell.BackButtonBehavior>
+    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />
+    </RefreshView>
 </ContentPage>

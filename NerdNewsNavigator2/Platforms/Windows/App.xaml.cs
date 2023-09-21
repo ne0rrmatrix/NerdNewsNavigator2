@@ -14,7 +14,7 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    AutoDownloadService AutoDownloadService { get; set; } = new();
+    AutoDownloadService AutoDownloadService { get; set; }
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -45,6 +45,7 @@ public partial class App : MauiWinUIApplication
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
+        AutoDownloadService = NerdNewsNavigator2.App.AutoDownloadService;
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, async (recipient, message) =>
         {

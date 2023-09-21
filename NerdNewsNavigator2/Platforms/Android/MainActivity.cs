@@ -11,7 +11,6 @@ namespace NerdNewsNavigator2.Platforms.Android;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
-    private AutoDownloadService AutoDownloadService { get; set; } = new();
     public MainActivity()
     {
         var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
@@ -45,14 +44,7 @@ public class MainActivity : MauiAppCompatActivity
     }
     private void StopService()
     {
-        if (AutoDownloadService.CancellationTokenSource is not null)
-        {
-            AutoDownloadService.CancellationTokenSource.Cancel();
-            _ = AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
-            AutoDownloadService.CancellationTokenSource?.Dispose();
-            AutoDownloadService.CancellationTokenSource = null;
-        }
-
+        App.AutoDownloadService.Stop();
         var serviceIntent = new Intent(this, typeof(AutoStartService));
         StopService(serviceIntent);
     }

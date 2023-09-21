@@ -7,19 +7,11 @@
     Title="NerdNewsNavigator"
     FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
-    FlyoutWidth="200"
-    Shell.BackgroundColor="#34AAD2"
-    Shell.NavBarIsVisible="True"
-    Shell.TabBarBackgroundColor="#FFFFFF"
-    Shell.TabBarIsVisible="{OnPlatform MacCatalyst=true,
-                                       Android=true,
-                                       iOS=true,
-                                       WinUI=false}"
-    Shell.TabBarTitleColor="#205493"
-    Shell.TabBarUnselectedColor="#212121">
+    FlyoutWidth="220"
+    Shell.BackgroundColor="#34AAD2">
+
     <Shell.MenuItemTemplate>
         <DataTemplate>
-
             <Grid
                 Margin="5"
                 ColumnDefinitions="50,*"
@@ -42,30 +34,6 @@
             </Grid>
         </DataTemplate>
     </Shell.MenuItemTemplate>
-
-    <TabBar IsEnabled="{OnPlatform WinUI=false, MacCatalyst=false, iOS=False, Default=true}" IsVisible="{OnPlatform WinUI=false, MacCatalyst=false, Default=true, iOS=False}">
-
-        <ShellContent
-            Title="Home"
-            ContentTemplate="{DataTemplate local:PodcastPage}"
-            Icon="house.png" />
-        <ShellContent
-            Title="Recent"
-            ContentTemplate="{DataTemplate local:MostRecentShowsPage}"
-            Icon="history.png" />
-        <ShellContent
-            Title="Downloads"
-            ContentTemplate="{DataTemplate local:DownloadedShowPage}"
-            Icon="download.png" />
-        <ShellContent
-            Title="Live"
-            ContentTemplate="{DataTemplate local:LivePage}"
-            Icon="live_broadcasting.png" />
-        <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate local:SettingsPage}"
-            Icon="settings.png" />
-    </TabBar>
 
     <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
     <MenuItem
