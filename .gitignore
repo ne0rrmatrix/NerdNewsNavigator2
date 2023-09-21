@@ -399,3 +399,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /NerdNewsNavigator2/Services/PodcastData.cs
+/.sonarqube
+/Start.bat
