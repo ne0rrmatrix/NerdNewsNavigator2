@@ -3,6 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
+using NerdNewsNavigator2.Devices;
+using NerdNewsNavigator2.Interface;
 using Woka;
 
 namespace NerdNewsNavigator2;
@@ -93,10 +95,13 @@ public static class MauiProgram
         builder.Services.AddSingleton<CurrentNavigation>();
         builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
+        builder.Services.AddSingleton<DownloadService>();
+        builder.Services.AddSingleton<AutoDownloadService>();
 
         builder.Services.AddSingleton<PositionDataBase>();
         builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
+        builder.Services.AddSingleton<IDeviceServices, DeviceServices>();
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         return builder.Build();

@@ -47,6 +47,6 @@
 		<string>com.yourappname.refresh</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.4</string>
+	<string>1.2.5</string>
 </dict>
 </plist>

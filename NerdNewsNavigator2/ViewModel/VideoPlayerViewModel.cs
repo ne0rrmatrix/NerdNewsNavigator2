@@ -7,13 +7,9 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="VideoPlayerViewModel"/>
 /// </summary>
-public partial class VideoPlayerViewModel : BaseViewModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.
+/// </remarks>
+public partial class VideoPlayerViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
 {
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.
-    /// </summary>
-    public VideoPlayerViewModel(IConnectivity connectivity) : base(connectivity)
-    {
-    }
 }

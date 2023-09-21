@@ -14,7 +14,9 @@
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded"
     mc:Ignorable="d">
-
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <CollectionView
             Margin="15"

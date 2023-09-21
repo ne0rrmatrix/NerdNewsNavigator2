@@ -13,7 +13,6 @@
     x:Name="showControl"
     x:DataType="viewmodel:SharedViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
     mc:Ignorable="d">
 
     <CollectionView

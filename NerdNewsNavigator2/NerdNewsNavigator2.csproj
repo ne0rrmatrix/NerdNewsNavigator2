@@ -22,7 +22,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>29</ApplicationVersion>
+	    <ApplicationVersion>30</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -83,7 +83,36 @@
     <!-- App Icon -->
     <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
-  
+    <!-- Android -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
+        <Compile Remove="**\**\*.Android.cs" />
+        <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    </ItemGroup>
+
+    <!-- iOS -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true">
+        <Compile Remove="**\**\*.iOS.cs" />
+        <None Include="**\**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    </ItemGroup>
+
+    <!-- Mac Catalyst -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
+        <Compile Remove="**\**\*.MacCatalyst.cs" />
+        <None Include="**\**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    </ItemGroup>
+
+    <!-- Windows -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-windows')) != true">
+        <Compile Remove="**\*.Windows.cs" />
+        <None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    </ItemGroup>
+    <!-- .NET -->
+    <ItemGroup Condition="!($(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.EndsWith('.0')) == true AND $(TargetFramework.Contains('-')) != true)">
+        <!-- e.g net6.0 or net7.0 -->
+        <Compile Remove="**\*.net.cs" />
+        <None Include="**\*.net.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    </ItemGroup>
+    
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#34AAD2" />
         <!-- Splash Screen -->
@@ -101,23 +130,23 @@
     </ItemGroup>
 	
     <ItemGroup>
-	    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+	    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
 	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
-	    <PackageReference Include="M3U8Parser" Version="1.0.1" />
+	    <PackageReference Include="M3U8Parser" Version="1.0.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	    <PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 	    <PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
-	    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
-	    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
-	    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
-	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
+	    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
+	    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.6" />
+	    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.6" />
+	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.8" />
-	    <PackageReference Include="YoutubeExplode" Version="6.3.1" />
+	    <PackageReference Include="Woka" Version="1.0.12" />
+	    <PackageReference Include="YoutubeExplode" Version="6.3.4" />
     </ItemGroup>
   
     <ItemGroup>

@@ -7,13 +7,10 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="LivePage"/>
 /// </summary>
-public partial class LiveViewModel : SharedViewModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="LiveViewModel"/>
+/// <paramref name="connectivity"/>
+/// </remarks>
+public partial class LiveViewModel(IConnectivity connectivity) : SharedViewModel(connectivity)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiveViewModel"/>
-    /// <paramref name="connectivity"/>
-    /// </summary>
-    public LiveViewModel(IConnectivity connectivity) : base(connectivity)
-    {
-    }
 }

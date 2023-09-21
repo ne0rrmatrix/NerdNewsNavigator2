@@ -13,7 +13,9 @@
     Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
                                        Default=false}"
     Unloaded="ContentPage_Unloaded">
-
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
 
 </ContentPage>

@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages showing a <see cref="List{T}"/> of downloaded <see cref="Show"/> to users.
 /// </summary>
-public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMessage>
+public partial class DownloadedShowPage : ContentPage
 {
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowPage"/>
@@ -17,29 +17,5 @@ public partial class DownloadedShowPage : ContentPage, IRecipient<DeletedItemMes
     {
         InitializeComponent();
         BindingContext = viewModel;
-        WeakReferenceMessenger.Default.Register<DeletedItemMessage>(this);
-    }
-
-    /// <summary>
-    /// Method recieves <see cref="DeletedItemMessage"/> and invokes <see cref="MessagingService.RecievedDelete(bool)"/>
-    /// </summary>
-    /// <param name="message"></param>
-    public void Receive(DeletedItemMessage message)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await MessagingService.RecievedDelete(message.Value);
-            WeakReferenceMessenger.Default.Unregister<DeletedItemMessage>(message);
-        });
-    }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        DeviceService.RestoreScreen();
     }
 }

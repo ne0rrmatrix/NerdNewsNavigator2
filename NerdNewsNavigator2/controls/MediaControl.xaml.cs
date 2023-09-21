@@ -303,27 +303,23 @@ public partial class MediaControl : ContentView
     {
         if (e.Direction == SwipeDirection.Up)
         {
-            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
-            DeviceService.FullScreen();
+            CustomControls.FullScreen();
         }
         if (e.Direction == SwipeDirection.Down)
         {
-            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
-            DeviceService.RestoreScreen();
+            CustomControls.RestoreScreen();
         }
     }
     private static void SetVideoSize()
     {
         if (s_fullScreen)
         {
-            DeviceService.RestoreScreen();
-            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(false));
+            CustomControls.RestoreScreen();
             s_fullScreen = false;
         }
         else
         {
-            DeviceService.FullScreen();
-            WeakReferenceMessenger.Default.Send(new FullScreenItemMessage(true));
+            CustomControls.FullScreen();
             s_fullScreen = true;
         }
     }
@@ -357,4 +353,12 @@ public partial class MediaControl : ContentView
         }
     }
     #endregion
+
+    private void MediaControl_Unloaded(object sender, EventArgs e)
+    {
+        if (s_fullScreen)
+        {
+            CustomControls.RestoreScreen();
+        }
+    }
 }

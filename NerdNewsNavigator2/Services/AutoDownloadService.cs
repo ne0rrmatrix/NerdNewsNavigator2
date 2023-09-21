@@ -9,14 +9,10 @@ using static Android.OS.PowerManager;
 
 namespace NerdNewsNavigator2.Services;
 
-public class AutoDownloadService
+public partial class AutoDownloadService
 {
     private string Status { get; set; }
     private string WifiOnlyDownloading { get; set; }
-    private DownloadService DownloadService { get; set; } = new();
-#if ANDROID
-    public WakeLock WLock { get; set; }
-#endif
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     public CancellationTokenSource CancellationTokenSource { get; set; } = null;
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
@@ -26,39 +22,21 @@ public class AutoDownloadService
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
     }
-#if ANDROID
-    public void AcquireWakeLock()
-    {
-        WLock?.Release();
-
-        var wakeFlags = WakeLockFlags.Partial;
-
-        var pm = (PowerManager)global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.PowerService);
-        WLock = pm.NewWakeLock(wakeFlags, typeof(AutoStartService).FullName);
-        if (!WLock.IsHeld)
-        {
-            WLock.Acquire();
-        }
-        var item = WLock.IsHeld;
-        s_logger.Info($"Wake Lock On: {item}");
-
-    }
-#endif
 
     /// <summary>
     /// A method that Auto starts Downloads
     /// </summary>
     public void Start()
     {
-        if (CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
-        }
-        else if (CancellationTokenSource is not null)
+        if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Dispose();
             CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        else if (CancellationTokenSource is null)
+        {
             var cts = new CancellationTokenSource();
             CancellationTokenSource = cts;
         }
@@ -74,7 +52,7 @@ public class AutoDownloadService
         if (CancellationTokenSource is not null)
         {
             CancellationTokenSource.Cancel();
-            DownloadService.CancellationTokenSource.Cancel();
+            App.DownloadService.CancellationTokenSource.Cancel();
             _ = LongTaskAsync(CancellationTokenSource.Token);
             CancellationTokenSource?.Dispose();
             CancellationTokenSource = null;
@@ -86,7 +64,7 @@ public class AutoDownloadService
         if (cancellationToken.IsCancellationRequested)
         {
             ATimer.Stop();
-            DownloadService.CancellationTokenSource?.Cancel();
+            App.DownloadService.CancellationTokenSource?.Cancel();
             ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
             return;
         }
@@ -94,7 +72,7 @@ public class AutoDownloadService
         ATimer.Start();
         if (CheckIfWifiOnly())
         {
-            await DownloadService.AutoDownload();
+            await App.DownloadService.AutoDownload();
         }
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
@@ -103,17 +81,13 @@ public class AutoDownloadService
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         s_logger.Info(Status);
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
-        if (WifiOnlyDownloading == "No" && !CheckIfWifiOnly())
-        {
-            DownloadService.CancellationTokenSource.Cancel();
-        }
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
         if (CheckIfWifiOnly())
         {
             s_logger.Info($"Timed event: {e} Started");
-            _ = DownloadService.AutoDownload();
+            _ = App.DownloadService.AutoDownload();
             return;
         }
         s_logger.Info("Auto Downloader not started");

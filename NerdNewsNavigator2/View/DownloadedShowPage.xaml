@@ -7,11 +7,10 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
-    BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded">
+    BackgroundColor="#34AAD2">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="True" />
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
 
     <Grid>
