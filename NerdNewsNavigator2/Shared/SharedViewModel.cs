@@ -31,6 +31,8 @@ public partial class SharedViewModel : BaseViewModel
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
         }
     }
+
+    #region Events
     partial void OnUrlChanged(string oldValue, string newValue)
     {
         _logger.Info("Show Url changed. Updating Shows");
@@ -46,14 +48,26 @@ public partial class SharedViewModel : BaseViewModel
         GetShowsAsync(decodedUrl, false);
 #endif
     }
-
-    #region Events
+    public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
+    {
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+    }
+    public void DownloadStarted(object sender, DownloadEventArgs e)
+    {
+        if (e.Status is null || e.Shows.Count == 0)
+        {
+            return;
+        }
+        Title = e.Status;
+    }
     public void DonwnloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DonwnloadCancelled;
         MainThread.InvokeOnMainThreadAsync(() =>
         {
             Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
         });
         ThreadPool.QueueUserWorkItem(state =>
         {
@@ -74,36 +88,6 @@ public partial class SharedViewModel : BaseViewModel
             _logger.Info("update for shows not downlaoding anymore");
             Title = string.Empty;
             OnPropertyChanged(nameof(Title));
-        });
-    }
-    public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
-    {
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-    }
-    public void DownloadStarted(object sender, DownloadEventArgs e)
-    {
-        if (e.Status is null || e.Shows.Count == 0)
-        {
-            return;
-        }
-        Title = e.Status;
-    }
-    public void UpdateShows()
-    {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = true;
-                Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(Shows));
-            });
         });
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
@@ -304,11 +288,28 @@ public partial class SharedViewModel : BaseViewModel
         }
         Shows.Clear();
         var temp = FeedService.GetShows(url, getFirstOnly);
-        var item = BaseViewModel.RemoveDuplicates(temp);
+        var item = RemoveDuplicates(temp);
         item.ForEach(Shows.Add);
         _logger.Info("Got All Shows");
         Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+    }
+    public void UpdateShows()
+    {
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsBusy = false;
+            Title = string.Empty;
+            DownloadProgress = string.Empty;
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
+            {
+                var number = Shows.IndexOf(item);
+                Shows[number].IsDownloaded = true;
+                Shows[number].IsDownloading = false;
+                Shows[number].IsNotDownloaded = false;
+                OnPropertyChanged(nameof(Shows));
+            });
+        });
     }
     #endregion
 }

@@ -17,11 +17,6 @@ public partial class MediaControl : ContentView
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl));
     public static readonly BindableProperty CurrentStateProperty = BindableProperty.Create(nameof(CurrentState), typeof(MediaElementState), typeof(MediaElement), MediaElementState.None);
-    public MediaElementState CurrentState
-    {
-        get => (MediaElementState)GetValue(CurrentStateProperty);
-        private set => SetValue(CurrentStateProperty, value);
-    }
     public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
@@ -74,6 +69,11 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldMute = (bool)newValue;
     });
+    public MediaElementState CurrentState
+    {
+        get => (MediaElementState)GetValue(CurrentStateProperty);
+        private set => SetValue(CurrentStateProperty, value);
+    }
     public bool ShouldMute
     {
         get => (bool)GetValue(ShouldMuteProperty);
