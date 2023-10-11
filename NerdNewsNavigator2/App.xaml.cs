@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -10,12 +10,10 @@ namespace NerdNewsNavigator2;
 public partial class App : Application, IRecipient<NotificationItemMessage>
 {
     #region Properties
-    public static Show ShowItem { get; set; } = new();
+    public MessagingService MessagingService { get; set; } = new();
     public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
     public static DownloadService DownloadService { get; set; } = new();
     public static AutoDownloadService AutoDownloadService { get; set; } = new();
-    public static bool Loading { get; set; } = false;
-    public static List<Show> MostRecentShows { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
     public static CurrentNavigation CurrentNavigation { get; set; } = new();

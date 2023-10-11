@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that manages watching Live video from twit.tv podcasting network
 /// </summary>
-public partial class LivePage : ContentPage, IDisposable
+public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedItemMessage>
 {
     #region Properties
     private readonly string _item = "https://www.youtube.com/user/twit";
@@ -28,9 +28,9 @@ public partial class LivePage : ContentPage, IDisposable
     {
         InitializeComponent();
         BindingContext = liveViewModel;
+        WeakReferenceMessenger.Default.Register<NavigatedItemMessage>(this);
         _ = LoadVideo(_item);
     }
-
     #region Youtube Methods
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
@@ -128,6 +128,7 @@ public partial class LivePage : ContentPage, IDisposable
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
+        mediaElement.Stop();
 #if ANDROID || IOS || MACCATALYST
         mediaElement?.Handler.DisconnectHandler();
 #endif
@@ -144,6 +145,20 @@ public partial class LivePage : ContentPage, IDisposable
         {
             Client.Dispose();
             Client = null;
+        }
+    }
+
+    public void Receive(NavigatedItemMessage message)
+    {
+        if (mediaElement.CurrentState is MediaElementState.Stopped or
+      MediaElementState.Paused)
+        {
+            mediaElement.Play();
+        }
+        else if (mediaElement.CurrentState is MediaElementState.Playing)
+        {
+            Debug.WriteLine("Live playback stopped");
+            mediaElement.Stop();
         }
     }
 }

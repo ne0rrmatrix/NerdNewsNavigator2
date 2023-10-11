@@ -24,12 +24,6 @@ public partial class BaseViewModel : ObservableObject
     private ObservableCollection<Show> _shows;
 
     /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<Show> _mostRecentShows;
-
-    /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of downloaded <see cref="Download"/> managed by this class.
     /// </summary>
     [ObservableProperty]
@@ -93,12 +87,10 @@ public partial class BaseViewModel : ObservableObject
         _shows = new();
         _downloadProgress = string.Empty;
         _downloadedShows = new();
-        _mostRecentShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(MostRecentShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(FavoriteShows, null, ObservableCollectionCallback);
     }
@@ -136,11 +128,6 @@ public partial class BaseViewModel : ObservableObject
         if (Shows.ToList().Exists(x => x.Url == url))
         {
             var showItem = Shows.ToList().Find(x => x.Url == url);
-            return showItem;
-        }
-        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
-        {
-            var showItem = MostRecentShows.ToList().Find(x => x.Url == url);
             return showItem;
         }
         return new Show();
@@ -204,8 +191,14 @@ public partial class BaseViewModel : ObservableObject
         {
             return;
         }
-        var updates = await UpdateCheckAsync();
         var temp = await App.PositionData.GetAllPodcasts();
+        if (!InternetConnected())
+        {
+            var item = temp.OrderBy(x => x.Title).ToList();
+            item.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+            return;
+        }
+        var updates = await UpdateCheckAsync();
         if (!updates && temp.Count == 0)
         {
             await ProcessPodcasts();

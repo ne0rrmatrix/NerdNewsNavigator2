@@ -82,9 +82,6 @@ public static class MauiProgram
         builder.Services.AddTransient<ResetAllSettingsPage>();
         builder.Services.AddTransient<ResetAllSettingsViewModel>();
 
-        builder.Services.AddTransient<MostRecentShowsPage>();
-        builder.Services.AddTransient<MostRecentShowsViewModel>();
-
         builder.Services.AddTransient<DownloadedShowPage>();
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
@@ -104,6 +101,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDeviceServices, DeviceServices>();
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
+        builder.Services.AddSingleton<MessagingService>();
         return builder.Build();
         #endregion
     }

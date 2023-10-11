@@ -22,13 +22,13 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         {
             DownloadCancel.Dispose();
             DownloadCancel = null;
-            var Cts = new CancellationTokenSource();
-            DownloadCancel = Cts;
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
         }
         else if (DownloadCancel is null)
         {
-            var Cts = new CancellationTokenSource();
-            DownloadCancel = Cts;
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
         }
         _httpClient = new HttpClient();
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;

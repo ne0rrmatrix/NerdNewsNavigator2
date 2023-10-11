@@ -30,8 +30,6 @@ public partial class SettingsViewModel(IConnectivity connectivity) : SharedViewM
            var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
            fav.ForEach(FavoriteShows.Add);
-           MostRecentShows.Clear();
-           _ = Task.Run(GetMostRecent);
            _ = Task.Run(GetUpdatedPodcasts);
            IsBusy = false;
        });

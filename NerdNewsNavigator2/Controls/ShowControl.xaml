@@ -95,12 +95,12 @@
                                 Margin="5"
                                 BackgroundColor="Green"
                                 FontAttributes="Bold"
-                                FontSize="Small"
+                                FontSize="14"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
                                 TextColor="#FFFFFF"
-                                WidthRequest="120">
+                                WidthRequest="100">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsNotDownloaded}"
@@ -117,12 +117,12 @@
                                 Margin="5"
                                 BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
-                                FontSize="Small"
+                                FontSize="14"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
                                 TextColor="#FFFFFF"
-                                WidthRequest="120">
+                                WidthRequest="100">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsDownloading}"

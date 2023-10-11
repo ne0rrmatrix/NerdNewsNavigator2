@@ -22,7 +22,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>30</ApplicationVersion>
+	    <ApplicationVersion>31</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -211,9 +211,6 @@
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\LivePage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="View\MostRecentShowsPage.xaml">
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\EditPage.xaml">

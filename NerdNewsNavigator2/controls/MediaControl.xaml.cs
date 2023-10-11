@@ -11,12 +11,17 @@ public partial class MediaControl : ContentView
     public bool MenuIsVisible { get; set; } = false;
 
     private static bool s_fullScreen = false;
-
     public bool FullScreen { get; set; } = false;
     #endregion
     #region Bindably Properties
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl));
+    public static readonly BindableProperty CurrentStateProperty = BindableProperty.Create(nameof(CurrentState), typeof(MediaElementState), typeof(MediaElement), MediaElementState.None);
+    public MediaElementState CurrentState
+    {
+        get => (MediaElementState)GetValue(CurrentStateProperty);
+        private set => SetValue(CurrentStateProperty, value);
+    }
     public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;

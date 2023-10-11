@@ -22,10 +22,8 @@ public partial class DownloadedShowViewModel : SharedViewModel
     public DownloadedShowViewModel(IConnectivity connectivity)
         : base(connectivity)
     {
-        if (App.Downloads.Shows.Count > 0)
-        {
-            App.Downloads.DownloadStarted += DownloadStarted;
-        }
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadCancelled += DonwnloadCancelled;
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
