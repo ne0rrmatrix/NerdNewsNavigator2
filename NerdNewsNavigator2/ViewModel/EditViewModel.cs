@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="EditPage"/>
 /// </summary>
-public partial class EditViewModel : SharedViewModel
+public partial class EditViewModel : BaseViewModel
 {
     /// <summary>
     /// An <see cref="ILogger"/> instance managed by this class.

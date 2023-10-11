@@ -191,7 +191,7 @@ public partial class CurrentDownloads : ObservableObject
                 StartedDownload();
                 if (Cancelled)
                 {
-                    client.DownloadCancel.Cancel();
+                    client.DownloadCancel.Cancel(false);
                 }
             };
             if (!Cancelled)

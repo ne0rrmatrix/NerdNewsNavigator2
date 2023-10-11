@@ -11,6 +11,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// Initializes a new instance of the <see cref="LiveViewModel"/>
 /// <paramref name="connectivity"/>
 /// </remarks>
-public partial class LiveViewModel(IConnectivity connectivity) : SharedViewModel(connectivity)
+public partial class LiveViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
 {
 }

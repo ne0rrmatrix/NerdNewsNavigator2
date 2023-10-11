@@ -28,10 +28,8 @@ global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.ViewModel;
 global using SQLite;
 global using YoutubeExplode;
-
 global using MetroLog;
 global using LoggerFactory = MetroLog.LoggerFactory;
-global using NerdNewsNavigator2.Shared;
 global using NerdNewsNavigator2.Primitives;
 global using System.Windows.Input;
 #if ANDROID || IOS

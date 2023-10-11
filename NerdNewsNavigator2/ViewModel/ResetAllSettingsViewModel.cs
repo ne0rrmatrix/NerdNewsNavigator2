@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ResetAllSettingsViewModel"/>
 /// </summary>
-public partial class ResetAllSettingsViewModel : SharedViewModel
+public partial class ResetAllSettingsViewModel : BaseViewModel
 {
     private readonly IMessenger _messenger;
     /// <summary>

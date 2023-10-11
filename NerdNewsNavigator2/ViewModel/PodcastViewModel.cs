@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that manages displaying <see cref="Podcast"/> from twit.tv network.
 /// </summary>
-public partial class PodcastViewModel : SharedViewModel
+public partial class PodcastViewModel : BaseViewModel
 {
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger"/> class

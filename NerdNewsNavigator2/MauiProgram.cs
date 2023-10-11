@@ -86,7 +86,6 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
         builder.Services.AddSingleton<BaseViewModel>();
-        builder.Services.AddSingleton<SharedViewModel>();
 
         builder.Services.AddSingleton<CurrentDownloads>();
         builder.Services.AddSingleton<DeletedItemService>();

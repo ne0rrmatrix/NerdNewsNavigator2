@@ -5,9 +5,9 @@
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
-/// A class that inherits from <see cref="SharedViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
+/// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
-public partial class DownloadedShowViewModel : SharedViewModel
+public partial class DownloadedShowViewModel : BaseViewModel
 {
 
     /// <summary>
@@ -45,6 +45,41 @@ public partial class DownloadedShowViewModel : SharedViewModel
     {
         await GetDownloadedShows();
         _ = MainThread.InvokeOnMainThreadAsync(() => { Title = string.Empty; });
+    }
+
+    /// <summary>
+    /// Deletes file and removes it from database.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task Delete(string url)
+    {
+        var item = DownloadedShows.FirstOrDefault(x => x.Url == url);
+        if (item is null)
+        {
+            return;
+        }
+        var filename = DownloadService.GetFileName(item.Url);
+        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+            _logger.Info($"Deleted file {tempFile}");
+        }
+        else
+        {
+            _logger.Info($"File {tempFile} was not found in file system.");
+        }
+        item.IsDownloaded = false;
+        item.Deleted = true;
+        item.IsNotDownloaded = true;
+        await App.PositionData.UpdateDownload(item);
+        DownloadedShows.Remove(item);
+        var showTemp = Shows.ToList().Find(x => x.Url == url);
+        Shows?.Remove(showTemp);
+        _logger.Info($"Removed {url} from Downloaded Shows list.");
+        App.DeletedItem.Add(item);
     }
 }
 
