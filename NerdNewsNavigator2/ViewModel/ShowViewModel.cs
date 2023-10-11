@@ -7,9 +7,14 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ShowViewModel"/>
 /// </summary>
+[QueryProperty("Url", "Url")]
 public partial class ShowViewModel : SharedViewModel
 {
-
+    /// <summary>
+    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
+    /// </summary>
+    [ObservableProperty]
+    private string _url;
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
@@ -27,6 +32,21 @@ public partial class ShowViewModel : SharedViewModel
             App.Downloads.DownloadStarted += DownloadStarted;
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
+    }
+    partial void OnUrlChanged(string oldValue, string newValue)
+    {
+        _logger.Info("Show Url changed. Updating Shows");
+        if (!InternetConnected())
+        {
+            return;
+        }
+        var decodedUrl = HttpUtility.UrlDecode(newValue);
+#if WINDOWS || MACCATALYST || ANDROID
+        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
+#endif
+#if IOS
+        GetShowsAsync(decodedUrl, false);
+#endif
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
     {

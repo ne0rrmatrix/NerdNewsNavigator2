@@ -7,7 +7,6 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that Displays a Video from twit.tv.
 /// </summary>
-/// 
 public partial class VideoPlayerPage : ContentPage
 {
     #region Properties
@@ -21,7 +20,6 @@ public partial class VideoPlayerPage : ContentPage
     /// Initilizes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
-    private Show ShowItem { get; set; } = new();
 
     #endregion
     /// <summary>
@@ -40,9 +38,8 @@ public partial class VideoPlayerPage : ContentPage
     {
         _logger.Info($"Navigated: {e.CurrentShow.Url}");
         App.OnVideoNavigated.Navigation -= Now;
-        ShowItem = e.CurrentShow;
         mediaElement.Source = new Uri(e.CurrentShow.Url);
-        await Seek(ShowItem);
+        await Seek(e.CurrentShow);
     }
 
     #region Events

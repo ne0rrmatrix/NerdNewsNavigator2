@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Shared;
-
-[QueryProperty("Url", "Url")]
 public partial class SharedViewModel : BaseViewModel
 {
     #region Properties
@@ -12,11 +10,6 @@ public partial class SharedViewModel : BaseViewModel
     /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(SharedViewModel));
-    /// <summary>
-    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
-    /// </summary>
-    [ObservableProperty]
-    private string _url;
 
     [ObservableProperty]
     private bool _isRefreshing;
@@ -33,21 +26,6 @@ public partial class SharedViewModel : BaseViewModel
     }
 
     #region Events
-    partial void OnUrlChanged(string oldValue, string newValue)
-    {
-        _logger.Info("Show Url changed. Updating Shows");
-        if (!InternetConnected())
-        {
-            return;
-        }
-        var decodedUrl = HttpUtility.UrlDecode(newValue);
-#if WINDOWS || MACCATALYST || ANDROID
-        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
-#endif
-#if IOS
-        GetShowsAsync(decodedUrl, false);
-#endif
-    }
     public void DownloadStarted(object sender, DownloadEventArgs e)
     {
         if (e.Status is null || e.Shows.Count == 0)
