@@ -48,11 +48,6 @@ public partial class SharedViewModel : BaseViewModel
         GetShowsAsync(decodedUrl, false);
 #endif
     }
-    public void OnNavigated(object sender, Primitives.NavigationEventArgs e)
-    {
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-    }
     public void DownloadStarted(object sender, DownloadEventArgs e)
     {
         if (e.Status is null || e.Shows.Count == 0)
@@ -61,9 +56,9 @@ public partial class SharedViewModel : BaseViewModel
         }
         Title = e.Status;
     }
-    public void DonwnloadCancelled(object sender, DownloadEventArgs e)
+    public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        App.Downloads.DownloadCancelled -= DonwnloadCancelled;
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
         MainThread.InvokeOnMainThreadAsync(() =>
         {
             Title = string.Empty;
@@ -72,7 +67,7 @@ public partial class SharedViewModel : BaseViewModel
         ThreadPool.QueueUserWorkItem(state =>
         {
             Thread.Sleep(1000);
-            App.Downloads.DownloadCancelled += DonwnloadCancelled;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
             if (e.Shows.Count > 0)
             {
                 _logger.Info("Starting Second Download");
@@ -80,25 +75,13 @@ public partial class SharedViewModel : BaseViewModel
             }
         });
     }
-    public void UpdateOnCancel(object sender, Primitives.DownloadEventArgs e)
-    {
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Shows?.ToList().ForEach(SetProperties);
-            _logger.Info("update for shows not downlaoding anymore");
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        });
-    }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
-        Title = string.Empty;
-        OnPropertyChanged(nameof(Title));
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
         App.Downloads.DownloadStarted -= DownloadStarted;
-        App.Downloads.DownloadCancelled -= DonwnloadCancelled;
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
         App.Downloads.DownloadFinished -= DownloadCompleted;
         await GetDownloadedShows();
         _logger.Info("Shared View model - Downloaded event firing");
@@ -110,7 +93,7 @@ public partial class SharedViewModel : BaseViewModel
             App.Downloads.Notify.StartNotifications();
 #endif
             App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DonwnloadCancelled;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
             App.Downloads.DownloadFinished += DownloadCompleted;
             App.Downloads.Start(e.Shows[0]);
         }
@@ -175,6 +158,7 @@ public partial class SharedViewModel : BaseViewModel
         var showTemp = Shows.ToList().Find(x => x.Url == url);
         Shows?.Remove(showTemp);
         _logger.Info($"Removed {url} from Downloaded Shows list.");
+        App.DeletedItem.Add(item);
     }
 
     /// <summary>
@@ -206,7 +190,7 @@ public partial class SharedViewModel : BaseViewModel
         {
             _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");
             App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DonwnloadCancelled;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
         App.Downloads.Add(item);
@@ -224,15 +208,7 @@ public partial class SharedViewModel : BaseViewModel
             _logger.Info("show was null");
             return;
         }
-        var show = Shows.ToList().Find(x => x.Url == item.Url);
-        if (show is not null)
-        {
-            var number = Shows.IndexOf(show);
-            Shows[number].IsDownloaded = false;
-            Shows[number].IsDownloading = false;
-            Shows[number].IsNotDownloaded = true;
-            OnPropertyChanged(nameof(Shows));
-        }
+        Shows.ToList().ForEach(SetProperties);
         DownloadProgress = string.Empty;
     }
     #endregion
@@ -301,14 +277,7 @@ public partial class SharedViewModel : BaseViewModel
             IsBusy = false;
             Title = string.Empty;
             DownloadProgress = string.Empty;
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(item =>
-            {
-                var number = Shows.IndexOf(item);
-                Shows[number].IsDownloaded = true;
-                Shows[number].IsDownloading = false;
-                Shows[number].IsNotDownloaded = false;
-                OnPropertyChanged(nameof(Shows));
-            });
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
     #endregion

@@ -23,7 +23,8 @@ public partial class DownloadedShowViewModel : SharedViewModel
         : base(connectivity)
     {
         App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadCancelled += DonwnloadCancelled;
+        App.Downloads.DownloadCancelled += DownloadCancelled;
+        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -39,6 +40,11 @@ public partial class DownloadedShowViewModel : SharedViewModel
         DownloadedShows.Clear();
         await GetDownloadedShows();
         IsBusy = false;
+    }
+    private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
+    {
+        await GetDownloadedShows();
+        _ = MainThread.InvokeOnMainThreadAsync(() => { Title = string.Empty; });
     }
 }
 

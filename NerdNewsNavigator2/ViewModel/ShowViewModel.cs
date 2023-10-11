@@ -19,13 +19,20 @@ public partial class ShowViewModel : SharedViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        App.Downloads.DownloadCancelled += UpdateOnCancel;
-        App.CurrentNavigation.NavigationCompleted += OnNavigated;
-        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        App.DeletedItem.DeletedItem += OnItemDeleted;
         if (App.Downloads.Shows.Count > 0)
         {
             App.Downloads.DownloadStarted += DownloadStarted;
+            App.Downloads.DownloadFinished += DownloadCompleted;
         }
+    }
+    private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
+    {
+        await GetDownloadedShows();
+        _logger.Info("Updating deleted Items");
+        Shows?.Where(x => x.Url == e.Item.Url).ToList().ForEach(SetProperties);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {

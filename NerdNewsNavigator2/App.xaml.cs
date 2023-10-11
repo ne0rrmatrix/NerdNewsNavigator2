@@ -16,7 +16,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
     public static AutoDownloadService AutoDownloadService { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
-    public static CurrentNavigation CurrentNavigation { get; set; } = new();
+    public static DeletedItemService DeletedItem { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>

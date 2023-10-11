@@ -19,11 +19,19 @@ public partial class PodcastViewModel : SharedViewModel
     public PodcastViewModel(IConnectivity connectivity) : base(connectivity)
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-        if (App.Downloads.Shows.Count > 0)
-        {
-            App.Downloads.DownloadStarted += DownloadStarted;
-        }
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += Finished;
     }
+
+    private void Finished(object sender, DownloadEventArgs e)
+    {
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
+        });
+    }
+
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.Info("Refresh podcasts");

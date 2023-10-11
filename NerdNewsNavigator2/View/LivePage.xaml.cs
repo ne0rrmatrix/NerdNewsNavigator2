@@ -31,6 +31,20 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
         WeakReferenceMessenger.Default.Register<NavigatedItemMessage>(this);
         _ = LoadVideo(_item);
     }
+    public void Receive(NavigatedItemMessage message)
+    {
+        if (mediaElement.CurrentState is MediaElementState.Stopped or
+      MediaElementState.Paused)
+        {
+            mediaElement.Play();
+        }
+        else if (mediaElement.CurrentState is MediaElementState.Playing)
+        {
+            _logger.Info("Live playback stopped");
+            mediaElement.Stop();
+        }
+    }
+
     #region Youtube Methods
     /// <summary>
     /// Method Starts <see cref="MediaElement"/> Playback.
@@ -123,15 +137,15 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
+        _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
+        mediaElement.Handler.DisconnectHandler();
         base.OnNavigatedFrom(args);
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)
     {
         mediaElement.Stop();
-#if ANDROID || IOS || MACCATALYST
-        mediaElement?.Handler.DisconnectHandler();
-#endif
+        mediaElement.Handler.DisconnectHandler();
     }
     public void Dispose()
     {
@@ -145,20 +159,6 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
         {
             Client.Dispose();
             Client = null;
-        }
-    }
-
-    public void Receive(NavigatedItemMessage message)
-    {
-        if (mediaElement.CurrentState is MediaElementState.Stopped or
-      MediaElementState.Paused)
-        {
-            mediaElement.Play();
-        }
-        else if (mediaElement.CurrentState is MediaElementState.Playing)
-        {
-            Debug.WriteLine("Live playback stopped");
-            mediaElement.Stop();
         }
     }
 }

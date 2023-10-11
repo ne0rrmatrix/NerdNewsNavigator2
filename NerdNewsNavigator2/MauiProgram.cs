@@ -89,7 +89,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SharedViewModel>();
 
         builder.Services.AddSingleton<CurrentDownloads>();
-        builder.Services.AddSingleton<CurrentNavigation>();
+        builder.Services.AddSingleton<DeletedItemService>();
         builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
         builder.Services.AddSingleton<DownloadService>();
