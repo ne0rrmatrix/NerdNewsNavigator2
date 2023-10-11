@@ -12,7 +12,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </remarks>
 public partial class SettingsViewModel(IConnectivity connectivity) : SharedViewModel(connectivity)
 {
-
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
