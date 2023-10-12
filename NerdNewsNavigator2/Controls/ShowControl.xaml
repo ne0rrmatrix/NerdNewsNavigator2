@@ -15,8 +15,6 @@
     mc:Ignorable="d">
 
     <CollectionView
-        HorizontalOptions="{OnPlatform MacCatalyst=Center,
-                                       iOS=Center}"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Source, Source={x:Reference showControl}}"
         VerticalScrollBarVisibility="Never">
@@ -44,6 +42,7 @@
                     <Grid
                         Margin="5"
                         ColumnDefinitions="Auto"
+                        HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                         RowDefinitions="Auto,Auto,Auto,980">
                         <Label
                             Grid.Row="0"
