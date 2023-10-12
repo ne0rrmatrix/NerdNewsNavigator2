@@ -11,7 +11,8 @@
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True"
     Shell.TabBarIsVisible="{OnPlatform Default=true,
-                                       WinUI=false}">
+                                       WinUI=false,
+                                       MacCatalyst=false}">
 
     <Shell.MenuItemTemplate>
         <DataTemplate>

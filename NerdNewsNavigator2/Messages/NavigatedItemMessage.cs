@@ -4,6 +4,9 @@
 
 namespace NerdNewsNavigator2.Messages;
 
-public class NavigatedItemMessage(bool value) : ValueChangedMessage<bool>(value)
+public class NavigatedItemMessage : ValueChangedMessage<bool>
 {
+    public NavigatedItemMessage(bool value) : base(value)
+    {
+    }
 }
