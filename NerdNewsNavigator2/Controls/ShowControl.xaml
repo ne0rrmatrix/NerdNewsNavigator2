@@ -34,7 +34,7 @@
                     SemanticProperties.Hint="A frame of all downloaded shows listed."
                     WidthRequest="{OnPlatform WinUI=430,
                                               MacCatalyst=340,
-                                              Android=330,
+                                              Android=340,
                                               iOS=340}">
 
                     <Frame.GestureRecognizers>

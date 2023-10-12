@@ -126,7 +126,11 @@ public partial class BaseViewModel : ObservableObject
             if (e.Shows.Count > 0)
             {
                 _logger.Info("Starting Second Download");
+#if ANDROID || IOS
+                _ = App.Downloads.Start(e.Shows[0]);
+#else
                 App.Downloads.Start(e.Shows[0]);
+#endif
             }
         });
     }
@@ -150,10 +154,15 @@ public partial class BaseViewModel : ObservableObject
             App.Downloads.DownloadStarted += DownloadStarted;
             App.Downloads.DownloadCancelled += DownloadCancelled;
             App.Downloads.DownloadFinished += DownloadCompleted;
+#if ANDROID || IOS
+            _ = App.Downloads.Start(e.Shows[0]);
+#else
             App.Downloads.Start(e.Shows[0]);
+#endif
         }
     }
     #endregion
+
     #region Relay Commands
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>

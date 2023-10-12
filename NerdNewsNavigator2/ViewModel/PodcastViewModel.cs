@@ -20,10 +20,10 @@ public partial class PodcastViewModel : BaseViewModel
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
         App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadFinished += Finished;
+        App.Downloads.DownloadFinished += RemoveTitle;
+        App.Downloads.DownloadCancelled += RemoveTitle;
     }
-
-    private void Finished(object sender, DownloadEventArgs e)
+    private void RemoveTitle(object sender, DownloadEventArgs e)
     {
         _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
@@ -31,7 +31,6 @@ public partial class PodcastViewModel : BaseViewModel
             OnPropertyChanged(nameof(Title));
         });
     }
-
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.Info("Refresh podcasts");

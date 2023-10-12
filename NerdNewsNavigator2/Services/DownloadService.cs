@@ -61,7 +61,11 @@ public partial class DownloadService
             if (App.Downloads.Shows.Count > 0)
             {
                 s_logger.Info("Starting to download favorite shows");
+#if ANDROID || IOS
+                _ = App.Downloads.Start(App.Downloads.Shows[0]);
+#else
                 App.Downloads.Start(App.Downloads.Shows[0]);
+#endif
             }
         });
     }
@@ -95,8 +99,10 @@ public partial class DownloadService
         {
 #if ANDROID || IOS
             App.Downloads.Notify.StartNotifications();
-#endif
+            _ = App.Downloads.Start(e.Shows[0]);
+#else
             App.Downloads.Start(e.Shows[0]);
+#endif
         }
         if (e.Shows.Count == 0)
         {

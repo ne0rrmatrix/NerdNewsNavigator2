@@ -123,6 +123,10 @@ public partial class ShowViewModel : BaseViewModel
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
         App.Downloads.Add(item);
+#if ANDROID || IOS
+        _ = App.Downloads.Start(item);
+#else
         App.Downloads.Start(item);
+#endif
     }
 }

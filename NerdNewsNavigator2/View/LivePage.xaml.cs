@@ -139,7 +139,6 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     {
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
-        mediaElement.Handler.DisconnectHandler();
         base.OnNavigatedFrom(args);
     }
     private void ContentPage_Unloaded(object sender, EventArgs e)
