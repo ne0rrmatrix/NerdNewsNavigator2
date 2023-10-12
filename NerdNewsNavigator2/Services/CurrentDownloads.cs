@@ -86,8 +86,7 @@ public partial class CurrentDownloads : ObservableObject
             await StartDownload(show);
         });
     }
-#endif
-#if WINDOWS || MACCATALYST
+#else
     public void Start(Show show)
     {
         s_logger.Info($"Staring show: {show.Title}");
