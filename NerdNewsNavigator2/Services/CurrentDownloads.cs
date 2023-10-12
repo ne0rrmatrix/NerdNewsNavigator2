@@ -19,7 +19,6 @@ public partial class CurrentDownloads : ObservableObject
     [ObservableProperty]
     private NotificationService _notify;
     private int Id { get; set; } = 0;
-    private readonly Random _random = new();
     [ObservableProperty]
     private NotificationRequest _notification;
 #endif
@@ -71,6 +70,23 @@ public partial class CurrentDownloads : ObservableObject
         Shows.Remove(item);
         return item;
     }
+#if ANDROID || IOS
+    public async Task Start(Show show)
+    {
+        s_logger.Info($"Staring show: {show.Title}");
+        if (IsDownloading)
+        {
+            s_logger.Info("Download is not starting IDownloading is true");
+            return;
+        }
+        Notify.StartNotifications();
+        Notification = await Notify.NotificationRequests(show);
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
+        });
+    }
+#else
     public void Start(Show show)
     {
         s_logger.Info($"Staring show: {show.Title}");
@@ -79,15 +95,12 @@ public partial class CurrentDownloads : ObservableObject
             s_logger.Info("Download is not starting IDownloading is true");
             return;
         }
-#if ANDROID || IOS
-        Notify.StartNotifications();
-        _ = NotificationRequests(show);
-#endif
         ThreadPool.QueueUserWorkItem(async state =>
         {
             await StartDownload(show);
         });
     }
+#endif
     private async Task StartDownload(Show item)
     {
         Item = item;
@@ -116,44 +129,11 @@ public partial class CurrentDownloads : ObservableObject
             IsDownloading = false;
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
             Completed(item);
+#if ANDROID || IOS
+            Notify.StopNotifications();
+#endif
         }
     }
-
-#if ANDROID || IOS
-    private async Task<NotificationRequest> NotificationRequests(Show item)
-    {
-        Id = _random.Next();
-        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(Id, item.Url, item, false));
-        var request = new Plugin.LocalNotification.NotificationRequest
-        {
-            NotificationId = Id,
-            Title = item.Title,
-            CategoryType = NotificationCategoryType.Progress,
-#if IOS
-            Description = "Downloading",
-#endif
-#if ANDROID
-            Description = $"Download Progress {(int)Progress}",
-            Android = new AndroidOptions
-            {
-                IconSmallName = new AndroidIcon("ic_stat_alarm"),
-                Ongoing = true,
-                ProgressBarProgress = (int)Progress,
-                IsProgressBarIndeterminate = false,
-                Color =
-                {
-                    ResourceName = "colorPrimary"
-                },
-                AutoCancel = true,
-                ProgressBarMax = 100,
-            },
-#endif
-        };
-        await LocalNotificationCenter.Current.Show(request);
-        Notification = request;
-        return request;
-    }
-#endif
 
     /// <summary>
     /// Download a file to local filesystem from a URL
@@ -191,7 +171,7 @@ public partial class CurrentDownloads : ObservableObject
                 StartedDownload();
                 if (Cancelled)
                 {
-                    client.DownloadCancel.Cancel();
+                    client.DownloadCancel.Cancel(false);
                 }
             };
             if (!Cancelled)

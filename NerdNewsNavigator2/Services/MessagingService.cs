@@ -2,25 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using NerdNewsNavigator2.Extensions;
-
 namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class to manage Messaging between classes.
 /// </summary>
-public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
+public partial class MessagingService : IRecipient<InternetItemMessage>, IRecipient<DownloadItemMessage>
 {
-    /// <summary>
-    /// Gets the presented page.
-    /// </summary>
-    protected static Page CurrentPage
-    {
-        get
-        {
-            return PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
-        }
-    }
-
     public MessagingService()
     {
         WeakReferenceMessenger.Default.Register<DownloadItemMessage>(this);
@@ -45,20 +32,26 @@ public class MessagingService : IRecipient<InternetItemMessage>, IRecipient<Down
     public void Receive(DownloadItemMessage message)
     {
         WeakReferenceMessenger.Default.Unregister<DownloadItemMessage>(message);
-        if (message.Value)
+        MainThread.InvokeOnMainThreadAsync(() =>
         {
-            _ = Toast.Make($"Download {message.Title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-            return;
-        }
-        _ = Toast.Make($"Download {message.Title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            if (message.Value)
+            {
+                _ = Toast.Make($"Download {message.Title} is completed.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                return;
+            }
+            _ = Toast.Make($"Download {message.Title} Failed!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        });
     }
 
     public void Receive(InternetItemMessage message)
     {
         WeakReferenceMessenger.Default.Unregister<InternetItemMessage>(message);
-        if (!message.Value)
+        MainThread.InvokeOnMainThreadAsync(() =>
         {
-            _ = Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
+            if (!message.Value)
+            {
+                _ = Toast.Make("Can't Connect to Internet.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            }
+        });
     }
 }

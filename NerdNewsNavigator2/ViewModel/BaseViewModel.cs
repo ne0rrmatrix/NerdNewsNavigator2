@@ -24,12 +24,6 @@ public partial class BaseViewModel : ObservableObject
     private ObservableCollection<Show> _shows;
 
     /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of most recent <see cref="Show"/> managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<Show> _mostRecentShows;
-
-    /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of downloaded <see cref="Download"/> managed by this class.
     /// </summary>
     [ObservableProperty]
@@ -86,6 +80,8 @@ public partial class BaseViewModel : ObservableObject
     private double _progressInfos = 0;
     public static string CancelUrl { get; set; }
     public static bool CancelDownload { get; set; }
+    [ObservableProperty]
+    private bool _isRefreshing;
     #endregion
     public BaseViewModel(IConnectivity connectivity)
     {
@@ -93,15 +89,175 @@ public partial class BaseViewModel : ObservableObject
         _shows = new();
         _downloadProgress = string.Empty;
         _downloadedShows = new();
-        _mostRecentShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(MostRecentShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(FavoriteShows, null, ObservableCollectionCallback);
+        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
+        Orientation = OnDeviceOrientationChange();
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+        }
     }
+    #region Events
+    public void DownloadStarted(object sender, DownloadEventArgs e)
+    {
+        if (e.Status is null || e.Shows.Count == 0)
+        {
+            return;
+        }
+        Title = e.Status;
+    }
+    public void DownloadCancelled(object sender, DownloadEventArgs e)
+    {
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
+        });
+        ThreadPool.QueueUserWorkItem(state =>
+        {
+            Thread.Sleep(1000);
+            App.Downloads.DownloadCancelled += DownloadCancelled;
+            if (e.Shows.Count > 0)
+            {
+                _logger.Info("Starting Second Download");
+#if ANDROID || IOS
+                _ = App.Downloads.Start(e.Shows[0]);
+#else
+                App.Downloads.Start(e.Shows[0]);
+#endif
+            }
+        });
+    }
+    public async void DownloadCompleted(object sender, DownloadEventArgs e)
+    {
+#if ANDROID || IOS
+        App.Downloads.Notify.StopNotifications();
+#endif
+        App.Downloads.DownloadStarted -= DownloadStarted;
+        App.Downloads.DownloadCancelled -= DownloadCancelled;
+        App.Downloads.DownloadFinished -= DownloadCompleted;
+        await GetDownloadedShows();
+        _logger.Info("Shared View model - Downloaded event firing");
+        UpdateShows();
+        if (e.Shows.Count > 0)
+        {
+            _logger.Info("Starting next show: {Title}", e.Shows[0].Title);
+#if ANDROID || IOS
+            App.Downloads.Notify.StartNotifications();
+#endif
+            App.Downloads.DownloadStarted += DownloadStarted;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
+            App.Downloads.DownloadFinished += DownloadCompleted;
+#if ANDROID || IOS
+            _ = App.Downloads.Start(e.Shows[0]);
+#else
+            App.Downloads.Start(e.Shows[0]);
+#endif
+        }
+    }
+    #endregion
+
+    #region Relay Commands
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task Tap(string url)
+    {
+        Show show = new();
+        if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
+        {
+            var item = DownloadedShows.ToList().Find(x => x.Url == url);
+            show.Url = item.Url;
+            show.Title = item.Title;
+        }
+        else
+        {
+            var item = Shows.ToList().Find(x => x.Url == url);
+            show.Url = item.Url;
+            show.Title = item.Title;
+        }
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        App.OnVideoNavigated.Add(show);
+    }
+    #endregion
+
+    #region Download Status Methods
+    public void SetProperties(Show show)
+    {
+        var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
+        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
+        var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
+        if (currentDownload is null)
+        {
+            show.IsDownloading = false;
+            show.IsNotDownloaded = true;
+            show.IsDownloaded = false;
+        }
+        if (currentDownload is not null)
+        {
+            show.IsDownloaded = false;
+            show.IsDownloading = true;
+            show.IsNotDownloaded = false;
+        }
+        if (downloads is not null)
+        {
+            show.IsDownloaded = true;
+            show.IsDownloading = false;
+            show.IsNotDownloaded = false;
+        }
+        if (shows is not null)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shows[Shows.IndexOf(shows)] = show;
+            });
+        }
+    }
+
+    #endregion
+
+    #region Update Shows
+    /// <summary>
+    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
+    /// </summary>
+    /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
+    /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
+    /// <returns><see cref="Show"/></returns>
+    public void GetShowsAsync(string url, bool getFirstOnly)
+    {
+        if (!InternetConnected())
+        {
+            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
+            return;
+        }
+        Shows.Clear();
+        var temp = FeedService.GetShows(url, getFirstOnly);
+        var item = RemoveDuplicates(temp);
+        item.ForEach(Shows.Add);
+        _logger.Info("Got All Shows");
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+    }
+    public void UpdateShows()
+    {
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsBusy = false;
+            Title = string.Empty;
+            DownloadProgress = string.Empty;
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        });
+    }
+    #endregion
     private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
     {
         // `lock` ensures that only one thread access the collection at a time
@@ -136,11 +292,6 @@ public partial class BaseViewModel : ObservableObject
         if (Shows.ToList().Exists(x => x.Url == url))
         {
             var showItem = Shows.ToList().Find(x => x.Url == url);
-            return showItem;
-        }
-        else if (MostRecentShows.ToList().Exists(x => x.Url == url))
-        {
-            var showItem = MostRecentShows.ToList().Find(x => x.Url == url);
             return showItem;
         }
         return new Show();
@@ -204,8 +355,14 @@ public partial class BaseViewModel : ObservableObject
         {
             return;
         }
-        var updates = await UpdateCheckAsync();
         var temp = await App.PositionData.GetAllPodcasts();
+        if (!InternetConnected())
+        {
+            var item = temp.OrderBy(x => x.Title).ToList();
+            item.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+            return;
+        }
+        var updates = await UpdateCheckAsync();
         if (!updates && temp.Count == 0)
         {
             await ProcessPodcasts();

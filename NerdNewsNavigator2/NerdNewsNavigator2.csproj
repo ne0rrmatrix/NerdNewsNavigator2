@@ -22,7 +22,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>30</ApplicationVersion>
+	    <ApplicationVersion>31</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -49,23 +49,29 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
 	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
+	    <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
         <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
+        <RunAOTCompilation>True</RunAOTCompilation>
+        <PublishTrimmed>True</PublishTrimmed>
 	</PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
+        <MtouchLink>SdkOnly</MtouchLink>
+        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
         <MtouchLink>None</MtouchLink>
+        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
@@ -75,11 +81,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
-        <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
+        <CodesignKey>Apple Development: Created via API (9T5LN8B35Y)</CodesignKey>
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
         <ProvisioningType>automatic</ProvisioningType>
     </PropertyGroup>
-
+    
     <!-- App Icon -->
     <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
@@ -130,7 +136,7 @@
     </ItemGroup>
 	
     <ItemGroup>
-	    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
+	    <PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
 	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
@@ -145,8 +151,8 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.12" />
-	    <PackageReference Include="YoutubeExplode" Version="6.3.4" />
+	    <PackageReference Include="Woka" Version="1.0.13" />
+	    <PackageReference Include="YoutubeExplode" Version="6.3.5" />
     </ItemGroup>
   
     <ItemGroup>
@@ -211,9 +217,6 @@
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\LivePage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="View\MostRecentShowsPage.xaml">
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\EditPage.xaml">

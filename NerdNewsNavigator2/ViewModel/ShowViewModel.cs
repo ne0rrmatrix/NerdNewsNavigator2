@@ -7,9 +7,14 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ShowViewModel"/>
 /// </summary>
-public partial class ShowViewModel : SharedViewModel
+[QueryProperty("Url", "Url")]
+public partial class ShowViewModel : BaseViewModel
 {
-
+    /// <summary>
+    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
+    /// </summary>
+    [ObservableProperty]
+    private string _url;
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
@@ -19,13 +24,35 @@ public partial class ShowViewModel : SharedViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        App.Downloads.DownloadCancelled += UpdateOnCancel;
-        App.CurrentNavigation.NavigationCompleted += OnNavigated;
-        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
+        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        App.DeletedItem.DeletedItem += OnItemDeleted;
         if (App.Downloads.Shows.Count > 0)
         {
             App.Downloads.DownloadStarted += DownloadStarted;
+            App.Downloads.DownloadFinished += DownloadCompleted;
         }
+    }
+    partial void OnUrlChanged(string oldValue, string newValue)
+    {
+        _logger.Info("Show Url changed. Updating Shows");
+        if (!InternetConnected())
+        {
+            return;
+        }
+        var decodedUrl = HttpUtility.UrlDecode(newValue);
+#if WINDOWS || MACCATALYST || ANDROID
+        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
+#endif
+#if IOS
+        GetShowsAsync(decodedUrl, false);
+#endif
+    }
+    private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
+    {
+        await GetDownloadedShows();
+        _logger.Info("Updating deleted Items");
+        Shows?.Where(x => x.Url == e.Item.Url).ToList().ForEach(SetProperties);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -48,5 +75,58 @@ public partial class ShowViewModel : SharedViewModel
     {
         await GetDownloadedShows();
         UpdateShows();
+    }
+    [RelayCommand]
+    public void Cancel(string url)
+    {
+        Title = string.Empty;
+        OnPropertyChanged(nameof(Title));
+        var item = App.Downloads.Cancel(url);
+        if (item is null)
+        {
+            _logger.Info("show was null");
+            return;
+        }
+        Shows.ToList().ForEach(SetProperties);
+        DownloadProgress = string.Empty;
+    }
+    /// <summary>
+    /// A Method that passes a Url to <see cref="DownloadService"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public void Download(string url)
+    {
+#if ANDROID
+        _ = EditViewModel.CheckAndRequestForeGroundPermission();
+#endif
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        });
+        var item = GetShowForDownload(url);
+        item.IsDownloading = true;
+        if (Shows.ToList().Exists(x => x.Url == item.Url))
+        {
+            var number = Shows.IndexOf(item);
+            Shows[number].IsDownloaded = false;
+            Shows[number].IsDownloading = true;
+            Shows[number].IsNotDownloaded = false;
+            OnPropertyChanged(nameof(Shows));
+        }
+        if (App.Downloads.Shows.Count == 0)
+        {
+            _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");
+            App.Downloads.DownloadStarted += DownloadStarted;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
+            App.Downloads.DownloadFinished += DownloadCompleted;
+        }
+        App.Downloads.Add(item);
+#if ANDROID || IOS
+        _ = App.Downloads.Start(item);
+#else
+        App.Downloads.Start(item);
+#endif
     }
 }

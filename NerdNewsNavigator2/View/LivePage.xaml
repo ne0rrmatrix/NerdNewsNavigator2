@@ -10,11 +10,10 @@
     x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
-                                       Default=false}"
+    Shell.NavBarIsVisible="False"
     Unloaded="ContentPage_Unloaded">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
     <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
 

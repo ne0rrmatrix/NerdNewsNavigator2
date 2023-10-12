@@ -22,13 +22,13 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         {
             DownloadCancel.Dispose();
             DownloadCancel = null;
-            var Cts = new CancellationTokenSource();
-            DownloadCancel = Cts;
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
         }
         else if (DownloadCancel is null)
         {
-            var Cts = new CancellationTokenSource();
-            DownloadCancel = Cts;
+            var cts = new CancellationTokenSource();
+            DownloadCancel = cts;
         }
         _httpClient = new HttpClient();
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
@@ -41,7 +41,6 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         {
             Debug.WriteLine("Http Client error");
             App.Downloads.Cancelled = true;
-            App.Downloads.Cancelling();
         }
         Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
     }
@@ -75,7 +74,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         using var fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         do
         {
-            var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: token);
+            var bytesRead = await contentStream.ReadAsync(buffer, cancellationToken: CancellationToken.None);
             if (bytesRead == 0)
             {
                 isMoreToRead = false;
@@ -83,7 +82,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
                 continue;
             }
 
-            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken: token);
+            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken: CancellationToken.None);
 
             totalBytesRead += bytesRead;
             readCount += 1;
@@ -94,7 +93,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
             }
             if (readCount % 100 == 0)
             {
-                TriggerProgressChanged(totalDownloadSize, totalBytesRead, token);
+                TriggerProgressChanged(totalDownloadSize, totalBytesRead, CancellationToken.None);
             }
         }
         while (isMoreToRead);

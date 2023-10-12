@@ -6,19 +6,18 @@ namespace NerdNewsNavigator2.Services;
 public partial class NotificationService
 {
 #if ANDROID || IOS
-    private double Progress { get; set; } = 0;
+
+    private readonly Random _random = new();
     public NotificationService()
     {
     }
     public void StartNotifications()
     {
-        App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadFinished += DownloadCompleted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
     }
     public void StopNotifications()
     {
-        App.Downloads.DownloadStarted -= DownloadStarted;
         App.Downloads.DownloadFinished -= DownloadCompleted;
         App.Downloads.DownloadCancelled -= DownloadCancelled;
     }
@@ -27,7 +26,6 @@ public partial class NotificationService
         MainThread.InvokeOnMainThreadAsync(async () =>
         {
             e.Progress = 0;
-            e.Notification.Android.ProgressBarProgress = 100;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download Complete";
             e.Notification.CategoryType = NotificationCategoryType.Status;
@@ -35,16 +33,31 @@ public partial class NotificationService
         });
         StopNotifications();
     }
-    public void StopWaitingForCancel()
+    public async Task<NotificationRequest> NotificationRequests(Show item)
     {
-        MainThread.InvokeOnMainThreadAsync(() =>
+        var id = _random.Next();
+        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(id, item.Url, item, false));
+        var request = new Plugin.LocalNotification.NotificationRequest
         {
-            App.Downloads.DownloadCancelled -= DownloadCancelled;
-        });
-    }
-    public void StartWatiingForCancel()
-    {
-        App.Downloads.DownloadCancelled += DownloadCancelled;
+            NotificationId = id,
+            Title = item.Title,
+            CategoryType = NotificationCategoryType.Status,
+            Description = "Downloading",
+#if ANDROID
+            Android = new AndroidOptions
+            {
+                IconSmallName = new AndroidIcon("ic_stat_alarm"),
+                Ongoing = true,
+                Color =
+                {
+                    ResourceName = "colorPrimary"
+                },
+                AutoCancel = true,
+            },
+#endif
+        };
+        await LocalNotificationCenter.Current.Show(request);
+        return request;
     }
     private async void DownloadCancelled(object sender, DownloadEventArgs e)
     {
@@ -58,30 +71,7 @@ public partial class NotificationService
             e.Notification.CategoryType = NotificationCategoryType.None;
             e.Progress = 0;
             await LocalNotificationCenter.Current.Show(e.Notification);
-            ThreadPool.QueueUserWorkItem(state =>
-            {
-                App.Downloads.DownloadCancelled += DownloadCancelled;
-            });
         });
-    }
-    private void DownloadStarted(object sender, DownloadEventArgs e)
-    {
-        Progress = e.Progress;
-        _ = DownloadNotifications(e.Notification);
-    }
-    public static async Task CheckNotification()
-    {
-        if (!await LocalNotificationCenter.Current.AreNotificationsEnabled())
-        {
-            await LocalNotificationCenter.Current.RequestNotificationPermission();
-        }
-    }
-    public async Task DownloadNotifications(NotificationRequest request)
-    {
-        request.Description = $"Download Progress {(int)Progress}%";
-        request.Android.ProgressBarProgress = (int)Progress;
-        request.Silent = true;
-        await LocalNotificationCenter.Current.Show(request);
     }
 #endif
 }
