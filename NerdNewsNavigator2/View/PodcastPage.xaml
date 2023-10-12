@@ -42,6 +42,7 @@
                     <Grid
                         Margin="0"
                         ColumnDefinitions="Auto"
+                        HorizontalOptions="Center"
                         RowDefinitions="Auto,Auto,640">
 
                         <Grid.GestureRecognizers>
