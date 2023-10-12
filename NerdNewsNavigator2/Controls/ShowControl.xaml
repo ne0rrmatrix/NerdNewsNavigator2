@@ -51,7 +51,7 @@
                             Grid.Row="0"
                             FontAttributes="Bold"
                             FontSize="{OnPlatform Default=Micro,
-                                                  MacCatalyst=16}"
+                                                  MacCatalyst=18}"
                             HeightRequest="60"
                             HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                             LineBreakMode="WordWrap"
@@ -64,7 +64,9 @@
                                                       MacCatalyst=370}" />
                         <Image
                             Grid.Row="1"
-                            Aspect="AspectFit"
+                            Aspect="{OnPlatform WinUI=AspectFit,
+                                                Android=AspectFit,
+                                                iOS=AspectFit}"
                             HeightRequest="{OnPlatform WinUI=370,
                                                        Android=270,
                                                        iOS=320,
@@ -146,7 +148,7 @@
                         <Label
                             Grid.Row="3"
                             FontSize="{OnPlatform Default=Micro,
-                                                  MacCatalyst=16}"
+                                                  MacCatalyst=18}"
                             HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="A description of episode."

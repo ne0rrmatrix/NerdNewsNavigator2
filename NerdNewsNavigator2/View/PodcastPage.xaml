@@ -69,16 +69,18 @@
                                                       MacCatalyst=370}" />
                         <Image
                             Grid.Row="1"
-                            Aspect="AspectFit"
+                            Aspect="{OnPlatform WinUI=AspectFit,
+                                                Android=AspectFit,
+                                                iOS=AspectFit}"
                             HeightRequest="{OnPlatform WinUI=360,
                                                        Android=270,
                                                        iOS=320,
-                                                       MacCatalyst=360}"
+                                                       MacCatalyst=370}"
                             HorizontalOptions="Center"
                             WidthRequest="{OnPlatform WinUI=360,
                                                       Android=270,
                                                       iOS=320,
-                                                      MacCatalyst=360}">
+                                                      MacCatalyst=370}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
