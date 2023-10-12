@@ -63,12 +63,15 @@
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
+        <MtouchLink>SdkOnly</MtouchLink>
+        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
         <MtouchLink>None</MtouchLink>
+        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
@@ -78,7 +81,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
-        <CodesignKey>Apple Development: Created via API (43U7LTXVUT)</CodesignKey>
+        <CodesignKey>Apple Development: Created via API (9T5LN8B35Y)</CodesignKey>
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
         <ProvisioningType>automatic</ProvisioningType>
     </PropertyGroup>
@@ -234,10 +237,6 @@
     <MauiXaml Update="View\ResetAllSettingsPage.xaml">
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    </ItemGroup>
-  
-    <ItemGroup>
-      <Folder Include="Shared\" />
     </ItemGroup>
   
     <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionNerdNewsNavigator2HideInfoBar="True" /></VisualStudio></ProjectExtensions>

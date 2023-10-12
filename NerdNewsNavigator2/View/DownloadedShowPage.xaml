@@ -11,7 +11,7 @@
     Loaded="ContentPage_Loaded">
 
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
 
     <Grid>
