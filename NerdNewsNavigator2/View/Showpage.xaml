@@ -12,7 +12,7 @@
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="{OnPlatform Default=false, Android=true}" IsVisible="{OnPlatform Default=false, Android=true}" />
+        <BackButtonBehavior IsEnabled="{OnPlatform Default=true, WinUI=false}" IsVisible="{OnPlatform Default=true, WinUI=false}" />
     </Shell.BackButtonBehavior>
     <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <media:ShowControl x:Name="showControl" Source="{Binding Shows}" />

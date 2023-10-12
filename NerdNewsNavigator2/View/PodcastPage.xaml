@@ -15,7 +15,7 @@
     Shell.NavBarIsVisible="True"
     mc:Ignorable="d">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
     <CollectionView
         HorizontalOptions="Center"

@@ -13,4 +13,7 @@
     Shell.TitleColor="White"
     Unloaded="ContentPage_Unloaded">
     <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
+    </Shell.BackButtonBehavior>
 </ContentPage>
