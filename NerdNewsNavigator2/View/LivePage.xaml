@@ -10,8 +10,7 @@
     x:DataType="vm:LiveViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Shell.NavBarIsVisible="{OnPlatform MacCatalyst=true,
-                                       Default=false}"
+    Shell.NavBarIsVisible="False"
     Unloaded="ContentPage_Unloaded">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />

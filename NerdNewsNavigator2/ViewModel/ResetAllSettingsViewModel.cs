@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="ResetAllSettingsViewModel"/>
 /// </summary>
-public partial class ResetAllSettingsViewModel : SharedViewModel
+public partial class ResetAllSettingsViewModel : BaseViewModel
 {
     private readonly IMessenger _messenger;
     /// <summary>
@@ -41,7 +41,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         await GetDownloadedShows();
         await GetFavoriteShows();
         Thread.Sleep(1000);
-        await GetMostRecent();
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
@@ -51,8 +50,6 @@ public partial class ResetAllSettingsViewModel : SharedViewModel
         FavoriteShows.Clear();
         Shows.Clear();
         Podcasts.Clear();
-        App.MostRecentShows.Clear();
-        MostRecentShows.Clear();
         DownloadedShows.Clear();
     }
     private static async Task DeleteAllAsync()

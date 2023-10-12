@@ -8,7 +8,10 @@
     FlyoutBackgroundColor="LightGray"
     FlyoutHeaderBehavior="CollapseOnScroll"
     FlyoutWidth="220"
-    Shell.BackgroundColor="#34AAD2">
+    Shell.BackgroundColor="#34AAD2"
+    Shell.NavBarIsVisible="True"
+    Shell.TabBarIsVisible="{OnPlatform Default=true,
+                                       WinUI=false}">
 
     <Shell.MenuItemTemplate>
         <DataTemplate>
@@ -35,15 +38,30 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
+    <TabBar IsEnabled="{OnPlatform Android=true, Default=false}" IsVisible="{OnPlatform Default=false, Android=true}">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:PodcastPage}"
+            Icon="house.png" />
+        <ShellContent
+            Title="Downloads"
+            ContentTemplate="{DataTemplate local:DownloadedShowPage}"
+            Icon="download.png" />
+        <ShellContent
+            Title="Live"
+            ContentTemplate="{DataTemplate local:LivePage}"
+            Icon="live_broadcasting.png" />
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Icon="settings.png" />
+    </TabBar>
+
     <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />
     <MenuItem
         Clicked="GotoFirstPage"
         IconImageSource="house.png"
         Text="Home" />
-    <MenuItem
-        Clicked="GotoMostRecentShowPage"
-        IconImageSource="history.png"
-        Text="Recent" />
     <MenuItem
         Clicked="GotoDownloadedPage"
         IconImageSource="download.png"

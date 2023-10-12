@@ -10,9 +10,8 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <remarks>
 /// Initializes a new instance of the <see cref="SettingsViewModel"/>
 /// </remarks>
-public partial class SettingsViewModel(IConnectivity connectivity) : SharedViewModel(connectivity)
+public partial class SettingsViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
 {
-
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
@@ -30,8 +29,6 @@ public partial class SettingsViewModel(IConnectivity connectivity) : SharedViewM
            var fav = await PodcastServices.UpdateFavoritesAsync();
            FavoriteShows.Clear();
            fav.ForEach(FavoriteShows.Add);
-           MostRecentShows.Clear();
-           _ = Task.Run(GetMostRecent);
            _ = Task.Run(GetUpdatedPodcasts);
            IsBusy = false;
        });

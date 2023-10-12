@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that manages displaying <see cref="Podcast"/> from twit.tv network.
 /// </summary>
-public partial class PodcastViewModel : SharedViewModel
+public partial class PodcastViewModel : BaseViewModel
 {
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger"/> class
@@ -19,10 +19,17 @@ public partial class PodcastViewModel : SharedViewModel
     public PodcastViewModel(IConnectivity connectivity) : base(connectivity)
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-        if (App.Downloads.Shows.Count > 0)
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += RemoveTitle;
+        App.Downloads.DownloadCancelled += RemoveTitle;
+    }
+    private void RemoveTitle(object sender, DownloadEventArgs e)
+    {
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
-            App.Downloads.DownloadStarted += DownloadStarted;
-        }
+            Title = string.Empty;
+            OnPropertyChanged(nameof(Title));
+        });
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {

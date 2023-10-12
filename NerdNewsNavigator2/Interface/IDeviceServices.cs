@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 #if WINDOWS
-using NerdNewsNavigator2;
-using NerdNewsNavigator2.Interface;
 using Microsoft.UI.Windowing;
 #endif
 

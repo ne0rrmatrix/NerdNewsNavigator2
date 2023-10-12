@@ -8,10 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.Shared"
+    xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     xmlns:woka="clr-namespace:Woka.Controls;assembly=Woka"
     x:Name="showControl"
-    x:DataType="viewmodel:SharedViewModel"
+    x:DataType="viewmodel:BaseViewModel"
     BackgroundColor="#34AAD2"
     mc:Ignorable="d">
 
@@ -34,11 +34,11 @@
                     SemanticProperties.Hint="A frame of all downloaded shows listed."
                     WidthRequest="{OnPlatform WinUI=430,
                                               MacCatalyst=340,
-                                              Android=330,
+                                              Android=340,
                                               iOS=340}">
 
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
                     <woka:WokaGrid
                         Margin="5"
@@ -95,12 +95,12 @@
                                 Margin="5"
                                 BackgroundColor="Green"
                                 FontAttributes="Bold"
-                                FontSize="Small"
+                                FontSize="14"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
                                 TextColor="#FFFFFF"
-                                WidthRequest="120">
+                                WidthRequest="100">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsNotDownloaded}"
@@ -110,19 +110,19 @@
                                     </DataTrigger>
                                 </Button.Triggers>
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Button
                                 Margin="5"
                                 BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
-                                FontSize="Small"
+                                FontSize="14"
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
                                 TextColor="#FFFFFF"
-                                WidthRequest="120">
+                                WidthRequest="100">
                                 <Button.Triggers>
                                     <DataTrigger
                                         Binding="{Binding Path=IsDownloading}"
@@ -132,7 +132,7 @@
                                     </DataTrigger>
                                 </Button.Triggers>
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SharedViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                         </HorizontalStackLayout>

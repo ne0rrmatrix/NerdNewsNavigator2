@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="EditPage"/>
 /// </summary>
-public partial class EditViewModel : SharedViewModel
+public partial class EditViewModel : BaseViewModel
 {
     /// <summary>
     /// An <see cref="ILogger"/> instance managed by this class.
@@ -19,7 +19,6 @@ public partial class EditViewModel : SharedViewModel
     public EditViewModel(IConnectivity connectivity) : base(connectivity)
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
-        ThreadPool.QueueUserWorkItem(async state => await GetMostRecent());
     }
 
     #region Methods
@@ -100,7 +99,6 @@ public partial class EditViewModel : SharedViewModel
             Podcasts?.Remove(podcast);
             podcast.Deleted = true;
             await App.PositionData.UpdatePodcast(podcast);
-            MostRecentShows.Clear();
         }
         var favoriteShow = await App.PositionData.GetAllFavorites();
         if (favoriteShow is null || favoriteShow.Count == 0)

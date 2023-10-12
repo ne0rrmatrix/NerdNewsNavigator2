@@ -18,19 +18,4 @@ public partial class ShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        App.CurrentNavigation.StartedNavigation(true, true);
-        base.OnNavigatedTo(args);
-    }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-    }
 }

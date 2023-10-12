@@ -3,9 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Primitives;
-
-public class NavigationEventArgs : EventArgs
+public class DeletedItemEventArgs : EventArgs
 {
-    public bool IsNavigating { get; set; }
-    public bool IsShows { get; set; }
+    public Download Item { get; set; }
 }
