@@ -43,6 +43,7 @@
                         Margin="{OnPlatform Default=5,
                                             MacCatalyst=0}"
                         ColumnDefinitions="Auto"
+                        HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                         RowDefinitions="Auto,Auto,Auto,980">
                         <Label
                             Grid.Row="0"
