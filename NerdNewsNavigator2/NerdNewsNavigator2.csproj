@@ -239,10 +239,6 @@
     </MauiXaml>
     </ItemGroup>
   
-    <ItemGroup>
-      <Folder Include="Shared\" />
-    </ItemGroup>
-  
     <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionNerdNewsNavigator2HideInfoBar="True" /></VisualStudio></ProjectExtensions>
   
 </Project>

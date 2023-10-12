@@ -4,9 +4,7 @@
 
 using UIKit;
 
-#pragma warning disable IDE1006 // Naming Styles
 namespace NerdNewsNavigator2.Platforms.iOS;
-#pragma warning restore IDE1006 // Naming Styles
 public static class Program
 {
     // This is the main entry point of the application.

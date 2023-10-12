@@ -18,7 +18,8 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
     <CollectionView
-        HorizontalOptions="Center"
+        HorizontalOptions="{OnPlatform iOS=Center,
+                                       MacCatalyst=Center}"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Podcasts}"
         VerticalScrollBarVisibility="Never">
@@ -36,7 +37,7 @@
                     Margin="5"
                     BackgroundColor="White"
                     WidthRequest="{OnPlatform WinUI=390,
-                                              MacCatalyst=340,
+                                              MacCatalyst=390,
                                               Android=340,
                                               iOS=340}">
                     <Grid
@@ -64,19 +65,19 @@
                             WidthRequest="{OnPlatform WinUI=370,
                                                       Android=260,
                                                       iOS=320,
-                                                      MacCatalyst=380}" />
+                                                      MacCatalyst=370}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
                             HeightRequest="{OnPlatform WinUI=360,
                                                        Android=270,
                                                        iOS=320,
-                                                       MacCatalyst=380}"
+                                                       MacCatalyst=360}"
                             HorizontalOptions="Center"
                             WidthRequest="{OnPlatform WinUI=360,
                                                       Android=270,
                                                       iOS=320,
-                                                      MacCatalyst=380}">
+                                                      MacCatalyst=360}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
@@ -94,7 +95,7 @@
                             WidthRequest="{OnPlatform WinUI=320,
                                                       Android=260,
                                                       iOS=310,
-                                                      MacCatalyst=370}" />
+                                                      MacCatalyst=320}" />
 
                     </Grid>
                 </Frame>
