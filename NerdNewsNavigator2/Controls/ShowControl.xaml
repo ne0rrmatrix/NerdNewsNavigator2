@@ -9,7 +9,6 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
-    xmlns:woka="clr-namespace:Woka.Controls;assembly=Woka"
     x:Name="showControl"
     x:DataType="viewmodel:BaseViewModel"
     BackgroundColor="#34AAD2"
@@ -40,7 +39,7 @@
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                     </Frame.GestureRecognizers>
-                    <woka:WokaGrid
+                    <Grid
                         Margin="5"
                         ColumnDefinitions="Auto"
                         RowDefinitions="Auto,Auto,Auto,980">
@@ -150,7 +149,7 @@
                                                       Android=260,
                                                       iOS=310,
                                                       MacCatalyst=370}" />
-                    </woka:WokaGrid>
+                    </Grid>
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
