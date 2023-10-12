@@ -9,7 +9,7 @@
     x:DataType="viewmodel:EditViewModel"
     BackgroundColor="#34AAD2">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
+        <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
     <Grid>
 
