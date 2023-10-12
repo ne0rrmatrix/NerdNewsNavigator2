@@ -15,6 +15,8 @@
     mc:Ignorable="d">
 
     <CollectionView
+        HorizontalOptions="{OnPlatform iOS=Center,
+                                       MacCatalyst=Center}"
         HorizontalScrollBarVisibility="Never"
         ItemsSource="{Binding Source, Source={x:Reference showControl}}"
         VerticalScrollBarVisibility="Never">
@@ -48,7 +50,8 @@
                         <Label
                             Grid.Row="0"
                             FontAttributes="Bold"
-                            FontSize="Micro"
+                            FontSize="{OnPlatform Default=Micro,
+                                                  MacCatalyst=16}"
                             HeightRequest="60"
                             HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                             LineBreakMode="WordWrap"
@@ -58,20 +61,20 @@
                             WidthRequest="{OnPlatform WinUI=380,
                                                       Android=260,
                                                       iOS=320,
-                                                      MacCatalyst=380}" />
+                                                      MacCatalyst=370}" />
                         <Image
                             Grid.Row="1"
                             Aspect="AspectFit"
                             HeightRequest="{OnPlatform WinUI=370,
                                                        Android=270,
                                                        iOS=320,
-                                                       MacCatalyst=380}"
+                                                       MacCatalyst=370}"
                             HorizontalOptions="{OnPlatform Default=Start,
                                                            MacCatalyst=Center}"
                             WidthRequest="{OnPlatform WinUI=370,
                                                       Android=270,
                                                       iOS=320,
-                                                      MacCatalyst=380}">
+                                                      MacCatalyst=370}">
                             <Image.Source>
                                 <UriImageSource
                                     CacheValidity="10:00:00:00"
@@ -142,7 +145,8 @@
 
                         <Label
                             Grid.Row="3"
-                            FontSize="Micro"
+                            FontSize="{OnPlatform Default=Micro,
+                                                  MacCatalyst=16}"
                             HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="A description of episode."

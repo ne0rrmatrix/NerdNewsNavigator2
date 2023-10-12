@@ -55,7 +55,8 @@
                             Margin="5"
                             Padding="10"
                             FontAttributes="Bold"
-                            FontSize="Micro"
+                            FontSize="{OnPlatform Default=Micro,
+                                                  MacCatalyst=16}"
                             HorizontalOptions="Center"
                             HorizontalTextAlignment="Center"
                             LineBreakMode="WordWrap"
@@ -87,7 +88,8 @@
                         </Image>
                         <Label
                             Grid.Row="2"
-                            FontSize="Micro"
+                            FontSize="{OnPlatform Default=Micro,
+                                                  MacCatalyst=16}"
                             HeightRequest="600"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
