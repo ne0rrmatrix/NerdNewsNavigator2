@@ -3,12 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-
 public class UrlItemMessage : ValueChangedMessage<Show>
 {
+    public Show ShowItem { get; set; }
     public UrlItemMessage(Show show) : base(show)
     {
         ShowItem = show;
     }
-    public Show ShowItem { get; }
 }
