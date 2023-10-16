@@ -12,28 +12,4 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </remarks>
 public partial class SettingsViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
 {
-    /*
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
-    /// </summary>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task UpdatePodcasts()
-    {
-        await Toast.Make("Updating Podcasts.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        ThreadPool.QueueUserWorkItem(state =>
-       {
-           _ = UpdatePodcasts();
-           //var podcast = await PodcastServices.UpdatePodcast();
-           //Podcasts.Clear();
-           //podcast.ForEach(Podcasts.Add);
-           //var fav = await PodcastServices.UpdateFavoritesAsync();
-           FavoriteShows.Clear();
-           _ = GetFavoriteShows();
-           //fav.ForEach(FavoriteShows.Add);
-           //_ = Task.Run(GetPodcasts);
-           //IsBusy = false;
-       });
-    }
-    */
 }
