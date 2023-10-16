@@ -168,35 +168,6 @@
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
                         HorizontalOptions="Start"
-                        Text="Update Podcasts"
-                        TextColor="Black"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
-                    <Button
-                        Margin="10"
-                        BackgroundColor="#205493"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SettingsViewModel}}, Path=UpdatePodcastsCommand}"
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HeightRequest="{OnIdiom Default=48,
-                                                Tablet=50}"
-                        HorizontalOptions="End"
-                        SemanticProperties.Description="Button updates podcasts and removes stale favorites."
-                        Text="Update"
-                        TextColor="#FFFFFF"
-                        VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout>
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="{OnIdiom Tablet=24,
-                                           Default=12}"
-                        HorizontalOptions="Start"
                         Text="Edit Item"
                         TextColor="Black"
                         VerticalOptions="Center"

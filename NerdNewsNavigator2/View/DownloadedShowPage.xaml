@@ -33,15 +33,12 @@
                     <DataTemplate x:DataType="model:Download">
 
                         <Frame
-                            Margin="{OnPlatform WinUI=90,
-                                                MacCatalyst=90,
-                                                Android=90,
-                                                iOS=90}"
+                            Margin="5"
                             BackgroundColor="White"
                             WidthRequest="{OnPlatform WinUI=370,
-                                                      MacCatalyst=370,
-                                                      Android=370,
-                                                      iOS=320}">
+                                                      MacCatalyst=390,
+                                                      Android=340,
+                                                      iOS=340}">
                             <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
