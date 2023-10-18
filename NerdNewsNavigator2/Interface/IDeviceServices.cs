@@ -9,10 +9,7 @@ using Microsoft.UI.Windowing;
 namespace NerdNewsNavigator2.Interface;
 interface IDeviceServices
 {
-#if IOS || ANDROID || MACCATALYST
-    public void FullScreen();
-    public void RestoreScreen();
-#elif WINDOWS
+#if WINDOWS
     public AppWindow FullScreen();
     public AppWindow RestoreScreen();
 #else
