@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-
 public class PageMessage : ValueChangedMessage<string>
 {
     public bool PageChange { get; set; }

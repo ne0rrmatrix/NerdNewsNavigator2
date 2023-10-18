@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using NerdNewsNavigator2.Extensions;
-using NerdNewsNavigator2.Interface;
 using Platform = Microsoft.Maui.ApplicationModel.Platform;
 
 #if ANDROID

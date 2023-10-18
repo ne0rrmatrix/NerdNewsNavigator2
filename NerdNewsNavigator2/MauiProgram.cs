@@ -3,9 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
-using NerdNewsNavigator2.Devices;
-using NerdNewsNavigator2.Interface;
-using Woka;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -21,7 +18,7 @@ public static class MauiProgram
             // fonts.AddFont("OpenSans-Medium.ttf", "OpenSansMedium"); !! Still throws error !!
             // Alias set to match error string
             fonts.AddFont("OpenSans-Medium.ttf", "sans-serif-medium");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement().ConfigureWorkarounds()
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement()
 #if ANDROID || IOS
         .UseLocalNotification();
 #else

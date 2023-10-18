@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Primitives;
-
 public class VideoNavigationEventArgs : EventArgs
 {
     public Show CurrentShow { get; set; }

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-
 public class DeletedItemMessage : ValueChangedMessage<bool>
 {
     public DeletedItemMessage(bool value) : base(value)

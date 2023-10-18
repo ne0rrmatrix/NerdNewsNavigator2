@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2;
+
 /// <summary>
 /// A class that inherits <see cref="Shell"/> and manages it.
 /// </summary>

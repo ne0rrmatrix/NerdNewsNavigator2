@@ -8,7 +8,6 @@ using static Android.OS.PowerManager;
 #endif
 
 namespace NerdNewsNavigator2.Services;
-
 public partial class AutoDownloadService
 {
     private string Status { get; set; }
