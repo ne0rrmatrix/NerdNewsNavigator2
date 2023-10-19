@@ -18,7 +18,7 @@ public partial class PodcastViewModel : BaseViewModel
     /// </summary>
     public PodcastViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
+        ThreadPool.QueueUserWorkItem(async (state) => await GetPodcasts());
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadFinished += RemoveTitle;
         App.Downloads.DownloadCancelled += RemoveTitle;
@@ -43,7 +43,7 @@ public partial class PodcastViewModel : BaseViewModel
     {
         IsBusy = true;
         Podcasts.Clear();
-        await GetUpdatedPodcasts();
+        await GetPodcasts();
         IsBusy = false;
     }
     /// <summary>

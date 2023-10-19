@@ -108,49 +108,33 @@ public static class FeedService
             {
                 return shows;
             }
-
-            return ProcessShows(rssNodes, shows, getFirstOnly, mgr);
+            for (var i = 0; i < rssNodes.Count; i++)
+            {
+                Show show = new()
+                {
+                    Description = rssNodes[i].SelectSingleNode("description") != null ? rssNodes[i].SelectSingleNode("description").InnerText : string.Empty,
+                    PubDate = ConvertToDateTime(rssNodes[i].SelectSingleNode("pubDate") != null ? rssNodes[i].SelectSingleNode("pubDate").InnerText : string.Empty),
+                    Title = rssNodes[i].SelectSingleNode("title") != null ? rssNodes[i].SelectSingleNode("title").InnerText : string.Empty,
+                    Url = rssNodes[i].SelectSingleNode("enclosure", mgr) != null ? rssNodes[i].SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
+                    Image = rssNodes[i].SelectSingleNode("itunes:image", mgr) != null ? rssNodes[i].SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
+                    IsDownloading = false,
+                    IsNotDownloaded = true,
+                    IsDownloaded = false,
+                };
+                shows.Add(show);
+                if (getFirstOnly)
+                {
+                    return shows;
+                }
+            }
+            return shows;
         }
         catch
         {
             return Enumerable.Empty<Show>().ToList();
         }
     }
-    private static List<Show> ProcessShows(XmlNodeList rssNodes, List<Show> shows, bool getFirstOnly, XmlNamespaceManager mgr)
-    {
-        foreach (XmlNode node in rssNodes)
-        {
-            Show show = new()
-            {
-                Description = RemoveBADHtmlTags(node.SelectSingleNode("description") != null ? node.SelectSingleNode("description").InnerText : string.Empty),
-                PubDate = ConvertToDateTime(node.SelectSingleNode("pubDate") != null ? node.SelectSingleNode("pubDate").InnerText : string.Empty),
-                Title = node.SelectSingleNode("title") != null ? node.SelectSingleNode("title").InnerText : string.Empty,
-                Url = node.SelectSingleNode("enclosure", mgr) != null ? node.SelectSingleNode("enclosure", mgr).Attributes["url"].InnerText : string.Empty,
-                Image = node.SelectSingleNode("itunes:image", mgr) != null ? node.SelectSingleNode("itunes:image", mgr).Attributes["href"].InnerText : string.Empty,
-                IsDownloading = false,
-                IsNotDownloaded = true,
-                IsDownloaded = false,
-            };
-            shows.Add(show);
-            if (getFirstOnly)
-            {
-                return shows;
-            }
-        }
-        return shows;
-    }
     #endregion
-
-    /// <summary>
-    /// Method <c>hTMLCode</c> Returns html string that will not crash.
-    /// </summary>
-    /// <param name="hTMLCode"></param> String of html.
-    /// <returns><see cref="string"/></returns>
-    public static string RemoveBADHtmlTags(string hTMLCode)
-    {
-        hTMLCode = Regex.Replace(hTMLCode, "/\\?.*?.\"", "\"", RegexOptions.IgnoreCase | RegexOptions.Singleline, TimeSpan.FromMilliseconds(500));
-        return hTMLCode;
-    }
 
     /// <summary>
     /// Method returns <see cref="DateTime"/> object from string.

@@ -33,24 +33,19 @@
                     <DataTemplate x:DataType="model:Download">
 
                         <Frame
-                            Margin="{OnPlatform WinUI=90,
-                                                MacCatalyst=90,
-                                                Android=90,
-                                                iOS=90}"
+                            Margin="5"
                             BackgroundColor="White"
                             WidthRequest="{OnPlatform WinUI=370,
-                                                      MacCatalyst=370,
-                                                      Android=370,
-                                                      iOS=320}">
-                            <Grid ColumnDefinitions="310,310,Auto" RowDefinitions="Auto,350,Auto,970">
+                                                      MacCatalyst=390,
+                                                      Android=340,
+                                                      iOS=340}">
+                            <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
                                 </Grid.GestureRecognizers>
                                 <Label
                                     Grid.Row="0"
                                     FontAttributes="Bold"
-                                    FontSize="12"
-                                    HeightRequest="35"
                                     LineBreakMode="WordWrap"
                                     SemanticProperties.Description="Show title."
                                     Text="{Binding Title}"
@@ -60,8 +55,15 @@
                                     Grid.Row="1"
                                     Margin="10"
                                     Aspect="AspectFit"
-                                    HeightRequest="320"
-                                    WidthRequest="320">
+                                    HeightRequest="{OnPlatform WinUI=360,
+                                                               Android=270,
+                                                               iOS=320,
+                                                               MacCatalyst=370}"
+                                    HorizontalOptions="Center"
+                                    WidthRequest="{OnPlatform WinUI=360,
+                                                              Android=270,
+                                                              iOS=320,
+                                                              MacCatalyst=370}">
                                     <Image.Source>
                                         <UriImageSource
                                             CacheValidity="10:00:00:00"
@@ -107,7 +109,8 @@
                                 <Label
                                     Grid.Row="3"
                                     Margin="10"
-                                    FontSize="10"
+                                    FontSize="{OnPlatform MacCatalyst=16}"
+                                    HeightRequest="{OnPlatform WinUI=890}"
                                     LineBreakMode="WordWrap"
                                     SemanticProperties.Description="A description of what the show is about."
                                     Text="{Binding Description}"

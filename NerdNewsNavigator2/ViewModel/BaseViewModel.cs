@@ -77,10 +77,6 @@ public partial class BaseViewModel : ObservableObject
     public bool IsNotBusy => !IsBusy;
 
     [ObservableProperty]
-    private double _progressInfos = 0;
-    public static string CancelUrl { get; set; }
-    public static bool CancelDownload { get; set; }
-    [ObservableProperty]
     private bool _isRefreshing;
     #endregion
     public BaseViewModel(IConnectivity connectivity)
@@ -239,13 +235,15 @@ public partial class BaseViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
             return;
         }
-        Shows.Clear();
-        var temp = FeedService.GetShows(url, getFirstOnly);
-        var item = RemoveDuplicates(temp);
-        item.ForEach(Shows.Add);
-        _logger.Info("Got All Shows");
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Shows.Clear();
+            var temp = FeedService.GetShows(url, getFirstOnly);
+            Shows = new ObservableCollection<Show>(temp);
+            _logger.Info("Got All Shows");
+            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+            Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
+        });
     }
     public void UpdateShows()
     {
@@ -284,20 +282,6 @@ public partial class BaseViewModel : ObservableObject
             return false;
         }
     }
-
-    #region Download Tasks
-
-    public Show GetShowForDownload(string url)
-    {
-        if (Shows.ToList().Exists(x => x.Url == url))
-        {
-            var showItem = Shows.ToList().Find(x => x.Url == url);
-            return showItem;
-        }
-        return new Show();
-    }
-    #endregion
-
     #region Podcast data functions
 
     /// <summary>
@@ -307,7 +291,8 @@ public partial class BaseViewModel : ObservableObject
     {
         FavoriteShows.Clear();
         var temp = await App.PositionData.GetAllFavorites();
-        temp?.ForEach(FavoriteShows.Add);
+        FavoriteShows = new ObservableCollection<Favorites>(temp);
+        OnPropertyChanged(nameof(FavoriteShows));
         _logger.Info("Got all Favorite Shows");
     }
 
@@ -318,98 +303,38 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp.Where(x => x.IsDownloaded).ToList().ForEach(DownloadedShows.Add);
+        temp.Where(x => !x.Deleted).ToList().ForEach(download => DownloadedShows.Add(download));
         _logger.Info("Add all downloads to All Shows list");
-    }
-    public static List<Show> RemoveDuplicates(List<Show> items)
-    {
-        List<Show> result = new();
-        for (var i = 0; i < items.Count; i++)
-        {
-            var duplicate = false;
-            for (var z = 0; z < i; z++)
-            {
-                if (items[z].Url == items[i].Url)
-                {
-                    duplicate = true;
-                    break;
-                }
-            }
-            if (!duplicate)
-            {
-                result.Add(items[i]);
-            }
-        }
-        return result;
     }
     #endregion
 
     #region Update Podcasts
     /// <summary>
-    /// <c>GetUpdatedPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
+    /// <c>GetPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
     /// </summary>
     /// <returns></returns>
-    public async Task GetUpdatedPodcasts()
+    public async Task GetPodcasts()
     {
         if (Podcasts.Count > 0)
         {
             return;
         }
         var temp = await App.PositionData.GetAllPodcasts();
-        if (!InternetConnected())
+        if (temp.Count > 0)
         {
-            var item = temp.OrderBy(x => x.Title).ToList();
-            item.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+            SortAndAdd(temp);
             return;
         }
-        var updates = await UpdateCheckAsync();
-        if (!updates && temp.Count == 0)
-        {
-            await ProcessPodcasts();
-        }
-        else
-        {
-            var item = temp.OrderBy(x => x.Title).ToList();
-            item.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
-        }
+        var updates = PodcastServices.GetFromUrl();
+        PodcastServices.AddToDatabase(updates);
+        Podcasts = new ObservableCollection<Podcast>(updates);
+        OnPropertyChanged(nameof(Podcasts));
     }
-    private async Task ProcessPodcasts()
+    private void SortAndAdd(List<Podcast> podcasts)
     {
-        var res = await PodcastServices.UpdatePodcast();
-        Podcasts.Clear();
-        // sort podcast alphabetically
-        var orderPodcast = res.OrderBy(x => x.Title).ToList();
-
-        orderPodcast.ForEach(Podcasts.Add);
+        var item = podcasts?.OrderBy(x => x.Title).ToList();
+        item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
     }
-    private async Task<bool> UpdateCheckAsync()
-    {
-        var currentdate = DateTime.Now;
-        var oldDate = Preferences.Default.Get("OldDate", DateTime.Now);
-        _logger.Info($"Total day since last Update check for new Podcasts: {(currentdate - oldDate).Days}");
-        if ((currentdate - oldDate).Days <= 0)
-        {
-            Preferences.Default.Set("OldDate", DateTime.Now);
-            _logger.Info("Setting current date as Last Update Check");
-            return false;
-        }
-        if ((oldDate - currentdate).Days > 30)
-        {
-            _logger.Info("Last Update Check is over 30 days ago. Updating now.");
-            Preferences.Default.Remove("OldDate");
-            Preferences.Default.Set("OldDate", currentdate);
-            var res = await PodcastServices.UpdatePodcast();
-            Podcasts.Clear();
-            var item = res.OrderBy(x => x.Title).ToList();
-            item.ForEach(Podcasts.Add);
-            var fav = await PodcastServices.UpdateFavoritesAsync();
-            FavoriteShows.Clear();
-            fav.ForEach(FavoriteShows.Add);
-            return true;
-        }
-        return false;
-    }
-
     #endregion
 
     #region Display Functions

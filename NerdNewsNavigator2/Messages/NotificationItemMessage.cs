@@ -3,9 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Messages;
-
 public class NotificationItemMessage : ValueChangedMessage<int>
 {
+    public bool Cancel { get; }
+    public int Id { get; }
+    public string Url { get; }
+    public Show ShowItem { get; }
     public NotificationItemMessage(int id, string url, Show show, bool cancel) : base(id)
     {
         Id = id;
@@ -13,8 +16,4 @@ public class NotificationItemMessage : ValueChangedMessage<int>
         ShowItem = show;
         Cancel = cancel;
     }
-    public bool Cancel { get; }
-    public int Id { get; }
-    public string Url { get; }
-    public Show ShowItem { get; }
 }

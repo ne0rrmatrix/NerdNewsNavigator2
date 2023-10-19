@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Controls;
-
 public partial class MediaControl : ContentView
 {
-    #region Properties and Bindable Properties
+    #region Properties
     public string PlayPosition { get; set; }
     public bool MenuIsVisible { get; set; } = false;
 
@@ -164,6 +163,34 @@ public partial class MediaControl : ContentView
         mediaElement.Stop();
         BtnPLay.Source = "pause.png";
     }
+    private async Task Moved()
+    {
+        if (!FullScreen)
+        {
+            FullScreen = true;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = true;
+                ImageSettings.IsVisible = true;
+            }
+            else
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
+            OnPropertyChanged(nameof(FullScreen));
+            await Task.Delay(7000);
+            FullScreen = false;
+            MenuIsVisible = false;
+            if (IsYoutube)
+            {
+                ImageSettings.IsEnabled = false;
+                ImageSettings.IsVisible = false;
+            }
+            OnPropertyChanged(nameof(MenuIsVisible));
+            OnPropertyChanged(nameof(FullScreen));
+        }
+    }
 
     /// <summary>
     /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
@@ -178,20 +205,25 @@ public partial class MediaControl : ContentView
     #endregion
 
     #region Events
-
-#nullable enable
-    private void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void MediaControl_Unloaded(object sender, EventArgs e)
+    {
+        if (s_fullScreen)
+        {
+            CustomControls.RestoreScreen();
+        }
+    }
+    private void MediaElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
         {
             PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
         }
     }
-    private void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
+    private void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
     {
         PositionSlider.Value = e.Position.TotalSeconds;
     }
-    private void Slider_DragCompleted(object? sender, EventArgs e)
+    private void Slider_DragCompleted(object sender, EventArgs e)
     {
         ArgumentNullException.ThrowIfNull(sender);
 
@@ -199,8 +231,6 @@ public partial class MediaControl : ContentView
         mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
         mediaElement.Play();
     }
-
-#nullable disable
     private void Slider_DragStarted(object sender, EventArgs e)
     {
         mediaElement.Pause();
@@ -328,42 +358,5 @@ public partial class MediaControl : ContentView
             s_fullScreen = true;
         }
     }
-
-    private async Task Moved()
-    {
-        if (!FullScreen)
-        {
-            FullScreen = true;
-            if (IsYoutube)
-            {
-                ImageSettings.IsEnabled = true;
-                ImageSettings.IsVisible = true;
-            }
-            else
-            {
-                ImageSettings.IsEnabled = false;
-                ImageSettings.IsVisible = false;
-            }
-            OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(7000);
-            FullScreen = false;
-            MenuIsVisible = false;
-            if (IsYoutube)
-            {
-                ImageSettings.IsEnabled = false;
-                ImageSettings.IsVisible = false;
-            }
-            OnPropertyChanged(nameof(MenuIsVisible));
-            OnPropertyChanged(nameof(FullScreen));
-        }
-    }
     #endregion
-
-    private void MediaControl_Unloaded(object sender, EventArgs e)
-    {
-        if (s_fullScreen)
-        {
-            CustomControls.RestoreScreen();
-        }
-    }
 }

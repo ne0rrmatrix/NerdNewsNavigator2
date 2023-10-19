@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-
 public static class FavoriteService
 {
     /// <summary>
@@ -36,11 +35,6 @@ public static class FavoriteService
     {
         var temp = await App.PositionData.GetAllFavorites();
         var result = temp.AsEnumerable().First(temp => temp.Url == url);
-        if (result is not null)
-        {
-            await App.PositionData.DeleteFavorite(result);
-            return true;
-        }
-        return false;
+        return await App.PositionData.DeleteFavorite(result);
     }
 }

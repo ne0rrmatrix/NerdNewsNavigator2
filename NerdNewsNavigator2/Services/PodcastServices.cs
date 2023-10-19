@@ -9,12 +9,7 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class PodcastServices
 {
-    #region Properties
     public static bool IsConnected { get; set; } = true;
-    private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(PodcastServices));
-    #endregion
-
-    #region Get Podcasts
 
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
@@ -27,66 +22,6 @@ public static class PodcastServices
         item.ForEach(x => podcasts.Add(FeedService.GetFeed(x)));
         return podcasts;
     }
-    #endregion
-
-    #region Update Podcast list
-    public static async Task<List<Podcast>> UpdatePodcast()
-    {
-        var podcasts = await App.PositionData.GetAllPodcasts();
-        var stalePodcasts = new List<Podcast>();
-
-        // list of stale podcasts
-        podcasts?.Where(x => x.Deleted).ToList().ForEach(stalePodcasts.Add);
-        var newPodcasts = RemoveStalePodcastsAsync(stalePodcasts);
-        await App.PositionData.DeleteAllPodcasts();
-        return await AddPodcastsToDBAsync(newPodcasts);
-    }
-    public static async Task<List<Favorites>> UpdateFavoritesAsync()
-    {
-        // get old favorites list
-        var favoriteShows = await App.PositionData.GetAllFavorites();
-        var podcasts = await App.PositionData.GetAllPodcasts();
-        var temp = new List<Favorites>();
-
-        if (favoriteShows.Count == 0)
-        {
-            s_logger.Info("Did not find any stale Favorite Shows");
-            return favoriteShows;
-        }
-        var item = favoriteShows.Where(favoriteShows => !podcasts.Exists(x => x.Title == favoriteShows.Title)).ToList();
-        item.ForEach(temp.Add);
-        await App.PositionData.DeleteAllFavorites();
-        AddFavoritesToDatabase(temp);
-        return temp;
-    }
-    private static List<Podcast> RemoveStalePodcastsAsync(List<Podcast> stalePodcasts)
-    {
-        // get updated podcast list
-        var newPodcasts = GetFromUrl();
-
-        if (stalePodcasts.Count == 0)
-        {
-            s_logger.Info("Did not find any deleted podcasts");
-            return newPodcasts;
-        }
-
-        // on new podcast list mark all old deleted podcast as deleted. If old podcast does not exist it ignores it.
-        newPodcasts.Where(x => stalePodcasts.Exists(y => y.Url == x.Url)).ToList().ForEach(x => x.Deleted = true);
-        return newPodcasts;
-    }
-    private static async Task<List<Podcast>> AddPodcastsToDBAsync(List<Podcast> newPodcasts)
-    {
-        var res = new List<Podcast>();
-        await App.PositionData.DeleteAllPodcasts();
-        await App.PositionData.DeleteAll();
-        // add all podcasts
-        newPodcasts.ForEach(res.Add);
-
-        AddToDatabase(res);
-        return res;
-    }
-
-    #endregion
 
     #region Manipulate Database
 
@@ -165,26 +100,11 @@ public static class PodcastServices
     {
         await Task.Run(async () =>
         {
+            await App.PositionData.DeleteAllPodcasts();
             var items = await App.PositionData.GetAllPodcasts();
             items.Where(x => x.Url.Contains("feeds.twit.tv")).ToList().ForEach(async item => await App.PositionData.DeletePodcast(item));
         });
 
-    }
-
-    /// <summary>
-    /// Method Deletes a <see cref="Podcast"/> from Database.
-    /// </summary>
-    /// <param name="url"><see cref="string"/> URL of <see cref="Podcast"/> to delete</param>
-    /// <returns><see cref="bool"/> Return True if <see cref="Podcast"/> is Deleted. False Otherwise.</returns>
-    public static async Task<bool> Delete(string url)
-    {
-        var items = await App.PositionData.GetAllPodcasts();
-        if (items.Count == 0)
-        {
-            return false;
-        }
-        items.Where(x => x.Url == url).ToList().ForEach(async item => await App.PositionData.DeletePodcast(item));
-        return true;
     }
     #endregion
 }

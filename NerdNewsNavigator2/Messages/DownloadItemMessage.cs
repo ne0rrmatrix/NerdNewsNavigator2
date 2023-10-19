@@ -8,11 +8,11 @@ namespace NerdNewsNavigator2.Messages;
 /// </summary>
 public class DownloadItemMessage : ValueChangedMessage<bool>
 {
+    public string Title { get; }
+    public Show ShowItem { get; }
     public DownloadItemMessage(bool value, string title, Show show) : base(value)
     {
         Title = title;
         ShowItem = show;
     }
-    public string Title { get; }
-    public Show ShowItem { get; }
 }

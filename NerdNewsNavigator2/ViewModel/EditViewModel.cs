@@ -10,15 +10,11 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class EditViewModel : BaseViewModel
 {
     /// <summary>
-    /// An <see cref="ILogger"/> instance managed by this class.
-    /// </summary>
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(EditViewModel));
-    /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
     public EditViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        ThreadPool.QueueUserWorkItem(async (state) => await GetUpdatedPodcasts());
+        _ = GetPodcasts();
     }
 
     #region Methods
@@ -26,39 +22,24 @@ public partial class EditViewModel : BaseViewModel
     /// Method checks for required Permission for Android Notifications and requests them if needed
     /// </summary>
     /// <returns></returns>
-    public static async Task<PermissionStatus> CheckAndRequestForeGroundPermission()
+    public static async Task CheckAndRequestForeGroundPermission()
     {
         var status = await Permissions.CheckStatusAsync<AndroidPermissions>();
         if (status == PermissionStatus.Granted)
         {
-            return status;
+            return;
         }
         else
         {
             await Shell.Current.DisplayAlert("Permission Required", "Notification permission is required for Auto Downloads to work in background. It runs on an hourly schedule.", "Ok");
         }
-        status = await Permissions.RequestAsync<AndroidPermissions>();
-        return status;
+        await Permissions.RequestAsync<AndroidPermissions>();
     }
     private async Task DeleteFavorites(List<Favorites> favoriteShow, string url)
     {
-        var item = favoriteShow.ToList().Exists(x => x.Url == url);
-        if (item)
-        {
-            await FavoriteService.RemoveFavoriteFromDatabase(url);
-            var fav = FavoriteShows.First(x => x.Url == url);
-            favoriteShow?.Remove(fav);
-        }
-    }
-    private bool SetPreferences()
-    {
-        var start = Preferences.Default.Get("start", false);
-        if (start)
-        {
-            _logger.Info("Auto Download is already set to start Automatically");
-            return true;
-        }
-        return true;
+        await FavoriteService.RemoveFavoriteFromDatabase(url);
+        var fav = FavoriteShows.First(x => x.Url == url);
+        favoriteShow?.Remove(fav);
     }
     private async Task ProcessPodcastsAsync(Podcast item)
     {
@@ -116,15 +97,7 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task<bool> AddToFavorite(string url)
     {
-        var status = await CheckAndRequestForeGroundPermission();
-        if (PermissionStatus.Granted == status)
-        {
-            _logger.Info("Notification Permission Granted");
-        }
-        else if (PermissionStatus.Denied == status)
-        {
-            _logger.Info("Notification Permission Denied");
-        }
+        await CheckAndRequestForeGroundPermission();
         if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
         {
             return false;
@@ -135,7 +108,7 @@ public partial class EditViewModel : BaseViewModel
             await ProcessFavoritesAsync(item);
             await ProcessPodcastsAsync(item);
 
-            return SetPreferences();
+            return Preferences.Default.Get("start", false);
         }
         return false;
     }

@@ -24,8 +24,6 @@ public partial class ShowViewModel : BaseViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
-        Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         App.DeletedItem.DeletedItem += OnItemDeleted;
         if (App.Downloads.Shows.Count > 0)
         {
@@ -41,12 +39,7 @@ public partial class ShowViewModel : BaseViewModel
             return;
         }
         var decodedUrl = HttpUtility.UrlDecode(newValue);
-#if WINDOWS || MACCATALYST || ANDROID
-        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
-#endif
-#if IOS
         GetShowsAsync(decodedUrl, false);
-#endif
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
     {
@@ -80,15 +73,16 @@ public partial class ShowViewModel : BaseViewModel
     public void Cancel(string url)
     {
         Title = string.Empty;
-        OnPropertyChanged(nameof(Title));
-        var item = App.Downloads.Cancel(url);
-        if (item is null)
-        {
-            _logger.Info("show was null");
-            return;
-        }
-        Shows.ToList().ForEach(SetProperties);
         DownloadProgress = string.Empty;
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(DownloadProgress));
+        App.Downloads.Cancel(url);
+        var show = Shows.ToList().Find(x => x.Url == url);
+        var number = Shows.IndexOf(show);
+        show.IsDownloading = false;
+        show.IsNotDownloaded = true;
+        show.IsDownloaded = false;
+        Shows[number] = show;
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
@@ -105,16 +99,11 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
-        var item = GetShowForDownload(url);
-        item.IsDownloading = true;
-        if (Shows.ToList().Exists(x => x.Url == item.Url))
-        {
-            var number = Shows.IndexOf(item);
-            Shows[number].IsDownloaded = false;
-            Shows[number].IsDownloading = true;
-            Shows[number].IsNotDownloaded = false;
-            OnPropertyChanged(nameof(Shows));
-        }
+        var item = Shows.ToList().Find(x => x.Url == url);
+        var number = Shows.IndexOf(item);
+        Shows[number].IsDownloaded = false;
+        Shows[number].IsDownloading = true;
+        Shows[number].IsNotDownloaded = false;
         if (App.Downloads.Shows.Count == 0)
         {
             _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");

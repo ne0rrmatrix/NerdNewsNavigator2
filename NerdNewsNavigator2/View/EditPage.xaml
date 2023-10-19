@@ -27,36 +27,21 @@
                 <DataTemplate x:DataType="model:Podcast">
 
                     <Frame
-                        Margin="{OnPlatform WinUI=90,
-                                            MacCatalyst=90,
-                                            Android=10,
-                                            iOS=90}"
-                        Padding="{OnPlatform Default=10,
-                                             iOS=10}"
+                        Margin="10"
                         BackgroundColor="White"
-                        WidthRequest="{OnPlatform WinUI=370,
+                        WidthRequest="{OnPlatform WinUI=390,
+                                                  MacCatalyst=390,
                                                   Android=340,
-                                                  MacCatalyst=370,
                                                   iOS=340}">
 
-                        <Grid>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{OnPlatform WinUI=350, MacCatalyst=350, Android=310, iOS=375}" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="{OnPlatform WinUI=Auto, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
-                                <RowDefinition Height="{OnPlatform WinUI=350, Android=350, MacCatalyst=350, iOS=350}" />
-                                <RowDefinition Height="{OnPlatform WinUI=130, Android=Auto, MacCatalyst=Auto, iOS=Auto}" />
-                                <RowDefinition Height="{OnPlatform WinUI=280, Android=280, iOS=110, MacCatalyst=280}" />
-                            </Grid.RowDefinitions>
-
+                        <Grid
+                            ColumnDefinitions="Auto"
+                            HorizontalOptions="Center"
+                            RowDefinitions="Auto, Auto, Auto, *">
                             <Label
                                 Grid.Row="0"
-                                Margin="5"
                                 FontAttributes="Bold"
-                                FontSize="10"
+                                HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 LineBreakMode="WordWrap"
                                 Text="{Binding Title}"
@@ -64,12 +49,18 @@
                                 VerticalOptions="Center" />
                             <Image
                                 Grid.Row="1"
-                                Margin="10"
-                                Aspect="AspectFit"
+                                Aspect="{OnPlatform WinUI=AspectFit,
+                                                    Android=AspectFit,
+                                                    iOS=AspectFit}"
+                                HeightRequest="{OnPlatform WinUI=360,
+                                                           Android=270,
+                                                           iOS=320,
+                                                           MacCatalyst=370}"
                                 HorizontalOptions="Center"
-                                WidthRequest="{OnIdiom Phone=310,
-                                                       Tablet=340,
-                                                       Desktop=350}">
+                                WidthRequest="{OnPlatform WinUI=360,
+                                                          Android=270,
+                                                          iOS=320,
+                                                          MacCatalyst=370}">
                                 <Image.Source>
                                     <UriImageSource
                                         CacheValidity="10:00:00:00"
@@ -77,20 +68,9 @@
                                         Uri="{Binding Image}" />
                                 </Image.Source>
                             </Image>
-                            <Label
-                                Grid.Row="3"
-                                Margin="10"
-                                FontSize="10"
-                                LineBreakMode="WordWrap"
-                                Text="{Binding Description}"
-                                TextColor="Black"
-                                WidthRequest="{OnIdiom Phone=290,
-                                                       Tablet=300,
-                                                       Default=290,
-                                                       Desktop=340}" />
+
                             <Button
                                 Grid.Row="2"
-                                Margin="10"
                                 BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
                                 FontSize="Small"
@@ -99,23 +79,22 @@
                                 SemanticProperties.Description="Button for deleting podcast"
                                 Text="Delete"
                                 TextColor="#FFFFFF"
-                                WidthRequest="{OnIdiom Default=90,
-                                                       Tablet=90}">
+                                WidthRequest="125">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Button
                                 Grid.Row="2"
-                                Margin="10"
+                                Margin="20"
                                 BackgroundColor="#205493"
                                 FontAttributes="Bold"
-                                FontSize="14"
+                                FontSize="Small"
                                 HeightRequest="48"
                                 HorizontalOptions="End"
                                 IsVisible="{Binding IsNotDownloaded}"
                                 SemanticProperties.Description="Button for adding favorite podcast"
-                                Text="Add Favorite"
+                                Text="Add"
                                 TextColor="#FFFFFF"
                                 WidthRequest="125">
                                 <Button.GestureRecognizers>
@@ -124,7 +103,7 @@
                             </Button>
                             <Button
                                 Grid.Row="2"
-                                Margin="10"
+                                Margin="20"
                                 BackgroundColor="#205493"
                                 FontAttributes="Bold"
                                 FontSize="Small"
@@ -134,13 +113,22 @@
                                 SemanticProperties.Description="Button for removing favorite podcast"
                                 Text="Remove"
                                 TextColor="#FFFFFF"
-                                WidthRequest="{OnIdiom Default=125,
-                                                       Tablet=125}">
+                                WidthRequest="125">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
-
+                            <Label
+                                Grid.Row="3"
+                                Margin="10"
+                                HeightRequest="{OnPlatform WinUI=450}"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding Description}"
+                                TextColor="Black"
+                                WidthRequest="{OnPlatform WinUI=320,
+                                                          Android=260,
+                                                          iOS=310,
+                                                          MacCatalyst=320}" />
                         </Grid>
 
                     </Frame>

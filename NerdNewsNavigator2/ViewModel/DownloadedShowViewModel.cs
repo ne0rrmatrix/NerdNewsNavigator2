@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
-public partial class DownloadedShowViewModel : BaseViewModel
+public partial class DownloadedShowViewModel : BaseViewModel, IRecipient<DeletedItemMessage>
 {
 
     /// <summary>
@@ -25,6 +25,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
         App.Downloads.DownloadFinished += ShowsDownloadCompleted;
+        WeakReferenceMessenger.Default.Register(this);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -41,10 +42,9 @@ public partial class DownloadedShowViewModel : BaseViewModel
         await GetDownloadedShows();
         IsBusy = false;
     }
-    private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
+    private void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
-        await GetDownloadedShows();
-        _ = MainThread.InvokeOnMainThreadAsync(() => { Title = string.Empty; });
+        _ = MainThread.InvokeOnMainThreadAsync(async () => { Title = string.Empty; await GetDownloadedShows(); });
     }
 
     /// <summary>
@@ -80,6 +80,11 @@ public partial class DownloadedShowViewModel : BaseViewModel
         Shows?.Remove(showTemp);
         _logger.Info($"Removed {url} from Downloaded Shows list.");
         App.DeletedItem.Add(item);
+    }
+
+    public void Receive(DeletedItemMessage message)
+    {
+        DownloadedShows.Clear();
     }
 }
 

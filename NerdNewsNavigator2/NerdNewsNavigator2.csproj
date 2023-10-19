@@ -151,14 +151,10 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.13" />
 	    <PackageReference Include="YoutubeExplode" Version="6.3.5" />
     </ItemGroup>
   
     <ItemGroup>
-    <Compile Update="Controls\ShowControl.xaml.cs">
-        <DependentUpon>ShowControl.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -205,9 +201,6 @@
   
     <ItemGroup>
     <MauiXaml Update="Controls\MediaControl.xaml">
-        <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Controls\ShowControl.xaml">
         <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="View\SettingsPage.xaml">
