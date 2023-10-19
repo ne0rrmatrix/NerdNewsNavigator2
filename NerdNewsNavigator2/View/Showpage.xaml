@@ -9,6 +9,7 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:ShowViewModel"
     BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded"
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True">
     <Shell.BackButtonBehavior>
@@ -23,7 +24,10 @@
             VerticalScrollBarVisibility="Never">
 
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
+                <GridItemsLayout
+                    x:Name="ItemLayout"
+                    Orientation="Vertical"
+                    Span="{Binding Orientation}" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>

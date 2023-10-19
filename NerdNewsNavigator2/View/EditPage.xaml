@@ -7,7 +7,8 @@
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:EditViewModel"
-    BackgroundColor="#34AAD2">
+    BackgroundColor="#34AAD2"
+    Loaded="ContentPage_Loaded">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
@@ -19,7 +20,10 @@
             VerticalScrollBarVisibility="Never">
 
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
+                <GridItemsLayout
+                    x:Name="ItemLayout"
+                    Orientation="Vertical"
+                    Span="{Binding Orientation}" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>

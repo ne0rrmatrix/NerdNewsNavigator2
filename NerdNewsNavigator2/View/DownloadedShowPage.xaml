@@ -25,7 +25,10 @@
                 VerticalScrollBarVisibility="Never">
 
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="{Binding Orientation}" />
+                    <GridItemsLayout
+                        x:Name="ItemLayout"
+                        Orientation="Vertical"
+                        Span="{Binding Orientation}" />
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
