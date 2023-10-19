@@ -47,13 +47,12 @@
                                                 MacCatalyst=0}"
                             ColumnDefinitions="Auto"
                             HorizontalOptions="{OnPlatform MacCatalyst=Center}"
-                            RowDefinitions="Auto,Auto,Auto,980">
+                            RowDefinitions="Auto,Auto,Auto,*">
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=Micro,
+                                FontSize="{OnPlatform Default=Default,
                                                       MacCatalyst=18}"
-                                HeightRequest="60"
                                 HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
@@ -148,8 +147,11 @@
 
                             <Label
                                 Grid.Row="3"
-                                FontSize="{OnPlatform Default=Micro,
-                                                      MacCatalyst=18}"
+                                FontSize="{OnPlatform iOS=Default,
+                                                      Android=Default,
+                                                      WinUI=Default,
+                                                      MacCatalyst=16}"
+                                HeightRequest="{OnPlatform WinUI=890}"
                                 HorizontalOptions="Start"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="A description of episode."

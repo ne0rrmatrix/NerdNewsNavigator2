@@ -35,17 +35,16 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Podcast">
                     <Frame
-                        Margin="5"
+                        Margin="10"
                         BackgroundColor="White"
                         WidthRequest="{OnPlatform WinUI=390,
                                                   MacCatalyst=390,
                                                   Android=340,
                                                   iOS=340}">
                         <Grid
-                            Margin="0"
                             ColumnDefinitions="Auto"
                             HorizontalOptions="Center"
-                            RowDefinitions="Auto,Auto,640">
+                            RowDefinitions="Auto,Auto,*">
 
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
@@ -53,10 +52,8 @@
 
                             <Label
                                 Grid.Row="0"
-                                Margin="5"
-                                Padding="10"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=Micro,
+                                FontSize="{OnPlatform Default=Default,
                                                       MacCatalyst=16}"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
@@ -91,9 +88,12 @@
                             </Image>
                             <Label
                                 Grid.Row="2"
-                                FontSize="{OnPlatform Default=Micro,
+                                Margin="10"
+                                FontSize="{OnPlatform iOS=Default,
+                                                      Android=Default,
+                                                      WinUI=Default,
                                                       MacCatalyst=16}"
-                                HeightRequest="600"
+                                HeightRequest="{OnPlatform WinUI=450}"
                                 LineBreakMode="WordWrap"
                                 Text="{Binding Description}"
                                 TextColor="Black"
