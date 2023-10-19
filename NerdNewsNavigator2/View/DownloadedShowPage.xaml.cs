@@ -18,19 +18,4 @@ public partial class DownloadedShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
-    /// <summary>
-    /// Method sets screen to normal screen size.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        Shell.SetNavBarIsVisible(Shell.Current.CurrentPage, true);
-        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-        {
-            ItemLayout.Span = 2;
-            OnPropertyChanged(nameof(ItemLayout));
-        }
-    }
 }

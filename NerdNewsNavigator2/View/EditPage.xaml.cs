@@ -18,13 +18,4 @@ public partial class EditPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
-    private void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-        {
-            ItemLayout.Span = 2;
-            OnPropertyChanged(nameof(ItemLayout));
-        }
-    }
 }
