@@ -94,7 +94,7 @@
                                 HorizontalOptions="End"
                                 IsVisible="{Binding IsNotDownloaded}"
                                 SemanticProperties.Description="Button for adding favorite podcast"
-                                Text="Add"
+                                Text="Favorite"
                                 TextColor="#FFFFFF"
                                 WidthRequest="125">
                                 <Button.GestureRecognizers>
