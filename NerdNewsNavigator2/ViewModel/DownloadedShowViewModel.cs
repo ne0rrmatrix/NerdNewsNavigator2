@@ -55,22 +55,9 @@ public partial class DownloadedShowViewModel : BaseViewModel, IRecipient<Deleted
     [RelayCommand]
     public async Task Delete(string url)
     {
-        var item = DownloadedShows.FirstOrDefault(x => x.Url == url);
-        if (item is null)
-        {
-            return;
-        }
-        var filename = DownloadService.GetFileName(item.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            _logger.Info($"Deleted file {tempFile}");
-        }
-        else
-        {
-            _logger.Info($"File {tempFile} was not found in file system.");
-        }
+        var item = DownloadedShows.ToList().Find(x => x.Url == url);
+        var tempFile = FileService.GetFileName(item.Url);
+        FileService.DeleteFile(tempFile);
         item.IsDownloaded = false;
         item.Deleted = true;
         item.IsNotDownloaded = true;

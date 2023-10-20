@@ -121,7 +121,7 @@ public partial class CurrentDownloads : ObservableObject
                 Deleted = false,
                 PubDate = item.PubDate,
                 Description = item.Description,
-                FileName = GetFileName(item.Url)
+                FileName = FileService.GetFileName(item.Url)
             };
             s_logger.Info($"Download completed: {item.Title}");
             await App.PositionData.UpdateDownload(download);
@@ -144,15 +144,13 @@ public partial class CurrentDownloads : ObservableObject
     {
         try
         {
-            var filename = GetFileName(item.Url);
-            var downloadFileUrl = item.Url;
             var favorites = await App.PositionData.GetAllDownloads();
-            var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
+            var tempFile = FileService.GetFileName(item.Url);
             if (File.Exists(tempFile))
             {
                 if (favorites?.Where(x => x.Deleted).ToList().Find(y => y.Url == item.Url) is not null || favorites?.Find(x => x.Url == item.Url) is null)
                 {
-                    s_logger.Info($"Item is Partially downloaded, Deleting: {filename}");
+                    s_logger.Info($"Item is Partially downloaded, Deleting: {tempFile}");
                     File.Delete(tempFile);
                 }
                 else
@@ -163,7 +161,7 @@ public partial class CurrentDownloads : ObservableObject
             }
             var destinationFilePath = tempFile;
             s_logger.Info("Starting download Progress on TaskBar");
-            using var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath);
+            using var client = new HttpClientDownloadWithProgress(item.Url, destinationFilePath);
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
             {
                 Status = $"        Download Progress: {progressPercentage}%";
@@ -180,7 +178,7 @@ public partial class CurrentDownloads : ObservableObject
             }
             if (Cancelled)
             {
-                DeleteFile(item.Url);
+                FileService.DeleteFile(item.Url);
                 Cancel(item);
                 _ = MainThread.InvokeOnMainThreadAsync(async () =>
                 {
@@ -193,35 +191,12 @@ public partial class CurrentDownloads : ObservableObject
         catch (Exception ex)
         {
             s_logger.Info($"{ex.Message}, Deleting file");
-            DeleteFile(item.Url);
+            FileService.DeleteFile(item.Url);
             _ = MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 await Toast.Make($"Download error: {ex.Message}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             });
             return false;
-        }
-    }
-
-    /// <summary>
-    /// Get file name from Url <see cref="string"/>
-    /// </summary>
-    /// <param name="url">A URL <see cref="string"/></param>
-    /// <returns>Filename <see cref="string"/> with file extension</returns>
-    public static string GetFileName(string url)
-    {
-        var temp = new Uri(url).LocalPath;
-        var filename = System.IO.Path.GetFileName(temp);
-        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-
-    }
-    private static void DeleteFile(string url)
-    {
-        var filename = GetFileName(url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            s_logger.Info($"Deleted file {tempFile}");
         }
     }
     #endregion
