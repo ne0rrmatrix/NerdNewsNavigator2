@@ -30,12 +30,7 @@ public class PositionDataBase
     {
         try
         {
-#if WINDOWS || IOS || MACCATALYST
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
-#endif
-#if ANDROID 
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
-#endif
             _logger.Info($"Database path is: {databasePath}");
             _connection = new SQLiteAsyncConnection(databasePath, Flags);
 
@@ -214,12 +209,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(position);
-            _logger.Info($"Saved to database: {position.Title} {position.SavedPosition}");
+            _logger.Info($"Saved to database Position: {position.Title} {position.SavedPosition}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.Error($"Failed to save to Database: {ex.Message}");
+            _logger.Error($"Failed to save to Database Position: {ex.Message}");
             return false;
         }
     }

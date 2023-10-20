@@ -190,6 +190,7 @@ public partial class BaseViewModel : ObservableObject
     public void SetProperties(Show show)
     {
         var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
+        var num = Shows.IndexOf(show);
         var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
         if (currentDownload is null)
@@ -214,7 +215,7 @@ public partial class BaseViewModel : ObservableObject
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Shows[Shows.IndexOf(shows)] = show;
+                Shows[num] = show;
             });
         }
     }

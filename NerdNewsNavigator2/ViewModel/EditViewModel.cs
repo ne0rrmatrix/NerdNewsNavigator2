@@ -50,12 +50,14 @@ public partial class EditViewModel : BaseViewModel
         Podcasts.Remove(item);
         item.Deleted = true;
         await App.PositionData.UpdatePodcast(item);
-        if (FavoriteShows.Any(x => x.Url == url))
+
+        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
+        if (fav is null)
         {
-            var fav = FavoriteShows.ToList().Find(x => x.Url == url);
-            FavoriteShows.Remove(fav);
-            await App.PositionData.DeleteFavorite(fav);
+            return;
         }
+        FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
     }
 
     /// <summary>
@@ -68,6 +70,7 @@ public partial class EditViewModel : BaseViewModel
     {
         await CheckAndRequestForeGroundPermission();
         var item = Podcasts.ToList().Find(x => x.Url == url);
+        var num = Podcasts.IndexOf(item);
 
         Favorites favorite = new()
         {
@@ -84,7 +87,7 @@ public partial class EditViewModel : BaseViewModel
 
         item.Download = true;
         item.IsNotDownloaded = false;
-        Podcasts[Podcasts.IndexOf(item)] = item;
+        Podcasts[num] = item;
         await App.PositionData.UpdatePodcast(item);
     }
 
@@ -97,15 +100,15 @@ public partial class EditViewModel : BaseViewModel
     public async Task RemoveFavorite(string url)
     {
         var item = Podcasts.ToList().Find(x => x.Url == url);
+        var num = Podcasts.IndexOf(item);
         var fav = FavoriteShows.ToList().Find(x => x.Url == url);
 
         FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
 
         item.IsNotDownloaded = true;
         item.Download = false;
-        Podcasts[Podcasts.IndexOf(item)] = item;
-
-        await App.PositionData.DeleteFavorite(fav);
+        Podcasts[num] = item;
         await App.PositionData.UpdatePodcast(item);
     }
     #endregion
