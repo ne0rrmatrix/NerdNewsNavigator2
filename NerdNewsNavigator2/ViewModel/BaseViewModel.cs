@@ -130,6 +130,7 @@ public partial class BaseViewModel : ObservableObject
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        UpdateShows();
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
@@ -138,7 +139,7 @@ public partial class BaseViewModel : ObservableObject
         App.Downloads.DownloadFinished -= DownloadCompleted;
         await GetDownloadedShows();
         _logger.Info("Shared View model - Downloaded event firing");
-        UpdateShows();
+
         if (e.Shows.Count > 0)
         {
             _logger.Info("Starting next show: {Title}", e.Shows[0].Title);
@@ -167,7 +168,7 @@ public partial class BaseViewModel : ObservableObject
     public async Task Play(string url)
     {
         Show show = new();
-        if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
+        if (DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
         {
             var item = DownloadedShows.ToList().Find(x => x.Url == url);
             show.Title = item.Title;
@@ -175,7 +176,7 @@ public partial class BaseViewModel : ObservableObject
         }
         else
         {
-            var item = Shows.ToList().Find(x => x.Url == url);
+            var item = Shows.First(x => x.Url == url);
             show.Url = item.Url;
             show.Title = item.Title;
         }
@@ -187,26 +188,25 @@ public partial class BaseViewModel : ObservableObject
     #region Download Status Methods
     public void SetProperties(Show show)
     {
-        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
-        var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
-        if (currentDownload is null)
+        var downloads = DownloadedShows.Any(x => x.Url == show.Url);
+        if (downloads)
         {
+            show.IsDownloaded = true;
             show.IsDownloading = false;
-            show.IsNotDownloaded = true;
-            show.IsDownloaded = false;
+            show.IsNotDownloaded = false;
+            return;
         }
+        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
+            return;
         }
-        if (downloads is not null)
-        {
-            show.IsDownloaded = true;
-            show.IsDownloading = false;
-            show.IsNotDownloaded = false;
-        }
+        show.IsDownloading = false;
+        show.IsNotDownloaded = true;
+        show.IsDownloaded = false;
     }
 
     #endregion
@@ -229,10 +229,9 @@ public partial class BaseViewModel : ObservableObject
         {
             Shows.Clear();
             var temp = FeedService.GetShows(url, getFirstOnly);
+            temp.ForEach(SetProperties);
             Shows = new ObservableCollection<Show>(temp);
             _logger.Info("Got All Shows");
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-            Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
 
@@ -246,6 +245,7 @@ public partial class BaseViewModel : ObservableObject
             Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
+
     #endregion
     private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
     {
@@ -313,23 +313,18 @@ public partial class BaseViewModel : ObservableObject
         var temp = await App.PositionData.GetAllPodcasts();
         if (temp.Count > 0)
         {
-            SortAndAdd(temp);
+            Podcasts = new ObservableCollection<Podcast>(temp);
             return;
         }
         var updates = PodcastServices.GetFromUrl();
-        PodcastServices.AddToDatabase(updates);
-        SortAndAdd(updates);
+        var sortedItems = updates.OrderBy(x => x.Title).ToList();
+        Podcasts = new ObservableCollection<Podcast>(sortedItems);
+        await PodcastServices.AddToDatabase(sortedItems);
     }
     public async Task UpdatePodcasts()
     {
-        Podcasts.Clear();
         var temp = await App.PositionData.GetAllPodcasts();
-        SortAndAdd(temp);
-    }
-    private void SortAndAdd(List<Podcast> podcasts)
-    {
-        var item = podcasts?.OrderBy(x => x.Title).ToList();
-        item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+        Podcasts = new ObservableCollection<Podcast>(temp);
     }
     #endregion
 

@@ -29,6 +29,7 @@ public partial class ShowViewModel : BaseViewModel
         {
             App.Downloads.DownloadStarted += DownloadStarted;
             App.Downloads.DownloadFinished += DownloadCompleted;
+            App.Downloads.DownloadCancelled += DownloadCancelled;
         }
     }
     partial void OnUrlChanged(string oldValue, string newValue)
