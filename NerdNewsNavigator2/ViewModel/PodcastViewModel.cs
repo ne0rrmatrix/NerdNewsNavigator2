@@ -35,17 +35,12 @@ public partial class PodcastViewModel : BaseViewModel
     {
         _logger.Info("Refresh podcasts");
         IsRefreshing = true;
-        await RefreshData();
+        IsBusy = true;
+        await UpdatePodcasts();
+        IsBusy = false;
         IsRefreshing = false;
         _logger.Info("Finished refreshing podcasts");
     });
-    public async Task RefreshData()
-    {
-        IsBusy = true;
-        Podcasts.Clear();
-        await GetPodcasts();
-        IsBusy = false;
-    }
 
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>

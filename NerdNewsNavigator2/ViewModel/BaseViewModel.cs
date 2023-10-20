@@ -33,7 +33,7 @@ public partial class BaseViewModel : ObservableObject
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
     [ObservableProperty]
-    public ObservableCollection<Podcast> _podcasts;
+    private ObservableCollection<Podcast> _podcasts;
 
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
@@ -322,8 +322,13 @@ public partial class BaseViewModel : ObservableObject
         }
         var updates = PodcastServices.GetFromUrl();
         PodcastServices.AddToDatabase(updates);
-        Podcasts = new ObservableCollection<Podcast>(updates);
-        OnPropertyChanged(nameof(Podcasts));
+        SortAndAdd(updates);
+    }
+    public async Task UpdatePodcasts()
+    {
+        Podcasts.Clear();
+        var temp = await App.PositionData.GetAllPodcasts();
+        SortAndAdd(temp);
     }
     private void SortAndAdd(List<Podcast> podcasts)
     {
