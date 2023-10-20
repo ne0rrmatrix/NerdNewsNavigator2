@@ -318,10 +318,10 @@ public class PositionDataBase
     {
         try
         {
-            if (podcast.Id != 0)
+            var existingPositon = await _connection.Table<Podcast>().FirstOrDefaultAsync(x => x.Title == podcast.Title);
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(podcast);
-                await _connection.InsertAsync(podcast);
+                await _connection.UpdateAsync(podcast);
 
                 _logger.Info($"Updated Podcast: {podcast.Title}");
                 return true;
@@ -346,10 +346,10 @@ public class PositionDataBase
     {
         try
         {
-            if (favorites.Id != 0)
+            var existingPositon = await _connection.Table<Favorites>().FirstOrDefaultAsync(x => x.Title == favorites.Title);
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(favorites);
-                await _connection.InsertAsync(favorites);
+                await _connection.UpdateAsync(favorites);
                 _logger.Info($"Updated Favorite in database: {favorites.Title}");
                 return true;
             }
@@ -373,10 +373,10 @@ public class PositionDataBase
     {
         try
         {
-            if (download.Id != 0)
+            var existingPositon = await _connection.Table<Download>().FirstOrDefaultAsync(x => x.Title == download.Title);
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(download);
-                await _connection.InsertAsync(download);
+                await _connection.UpdateAsync(download);
                 _logger.Info($"Updated Download: {download.Title}");
                 return true;
             }

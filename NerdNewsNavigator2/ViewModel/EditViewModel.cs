@@ -48,8 +48,7 @@ public partial class EditViewModel : BaseViewModel
     {
         var item = Podcasts.ToList().Find(x => x.Url == url);
         Podcasts.Remove(item);
-        item.Deleted = true;
-        await App.PositionData.UpdatePodcast(item);
+        await App.PositionData.DeletePodcast(item);
 
         var fav = FavoriteShows.ToList().Find(x => x.Url == url);
         if (fav is null)
