@@ -77,7 +77,6 @@ public partial class ShowViewModel : BaseViewModel
         OnPropertyChanged(nameof(Title));
         OnPropertyChanged(nameof(DownloadProgress));
         App.Downloads.Cancel(show.Url);
-        var number = Shows.IndexOf(show);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
