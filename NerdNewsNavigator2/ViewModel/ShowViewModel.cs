@@ -39,7 +39,7 @@ public partial class ShowViewModel : BaseViewModel
             return;
         }
         var decodedUrl = HttpUtility.UrlDecode(newValue);
-        GetShowsAsync(decodedUrl, false);
+        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
     {
