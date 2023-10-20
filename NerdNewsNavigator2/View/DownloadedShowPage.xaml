@@ -13,124 +13,125 @@
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
 
-    <Grid>
+    <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
 
-        <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <CollectionView
+            HorizontalScrollBarVisibility="Never"
+            ItemsSource="{Binding DownloadedShows}"
+            VerticalScrollBarVisibility="Never">
 
-            <CollectionView
-                Margin="5"
-                HorizontalScrollBarVisibility="Never"
-                ItemsSource="{Binding DownloadedShows}"
-                VerticalScrollBarVisibility="Never">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    x:Name="ItemLayout"
+                    Orientation="Vertical"
+                    Span="{Binding Orientation}" />
+            </CollectionView.ItemsLayout>
 
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout
-                        x:Name="ItemLayout"
-                        Orientation="Vertical"
-                        Span="{Binding Orientation}" />
-                </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
 
-                <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Download">
 
-                    <DataTemplate x:DataType="model:Download">
+                    <Frame
+                        Margin="5"
+                        BackgroundColor="White"
+                        WidthRequest="{OnPlatform WinUI=430,
+                                                  MacCatalyst=390,
+                                                  Android=340,
+                                                  iOS=340}">
+                        <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            </Grid.GestureRecognizers>
+                            <Label
+                                Grid.Row="0"
+                                FontAttributes="Bold"
+                                LineBreakMode="WordWrap"
+                                SemanticProperties.Description="Show title."
+                                Text="{Binding Title}"
+                                TextColor="Black"
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=320,
+                                                          iOS=320,
+                                                          MacCatalyst=370}" />
+                            <Image
+                                Grid.Row="1"
+                                Aspect="AspectFit"
+                                HeightRequest="{OnPlatform WinUI=390,
+                                                           Android=320,
+                                                           iOS=320,
+                                                           MacCatalyst=370}"
+                                HorizontalOptions="Center"
+                                SemanticProperties.Description="Show Box art."
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=320,
+                                                          iOS=320,
+                                                          MacCatalyst=370}">
+                                <Image.Source>
+                                    <UriImageSource
+                                        CacheValidity="10:00:00:00"
+                                        CachingEnabled="true"
+                                        Uri="{Binding Image}" />
+                                </Image.Source>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                                </Image.GestureRecognizers>
+                            </Image>
 
-                        <Frame
-                            Margin="5"
-                            BackgroundColor="White"
-                            WidthRequest="{OnPlatform WinUI=370,
-                                                      MacCatalyst=390,
-                                                      Android=340,
-                                                      iOS=340}">
-                            <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                                </Grid.GestureRecognizers>
+                            <HorizontalStackLayout Grid.Row="2">
+
                                 <Label
-                                    Grid.Row="0"
                                     FontAttributes="Bold"
-                                    LineBreakMode="WordWrap"
-                                    SemanticProperties.Description="Show title."
-                                    Text="{Binding Title}"
+                                    FontSize="12"
+                                    Text="Published: "
                                     TextColor="Black"
-                                    WidthRequest="300" />
-                                <Image
-                                    Grid.Row="1"
-                                    Margin="10"
-                                    Aspect="AspectFit"
-                                    HeightRequest="{OnPlatform WinUI=360,
-                                                               Android=270,
-                                                               iOS=320,
-                                                               MacCatalyst=370}"
-                                    HorizontalOptions="Center"
-                                    WidthRequest="{OnPlatform WinUI=360,
-                                                              Android=270,
-                                                              iOS=320,
-                                                              MacCatalyst=370}">
-                                    <Image.Source>
-                                        <UriImageSource
-                                            CacheValidity="10:00:00:00"
-                                            CachingEnabled="true"
-                                            Uri="{Binding Image}" />
-                                    </Image.Source>
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-
-                                <HorizontalStackLayout Grid.Row="2" Padding="10">
-
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="12"
-                                        Text="Published: "
-                                        TextColor="Black"
-                                        VerticalTextAlignment="Center" />
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="12"
-                                        SemanticProperties.Description="The date the show was published."
-                                        Text="{Binding PubDate}"
-                                        TextColor="Black"
-                                        VerticalTextAlignment="Center" />
-                                    <Button
-                                        Margin="20"
-                                        BackgroundColor="Red"
-                                        FontAttributes="Bold"
-                                        FontSize="12"
-                                        HeightRequest="48"
-                                        SemanticProperties.Description="Button allows you to delete a show."
-                                        Text="Delete"
-                                        TextColor="White">
-                                        <Button.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Url}" />
-                                        </Button.GestureRecognizers>
-                                    </Button>
-
-                                </HorizontalStackLayout>
-
+                                    VerticalTextAlignment="Center" />
                                 <Label
-                                    Grid.Row="3"
                                     Margin="10"
-                                    FontSize="{OnPlatform MacCatalyst=16}"
-                                    HeightRequest="{OnPlatform WinUI=890}"
-                                    LineBreakMode="WordWrap"
-                                    SemanticProperties.Description="A description of what the show is about."
-                                    Text="{Binding Description}"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    SemanticProperties.Description="The date the show was published."
+                                    Text="{Binding PubDate}"
                                     TextColor="Black"
-                                    TextType="Html"
-                                    WidthRequest="300" />
-                            </Grid>
+                                    VerticalTextAlignment="Center" />
+                                <Button
+                                    BackgroundColor="Red"
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    HeightRequest="48"
+                                    HorizontalOptions="End"
+                                    SemanticProperties.Description="Button allows you to delete a show."
+                                    Text="Delete"
+                                    TextColor="White">
+                                    <Button.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
+                                    </Button.GestureRecognizers>
+                                </Button>
 
-                        </Frame>
+                            </HorizontalStackLayout>
 
-                    </DataTemplate>
+                            <Label
+                                Grid.Row="3"
+                                FontSize="{OnPlatform MacCatalyst=16}"
+                                HeightRequest="{OnPlatform WinUI=890}"
+                                LineBreakMode="WordWrap"
+                                SemanticProperties.Description="A description of what the show is about."
+                                Text="{Binding Description}"
+                                TextColor="Black"
+                                TextType="Html"
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=320,
+                                                          iOS=320,
+                                                          MacCatalyst=370}" />
+                        </Grid>
 
-                </CollectionView.ItemTemplate>
+                    </Frame>
 
-            </CollectionView>
+                </DataTemplate>
 
-        </RefreshView>
+            </CollectionView.ItemTemplate>
 
-    </Grid>
+        </CollectionView>
+
+    </RefreshView>
 
 </ContentPage>

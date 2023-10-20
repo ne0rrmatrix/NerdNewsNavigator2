@@ -46,15 +46,16 @@ public partial class PodcastViewModel : BaseViewModel
         await GetPodcasts();
         IsBusy = false;
     }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="podcast">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task GotoShowPage(string url)
+    public async Task GotoShowPage(Podcast podcast)
     {
-        var encodedUrl = HttpUtility.UrlEncode(url);
+        var encodedUrl = HttpUtility.UrlEncode(podcast.Url);
         await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
     }
 }

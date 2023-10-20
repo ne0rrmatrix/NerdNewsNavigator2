@@ -70,27 +70,25 @@ public partial class ShowViewModel : BaseViewModel
         UpdateShows();
     }
     [RelayCommand]
-    public void Cancel(string url)
+    public void Cancel(Show show)
     {
         Title = string.Empty;
         DownloadProgress = string.Empty;
         OnPropertyChanged(nameof(Title));
         OnPropertyChanged(nameof(DownloadProgress));
-        App.Downloads.Cancel(url);
-        var show = Shows.ToList().Find(x => x.Url == url);
+        App.Downloads.Cancel(show.Url);
         var number = Shows.IndexOf(show);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
-        Shows[number] = show;
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public void Download(string url)
+    public void Download(Show show)
     {
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
@@ -99,8 +97,7 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
-        var item = Shows.ToList().Find(x => x.Url == url);
-        var number = Shows.IndexOf(item);
+        var number = Shows.IndexOf(show);
         Shows[number].IsDownloaded = false;
         Shows[number].IsDownloading = true;
         Shows[number].IsNotDownloaded = false;
@@ -111,11 +108,11 @@ public partial class ShowViewModel : BaseViewModel
             App.Downloads.DownloadCancelled += DownloadCancelled;
             App.Downloads.DownloadFinished += DownloadCompleted;
         }
-        App.Downloads.Add(item);
+        App.Downloads.Add(show);
 #if ANDROID || IOS
-        _ = App.Downloads.Start(item);
+        _ = App.Downloads.Start(show);
 #else
-        App.Downloads.Start(item);
+        App.Downloads.Start(show);
 #endif
     }
 }

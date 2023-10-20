@@ -84,7 +84,7 @@
                                 TextColor="#FFFFFF"
                                 WidthRequest="125">
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Button
@@ -101,7 +101,7 @@
                                 TextColor="#FFFFFF"
                                 WidthRequest="125">
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Button
@@ -118,7 +118,7 @@
                                 TextColor="#FFFFFF"
                                 WidthRequest="125">
                                 <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding Url}" />
                                 </Button.GestureRecognizers>
                             </Button>
                             <Label

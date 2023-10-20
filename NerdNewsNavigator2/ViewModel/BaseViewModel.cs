@@ -32,7 +32,8 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+    [ObservableProperty]
+    public ObservableCollection<Podcast> _podcasts;
 
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
@@ -85,6 +86,7 @@ public partial class BaseViewModel : ObservableObject
         _shows = new();
         _downloadProgress = string.Empty;
         _downloadedShows = new();
+        _podcasts = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
@@ -166,7 +168,7 @@ public partial class BaseViewModel : ObservableObject
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url)
+    public async Task Play(string url)
     {
         Show show = new();
         if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
@@ -189,8 +191,6 @@ public partial class BaseViewModel : ObservableObject
     #region Download Status Methods
     public void SetProperties(Show show)
     {
-        var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
-        var num = Shows.IndexOf(show);
         var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
         if (currentDownload is null)
@@ -210,13 +210,6 @@ public partial class BaseViewModel : ObservableObject
             show.IsDownloaded = true;
             show.IsDownloading = false;
             show.IsNotDownloaded = false;
-        }
-        if (shows is not null)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Shows[num] = show;
-            });
         }
     }
 
@@ -246,6 +239,7 @@ public partial class BaseViewModel : ObservableObject
             Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
+
     public void UpdateShows()
     {
         _ = MainThread.InvokeOnMainThreadAsync(() =>

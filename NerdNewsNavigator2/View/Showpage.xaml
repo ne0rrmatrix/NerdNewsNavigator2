@@ -42,11 +42,9 @@
                                                   iOS=340}">
 
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=TapCommand}" CommandParameter="{Binding Url}" />
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                         </Frame.GestureRecognizers>
                         <Grid
-                            Margin="{OnPlatform Default=5,
-                                                MacCatalyst=0}"
                             ColumnDefinitions="Auto"
                             HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                             RowDefinitions="Auto,Auto,Auto,*">
@@ -55,13 +53,14 @@
                                 FontAttributes="Bold"
                                 FontSize="{OnPlatform Default=Default,
                                                       MacCatalyst=18}"
+                                HeightRequest="60"
                                 HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
                                 TextColor="Black"
-                                WidthRequest="{OnPlatform WinUI=380,
-                                                          Android=260,
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=320,
                                                           iOS=320,
                                                           MacCatalyst=370}" />
                             <Image
@@ -69,14 +68,14 @@
                                 Aspect="{OnPlatform WinUI=AspectFit,
                                                     Android=AspectFit,
                                                     iOS=AspectFit}"
-                                HeightRequest="{OnPlatform WinUI=370,
-                                                           Android=270,
+                                HeightRequest="{OnPlatform WinUI=390,
+                                                           Android=320,
                                                            iOS=320,
                                                            MacCatalyst=370}"
                                 HorizontalOptions="{OnPlatform Default=Start,
                                                                MacCatalyst=Center}"
-                                WidthRequest="{OnPlatform WinUI=370,
-                                                          Android=270,
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=320,
                                                           iOS=320,
                                                           MacCatalyst=370}">
                                 <Image.Source>
@@ -95,6 +94,7 @@
                                     TextColor="Black"
                                     VerticalTextAlignment="Center" />
                                 <Label
+                                    Margin="10"
                                     FontAttributes="Bold"
                                     FontSize="Micro"
                                     SemanticProperties.Description="Shows the date the episode was published."
@@ -120,7 +120,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                     <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding Url}" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding}" />
                                     </Button.GestureRecognizers>
                                 </Button>
                                 <Button
@@ -142,7 +142,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                     <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding Url}" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding}" />
                                     </Button.GestureRecognizers>
                                 </Button>
                             </HorizontalStackLayout>
@@ -160,8 +160,8 @@
                                 Text="{Binding Description}"
                                 TextColor="Black"
                                 TextType="Html"
-                                WidthRequest="{OnPlatform WinUI=340,
-                                                          Android=260,
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=300,
                                                           iOS=310,
                                                           MacCatalyst=370}" />
                         </Grid>
