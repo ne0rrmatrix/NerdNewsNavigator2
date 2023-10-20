@@ -172,8 +172,8 @@ public partial class BaseViewModel : ObservableObject
         if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
         {
             var item = DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Url = item.Url;
             show.Title = item.Title;
+            show.Url = item.FileName;
         }
         else
         {
@@ -303,7 +303,7 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp.Where(x => !x.Deleted).ToList().ForEach(download => DownloadedShows.Add(download));
+        temp.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
         _logger.Info("Add all downloads to All Shows list");
     }
     #endregion

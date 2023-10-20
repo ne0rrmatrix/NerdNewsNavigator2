@@ -121,7 +121,7 @@ public partial class CurrentDownloads : ObservableObject
                 Deleted = false,
                 PubDate = item.PubDate,
                 Description = item.Description,
-                FileName = Services.DownloadService.GetFileName(item.Url)
+                FileName = GetFileName(item.Url)
             };
             s_logger.Info($"Download completed: {item.Title}");
             await App.PositionData.UpdateDownload(download);
@@ -207,10 +207,11 @@ public partial class CurrentDownloads : ObservableObject
     /// </summary>
     /// <param name="url">A URL <see cref="string"/></param>
     /// <returns>Filename <see cref="string"/> with file extension</returns>
-    private static string GetFileName(string url)
+    public static string GetFileName(string url)
     {
-        var result = new Uri(url).LocalPath;
-        return System.IO.Path.GetFileName(result);
+        var temp = new Uri(url).LocalPath;
+        var filename = System.IO.Path.GetFileName(temp);
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
 
     }
     private static void DeleteFile(string url)
