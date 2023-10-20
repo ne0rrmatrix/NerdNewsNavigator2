@@ -25,11 +25,7 @@ public partial class PodcastViewModel : BaseViewModel
     }
     private void RemoveTitle(object sender, DownloadEventArgs e)
     {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        });
+        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {

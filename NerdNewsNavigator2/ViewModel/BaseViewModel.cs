@@ -107,16 +107,12 @@ public partial class BaseViewModel : ObservableObject
         {
             return;
         }
-        Title = e.Status;
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Status);
     }
     public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DownloadCancelled;
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        });
+        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
         ThreadPool.QueueUserWorkItem(state =>
         {
             Thread.Sleep(1000);

@@ -93,7 +93,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<AutoDownloadService>();
 
         builder.Services.AddSingleton<PositionDataBase>();
-        builder.Services.AddSingleton<AndroidPermissions>();
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IDeviceServices, DeviceServices>();
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
