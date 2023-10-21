@@ -53,7 +53,7 @@
                                 FontAttributes="Bold"
                                 FontSize="{OnPlatform Default=Default,
                                                       MacCatalyst=18}"
-                                HeightRequest="60"
+                                HeightRequest="{OnPlatform WinUI=60}"
                                 HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
