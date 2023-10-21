@@ -291,7 +291,7 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Position>().FirstOrDefaultAsync(x => x.Title == position.Title);
+            var existingPositon = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(position);
@@ -318,11 +318,10 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Podcast>().FirstOrDefaultAsync(x => x.Title == podcast.Title);
+            var existingPositon = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(podcast);
-
                 _logger.Info($"Updated Podcast: {podcast.Title}");
                 return true;
             }
@@ -346,7 +345,7 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Favorites>().FirstOrDefaultAsync(x => x.Title == favorites.Title);
+            var existingPositon = await _connection.Table<Favorites>().Where(x => x.Title == favorites.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(favorites);
@@ -373,7 +372,7 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Download>().FirstOrDefaultAsync(x => x.Title == download.Title);
+            var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(download);

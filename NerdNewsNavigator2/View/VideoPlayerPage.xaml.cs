@@ -39,6 +39,7 @@ public partial class VideoPlayerPage : ContentPage
         _logger.Info($"Navigated: {e.CurrentShow.Url}");
         App.OnVideoNavigated.Navigation -= Now;
         mediaElement.Source = new Uri(e.CurrentShow.Url);
+        Pos.Title = e.CurrentShow.Title;
         await Seek(e.CurrentShow);
     }
 
@@ -67,6 +68,8 @@ public partial class VideoPlayerPage : ContentPage
         }
         else
         {
+            Pos.SavedPosition = mediaElement.Position;
+            await App.PositionData.AddPosition(Pos);
             _logger.Info("Could not find saved position");
         }
 
@@ -86,13 +89,15 @@ public partial class VideoPlayerPage : ContentPage
                 _logger.Info("Media has finished playing.");
                 mediaElement.ShouldKeepScreenOn = false;
                 _logger.Info("ShouldKeepScreenOn set to false.");
-                await UpdateDatabase();
+                Pos.SavedPosition = mediaElement.Position;
+                await App.PositionData.UpdatePosition(Pos);
                 break;
             case MediaElementState.Paused:
                 _logger.Info($"Paused: {mediaElement.Position}");
                 _logger.Info("Media paused. Setting should keep screen on to false");
                 mediaElement.ShouldKeepScreenOn = false;
-                await UpdateDatabase();
+                Pos.SavedPosition = mediaElement.Position;
+                await App.PositionData.UpdatePosition(Pos);
                 break;
             case MediaElementState.Playing:
                 mediaElement.ShouldKeepScreenOn = true;
@@ -100,11 +105,7 @@ public partial class VideoPlayerPage : ContentPage
                 break;
         }
     }
-    private async Task UpdateDatabase()
-    {
-        Pos.SavedPosition = mediaElement.Position;
-        await App.PositionData.UpdatePosition(Pos);
-    }
+
 #nullable disable
 
     #endregion
