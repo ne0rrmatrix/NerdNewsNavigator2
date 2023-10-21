@@ -203,7 +203,7 @@ public partial class CurrentDownloads : ObservableObject
             return false;
         }
     }
-#endregion
+    #endregion
 
     #region EventArgs
     private void StartedDownload()
