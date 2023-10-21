@@ -34,6 +34,9 @@
                     <Frame
                         Margin="5"
                         BackgroundColor="White"
+                        HorizontalOptions="Center"
+                        SemanticProperties.Description="A frame for all downloaded shows listed."
+                        SemanticProperties.Hint="A frame of all downloaded shows listed."
                         WidthRequest="{OnPlatform WinUI=430,
                                                   MacCatalyst=390,
                                                   Android=340,
@@ -45,12 +48,16 @@
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
+                                FontSize="{OnPlatform Default=Default,
+                                                      MacCatalyst=18}"
+                                HeightRequest="{OnPlatform WinUI=60}"
+                                HorizontalOptions="{OnPlatform MacCatalyst=Center}"
                                 LineBreakMode="WordWrap"
-                                SemanticProperties.Description="Show title."
+                                SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
                                 TextColor="Black"
                                 WidthRequest="{OnPlatform WinUI=390,
-                                                          Android=320,
+                                                          Android=300,
                                                           iOS=320,
                                                           MacCatalyst=370}" />
                             <Image
@@ -60,8 +67,8 @@
                                                            Android=320,
                                                            iOS=320,
                                                            MacCatalyst=370}"
-                                HorizontalOptions="Center"
-                                SemanticProperties.Description="Show Box art."
+                                HorizontalOptions="{OnPlatform Default=Start,
+                                                               MacCatalyst=Center}"
                                 WidthRequest="{OnPlatform WinUI=390,
                                                           Android=320,
                                                           iOS=320,
@@ -81,28 +88,28 @@
 
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="12"
+                                    FontSize="Micro"
                                     Text="Published: "
                                     TextColor="Black"
                                     VerticalTextAlignment="Center" />
                                 <Label
                                     Margin="10"
                                     FontAttributes="Bold"
-                                    FontSize="12"
-                                    SemanticProperties.Description="The date the show was published."
+                                    FontSize="Micro"
+                                    SemanticProperties.Description="Shows the date the episode was published."
                                     Text="{Binding PubDate}"
                                     TextColor="Black"
                                     VerticalTextAlignment="Center" />
                                 <Button
-                                    BackgroundColor="Red"
+                                    Margin="5"
+                                    BackgroundColor="#CD2026"
                                     FontAttributes="Bold"
-                                    FontSize="{OnIdiom Phone=10,
-                                                       Default=12}"
+                                    FontSize="{OnIdiom Phone=8,
+                                                       Default=14}"
                                     HeightRequest="48"
-                                    HorizontalOptions="End"
                                     SemanticProperties.Description="Button allows you to delete a show."
                                     Text="Delete"
-                                    TextColor="White"
+                                    TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
                                                            Default=100}">
                                     <Button.GestureRecognizers>
@@ -116,14 +123,15 @@
                                 Grid.Row="3"
                                 FontSize="{OnPlatform MacCatalyst=16}"
                                 HeightRequest="{OnPlatform WinUI=890}"
+                                HorizontalOptions="Start"
                                 LineBreakMode="WordWrap"
-                                SemanticProperties.Description="A description of what the show is about."
+                                SemanticProperties.Description="A description of episode."
                                 Text="{Binding Description}"
                                 TextColor="Black"
                                 TextType="Html"
                                 WidthRequest="{OnPlatform WinUI=390,
-                                                          Android=320,
-                                                          iOS=320,
+                                                          Android=300,
+                                                          iOS=310,
                                                           MacCatalyst=370}" />
                         </Grid>
 
