@@ -22,7 +22,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>31</ApplicationVersion>
+	    <ApplicationVersion>32</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>

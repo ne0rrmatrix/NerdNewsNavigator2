@@ -96,12 +96,15 @@
                                 <Button
                                     BackgroundColor="Red"
                                     FontAttributes="Bold"
-                                    FontSize="12"
+                                    FontSize="{OnIdiom Phone=10,
+                                                       Default=12}"
                                     HeightRequest="48"
                                     HorizontalOptions="End"
                                     SemanticProperties.Description="Button allows you to delete a show."
                                     Text="Delete"
-                                    TextColor="White">
+                                    TextColor="White"
+                                    WidthRequest="{OnIdiom Phone=75,
+                                                           Default=100}">
                                     <Button.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
                                     </Button.GestureRecognizers>
