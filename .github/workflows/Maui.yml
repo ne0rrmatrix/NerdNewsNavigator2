@@ -54,7 +54,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet publish ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
     
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -94,7 +94,7 @@ jobs:
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet publish ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0    
+        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0    
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
