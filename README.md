@@ -5,6 +5,9 @@ Or download them for offline watching. Automatically keeps track of playback pos
 Podcast list is updated automatically every 30 days, or it can manually be updated in settings. App also allows you to choose to download only
 when wifi is connected. Save you data!
 
+## NOTICE
+Store version is now 100% free! I have removed price from Microsoft store and Google play.
+
 ## Current Features implemented
 1. Browser RSS feed in a nice menu based layout.
 2. Watch the latest episodes currently available from twit.tv
@@ -30,11 +33,11 @@ when wifi is connected. Save you data!
 If you see any bugs or have any suggestions please open an issue and/or contact ne0rmatrix in Club twit discord.
 
 ## Link to current release
-Free Version:
+Github Version:
 - [Current Releases](https://github.com/ne0rrmatrix/NerdNewsNavigator2/releases) &nbsp; [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ne0rrmatrix_NerdNewsNavigator2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ne0rrmatrix_NerdNewsNavigator2)
 
 <br/><br/>
-Paid Version:
+Free Store Version:
 - [Microsoft store link](https://www.microsoft.com/store/apps/9N28GJQGP369)
 - [Google Play link](https://play.google.com/store/apps/details?id=com.ahdftech.nerdNewsNavigator)
 
