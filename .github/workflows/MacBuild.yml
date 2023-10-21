@@ -61,6 +61,6 @@ jobs:
     - name: Build MAUI MacCatalyst project
       shell: bash
       run: |
-          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Debug 
+          dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release
 
         
