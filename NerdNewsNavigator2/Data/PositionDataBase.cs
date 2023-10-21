@@ -30,12 +30,7 @@ public class PositionDataBase
     {
         try
         {
-#if WINDOWS || IOS || MACCATALYST
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
-#endif
-#if ANDROID 
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyData.db");
-#endif
             _logger.Info($"Database path is: {databasePath}");
             _connection = new SQLiteAsyncConnection(databasePath, Flags);
 
@@ -214,12 +209,12 @@ public class PositionDataBase
         try
         {
             await _connection.InsertAsync(position);
-            _logger.Info($"Saved to database: {position.Title} {position.SavedPosition}");
+            _logger.Info($"Saved to database Position: {position.Title} {position.SavedPosition}");
             return true;
         }
         catch (Exception ex)
         {
-            _logger.Error($"Failed to save to Database: {ex.Message}");
+            _logger.Error($"Failed to save to Database Position: {ex.Message}");
             return false;
         }
     }
@@ -296,7 +291,7 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Position>().FirstOrDefaultAsync(x => x.Title == position.Title);
+            var existingPositon = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
                 await _connection.UpdateAsync(position);
@@ -323,11 +318,10 @@ public class PositionDataBase
     {
         try
         {
-            if (podcast.Id != 0)
+            var existingPositon = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(podcast);
-                await _connection.InsertAsync(podcast);
-
+                await _connection.UpdateAsync(podcast);
                 _logger.Info($"Updated Podcast: {podcast.Title}");
                 return true;
             }
@@ -351,10 +345,10 @@ public class PositionDataBase
     {
         try
         {
-            if (favorites.Id != 0)
+            var existingPositon = await _connection.Table<Favorites>().Where(x => x.Title == favorites.Title).FirstOrDefaultAsync();
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(favorites);
-                await _connection.InsertAsync(favorites);
+                await _connection.UpdateAsync(favorites);
                 _logger.Info($"Updated Favorite in database: {favorites.Title}");
                 return true;
             }
@@ -378,10 +372,10 @@ public class PositionDataBase
     {
         try
         {
-            if (download.Id != 0)
+            var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
+            if (existingPositon is not null)
             {
-                await _connection.DeleteAsync(download);
-                await _connection.InsertAsync(download);
+                await _connection.UpdateAsync(download);
                 _logger.Info($"Updated Download: {download.Title}");
                 return true;
             }

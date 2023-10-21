@@ -33,10 +33,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         _messenger.Send(new MessageData(false));
         App.Downloads.CancelAll();
         var item = await App.PositionData.GetAllDownloads();
-        item.ForEach(x =>
-        {
-            App.DeletedItem.Add(x);
-        });
+        item.ForEach(App.DeletedItem.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await DeleteAllAsync();

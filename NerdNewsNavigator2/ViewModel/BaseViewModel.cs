@@ -32,7 +32,8 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Podcast> Podcasts { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Podcast> _podcasts;
 
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
@@ -85,6 +86,7 @@ public partial class BaseViewModel : ObservableObject
         _shows = new();
         _downloadProgress = string.Empty;
         _downloadedShows = new();
+        _podcasts = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
@@ -105,16 +107,12 @@ public partial class BaseViewModel : ObservableObject
         {
             return;
         }
-        Title = e.Status;
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Status);
     }
     public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
         App.Downloads.DownloadCancelled -= DownloadCancelled;
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        });
+        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
         ThreadPool.QueueUserWorkItem(state =>
         {
             Thread.Sleep(1000);
@@ -132,6 +130,7 @@ public partial class BaseViewModel : ObservableObject
     }
     public async void DownloadCompleted(object sender, DownloadEventArgs e)
     {
+        UpdateShows();
 #if ANDROID || IOS
         App.Downloads.Notify.StopNotifications();
 #endif
@@ -140,7 +139,7 @@ public partial class BaseViewModel : ObservableObject
         App.Downloads.DownloadFinished -= DownloadCompleted;
         await GetDownloadedShows();
         _logger.Info("Shared View model - Downloaded event firing");
-        UpdateShows();
+
         if (e.Shows.Count > 0)
         {
             _logger.Info("Starting next show: {Title}", e.Shows[0].Title);
@@ -166,18 +165,18 @@ public partial class BaseViewModel : ObservableObject
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Tap(string url)
+    public async Task Play(string url)
     {
         Show show = new();
-        if (DownloadedShows.Where(y => y.IsDownloaded).ToList().Exists(x => x.Url == url))
+        if (DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
         {
             var item = DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Url = item.Url;
             show.Title = item.Title;
+            show.Url = item.FileName;
         }
         else
         {
-            var item = Shows.ToList().Find(x => x.Url == url);
+            var item = Shows.First(x => x.Url == url);
             show.Url = item.Url;
             show.Title = item.Title;
         }
@@ -189,34 +188,25 @@ public partial class BaseViewModel : ObservableObject
     #region Download Status Methods
     public void SetProperties(Show show)
     {
-        var shows = Shows.FirstOrDefault(x => x.Url == show.Url);
-        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
-        var downloads = DownloadedShows.ToList().Find(x => x.Url == show.Url);
-        if (currentDownload is null)
+        var downloads = DownloadedShows.Any(x => x.Url == show.Url);
+        if (downloads)
         {
+            show.IsDownloaded = true;
             show.IsDownloading = false;
-            show.IsNotDownloaded = true;
-            show.IsDownloaded = false;
+            show.IsNotDownloaded = false;
+            return;
         }
+        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;
             show.IsDownloading = true;
             show.IsNotDownloaded = false;
+            return;
         }
-        if (downloads is not null)
-        {
-            show.IsDownloaded = true;
-            show.IsDownloading = false;
-            show.IsNotDownloaded = false;
-        }
-        if (shows is not null)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Shows[Shows.IndexOf(shows)] = show;
-            });
-        }
+        show.IsDownloading = false;
+        show.IsNotDownloaded = true;
+        show.IsDownloaded = false;
     }
 
     #endregion
@@ -239,12 +229,12 @@ public partial class BaseViewModel : ObservableObject
         {
             Shows.Clear();
             var temp = FeedService.GetShows(url, getFirstOnly);
+            temp.ForEach(SetProperties);
             Shows = new ObservableCollection<Show>(temp);
             _logger.Info("Got All Shows");
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-            Shows?.Where(x => App.Downloads.Shows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
+
     public void UpdateShows()
     {
         _ = MainThread.InvokeOnMainThreadAsync(() =>
@@ -255,6 +245,7 @@ public partial class BaseViewModel : ObservableObject
             Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
         });
     }
+
     #endregion
     private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
     {
@@ -303,7 +294,7 @@ public partial class BaseViewModel : ObservableObject
     {
         DownloadedShows.Clear();
         var temp = await App.PositionData.GetAllDownloads();
-        temp.Where(x => !x.Deleted).ToList().ForEach(download => DownloadedShows.Add(download));
+        temp.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
         _logger.Info("Add all downloads to All Shows list");
     }
     #endregion
@@ -322,18 +313,18 @@ public partial class BaseViewModel : ObservableObject
         var temp = await App.PositionData.GetAllPodcasts();
         if (temp.Count > 0)
         {
-            SortAndAdd(temp);
+            Podcasts = new ObservableCollection<Podcast>(temp);
             return;
         }
         var updates = PodcastServices.GetFromUrl();
-        PodcastServices.AddToDatabase(updates);
-        Podcasts = new ObservableCollection<Podcast>(updates);
-        OnPropertyChanged(nameof(Podcasts));
+        var sortedItems = updates.OrderBy(x => x.Title).ToList();
+        Podcasts = new ObservableCollection<Podcast>(sortedItems);
+        await PodcastServices.AddToDatabase(sortedItems);
     }
-    private void SortAndAdd(List<Podcast> podcasts)
+    public async Task UpdatePodcasts()
     {
-        var item = podcasts?.OrderBy(x => x.Title).ToList();
-        item?.Where(x => !x.Deleted).ToList().ForEach(Podcasts.Add);
+        var temp = await App.PositionData.GetAllPodcasts();
+        Podcasts = new ObservableCollection<Podcast>(temp);
     }
     #endregion
 

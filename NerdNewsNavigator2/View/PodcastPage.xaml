@@ -11,8 +11,6 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    Loaded="ContentPage_Loaded"
-    Shell.NavBarIsVisible="True"
     mc:Ignorable="d">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
@@ -47,7 +45,7 @@
                             RowDefinitions="Auto,Auto,*">
 
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PodcastViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=GotoShowPageCommand}" CommandParameter="{Binding}" />
                             </Grid.GestureRecognizers>
 
                             <Label

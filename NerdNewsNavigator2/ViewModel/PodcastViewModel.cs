@@ -25,36 +25,28 @@ public partial class PodcastViewModel : BaseViewModel
     }
     private void RemoveTitle(object sender, DownloadEventArgs e)
     {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Title = string.Empty;
-            OnPropertyChanged(nameof(Title));
-        });
+        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
         _logger.Info("Refresh podcasts");
         IsRefreshing = true;
-        await RefreshData();
+        IsBusy = true;
+        await UpdatePodcasts();
+        IsBusy = false;
         IsRefreshing = false;
         _logger.Info("Finished refreshing podcasts");
     });
-    public async Task RefreshData()
-    {
-        IsBusy = true;
-        Podcasts.Clear();
-        await GetPodcasts();
-        IsBusy = false;
-    }
+
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="ShowPage"/>
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="podcast">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task GotoShowPage(string url)
+    public async Task GotoShowPage(Podcast podcast)
     {
-        var encodedUrl = HttpUtility.UrlEncode(url);
+        var encodedUrl = HttpUtility.UrlEncode(podcast.Url);
         await Shell.Current.GoToAsync($"{nameof(ShowPage)}?Url={encodedUrl}");
     }
 }

@@ -111,16 +111,4 @@ public partial class DownloadService
         }
     }
     #endregion
-
-    /// <summary>
-    /// Get file name from Url <see cref="string"/>
-    /// </summary>
-    /// <param name="url">A URL <see cref="string"/></param>
-    /// <returns>Filename <see cref="string"/> with file extension</returns>
-    public static string GetFileName(string url)
-    {
-        var result = new Uri(url).LocalPath;
-        return System.IO.Path.GetFileName(result);
-
-    }
 }

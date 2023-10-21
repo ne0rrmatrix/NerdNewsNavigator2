@@ -35,33 +35,6 @@ public partial class EditViewModel : BaseViewModel
         }
         await Permissions.RequestAsync<AndroidPermissions>();
     }
-    private async Task DeleteFavorites(List<Favorites> favoriteShow, string url)
-    {
-        await FavoriteService.RemoveFavoriteFromDatabase(url);
-        var fav = FavoriteShows.First(x => x.Url == url);
-        favoriteShow?.Remove(fav);
-    }
-    private async Task ProcessPodcastsAsync(Podcast item)
-    {
-        item.Download = true;
-        item.IsNotDownloaded = false;
-        Podcasts[Podcasts.IndexOf(item)] = item;
-
-        await App.PositionData.UpdatePodcast(item);
-    }
-    private async Task ProcessFavoritesAsync(Podcast item)
-    {
-        Favorites favorite = new()
-        {
-            Title = item.Title,
-            Url = item.Url,
-            Description = item.Description,
-            Image = item.Image,
-            PubDate = item.PubDate,
-        };
-        FavoriteShows.Add(favorite);
-        await FavoriteService.AddFavoriteToDatabase(favorite);
-    }
     #endregion
 
     #region Events
@@ -73,20 +46,17 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task DeletePodcast(string url)
     {
-        var exists = Podcasts.ToList().Exists(x => x.Url == url);
-        if (exists)
-        {
-            var podcast = Podcasts.First(x => x.Url == url);
-            Podcasts?.Remove(podcast);
-            podcast.Deleted = true;
-            await App.PositionData.UpdatePodcast(podcast);
-        }
-        var favoriteShow = await App.PositionData.GetAllFavorites();
-        if (favoriteShow is null || favoriteShow.Count == 0)
+        var item = Podcasts.ToList().Find(x => x.Url == url);
+        Podcasts.Remove(item);
+        await App.PositionData.DeletePodcast(item);
+
+        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
+        if (fav is null)
         {
             return;
         }
-        await DeleteFavorites(favoriteShow, url);
+        FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
     }
 
     /// <summary>
@@ -95,22 +65,29 @@ public partial class EditViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task<bool> AddToFavorite(string url)
+    public async Task AddToFavorite(string url)
     {
         await CheckAndRequestForeGroundPermission();
-        if (FavoriteShows.AsEnumerable().Any(x => x.Url == url))
-        {
-            return false;
-        }
-        else if (Podcasts.AsEnumerable().Any(x => x.Url == url))
-        {
-            var item = Podcasts.First(x => x.Url == url);
-            await ProcessFavoritesAsync(item);
-            await ProcessPodcastsAsync(item);
+        var item = Podcasts.ToList().Find(x => x.Url == url);
+        var num = Podcasts.IndexOf(item);
 
-            return Preferences.Default.Get("start", false);
-        }
-        return false;
+        Favorites favorite = new()
+        {
+            Title = item.Title,
+            Url = item.Url,
+            Description = item.Description,
+            Image = item.Image,
+            PubDate = item.PubDate,
+            Download = true,
+            IsNotDownloaded = false,
+        };
+        FavoriteShows.Add(favorite);
+        await App.PositionData.AddFavorites(favorite);
+
+        item.Download = true;
+        item.IsNotDownloaded = false;
+        Podcasts[num] = item;
+        await App.PositionData.UpdatePodcast(item);
     }
 
     /// <summary>
@@ -119,27 +96,19 @@ public partial class EditViewModel : BaseViewModel
     /// <param name="url">A Url <see cref="string"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task<bool> RemoveFavorite(string url)
+    public async Task RemoveFavorite(string url)
     {
-        if (!FavoriteShows.AsEnumerable().Any(x => x.Url == url))
-        {
-            return false;
-        }
+        var item = Podcasts.ToList().Find(x => x.Url == url);
+        var num = Podcasts.IndexOf(item);
+        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
 
-        var fav = FavoriteShows.First(x => x.Url == url);
-        FavoriteShows.Remove(FavoriteShows[FavoriteShows.IndexOf(fav)]);
+        FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
 
-        var item = Podcasts.First(x => x.Url == url);
-        if (item is not null)
-        {
-            item.Download = false;
-            item.IsNotDownloaded = true;
-            Podcasts[Podcasts.IndexOf(item)] = item;
-            await App.PositionData.UpdatePodcast(item);
-        }
-
-        await FavoriteService.RemoveFavoriteFromDatabase(url);
-        return true;
+        item.IsNotDownloaded = true;
+        item.Download = false;
+        Podcasts[num] = item;
+        await App.PositionData.UpdatePodcast(item);
     }
     #endregion
 }

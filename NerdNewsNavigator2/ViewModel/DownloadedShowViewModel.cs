@@ -7,7 +7,7 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <summary>
 /// A class that inherits from <see cref="BaseViewModel"/> and manages <see cref="DownloadedShowViewModel"/>
 /// </summary>
-public partial class DownloadedShowViewModel : BaseViewModel, IRecipient<DeletedItemMessage>
+public partial class DownloadedShowViewModel : BaseViewModel
 {
 
     /// <summary>
@@ -25,7 +25,6 @@ public partial class DownloadedShowViewModel : BaseViewModel, IRecipient<Deleted
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
         App.Downloads.DownloadFinished += ShowsDownloadCompleted;
-        WeakReferenceMessenger.Default.Register(this);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -44,47 +43,33 @@ public partial class DownloadedShowViewModel : BaseViewModel, IRecipient<Deleted
     }
     private void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
-        _ = MainThread.InvokeOnMainThreadAsync(async () => { Title = string.Empty; await GetDownloadedShows(); });
+        _ = MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            Title = string.Empty;
+            OnPropertyChanged(Title);
+            await GetDownloadedShows();
+        });
     }
 
     /// <summary>
-    /// Deletes file and removes it from database.
+    /// Method Deletes a <see cref="Download"/>
     /// </summary>
-    /// <param name="url"></param>
+    /// <param name="download"><see cref="Download"/> to be Deleted.</param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Delete(string url)
+    public async Task Delete(Download download)
     {
-        var item = DownloadedShows.FirstOrDefault(x => x.Url == url);
-        if (item is null)
-        {
-            return;
-        }
-        var filename = DownloadService.GetFileName(item.Url);
-        var tempFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filename);
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-            _logger.Info($"Deleted file {tempFile}");
-        }
-        else
-        {
-            _logger.Info($"File {tempFile} was not found in file system.");
-        }
-        item.IsDownloaded = false;
-        item.Deleted = true;
-        item.IsNotDownloaded = true;
-        await App.PositionData.UpdateDownload(item);
-        DownloadedShows.Remove(item);
-        var showTemp = Shows.ToList().Find(x => x.Url == url);
+        var tempFile = FileService.GetFileName(download.Url);
+        FileService.DeleteFile(tempFile);
+        download.IsDownloaded = false;
+        download.Deleted = true;
+        download.IsNotDownloaded = true;
+        await App.PositionData.UpdateDownload(download);
+        DownloadedShows.Remove(download);
+        var showTemp = Shows.ToList().Find(x => x.Url == download.Url);
         Shows?.Remove(showTemp);
-        _logger.Info($"Removed {url} from Downloaded Shows list.");
-        App.DeletedItem.Add(item);
-    }
-
-    public void Receive(DeletedItemMessage message)
-    {
-        DownloadedShows.Clear();
+        _logger.Info($"Removed {download.FileName} from Downloaded Shows list.");
+        App.DeletedItem.Add(download);
     }
 }
 

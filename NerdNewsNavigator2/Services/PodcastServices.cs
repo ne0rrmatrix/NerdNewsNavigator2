@@ -30,23 +30,23 @@ public static class PodcastServices
     /// </summary>
     /// <param name="podcast"></param> Position Class object.
     /// <returns>nothing</returns>
-    public static void AddToDatabase(List<Podcast> podcast)
+    public static async Task AddToDatabase(List<Podcast> podcast)
     {
-        podcast.ForEach(async pod =>
+        for (var i = 0; i < podcast.Count; i++)
         {
             Position pos = new()
             {
-                Title = pod.Title,
-                Description = pod.Description,
-                Url = pod.Url,
-                Image = pod.Image,
-                Download = pod.Download,
-                Link = pod.Link,
-                PubDate = pod.PubDate
+                Title = podcast[i].Title,
+                Description = podcast[i].Description,
+                Url = podcast[i].Url,
+                Image = podcast[i].Image,
+                Download = podcast[i].Download,
+                Link = podcast[i].Link,
+                PubDate = podcast[i].PubDate
             };
             await App.PositionData.AddPosition(pos);
-            await App.PositionData.AddPodcast(pod);
-        });
+            await App.PositionData.AddPodcast(podcast[i]);
+        }
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public static class PodcastServices
             await RemoveDefaultPodcasts();
             var items = GetFromUrl();
             var res = items.OrderBy(x => x.Title).ToList();
-            AddToDatabase(res);
+            await AddToDatabase(res);
         });
     }
 

@@ -1,18 +1,19 @@
 name: Build MAUI Project
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
+  workflow_dispatch:
+   paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
-  pull_request:
-    branches: [ main ]
-  
+permissions:
+  contents: write
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
   NUGETCONFIG_PATH: "nuget.config"
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
  
 jobs:
 
@@ -54,7 +55,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-android33.0 --no-restore
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
     
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -94,8 +95,7 @@ jobs:
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net7.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
-    
+        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0    
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -137,9 +137,8 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-ios --no-restore  /p:buildForSimulator=True /p:packageApp=True /p:ArchiveOnBuild=False
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios
     
-
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
 # ********************************* #
@@ -180,4 +179,4 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Release--no-restore -p:BuildIpa=True
+      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Debug

@@ -28,7 +28,7 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     {
         InitializeComponent();
         BindingContext = liveViewModel;
-        WeakReferenceMessenger.Default.Register<NavigatedItemMessage>(this);
+        WeakReferenceMessenger.Default.Register(this);
         _ = LoadVideo(_item);
     }
     public void Receive(NavigatedItemMessage message)
