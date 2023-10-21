@@ -103,7 +103,7 @@
                                     SemanticProperties.Description="Button allows you to delete a show."
                                     Text="Delete"
                                     TextColor="White"
-                                    WidthRequest="{OnIdiom Phone=75,
+                                    WidthRequest="{OnIdiom Phone=70,
                                                            Default=100}">
                                     <Button.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
