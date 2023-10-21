@@ -164,7 +164,11 @@ public partial class CurrentDownloads : ObservableObject
             using var client = new HttpClientDownloadWithProgress(item.Url, destinationFilePath);
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
             {
+#if ANDROID
+                Status = $" Download Progress: {progressPercentage}%";
+#else
                 Status = $"        Download Progress: {progressPercentage}%";
+#endif
                 Progress = (double)progressPercentage;
                 StartedDownload();
                 if (Cancelled)
@@ -199,7 +203,7 @@ public partial class CurrentDownloads : ObservableObject
             return false;
         }
     }
-    #endregion
+#endregion
 
     #region EventArgs
     private void StartedDownload()

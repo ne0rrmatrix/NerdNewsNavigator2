@@ -65,9 +65,7 @@
                                                           MacCatalyst=370}" />
                             <Image
                                 Grid.Row="1"
-                                Aspect="{OnPlatform WinUI=AspectFit,
-                                                    Android=AspectFit,
-                                                    iOS=AspectFit}"
+                                Aspect="AspectFit"
                                 HeightRequest="{OnPlatform WinUI=390,
                                                            Android=320,
                                                            iOS=320,
@@ -105,12 +103,14 @@
                                     Margin="5"
                                     BackgroundColor="Green"
                                     FontAttributes="Bold"
-                                    FontSize="14"
+                                    FontSize="{OnIdiom Phone=8,
+                                                       Default=14}"
                                     HeightRequest="48"
                                     SemanticProperties.Description="Button allows you to download a show."
                                     Text="Download"
                                     TextColor="#FFFFFF"
-                                    WidthRequest="100">
+                                    WidthRequest="{OnIdiom Phone=70,
+                                                           Default=100}">
                                     <Button.Triggers>
                                         <DataTrigger
                                             Binding="{Binding Path=IsNotDownloaded}"
@@ -127,12 +127,14 @@
                                     Margin="5"
                                     BackgroundColor="#CD2026"
                                     FontAttributes="Bold"
-                                    FontSize="14"
+                                    FontSize="{OnIdiom Phone=8,
+                                                       Default=14}"
                                     HeightRequest="48"
                                     SemanticProperties.Description="Button allows you to cancel a current download."
                                     Text="Cancel"
                                     TextColor="#FFFFFF"
-                                    WidthRequest="100">
+                                    WidthRequest="{OnIdiom Phone=70,
+                                                           Default=100}">
                                     <Button.Triggers>
                                         <DataTrigger
                                             Binding="{Binding Path=IsDownloading}"
@@ -149,10 +151,7 @@
 
                             <Label
                                 Grid.Row="3"
-                                FontSize="{OnPlatform iOS=Default,
-                                                      Android=Default,
-                                                      WinUI=Default,
-                                                      MacCatalyst=16}"
+                                FontSize="{OnPlatform MacCatalyst=16}"
                                 HeightRequest="{OnPlatform WinUI=890}"
                                 HorizontalOptions="Start"
                                 LineBreakMode="WordWrap"
