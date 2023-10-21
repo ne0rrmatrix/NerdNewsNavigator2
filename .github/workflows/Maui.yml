@@ -1,18 +1,19 @@
 name: Build MAUI Project
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
+  workflow_dispatch:
+   paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
-  pull_request:
-    branches: [ main ]
-  
+permissions:
+  contents: write
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
   NUGETCONFIG_PATH: "nuget.config"
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
  
 jobs:
 
@@ -138,7 +139,6 @@ jobs:
       shell: bash
       run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios
     
-
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
 # ********************************* #
