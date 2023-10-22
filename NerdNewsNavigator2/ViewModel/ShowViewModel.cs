@@ -64,7 +64,7 @@ public partial class ShowViewModel : BaseViewModel
     }
     private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
-        Title = e.Title;
+        _ = MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
         await GetDownloadedShows();
         Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
     }

@@ -43,7 +43,6 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await GetDownloadedShows();
         await GetFavoriteShows();
         Thread.Sleep(1000);
-        WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()

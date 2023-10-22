@@ -375,8 +375,10 @@ public class PositionDataBase
             var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
-                await _connection.UpdateAsync(download);
-                _logger.Info($"Updated Download: {download.Title}");
+                // don't know why I need to do it this way!
+                existingPositon.Deleted = download.Deleted;
+                await _connection.UpdateAsync(existingPositon);
+                _logger.Info($"Updated Download: {existingPositon.Title}");
                 return true;
             }
             await _connection.InsertAsync(download);

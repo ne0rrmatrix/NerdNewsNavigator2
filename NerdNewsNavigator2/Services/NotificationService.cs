@@ -27,7 +27,6 @@ public partial class NotificationService
     public async Task<NotificationRequest> NotificationRequests(Show item)
     {
         var id = _random.Next();
-        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(id, item.Url, item, false));
         var request = new Plugin.LocalNotification.NotificationRequest
         {
             NotificationId = id,
