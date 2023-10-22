@@ -71,7 +71,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            _ = AutoDownloadService.Start();
+            AutoDownloadService.Start();
         }
         base.WillEnterForeground(application);
     }
@@ -80,7 +80,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            _ = AutoDownloadService.Start();
+            AutoDownloadService.Start();
         }
     }
 }

@@ -75,7 +75,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            _ = AutoDownloadService.Start();
+            AutoDownloadService.Start();
         }
     }
 }

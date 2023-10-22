@@ -51,7 +51,7 @@ public partial class App : MauiWinUIApplication
         {
             if (message.Start)
             {
-                _ = AutoDownloadService.Start();
+                AutoDownloadService.Start();
             }
             else
             {

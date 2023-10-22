@@ -27,7 +27,7 @@ internal class AutoStartService : Service
     #region Foreground Service Methods
     private void StartForegroundServiceAsync()
     {
-        _ = App.AutoDownloadService.Start();
+        App.AutoDownloadService.Start();
 
         AcquireWakeLock();
         var intent = new Intent(this, typeof(MainActivity));

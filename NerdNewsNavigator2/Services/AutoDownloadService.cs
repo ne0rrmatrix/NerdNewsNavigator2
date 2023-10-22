@@ -24,15 +24,15 @@ public partial class AutoDownloadService
     /// <summary>
     /// A method that Auto starts Downloads
     /// </summary>
-    public async Task Start()
+    public void Start()
     {
         ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
         ATimer.Start();
-        if (!CheckIfWifiOnly() || App.DownloadService.Shows.Count == 0)
+        if (!InternetOk())
         {
-            var favoriteShows = await App.PositionData.GetAllFavorites();
-            await ProccessShowAsync(favoriteShows);
+            return;
         }
+        ThreadPool.QueueUserWorkItem(state => _ = ProccessShowAsync());
     }
     /// <summary>
     /// A method that Stops auto downloads
@@ -53,58 +53,48 @@ public partial class AutoDownloadService
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
-        if (CheckIfWifiOnly())
-        {
-            s_logger.Info($"Timed event: {e} Started");
-            _ = Start();
-            return;
-        }
-        s_logger.Info("Auto Downloader not started");
+        s_logger.Info($"Timed event: {e} Started");
+        Start();
     }
 
-    public bool CheckIfWifiOnly()
+    private bool InternetOk()
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         s_logger.Info(Status);
-        if (Status == string.Empty)
+        if (Status.Contains("WiFi"))
         {
-            s_logger.Info("No wifi or cell service");
-            return false;
+            return true;
         }
-        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
+        if (WifiOnlyDownloading == "No" && Status != string.Empty)
         {
-            s_logger.Info("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
-            return false;
+            return true;
         }
-        return true;
+        s_logger.Info("No Internet. Aborting Auto downloads!");
+        return false;
     }
-    private static async Task ProccessShowAsync(List<Favorites> favoriteShows)
+    private static async Task ProccessShowAsync()
     {
         var downloadedShows = await App.PositionData.GetAllDownloads();
-        _ = Task.Run(() =>
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+
+        favoriteShows.ForEach(x =>
         {
-            if (App.DownloadService.Shows.Count > 0)
+            var show = FeedService.GetShows(x.Url, true);
+            if (show.Count == 1 && !downloadedShows.Exists(y => y.Url == show[0].Url))
             {
-                s_logger.Info("Manual dowload in progress. Cancelling auto download");
-                return;
-            }
-            favoriteShows.ForEach(x =>
-            {
-                var show = FeedService.GetShows(x.Url, true);
-                if (show is not null && !downloadedShows.Exists(y => y.Url == show[0].Url))
-                {
-                    App.DownloadService.Add(show[0]);
-                }
-            });
-            if (App.DownloadService.Shows.Count > 0)
-            {
-                s_logger.Info("Starting to download favorite shows");
-#if ANDROID || IOS
-                _ = App.DownloadService.Start(App.DownloadService.Shows[0]);
-#else
-                App.DownloadService.Start(App.DownloadService.Shows[0]);
-#endif
+                App.DownloadService.Add(show[0]);
             }
         });
+
+        if (App.DownloadService.Shows.Count == 0)
+        {
+            s_logger.Info("Notthing to download. Auto Downloader aborting!");
+            return;
+        }
+#if ANDROID || IOS
+        _ = App.DownloadService.Start(App.DownloadService.Shows[0]);
+#else
+        App.DownloadService.Start(App.DownloadService.Shows[0]);
+#endif
     }
 }
