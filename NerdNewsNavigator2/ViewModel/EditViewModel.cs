@@ -68,8 +68,14 @@ public partial class EditViewModel : BaseViewModel
     public async Task AddToFavorite(string url)
     {
         await CheckAndRequestForeGroundPermission();
+
         var item = Podcasts.ToList().Find(x => x.Url == url);
+        item.Download = true;
+        item.IsNotDownloaded = false;
         var num = Podcasts.IndexOf(item);
+        Podcasts[num] = item;
+
+        await App.PositionData.UpdatePodcast(item);
 
         Favorites favorite = new()
         {
@@ -83,11 +89,6 @@ public partial class EditViewModel : BaseViewModel
         };
         FavoriteShows.Add(favorite);
         await App.PositionData.AddFavorites(favorite);
-
-        item.Download = true;
-        item.IsNotDownloaded = false;
-        Podcasts[num] = item;
-        await App.PositionData.UpdatePodcast(item);
     }
 
     /// <summary>
@@ -100,15 +101,14 @@ public partial class EditViewModel : BaseViewModel
     {
         var item = Podcasts.ToList().Find(x => x.Url == url);
         var num = Podcasts.IndexOf(item);
-        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
-
-        FavoriteShows.Remove(fav);
-        await App.PositionData.DeleteFavorite(fav);
-
         item.IsNotDownloaded = true;
         item.Download = false;
         Podcasts[num] = item;
         await App.PositionData.UpdatePodcast(item);
+
+        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
+        FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
     }
     #endregion
 }

@@ -13,7 +13,8 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Favorites> FavoriteShows { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Favorites> _favoriteShows;
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
@@ -78,12 +79,13 @@ public partial class BaseViewModel : ObservableObject
         _shows = new();
         _downloadedShows = new();
         _podcasts = new();
+        _favoriteShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(FavoriteShows, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(_favoriteShows, null, ObservableCollectionCallback);
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
