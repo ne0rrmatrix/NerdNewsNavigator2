@@ -26,17 +26,11 @@ public partial class AutoDownloadService
     /// </summary>
     public async Task Start()
     {
-        s_logger.Info("Start Auto downloads");
         ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
         ATimer.Start();
-        if (App.DownloadService.Shows.Count > 0)
+        if (!CheckIfWifiOnly() || App.DownloadService.Shows.Count == 0)
         {
-            System.Diagnostics.Debug.WriteLine("Manual download in progress. Auto downloader aborting!");
-            return;
-        }
-        var favoriteShows = await App.PositionData.GetAllFavorites();
-        if (CheckIfWifiOnly())
-        {
+            var favoriteShows = await App.PositionData.GetAllFavorites();
             await ProccessShowAsync(favoriteShows);
         }
     }
