@@ -39,6 +39,8 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
+        Downloads.DownloadFinished += DownloadDone;
+        Downloads.DownloadCancelled += DownloadDone;
         // Database Dependancy Injection END
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
@@ -61,11 +63,23 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
                 }
             }));
 #endif
-
         ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
         });
+    }
+
+    private void DownloadDone(object sender, DownloadEventArgs e)
+    {
+        if (e.Shows.Count > 0)
+        {
+            _logger.Info($"Starting next show: {e.Shows[0].Title}");
+#if ANDROID || IOS
+            _ = App.DownloadService.Start(e.Shows[0]);
+#else
+            App.DownloadService.Start(e.Shows[0]);
+#endif
+        }
     }
     protected override Window CreateWindow(IActivationState activationState)
     {

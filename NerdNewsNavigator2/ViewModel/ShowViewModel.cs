@@ -24,9 +24,8 @@ public partial class ShowViewModel : BaseViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
-
         App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadFinished += DownloadCompleted;
+        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
         App.DeletedItem.DeletedItem += OnItemDeleted;
     }
@@ -65,16 +64,13 @@ public partial class ShowViewModel : BaseViewModel
     }
     private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
+        Title = e.Title;
         await GetDownloadedShows();
-        UpdateShows();
+        Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
     }
     [RelayCommand]
-    public void Cancel(Show show)
+    public static void Cancel(Show show)
     {
-        Title = string.Empty;
-        DownloadProgress = string.Empty;
-        OnPropertyChanged(nameof(Title));
-        OnPropertyChanged(nameof(DownloadProgress));
         App.DownloadService.Cancel(show.Url);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
@@ -86,7 +82,7 @@ public partial class ShowViewModel : BaseViewModel
     /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public void Download(Show show)
+    public static void Download(Show show)
     {
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
@@ -95,10 +91,9 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
-        var number = Shows.IndexOf(show);
-        Shows[number].IsDownloaded = false;
-        Shows[number].IsDownloading = true;
-        Shows[number].IsNotDownloaded = false;
+        show.IsDownloaded = false;
+        show.IsDownloading = true;
+        show.IsNotDownloaded = false;
         App.DownloadService.Add(show);
 #if ANDROID || IOS
         _ = App.DownloadService.Start(show);

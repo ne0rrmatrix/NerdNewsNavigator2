@@ -10,16 +10,8 @@ public partial class NotificationService
     private readonly Random _random = new();
     public NotificationService()
     {
-    }
-    public void StartNotifications()
-    {
         App.Downloads.DownloadFinished += DownloadCompleted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
-    }
-    public void StopNotifications()
-    {
-        App.Downloads.DownloadFinished -= DownloadCompleted;
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
     }
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
@@ -31,7 +23,6 @@ public partial class NotificationService
             e.Notification.CategoryType = NotificationCategoryType.Status;
             await LocalNotificationCenter.Current.Show(e.Notification);
         });
-        StopNotifications();
     }
     public async Task<NotificationRequest> NotificationRequests(Show item)
     {
@@ -61,8 +52,6 @@ public partial class NotificationService
     }
     private async void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        Debug.WriteLine("Notification cancelled");
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             e.Notification.Android.ProgressBarProgress = 0;

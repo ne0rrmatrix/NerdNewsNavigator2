@@ -9,7 +9,6 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class DownloadedShowViewModel : BaseViewModel
 {
-
     /// <summary>
     /// Initilizes a new instance of the <see cref="ILogger"/> class
     /// </summary>
@@ -24,7 +23,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
     {
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
-        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
+        App.Downloads.DownloadFinished += Finished;
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -41,13 +40,25 @@ public partial class DownloadedShowViewModel : BaseViewModel
         await GetDownloadedShows();
         IsBusy = false;
     }
-    private void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
+    private void Finished(object sender, DownloadEventArgs e)
     {
-        _ = MainThread.InvokeOnMainThreadAsync(async () =>
+        _ = MainThread.InvokeOnMainThreadAsync(() =>
         {
-            Title = string.Empty;
-            OnPropertyChanged(Title);
-            await GetDownloadedShows();
+            Title = e.Title;
+            Download download = new()
+            {
+                Title = e.Item.Title,
+                Url = e.Item.Url,
+                Image = e.Item.Image,
+                IsDownloaded = true,
+                IsNotDownloaded = false,
+                Deleted = false,
+                PubDate = e.Item.PubDate,
+                Description = e.Item.Description,
+                FileName = FileService.GetFileName(e.Item.Url)
+            };
+            DownloadedShows.Add(download);
+            Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
         });
     }
 

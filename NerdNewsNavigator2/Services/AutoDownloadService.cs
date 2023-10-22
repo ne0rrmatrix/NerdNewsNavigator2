@@ -47,7 +47,6 @@ public partial class AutoDownloadService
     {
         App.DownloadService.CancelAll();
         ATimer.Stop();
-        App.DownloadService.CancelAll();
         ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
         s_logger.Info("Stopped Auto Downloder");
     }

@@ -14,7 +14,6 @@ namespace NerdNewsNavigator2.Platforms.Android;
 internal class AutoStartService : Service
 {
     #region Properties
-    private AutoDownloadService AutoDownloadService { get; set; }
     public WakeLock WLock { get; set; }
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
@@ -24,14 +23,13 @@ internal class AutoStartService : Service
 
     public AutoStartService()
     {
-        AutoDownloadService = App.AutoDownloadService;
     }
     #region Foreground Service Methods
     private void StartForegroundServiceAsync()
     {
-        AcquireWakeLock();
-        _ = AutoDownloadService.Start();
+        _ = App.AutoDownloadService.Start();
 
+        AcquireWakeLock();
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
             ? PendingIntentFlags.UpdateCurrent |

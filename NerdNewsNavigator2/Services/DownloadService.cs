@@ -16,67 +16,18 @@ public partial class DownloadService : ObservableObject
     private Show Item { get; set; }
 #if ANDROID || IOS
     private int Id { get; set; } = 0;
-    public NotificationRequest Notification { get; private set; }
+    private NotificationRequest Notification { get; set; }
 #endif
     #endregion
     public DownloadService()
     {
+        SetToken();
         Shows = new();
         Item = new();
 #if ANDROID || IOS
         Notification = new();
 #endif
     }
-    #region Download Methods
-    private void SetToken()
-    {
-        if (CancellationTokenSource is not null)
-        {
-            CancellationTokenSource.Dispose();
-            CancellationTokenSource = null;
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
-        }
-        else if
-        (CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
-        }
-    }
-
-#if ANDROID || IOS
-    public async Task Start(Show show)
-    {
-        s_logger.Info($"Staring show: {show.Title}");
-        if (IsDownloading)
-        {
-            s_logger.Info("Download is not starting IDownloading is true");
-            return;
-        }
-        App.NotificationService.StartNotifications();
-        Notification = await App.NotificationService.NotificationRequests(show);
-        ThreadPool.QueueUserWorkItem(async state =>
-        {
-            await StartDownload(show);
-        });
-    }
-#else
-    public void Start(Show show)
-    {
-        s_logger.Info($"Staring show: {show.Title}");
-        if (IsDownloading)
-        {
-            s_logger.Info("Download is not starting IDownloading is true");
-            return;
-        }
-        ThreadPool.QueueUserWorkItem(async state =>
-        {
-            await StartDownload(show);
-        });
-    }
-#endif
-    #endregion
 
     public void Add(Show show)
     {
@@ -86,11 +37,6 @@ public partial class DownloadService : ObservableObject
     {
         CancellationTokenSource.Cancel();
         Shows.Clear();
-        IsDownloading = false;
-    }
-    public void Cancelling()
-    {
-        Shows.Remove(Item);
         IsDownloading = false;
     }
     public Show Cancel(string url)
@@ -109,13 +55,43 @@ public partial class DownloadService : ObservableObject
     }
 
     #region Download Methods
-    public async Task StartDownload(Show item)
+
+#if ANDROID || IOS
+    public async Task Start(Show show)
     {
+        if (IsDownloading)
+        {
+            s_logger.Info("Download is being added to Que");
+            return;
+        }
+        Notification = await App.NotificationService.NotificationRequests(show);
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
+        });
+    }
+#else
+    public void Start(Show show)
+    {
+        if (IsDownloading)
+        {
+            s_logger.Info("Download is being added to Que");
+            return;
+        }
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
+        });
+    }
+#endif
+    private async Task StartDownload(Show item)
+    {
+        s_logger.Info($"Starting Download of {item.Title}");
         SetToken();
         Item = item;
         IsDownloading = true;
-        s_logger.Info($"Starting Download of {item.Title}");
         var result = await DownloadFile(item);
+
         if (result)
         {
             s_logger.Info("Download Completed event triggered");
@@ -138,7 +114,6 @@ public partial class DownloadService : ObservableObject
 
             WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
 #if ANDROID || IOS
-            App.NotificationService.StopNotifications();
             App.Downloads.Completed(item, Notification);
 #else
             App.Downloads.Completed(item);
@@ -219,4 +194,20 @@ public partial class DownloadService : ObservableObject
         }
     }
     #endregion
+    private void SetToken()
+    {
+        if (CancellationTokenSource is not null)
+        {
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+        else if
+        (CancellationTokenSource is null)
+        {
+            var cts = new CancellationTokenSource();
+            CancellationTokenSource = cts;
+        }
+    }
 }

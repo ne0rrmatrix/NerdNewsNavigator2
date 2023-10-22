@@ -58,12 +58,6 @@ public partial class BaseViewModel : ObservableObject
     private string _title;
 
     /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private string _downloadProgress;
-
-    /// <summary>
     /// A <see cref="bool"/> instance managed by this class. 
     /// </summary>
     [ObservableProperty]
@@ -82,7 +76,6 @@ public partial class BaseViewModel : ObservableObject
     {
         _connectivity = connectivity;
         _shows = new();
-        _downloadProgress = string.Empty;
         _downloadedShows = new();
         _podcasts = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
@@ -105,40 +98,7 @@ public partial class BaseViewModel : ObservableObject
     }
     public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
-        ThreadPool.QueueUserWorkItem(state =>
-        {
-            Thread.Sleep(1000);
-            if (e.Shows.Count > 0)
-            {
-                _logger.Info("Starting Second Download");
-#if ANDROID || IOS
-                _ = App.DownloadService.Start(e.Shows[0]);
-#else
-                App.DownloadService.Start(e.Shows[0]);
-#endif
-            }
-        });
-    }
-    public async void DownloadCompleted(object sender, DownloadEventArgs e)
-    {
-        UpdateShows();
-#if ANDROID || IOS
-        App.NotificationService.StopNotifications();
-#endif
-        await GetDownloadedShows();
-        _logger.Info("Shared View model - Downloaded event firing");
-
-        if (e.Shows.Count > 0)
-        {
-            _logger.Info($"Starting next show: {e.Shows[0].Title}");
-#if ANDROID || IOS
-            App.NotificationService.StartNotifications();
-            _ = App.DownloadService.Start(e.Shows[0]);
-#else
-            App.DownloadService.Start(e.Shows[0]);
-#endif
-        }
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
     }
     #endregion
 
@@ -218,18 +178,6 @@ public partial class BaseViewModel : ObservableObject
             _logger.Info("Got All Shows");
         });
     }
-
-    public void UpdateShows()
-    {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        });
-    }
-
     #endregion
 
     #region Podcast data functions
