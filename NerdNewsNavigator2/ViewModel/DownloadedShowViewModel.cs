@@ -83,4 +83,3 @@ public partial class DownloadedShowViewModel : BaseViewModel
         App.DeletedItem.Add(download);
     }
 }
-
