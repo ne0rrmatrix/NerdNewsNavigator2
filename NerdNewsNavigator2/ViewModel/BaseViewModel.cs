@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -233,32 +231,7 @@ public partial class BaseViewModel : ObservableObject
     }
 
     #endregion
-    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
-    {
-        // `lock` ensures that only one thread access the collection at a time
-        lock (collection)
-        {
-            accessMethod?.Invoke();
-        }
-    }
 
-    /// <summary>
-    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
-    /// </summary>
-    /// <returns></returns>
-    public bool InternetConnected()
-    {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            PodcastServices.IsConnected = true;
-            return true;
-        }
-        else
-        {
-            PodcastServices.IsConnected = false;
-            return false;
-        }
-    }
     #region Podcast data functions
 
     /// <summary>
@@ -368,4 +341,30 @@ public partial class BaseViewModel : ObservableObject
         }
     }
     #endregion
+    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+    {
+        // `lock` ensures that only one thread access the collection at a time
+        lock (collection)
+        {
+            accessMethod?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            PodcastServices.IsConnected = true;
+            return true;
+        }
+        else
+        {
+            PodcastServices.IsConnected = false;
+            return false;
+        }
+    }
 }
