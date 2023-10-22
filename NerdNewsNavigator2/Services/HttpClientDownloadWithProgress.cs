@@ -39,7 +39,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         catch
         {
             Debug.WriteLine("Http Client error");
-            App.Downloads.Cancelled = true;
+            App.DownloadService.Cancel(App.DownloadService.Shows[0].Url);
         }
         Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
     }

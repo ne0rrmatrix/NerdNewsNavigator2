@@ -6,25 +6,29 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
-public partial class DownloadService
+public partial class DownloadService : ObservableObject
 {
     #region Properties
-    public CancellationTokenSource CancellationTokenSource { get; set; } = null;
+    private CancellationTokenSource CancellationTokenSource { get; set; } = null;
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(DownloadService));
+    private static bool IsDownloading { get; set; } = false;
+    public List<Show> Shows { get; private set; }
+    private Show Item { get; set; }
+#if ANDROID || IOS
+    private int Id { get; set; } = 0;
+    public NotificationRequest Notification { get; private set; }
+#endif
     #endregion
     public DownloadService()
     {
+        Shows = new();
+        Item = new();
+#if ANDROID || IOS
+        Notification = new();
+#endif
     }
     #region Download Methods
-    /// <summary>
-    /// Method Auto downloads <see cref="Show"/> from Database.
-    /// </summary>
-    public async Task AutoDownload()
-    {
-        var favoriteShows = await App.PositionData.GetAllFavorites();
-        await ProccessShowAsync(favoriteShows);
-    }
-    private async Task ProccessShowAsync(List<Favorites> favoriteShows)
+    private void SetToken()
     {
         if (CancellationTokenSource is not null)
         {
@@ -39,75 +43,179 @@ public partial class DownloadService
             var cts = new CancellationTokenSource();
             CancellationTokenSource = cts;
         }
-        var downloadedShows = await App.PositionData.GetAllDownloads();
-        _ = Task.Run(() =>
-        {
+    }
 
-            if (App.Downloads.Shows.Count > 0)
-            {
-                s_logger.Info("Manual dowload in progress. Cancelling auto download");
-                return;
-            }
-            favoriteShows.ForEach(x =>
-            {
-                var show = FeedService.GetShows(x.Url, true);
-                if (show is not null && !downloadedShows.Exists(y => y.Url == show[0].Url))
-                {
-                    App.Downloads.Add(show[0]);
-                }
-            });
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-            if (App.Downloads.Shows.Count > 0)
-            {
-                s_logger.Info("Starting to download favorite shows");
 #if ANDROID || IOS
-                _ = App.Downloads.Start(App.Downloads.Shows[0]);
-#else
-                App.Downloads.Start(App.Downloads.Shows[0]);
-#endif
-            }
+    public async Task Start(Show show)
+    {
+        s_logger.Info($"Staring show: {show.Title}");
+        if (IsDownloading)
+        {
+            s_logger.Info("Download is not starting IDownloading is true");
+            return;
+        }
+        App.NotificationService.StartNotifications();
+        Notification = await App.NotificationService.NotificationRequests(show);
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
         });
     }
+#else
+    public void Start(Show show)
+    {
+        s_logger.Info($"Staring show: {show.Title}");
+        if (IsDownloading)
+        {
+            s_logger.Info("Download is not starting IDownloading is true");
+            return;
+        }
+        ThreadPool.QueueUserWorkItem(async state =>
+        {
+            await StartDownload(show);
+        });
+    }
+#endif
     #endregion
 
-    #region Events
-    private void DownloadStarted(object sender, DownloadEventArgs e)
+    public void Add(Show show)
     {
-        if (CancellationTokenSource.IsCancellationRequested)
+        Shows.Add(show);
+    }
+    public void CancelAll()
+    {
+        CancellationTokenSource.Cancel();
+        Shows.Clear();
+        IsDownloading = false;
+    }
+    public void Cancelling()
+    {
+        Shows.Remove(Item);
+        IsDownloading = false;
+    }
+    public Show Cancel(string url)
+    {
+        Debug.WriteLine("Cancel called");
+        var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
+        if (item.Url == Item.Url)
         {
-            App.Downloads.DownloadStarted -= DownloadStarted;
-            App.Downloads.DownloadFinished -= DownloadCompleted;
-            s_logger.Info("Stopping auto download");
-            App.Downloads.CancelAll();
-            if (CancellationTokenSource is not null)
+            Shows.Remove(item);
+            IsDownloading = false;
+            CancellationTokenSource.Cancel();
+            return item;
+        }
+        Shows.Remove(item);
+        return item;
+    }
+
+    #region Download Methods
+    public async Task StartDownload(Show item)
+    {
+        SetToken();
+        Item = item;
+        IsDownloading = true;
+        s_logger.Info($"Starting Download of {item.Title}");
+        var result = await DownloadFile(item);
+        if (result)
+        {
+            s_logger.Info("Download Completed event triggered");
+            Download download = new()
             {
-                CancellationTokenSource.Cancel();
-                CancellationTokenSource?.Dispose();
-                CancellationTokenSource = null;
-            }
+                Title = item.Title,
+                Url = item.Url,
+                Image = item.Image,
+                IsDownloaded = true,
+                IsNotDownloaded = false,
+                Deleted = false,
+                PubDate = item.PubDate,
+                Description = item.Description,
+                FileName = FileService.GetFileName(item.Url)
+            };
+            s_logger.Info($"Download completed: {item.Title}");
+            await App.PositionData.UpdateDownload(download);
+            Shows.Remove(item);
+            IsDownloading = false;
+
+            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
+#if ANDROID || IOS
+            App.NotificationService.StopNotifications();
+            App.Downloads.Completed(item, Notification);
+#else
+            App.Downloads.Completed(item);
+#endif
         }
     }
 
-    private void DownloadCompleted(object sender, DownloadEventArgs e)
+    /// <summary>
+    /// Download a file to local filesystem from a URL
+    /// </summary>
+    /// <param name="item"><see cref="Show"/> Url to download file. </param>
+    /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
+    private async Task<bool> DownloadFile(Show item)
     {
-        MainThread.InvokeOnMainThreadAsync(() =>
+        try
         {
-            Shell.Current.CurrentPage.Title = string.Empty;
-        });
-        if (e.Shows.Count > 0)
-        {
+            var favorites = await App.PositionData.GetAllDownloads();
+            var tempFile = FileService.GetFileName(item.Url);
+            if (File.Exists(tempFile))
+            {
+                if (favorites?.Where(x => x.Deleted).ToList().Find(y => y.Url == item.Url) is not null || favorites?.Find(x => x.Url == item.Url) is null)
+                {
+                    s_logger.Info($"Item is Partially downloaded, Deleting: {tempFile}");
+                    File.Delete(tempFile);
+                }
+                else
+                {
+                    s_logger.Info("File exists stopping download");
+                    return false;
+                }
+            }
+            var destinationFilePath = tempFile;
+            s_logger.Info("Starting download Progress on TaskBar");
+            using var client = new HttpClientDownloadWithProgress(item.Url, destinationFilePath);
+            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
+            {
+                if (CancellationTokenSource.IsCancellationRequested)
+                {
+                    client.DownloadCancel.Cancel(false);
+                }
 #if ANDROID || IOS
-            App.Downloads.Notify.StartNotifications();
-            _ = App.Downloads.Start(e.Shows[0]);
+                var title = $" Download Progress: {progressPercentage}%";
+                App.Downloads.StartedDownload(title, item, Notification);
 #else
-            App.Downloads.Start(e.Shows[0]);
+                var title = $"        Download Progress: {progressPercentage}%";
+                App.Downloads.StartedDownload(title, item);
 #endif
+            };
+            if (!CancellationTokenSource.IsCancellationRequested)
+            {
+                await client.StartDownload();
+            }
+            if (CancellationTokenSource.IsCancellationRequested)
+            {
+                FileService.DeleteFile(item.Url);
+#if ANDROID || IOS
+                App.Downloads.Cancel(item, Notification);
+#else
+                App.Downloads.Cancel(item);
+#endif
+                _ = MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Toast.Make("Download cancelled", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                });
+                return false;
+            }
+            return true;
         }
-        if (e.Shows.Count == 0)
+        catch (Exception ex)
         {
-            App.Downloads.DownloadStarted -= DownloadStarted;
-            App.Downloads.DownloadFinished -= DownloadCompleted;
+            s_logger.Info($"{ex.Message}, Deleting file");
+            FileService.DeleteFile(item.Url);
+            _ = MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await Toast.Make($"Download error: {ex.Message}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            });
+            return false;
         }
     }
     #endregion

@@ -25,7 +25,7 @@ public partial class NotificationService
     {
         MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            e.Progress = 0;
+            e.Title = string.Empty;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download Complete";
             e.Notification.CategoryType = NotificationCategoryType.Status;
@@ -69,7 +69,7 @@ public partial class NotificationService
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download cancelled";
             e.Notification.CategoryType = NotificationCategoryType.None;
-            e.Progress = 0;
+            e.Title = string.Empty;
             await LocalNotificationCenter.Current.Show(e.Notification);
         });
     }

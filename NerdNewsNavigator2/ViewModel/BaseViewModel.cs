@@ -103,27 +103,21 @@ public partial class BaseViewModel : ObservableObject
     #region Events
     public void DownloadStarted(object sender, DownloadEventArgs e)
     {
-        if (e.Status is null || e.Shows.Count == 0)
-        {
-            return;
-        }
-        MainThread.InvokeOnMainThreadAsync(() => Title = e.Status);
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
     }
     public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
         MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
         ThreadPool.QueueUserWorkItem(state =>
         {
             Thread.Sleep(1000);
-            App.Downloads.DownloadCancelled += DownloadCancelled;
             if (e.Shows.Count > 0)
             {
                 _logger.Info("Starting Second Download");
 #if ANDROID || IOS
-                _ = App.Downloads.Start(e.Shows[0]);
+                _ = App.DownloadService.Start(e.Shows[0]);
 #else
-                App.Downloads.Start(e.Shows[0]);
+                App.DownloadService.Start(e.Shows[0]);
 #endif
             }
         });
@@ -132,27 +126,19 @@ public partial class BaseViewModel : ObservableObject
     {
         UpdateShows();
 #if ANDROID || IOS
-        App.Downloads.Notify.StopNotifications();
+        App.NotificationService.StopNotifications();
 #endif
-        App.Downloads.DownloadStarted -= DownloadStarted;
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
-        App.Downloads.DownloadFinished -= DownloadCompleted;
         await GetDownloadedShows();
         _logger.Info("Shared View model - Downloaded event firing");
 
         if (e.Shows.Count > 0)
         {
-            _logger.Info("Starting next show: {Title}", e.Shows[0].Title);
+            _logger.Info($"Starting next show: {e.Shows[0].Title}");
 #if ANDROID || IOS
-            App.Downloads.Notify.StartNotifications();
-#endif
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-#if ANDROID || IOS
-            _ = App.Downloads.Start(e.Shows[0]);
+            App.NotificationService.StartNotifications();
+            _ = App.DownloadService.Start(e.Shows[0]);
 #else
-            App.Downloads.Start(e.Shows[0]);
+            App.DownloadService.Start(e.Shows[0]);
 #endif
         }
     }
@@ -196,7 +182,7 @@ public partial class BaseViewModel : ObservableObject
             show.IsNotDownloaded = false;
             return;
         }
-        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
+        var currentDownload = App.DownloadService.Shows.Find(x => x.Url == show.Url);
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;

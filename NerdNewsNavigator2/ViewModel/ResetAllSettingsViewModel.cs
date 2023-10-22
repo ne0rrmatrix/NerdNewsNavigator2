@@ -31,7 +31,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     private async Task ResetAll()
     {
         _messenger.Send(new MessageData(false));
-        App.Downloads.CancelAll();
+        App.DownloadService.CancelAll();
         var item = await App.PositionData.GetAllDownloads();
         item.ForEach(App.DeletedItem.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

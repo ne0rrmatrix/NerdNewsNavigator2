@@ -24,13 +24,11 @@ public partial class ShowViewModel : BaseViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
+
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += DownloadCompleted;
+        App.Downloads.DownloadCancelled += DownloadCancelled;
         App.DeletedItem.DeletedItem += OnItemDeleted;
-        if (App.Downloads.Shows.Count > 0)
-        {
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-        }
     }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
@@ -77,7 +75,7 @@ public partial class ShowViewModel : BaseViewModel
         DownloadProgress = string.Empty;
         OnPropertyChanged(nameof(Title));
         OnPropertyChanged(nameof(DownloadProgress));
-        App.Downloads.Cancel(show.Url);
+        App.DownloadService.Cancel(show.Url);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
@@ -101,18 +99,11 @@ public partial class ShowViewModel : BaseViewModel
         Shows[number].IsDownloaded = false;
         Shows[number].IsDownloading = true;
         Shows[number].IsNotDownloaded = false;
-        if (App.Downloads.Shows.Count == 0)
-        {
-            _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-        }
-        App.Downloads.Add(show);
+        App.DownloadService.Add(show);
 #if ANDROID || IOS
-        _ = App.Downloads.Start(show);
+        _ = App.DownloadService.Start(show);
 #else
-        App.Downloads.Start(show);
+        App.DownloadService.Start(show);
 #endif
     }
 }

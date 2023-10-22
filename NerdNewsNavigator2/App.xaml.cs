@@ -16,6 +16,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
     public static AutoDownloadService AutoDownloadService { get; set; } = new();
     public static List<Message> Message { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
+    public static NotificationService NotificationService { get; set; } = new();
     public static DeletedItemService DeletedItem { get; set; } = new();
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
@@ -71,7 +72,7 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
-            Downloads.CancelAll();
+            DownloadService.CancelAll();
             Thread.Sleep(50);
             _logger.Info("Safe shutdown completed");
         };

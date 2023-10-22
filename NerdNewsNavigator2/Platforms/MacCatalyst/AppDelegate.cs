@@ -44,7 +44,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     private void HandleDownload(BGTask task)
     {
-        _ = AutoDownloadAsync();
+        AutoDownloadAsync();
         task.SetTaskCompleted(true);
     }
     private void HandleAppRefresh(BGAppRefreshTask task)
@@ -64,30 +64,18 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void WillEnterForeground(UIApplication application)
     {
         Logger.Info("App will enter foreground");
-        _ = AutoDownloadAsync();
+        AutoDownloadAsync();
         base.WillEnterForeground(application);
     }
     public AppDelegate() : base()
     {
     }
-    public async Task AutoDownloadAsync()
+    public void AutoDownloadAsync()
     {
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            if (AutoDownloadService.CancellationTokenSource is null)
-            {
-                var cts = new CancellationTokenSource();
-                AutoDownloadService.CancellationTokenSource = cts;
-            }
-            else if (AutoDownloadService.CancellationTokenSource is not null)
-            {
-                AutoDownloadService.CancellationTokenSource.Dispose();
-                AutoDownloadService.CancellationTokenSource = null;
-                var cts = new CancellationTokenSource();
-                AutoDownloadService.CancellationTokenSource = cts;
-            }
-            await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
+            _ = AutoDownloadService.Start();
         }
     }
 }

@@ -27,22 +27,10 @@ internal class AutoStartService : Service
         AutoDownloadService = App.AutoDownloadService;
     }
     #region Foreground Service Methods
-    private async Task StartForegroundServiceAsync()
+    private void StartForegroundServiceAsync()
     {
         AcquireWakeLock();
-        if (AutoDownloadService.CancellationTokenSource is not null)
-        {
-            AutoDownloadService.CancellationTokenSource.Dispose();
-            AutoDownloadService.CancellationTokenSource = null;
-            var cts = new CancellationTokenSource();
-            AutoDownloadService.CancellationTokenSource = cts;
-        }
-        else if (AutoDownloadService.CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            AutoDownloadService.CancellationTokenSource = cts;
-        }
-        await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
+        _ = AutoDownloadService.Start();
 
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
@@ -85,7 +73,7 @@ internal class AutoStartService : Service
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
         s_logger.Info("Staring Auto Download");
-        _ = StartForegroundServiceAsync();
+        StartForegroundServiceAsync();
         return StartCommandResult.Sticky;
     }
 
@@ -126,11 +114,6 @@ internal class AutoStartService : Service
             s_logger.Info("Wake lock is being released");
         }
         s_logger.Info($"Wake Lock Status: {WLock.IsHeld}");
-        if (AutoDownloadService.CancellationTokenSource is not null)
-        {
-            AutoDownloadService.CancellationTokenSource = null;
-        }
-        AutoDownloadService.CancellationTokenSource?.Dispose();
         base.OnDestroy();
     }
 }
