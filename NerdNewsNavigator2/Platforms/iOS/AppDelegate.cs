@@ -66,29 +66,21 @@ public class AppDelegate : MauiUIApplicationDelegate
     }
     public override void WillEnterForeground(UIApplication application)
     {
-
+        AutoDownloadAsync();
         Logger.Info("App will enter foreground");
-        _ = AutoDownloadAsync();
+        IsRunning = Preferences.Default.Get("AutoDownload", true);
+        if (InternetConnected() && IsRunning)
+        {
+            AutoDownloadService.Start();
+        }
         base.WillEnterForeground(application);
     }
-    public async Task AutoDownloadAsync()
+    public void AutoDownloadAsync()
     {
         IsRunning = Preferences.Default.Get("AutoDownload", true);
         if (InternetConnected() && IsRunning)
         {
-            if (AutoDownloadService.CancellationTokenSource is null)
-            {
-                var cts = new CancellationTokenSource();
-                AutoDownloadService.CancellationTokenSource = cts;
-            }
-            else if (AutoDownloadService.CancellationTokenSource is not null)
-            {
-                AutoDownloadService.CancellationTokenSource.Dispose();
-                AutoDownloadService.CancellationTokenSource = null;
-                var cts = new CancellationTokenSource();
-                AutoDownloadService.CancellationTokenSource = cts;
-            }
-            await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
+            AutoDownloadService.Start();
         }
     }
 }

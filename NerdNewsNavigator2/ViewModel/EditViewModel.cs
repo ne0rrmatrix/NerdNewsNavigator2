@@ -41,16 +41,15 @@ public partial class EditViewModel : BaseViewModel
     /// <summary>
     /// Method Deletes a Podcast from the database.
     /// </summary>
-    /// <param name="url"></param>
+    /// <param name="item">A <see cref="Podcast"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task DeletePodcast(string url)
+    public async Task DeletePodcast(Podcast item)
     {
-        var item = Podcasts.ToList().Find(x => x.Url == url);
         Podcasts.Remove(item);
         await App.PositionData.DeletePodcast(item);
 
-        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
+        var fav = FavoriteShows.ToList().Find(x => x.Url == item.Url);
         if (fav is null)
         {
             return;
@@ -62,14 +61,22 @@ public partial class EditViewModel : BaseViewModel
     /// <summary>
     /// A Method that adds a favourite to the database.
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="item">A <see cref="Podcast"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task AddToFavorite(string url)
+    public async Task AddToFavorite(Podcast item)
     {
+        if (Preferences.Default.Get("start", false))
+        {
+            await Toast.Make("Please disable Auto download before adding new favorites.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            return;
+        }
         await CheckAndRequestForeGroundPermission();
-        var item = Podcasts.ToList().Find(x => x.Url == url);
-        var num = Podcasts.IndexOf(item);
+
+        item.Download = true;
+        item.IsNotDownloaded = false;
+
+        await App.PositionData.UpdatePodcast(item);
 
         Favorites favorite = new()
         {
@@ -83,32 +90,23 @@ public partial class EditViewModel : BaseViewModel
         };
         FavoriteShows.Add(favorite);
         await App.PositionData.AddFavorites(favorite);
-
-        item.Download = true;
-        item.IsNotDownloaded = false;
-        Podcasts[num] = item;
-        await App.PositionData.UpdatePodcast(item);
     }
 
     /// <summary>
     /// A Method that removes a favourite from the database.
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="item">A <see cref="Podcast"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task RemoveFavorite(string url)
+    public async Task RemoveFavorite(Podcast item)
     {
-        var item = Podcasts.ToList().Find(x => x.Url == url);
-        var num = Podcasts.IndexOf(item);
-        var fav = FavoriteShows.ToList().Find(x => x.Url == url);
-
-        FavoriteShows.Remove(fav);
-        await App.PositionData.DeleteFavorite(fav);
-
         item.IsNotDownloaded = true;
         item.Download = false;
-        Podcasts[num] = item;
         await App.PositionData.UpdatePodcast(item);
+
+        var fav = FavoriteShows.ToList().Find(x => x.Url == item.Url);
+        FavoriteShows.Remove(fav);
+        await App.PositionData.DeleteFavorite(fav);
     }
     #endregion
 }

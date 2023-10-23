@@ -138,7 +138,7 @@ public partial class SettingsPage : ContentPage
     {
         _ = Task.Run(async () =>
         {
-            await PodcastServices.AddDefaultPodcasts();
+            PodcastServices.AddDefaultPodcasts();
             await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
     }

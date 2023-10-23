@@ -24,13 +24,10 @@ public partial class ShowViewModel : BaseViewModel
     /// </summary>
     public ShowViewModel(IConnectivity connectivity) : base(connectivity)
     {
+        App.Downloads.DownloadStarted += DownloadStarted;
+        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
+        App.Downloads.DownloadCancelled += DownloadCancelled;
         App.DeletedItem.DeletedItem += OnItemDeleted;
-        if (App.Downloads.Shows.Count > 0)
-        {
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-        }
     }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
@@ -67,20 +64,19 @@ public partial class ShowViewModel : BaseViewModel
     }
     private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
+        _ = MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
         await GetDownloadedShows();
-        UpdateShows();
+        Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
     }
     [RelayCommand]
+#pragma warning disable CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
     public void Cancel(Show show)
+#pragma warning restore CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
     {
-        Title = string.Empty;
-        DownloadProgress = string.Empty;
-        OnPropertyChanged(nameof(Title));
-        OnPropertyChanged(nameof(DownloadProgress));
-        App.Downloads.Cancel(show.Url);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
+        App.DownloadService.Cancel(show.Url);
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
@@ -88,7 +84,7 @@ public partial class ShowViewModel : BaseViewModel
     /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public void Download(Show show)
+    public static void Download(Show show)
     {
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
@@ -97,22 +93,10 @@ public partial class ShowViewModel : BaseViewModel
         {
             await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         });
-        var number = Shows.IndexOf(show);
-        Shows[number].IsDownloaded = false;
-        Shows[number].IsDownloading = true;
-        Shows[number].IsNotDownloaded = false;
-        if (App.Downloads.Shows.Count == 0)
-        {
-            _logger.Info($"Current download count is: {App.Downloads.Shows.Count}");
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-        }
-        App.Downloads.Add(show);
-#if ANDROID || IOS
-        _ = App.Downloads.Start(show);
-#else
-        App.Downloads.Start(show);
-#endif
+        show.IsDownloaded = false;
+        show.IsDownloading = true;
+        show.IsNotDownloaded = false;
+        App.DownloadService.Add(show);
+        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(show));
     }
 }

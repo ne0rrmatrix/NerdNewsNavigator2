@@ -13,7 +13,6 @@ public partial class AutoDownloadService
     private string Status { get; set; }
     private string WifiOnlyDownloading { get; set; }
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
-    public CancellationTokenSource CancellationTokenSource { get; set; } = null;
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     public AutoDownloadService()
     {
@@ -27,52 +26,23 @@ public partial class AutoDownloadService
     /// </summary>
     public void Start()
     {
-        if (CancellationTokenSource is not null)
+        ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
+        ATimer.Start();
+        if (!InternetOk())
         {
-            CancellationTokenSource.Dispose();
-            CancellationTokenSource = null;
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
+            return;
         }
-        else if (CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            CancellationTokenSource = cts;
-        }
-        s_logger.Info("Start Auto downloads");
-        _ = LongTaskAsync(CancellationTokenSource.Token);
+        ThreadPool.QueueUserWorkItem(state => _ = ProccessShowAsync());
     }
-
     /// <summary>
     /// A method that Stops auto downloads
     /// </summary>
     public void Stop()
     {
-        if (CancellationTokenSource is not null)
-        {
-            CancellationTokenSource.Cancel();
-            App.DownloadService.CancellationTokenSource.Cancel();
-            _ = LongTaskAsync(CancellationTokenSource.Token);
-            CancellationTokenSource?.Dispose();
-            CancellationTokenSource = null;
-        }
+        App.DownloadService.CancelAll();
+        ATimer.Stop();
+        ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
         s_logger.Info("Stopped Auto Downloder");
-    }
-    public async Task LongTaskAsync(CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            ATimer.Stop();
-            App.DownloadService.CancellationTokenSource?.Cancel();
-            ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
-            return;
-        }
-        ATimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-        ATimer.Start();
-        if (CheckIfWifiOnly())
-        {
-            await App.DownloadService.AutoDownload();
-        }
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
@@ -83,29 +53,44 @@ public partial class AutoDownloadService
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
-        if (CheckIfWifiOnly())
-        {
-            s_logger.Info($"Timed event: {e} Started");
-            _ = App.DownloadService.AutoDownload();
-            return;
-        }
-        s_logger.Info("Auto Downloader not started");
+        s_logger.Info($"Timed event: {e} Started");
+        Start();
     }
 
-    public bool CheckIfWifiOnly()
+    private bool InternetOk()
     {
         WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
         s_logger.Info(Status);
-        if (Status == string.Empty)
+        if (Status.Contains("WiFi"))
         {
-            s_logger.Info("No wifi or cell service");
-            return false;
+            return true;
         }
-        if (WifiOnlyDownloading == "Yes" && !Status.Contains("WiFi"))
+        if (WifiOnlyDownloading == "No" && Status != string.Empty)
         {
-            s_logger.Info("Turning off AutoDownloader. Cellular on connection and Wifi only Downloading turned on");
-            return false;
+            return true;
         }
-        return true;
+        s_logger.Info("No Internet. Aborting Auto downloads!");
+        return false;
+    }
+    private static async Task ProccessShowAsync()
+    {
+        var downloadedShows = await App.PositionData.GetAllDownloads();
+        var favoriteShows = await App.PositionData.GetAllFavorites();
+
+        favoriteShows.ForEach(x =>
+        {
+            var show = FeedService.GetShows(x.Url, true);
+            if (show.Count == 1 && !downloadedShows.Exists(y => y.Url == show[0].Url))
+            {
+                App.DownloadService.Add(show[0]);
+            }
+        });
+
+        if (App.DownloadService.Shows.Count == 0)
+        {
+            s_logger.Info("Notthing to download. Auto Downloader aborting!");
+            return;
+        }
+        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(App.DownloadService.Shows[0]));
     }
 }

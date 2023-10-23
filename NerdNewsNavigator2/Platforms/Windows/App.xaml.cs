@@ -47,23 +47,11 @@ public partial class App : MauiWinUIApplication
         base.OnLaunched(args);
         AutoDownloadService = NerdNewsNavigator2.App.AutoDownloadService;
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
-        messenger.Register<MessageData>(this, async (recipient, message) =>
+        messenger.Register<MessageData>(this, (recipient, message) =>
         {
             if (message.Start)
             {
-                if (AutoDownloadService.CancellationTokenSource is null)
-                {
-                    var cts = new CancellationTokenSource();
-                    AutoDownloadService.CancellationTokenSource = cts;
-                }
-                else if (AutoDownloadService.CancellationTokenSource is not null)
-                {
-                    AutoDownloadService.CancellationTokenSource.Dispose();
-                    AutoDownloadService.CancellationTokenSource = null;
-                    var cts = new CancellationTokenSource();
-                    AutoDownloadService.CancellationTokenSource = cts;
-                }
-                await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
+                AutoDownloadService.Start();
             }
             else
             {

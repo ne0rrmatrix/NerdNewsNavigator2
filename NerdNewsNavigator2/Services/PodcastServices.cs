@@ -9,8 +9,6 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class PodcastServices
 {
-    public static bool IsConnected { get; set; } = true;
-
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
@@ -50,15 +48,6 @@ public static class PodcastServices
     }
 
     /// <summary>
-    /// Method Adds Playback <see cref="Favorites"/> to Database.
-    /// </summary>
-    /// <param name="favorite"></param> Position Class object.
-    /// <returns>nothing</returns>
-    public static void AddFavoritesToDatabase(List<Favorites> favorite)
-    {
-        favorite.ForEach(async (item) => await App.PositionData.AddFavorites(item));
-    }
-    /// <summary>
     /// Method Adds a <see cref="Podcast"/> to Database.
     /// </summary>
     /// <param name="url"><see cref="string"/> Url of <see cref="Podcast"/></param>
@@ -81,17 +70,19 @@ public static class PodcastServices
     /// Method Adds default <see cref="List{T}"/> <see cref="Podcast"/> from RSS feed to Database.
     /// </summary>
     /// <returns>nothing</returns>
-    public static async Task AddDefaultPodcasts()
+    public static void AddDefaultPodcasts()
     {
-        await Task.Run(async () =>
+        ThreadPool.QueueUserWorkItem(async state =>
         {
             await RemoveDefaultPodcasts();
             var items = GetFromUrl();
             var res = items.OrderBy(x => x.Title).ToList();
-            await AddToDatabase(res);
+            foreach (var item in res)
+            {
+                await App.PositionData.AddPodcast(item);
+            }
         });
     }
-
     /// <summary>
     /// Method resets <see cref="List{T}"/> <see cref="Podcast"/> to default list.
     /// </summary>
@@ -100,7 +91,6 @@ public static class PodcastServices
     {
         await Task.Run(async () =>
         {
-            await App.PositionData.DeleteAllPodcasts();
             var items = await App.PositionData.GetAllPodcasts();
             items.Where(x => x.Url.Contains("feeds.twit.tv")).ToList().ForEach(async item => await App.PositionData.DeletePodcast(item));
         });

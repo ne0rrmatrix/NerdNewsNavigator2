@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
-
 namespace NerdNewsNavigator2.ViewModel;
 
 /// <summary>
@@ -15,7 +13,8 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
     /// </summary>
-    public ObservableCollection<Favorites> FavoriteShows { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<Favorites> _favoriteShows;
 
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
@@ -60,12 +59,6 @@ public partial class BaseViewModel : ObservableObject
     private string _title;
 
     /// <summary>
-    /// an <see cref="int"/> instance managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private string _downloadProgress;
-
-    /// <summary>
     /// A <see cref="bool"/> instance managed by this class. 
     /// </summary>
     [ObservableProperty]
@@ -84,15 +77,15 @@ public partial class BaseViewModel : ObservableObject
     {
         _connectivity = connectivity;
         _shows = new();
-        _downloadProgress = string.Empty;
         _downloadedShows = new();
         _podcasts = new();
+        _favoriteShows = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(FavoriteShows, null, ObservableCollectionCallback);
+        BindingBase.EnableCollectionSynchronization(_favoriteShows, null, ObservableCollectionCallback);
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
@@ -103,58 +96,11 @@ public partial class BaseViewModel : ObservableObject
     #region Events
     public void DownloadStarted(object sender, DownloadEventArgs e)
     {
-        if (e.Status is null || e.Shows.Count == 0)
-        {
-            return;
-        }
-        MainThread.InvokeOnMainThreadAsync(() => Title = e.Status);
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
     }
     public void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
-        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
-        ThreadPool.QueueUserWorkItem(state =>
-        {
-            Thread.Sleep(1000);
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-            if (e.Shows.Count > 0)
-            {
-                _logger.Info("Starting Second Download");
-#if ANDROID || IOS
-                _ = App.Downloads.Start(e.Shows[0]);
-#else
-                App.Downloads.Start(e.Shows[0]);
-#endif
-            }
-        });
-    }
-    public async void DownloadCompleted(object sender, DownloadEventArgs e)
-    {
-        UpdateShows();
-#if ANDROID || IOS
-        App.Downloads.Notify.StopNotifications();
-#endif
-        App.Downloads.DownloadStarted -= DownloadStarted;
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
-        App.Downloads.DownloadFinished -= DownloadCompleted;
-        await GetDownloadedShows();
-        _logger.Info("Shared View model - Downloaded event firing");
-
-        if (e.Shows.Count > 0)
-        {
-            _logger.Info("Starting next show: {Title}", e.Shows[0].Title);
-#if ANDROID || IOS
-            App.Downloads.Notify.StartNotifications();
-#endif
-            App.Downloads.DownloadStarted += DownloadStarted;
-            App.Downloads.DownloadCancelled += DownloadCancelled;
-            App.Downloads.DownloadFinished += DownloadCompleted;
-#if ANDROID || IOS
-            _ = App.Downloads.Start(e.Shows[0]);
-#else
-            App.Downloads.Start(e.Shows[0]);
-#endif
-        }
+        MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
     }
     #endregion
 
@@ -196,7 +142,7 @@ public partial class BaseViewModel : ObservableObject
             show.IsNotDownloaded = false;
             return;
         }
-        var currentDownload = App.Downloads.Shows.Find(x => x.Url == show.Url);
+        var currentDownload = App.DownloadService.Shows.Find(x => x.Url == show.Url);
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;
@@ -234,45 +180,8 @@ public partial class BaseViewModel : ObservableObject
             _logger.Info("Got All Shows");
         });
     }
-
-    public void UpdateShows()
-    {
-        _ = MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            IsBusy = false;
-            Title = string.Empty;
-            DownloadProgress = string.Empty;
-            Shows?.Where(x => DownloadedShows.ToList().Exists(y => y.Url == x.Url)).ToList().ForEach(SetProperties);
-        });
-    }
-
     #endregion
-    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
-    {
-        // `lock` ensures that only one thread access the collection at a time
-        lock (collection)
-        {
-            accessMethod?.Invoke();
-        }
-    }
 
-    /// <summary>
-    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
-    /// </summary>
-    /// <returns></returns>
-    public bool InternetConnected()
-    {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            PodcastServices.IsConnected = true;
-            return true;
-        }
-        else
-        {
-            PodcastServices.IsConnected = false;
-            return false;
-        }
-    }
     #region Podcast data functions
 
     /// <summary>
@@ -382,4 +291,28 @@ public partial class BaseViewModel : ObservableObject
         }
     }
     #endregion
+    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+    {
+        // `lock` ensures that only one thread access the collection at a time
+        lock (collection)
+        {
+            accessMethod?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// A method that checks if the internet is connected and returns a <see cref="bool"/> as answer.
+    /// </summary>
+    /// <returns></returns>
+    public bool InternetConnected()
+    {
+        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

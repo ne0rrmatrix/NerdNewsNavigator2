@@ -31,7 +31,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     private async Task ResetAll()
     {
         _messenger.Send(new MessageData(false));
-        App.Downloads.CancelAll();
+        App.DownloadService.CancelAll();
         var item = await App.PositionData.GetAllDownloads();
         item.ForEach(App.DeletedItem.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -43,7 +43,6 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await GetDownloadedShows();
         await GetFavoriteShows();
         Thread.Sleep(1000);
-        WeakReferenceMessenger.Default.Send(new DeletedItemMessage(true));
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
     }
     private void SetVariables()
@@ -57,7 +56,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     }
     private static async Task DeleteAllAsync()
     {
-        await App.PositionData.DeleteAll();
+        await App.PositionData.DeleteAllPositions();
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();

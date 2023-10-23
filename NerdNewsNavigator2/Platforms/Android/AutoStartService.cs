@@ -14,7 +14,6 @@ namespace NerdNewsNavigator2.Platforms.Android;
 internal class AutoStartService : Service
 {
     #region Properties
-    private AutoDownloadService AutoDownloadService { get; set; }
     public WakeLock WLock { get; set; }
     public const string NOTIFICATION_CHANNEL_ID = "10276";
     private const int NOTIFICATION_ID = 10923;
@@ -24,26 +23,13 @@ internal class AutoStartService : Service
 
     public AutoStartService()
     {
-        AutoDownloadService = App.AutoDownloadService;
     }
     #region Foreground Service Methods
-    private async Task StartForegroundServiceAsync()
+    private void StartForegroundServiceAsync()
     {
-        AcquireWakeLock();
-        if (AutoDownloadService.CancellationTokenSource is not null)
-        {
-            AutoDownloadService.CancellationTokenSource.Dispose();
-            AutoDownloadService.CancellationTokenSource = null;
-            var cts = new CancellationTokenSource();
-            AutoDownloadService.CancellationTokenSource = cts;
-        }
-        else if (AutoDownloadService.CancellationTokenSource is null)
-        {
-            var cts = new CancellationTokenSource();
-            AutoDownloadService.CancellationTokenSource = cts;
-        }
-        await AutoDownloadService.LongTaskAsync(AutoDownloadService.CancellationTokenSource.Token);
+        App.AutoDownloadService.Start();
 
+        AcquireWakeLock();
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
             ? PendingIntentFlags.UpdateCurrent |
@@ -85,7 +71,7 @@ internal class AutoStartService : Service
     public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
     {
         s_logger.Info("Staring Auto Download");
-        _ = StartForegroundServiceAsync();
+        StartForegroundServiceAsync();
         return StartCommandResult.Sticky;
     }
 
@@ -126,11 +112,6 @@ internal class AutoStartService : Service
             s_logger.Info("Wake lock is being released");
         }
         s_logger.Info($"Wake Lock Status: {WLock.IsHeld}");
-        if (AutoDownloadService.CancellationTokenSource is not null)
-        {
-            AutoDownloadService.CancellationTokenSource = null;
-        }
-        AutoDownloadService.CancellationTokenSource?.Dispose();
         base.OnDestroy();
     }
 }

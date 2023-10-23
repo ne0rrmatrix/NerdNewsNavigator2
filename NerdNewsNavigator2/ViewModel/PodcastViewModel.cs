@@ -20,12 +20,10 @@ public partial class PodcastViewModel : BaseViewModel
     {
         ThreadPool.QueueUserWorkItem(async (state) => await GetPodcasts());
         App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadFinished += RemoveTitle;
-        App.Downloads.DownloadCancelled += RemoveTitle;
-    }
-    private void RemoveTitle(object sender, DownloadEventArgs e)
-    {
-        MainThread.InvokeOnMainThreadAsync(() => Title = string.Empty);
+
+        // The following just sets the Title to string.empty when download is cancelled or completed.
+        App.Downloads.DownloadFinished += DownloadCancelled;
+        App.Downloads.DownloadCancelled += DownloadCancelled;
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {

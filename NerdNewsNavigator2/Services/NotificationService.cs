@@ -10,33 +10,23 @@ public partial class NotificationService
     private readonly Random _random = new();
     public NotificationService()
     {
-    }
-    public void StartNotifications()
-    {
         App.Downloads.DownloadFinished += DownloadCompleted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
-    }
-    public void StopNotifications()
-    {
-        App.Downloads.DownloadFinished -= DownloadCompleted;
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
     }
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {
         MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            e.Progress = 0;
+            e.Title = string.Empty;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download Complete";
             e.Notification.CategoryType = NotificationCategoryType.Status;
             await LocalNotificationCenter.Current.Show(e.Notification);
         });
-        StopNotifications();
     }
     public async Task<NotificationRequest> NotificationRequests(Show item)
     {
         var id = _random.Next();
-        WeakReferenceMessenger.Default.Send(new NotificationItemMessage(id, item.Url, item, false));
         var request = new Plugin.LocalNotification.NotificationRequest
         {
             NotificationId = id,
@@ -61,15 +51,13 @@ public partial class NotificationService
     }
     private async void DownloadCancelled(object sender, DownloadEventArgs e)
     {
-        Debug.WriteLine("Notification cancelled");
-        App.Downloads.DownloadCancelled -= DownloadCancelled;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             e.Notification.Android.ProgressBarProgress = 0;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download cancelled";
             e.Notification.CategoryType = NotificationCategoryType.None;
-            e.Progress = 0;
+            e.Title = string.Empty;
             await LocalNotificationCenter.Current.Show(e.Notification);
         });
     }

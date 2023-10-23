@@ -122,7 +122,7 @@ public class PositionDataBase
     /// Method Deletes all <see cref="Position"/> from database.
     /// </summary>
     /// <returns><see cref="bool"/></returns>
-    public async Task<bool> DeleteAll()
+    public async Task<bool> DeleteAllPositions()
     {
         try
         {
@@ -294,8 +294,9 @@ public class PositionDataBase
             var existingPositon = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
-                await _connection.UpdateAsync(position);
-                _logger.Info($"Updated Database: {position.Title} {position.SavedPosition}");
+                existingPositon.SavedPosition = position.SavedPosition;
+                await _connection.UpdateAsync(existingPositon);
+                _logger.Info($"Updated Database: {existingPositon.Title} {existingPositon.SavedPosition}");
                 return true;
             }
             await _connection.InsertAsync(position);
@@ -321,8 +322,10 @@ public class PositionDataBase
             var existingPositon = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
-                await _connection.UpdateAsync(podcast);
-                _logger.Info($"Updated Podcast: {podcast.Title}");
+                existingPositon.Download = podcast.Download;
+                existingPositon.IsNotDownloaded = podcast.IsNotDownloaded;
+                await _connection.UpdateAsync(existingPositon);
+                _logger.Info($"Updated Podcast: {existingPositon.Title}");
                 return true;
             }
             await _connection.InsertAsync(podcast);
@@ -332,33 +335,6 @@ public class PositionDataBase
         catch (Exception ex)
         {
             _logger.Error($"Failed to Update Podcast from Database: {ex.Message}");
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Method Updates a <see cref="Favorites"/> from Database
-    /// </summary>
-    /// <param name="favorites">an instance of <see cref="Favorites"/></param>
-    /// <returns><see cref="bool"/></returns>
-    public async Task<bool> UpdateFavorite(Favorites favorites)
-    {
-        try
-        {
-            var existingPositon = await _connection.Table<Favorites>().Where(x => x.Title == favorites.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
-            {
-                await _connection.UpdateAsync(favorites);
-                _logger.Info($"Updated Favorite in database: {favorites.Title}");
-                return true;
-            }
-            await _connection.InsertAsync(favorites);
-            _logger.Info($"Added Favorite: {favorites.Title}");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.Error($"Failed to Update favorite from Database: {ex.Message}");
             return false;
         }
     }
@@ -375,8 +351,10 @@ public class PositionDataBase
             var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
             if (existingPositon is not null)
             {
-                await _connection.UpdateAsync(download);
-                _logger.Info($"Updated Download: {download.Title}");
+                // don't know why I need to do it this way!
+                existingPositon.Deleted = download.Deleted;
+                await _connection.UpdateAsync(existingPositon);
+                _logger.Info($"Updated Download: {existingPositon.Title}");
                 return true;
             }
             await _connection.InsertAsync(download);

@@ -7,16 +7,17 @@ namespace NerdNewsNavigator2;
 /// <summary>
 /// A class that acts as a manager for <see cref="Application"/>
 /// </summary>
-public partial class App : Application, IRecipient<NotificationItemMessage>
+public partial class App : Application
 {
     #region Properties
     public MessagingService MessagingService { get; set; } = new();
     public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
     public static DownloadService DownloadService { get; set; } = new();
     public static AutoDownloadService AutoDownloadService { get; set; } = new();
-    public static List<Message> Message { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
+    public static NotificationService NotificationService { get; set; } = new();
     public static DeletedItemService DeletedItem { get; set; } = new();
+
     /// <summary>
     /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
@@ -38,13 +39,14 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
         _messenger = messenger;
         // Database Dependancy Injection START
         PositionData = positionDataBase;
+        Downloads.DownloadFinished += DownloadDone;
+        Downloads.DownloadCancelled += DownloadDone;
         // Database Dependancy Injection END
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
 #if ANDROID || IOS
         // Local Notification tap event listener
-        WeakReferenceMessenger.Default.Register<NotificationItemMessage>(this);
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
@@ -60,18 +62,26 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
                 }
             }));
 #endif
-
         ThreadPool.QueueUserWorkItem(state =>
         {
             StartAutoDownloadService();
         });
+    }
+
+    private void DownloadDone(object sender, DownloadEventArgs e)
+    {
+        if (e.Shows.Count > 0)
+        {
+            _logger.Info($"Starting next show: {e.Shows[0].Title}");
+            _ = App.DownloadService.Start(e.Shows[0]);
+        }
     }
     protected override Window CreateWindow(IActivationState activationState)
     {
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
-            Downloads.CancelAll();
+            DownloadService.CancelAll();
             Thread.Sleep(50);
             _logger.Info("Safe shutdown completed");
         };
@@ -101,30 +111,4 @@ public partial class App : Application, IRecipient<NotificationItemMessage>
             _messenger.Send(new MessageData(true));
         }
     }
-
-    #region Messaging Service
-
-    public void Receive(NotificationItemMessage message)
-    {
-        var newMessage = new Message
-        {
-            Cancel = message.Cancel,
-            Id = message.Id,
-            Url = message.Url,
-            ShowItem = message.ShowItem,
-        };
-        if (Message.Exists(x => x.Id == message.Id))
-        {
-            var item = Message.First(x => x.Id == message.Id);
-            item.Cancel = message.Cancel;
-            Message[Message.IndexOf(item)] = item;
-        }
-        else
-        {
-            Message.Add(newMessage);
-        }
-        WeakReferenceMessenger.Default.Unregister<NotificationItemMessage>(message);
-    }
-    #endregion
 }
-

@@ -8,10 +8,17 @@ public static class FileService
     public static void DeleteFile(string url)
     {
         var tempFile = GetFileName(url);
-        if (File.Exists(tempFile))
+        try
         {
-            File.Delete(tempFile);
-            Debug.WriteLine($"Deleted file {tempFile}");
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+                Debug.WriteLine($"Deleted file {tempFile}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
         }
     }
     /// <summary>
