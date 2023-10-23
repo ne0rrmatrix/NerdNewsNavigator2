@@ -12,6 +12,4 @@ public partial class Show : Shared
 {
     [ObservableProperty]
     private bool _isDownloading;
-    [ObservableProperty]
-    private string _status;
 }

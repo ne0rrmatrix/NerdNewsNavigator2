@@ -56,7 +56,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     }
     private static async Task DeleteAllAsync()
     {
-        await App.PositionData.DeleteAll();
+        await App.PositionData.DeleteAllPositions();
         await App.PositionData.DeleteAllPodcasts();
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();

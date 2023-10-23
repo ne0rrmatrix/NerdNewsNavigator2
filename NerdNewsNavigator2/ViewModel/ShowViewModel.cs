@@ -69,12 +69,14 @@ public partial class ShowViewModel : BaseViewModel
         Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
     }
     [RelayCommand]
-    public static void Cancel(Show show)
+#pragma warning disable CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
+    public void Cancel(Show show)
+#pragma warning restore CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
     {
-        App.DownloadService.Cancel(show.Url);
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
+        App.DownloadService.Cancel(show.Url);
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
@@ -95,10 +97,6 @@ public partial class ShowViewModel : BaseViewModel
         show.IsDownloading = true;
         show.IsNotDownloaded = false;
         App.DownloadService.Add(show);
-#if ANDROID || IOS
-        _ = App.DownloadService.Start(show);
-#else
-        App.DownloadService.Start(show);
-#endif
+        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(show));
     }
 }

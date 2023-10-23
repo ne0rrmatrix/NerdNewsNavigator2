@@ -79,7 +79,10 @@ public static class PodcastServices
             await RemoveDefaultPodcasts();
             var items = GetFromUrl();
             var res = items.OrderBy(x => x.Title).ToList();
-            res.ForEach(async x => await App.PositionData.AddPodcast(x));
+            foreach (var item in res)
+            {
+                await App.PositionData.AddPodcast(item);
+            }
         });
     }
     /// <summary>

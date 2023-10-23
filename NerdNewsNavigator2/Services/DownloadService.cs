@@ -53,147 +53,110 @@ public partial class DownloadService : ObservableObject
         Shows.Remove(item);
         return item;
     }
-
-    #region Download Methods
-
-#if ANDROID || IOS
-    public async Task Start(Show show)
+    public async Task Start(Show item)
     {
         if (IsDownloading)
         {
             s_logger.Info("Download is being added to Que");
             return;
         }
-        Notification = await App.NotificationService.NotificationRequests(show);
-        ThreadPool.QueueUserWorkItem(async state =>
-        {
-            await StartDownload(show);
-        });
-    }
-#else
-    public void Start(Show show)
-    {
-        if (IsDownloading)
-        {
-            s_logger.Info("Download is being added to Que");
-            return;
-        }
-        ThreadPool.QueueUserWorkItem(async state =>
-        {
-            await StartDownload(show);
-        });
-    }
-#endif
-    private async Task StartDownload(Show item)
-    {
-        s_logger.Info($"Starting Download of {item.Title}");
         SetToken();
         Item = item;
         IsDownloading = true;
-        var result = await DownloadFile(item);
 
-        if (result)
-        {
-            s_logger.Info("Download Completed event triggered");
-            Download download = new()
-            {
-                Title = item.Title,
-                Url = item.Url,
-                Image = item.Image,
-                IsDownloaded = true,
-                IsNotDownloaded = false,
-                Deleted = false,
-                PubDate = item.PubDate,
-                Description = item.Description,
-                FileName = FileService.GetFileName(item.Url)
-            };
-            s_logger.Info($"Download completed: {item.Title}");
-            await App.PositionData.UpdateDownload(download);
-            Shows.Remove(item);
-            IsDownloading = false;
+        var destinationFilePath = FileService.GetFileName(item.Url);
+        FileService.DeleteFile(item.Url);
 
-            WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
 #if ANDROID || IOS
-            App.Downloads.Completed(item, Notification);
-#else
-            App.Downloads.Completed(item);
+        Notification = await App.NotificationService.NotificationRequests(item);
 #endif
-        }
-    }
+        s_logger.Info($"Starting Download of {item.Title}");
 
-    /// <summary>
-    /// Download a file to local filesystem from a URL
-    /// </summary>
-    /// <param name="item"><see cref="Show"/> Url to download file. </param>
-    /// <returns><see cref="bool"/> True if download suceeded. False if it fails.</returns>
-    private async Task<bool> DownloadFile(Show item)
+        using var client = new HttpClientDownloadWithProgress(item.Url, destinationFilePath);
+        UpdateDownloadStatus(client, item);
+        if (await StartClient(client) && !CancellationTokenSource.IsCancellationRequested)
+        {
+            await DownloadSucceded(item);
+            return;
+        }
+        DownloadFailed(item);
+    }
+    private async Task<bool> StartClient(HttpClientDownloadWithProgress client)
     {
         try
         {
-            var favorites = await App.PositionData.GetAllDownloads();
-            var tempFile = FileService.GetFileName(item.Url);
-            if (File.Exists(tempFile))
-            {
-                if (favorites?.Where(x => x.Deleted).ToList().Find(y => y.Url == item.Url) is not null || favorites?.Find(x => x.Url == item.Url) is null)
-                {
-                    s_logger.Info($"Item is Partially downloaded, Deleting: {tempFile}");
-                    File.Delete(tempFile);
-                }
-                else
-                {
-                    s_logger.Info("File exists stopping download");
-                    return false;
-                }
-            }
-            var destinationFilePath = tempFile;
-            s_logger.Info("Starting download Progress on TaskBar");
-            using var client = new HttpClientDownloadWithProgress(item.Url, destinationFilePath);
-            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
-            {
-                if (CancellationTokenSource.IsCancellationRequested)
-                {
-                    client.DownloadCancel.Cancel(false);
-                }
-#if ANDROID || IOS
-                var title = $" Download Progress: {progressPercentage}%";
-                App.Downloads.StartedDownload(title, item, Notification);
-#else
-                var title = $"        Download Progress: {progressPercentage}%";
-                App.Downloads.StartedDownload(title, item);
-#endif
-            };
-            if (!CancellationTokenSource.IsCancellationRequested)
-            {
-                await client.StartDownload();
-            }
+            await client.StartDownload();
             if (CancellationTokenSource.IsCancellationRequested)
             {
-                FileService.DeleteFile(item.Url);
-#if ANDROID || IOS
-                App.Downloads.Cancel(item, Notification);
-#else
-                App.Downloads.Cancel(item);
-#endif
-                _ = MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await Toast.Make("Download cancelled", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                });
                 return false;
             }
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            s_logger.Info($"{ex.Message}, Deleting file");
-            FileService.DeleteFile(item.Url);
-            _ = MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                await Toast.Make($"Download error: {ex.Message}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-            });
             return false;
         }
     }
-    #endregion
+    private async Task DownloadSucceded(Show item)
+    {
+        s_logger.Info("Download Completed event triggered");
+        Download download = new()
+        {
+            Title = item.Title,
+            Url = item.Url,
+            Image = item.Image,
+            IsDownloaded = true,
+            IsNotDownloaded = false,
+            Deleted = false,
+            PubDate = item.PubDate,
+            Description = item.Description,
+            FileName = FileService.GetFileName(item.Url)
+        };
+        s_logger.Info($"Download completed: {item.Title}");
+        await App.PositionData.UpdateDownload(download);
+        Shows.Remove(item);
+        IsDownloading = false;
+
+        WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
+#if ANDROID || IOS
+        App.Downloads.Completed(item, Notification);
+#else
+        App.Downloads.Completed(item);
+#endif
+    }
+
+#pragma warning disable CA1822 // Mark members as static breaks functionality
+    private void DownloadFailed(Show item)
+#pragma warning restore CA1822 // Mark members as static breaks functionality
+    {
+        FileService.DeleteFile(item.Url);
+#if ANDROID || IOS
+        App.Downloads.Cancel(item, Notification);
+#else
+        App.Downloads.Cancel(item);
+#endif
+        _ = MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await Toast.Make("Download cancelled", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        });
+    }
+    private void UpdateDownloadStatus(HttpClientDownloadWithProgress client, Show item)
+    {
+        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, tokenSource) =>
+        {
+            if (CancellationTokenSource.IsCancellationRequested)
+            {
+                client.DownloadCancel.Cancel(false);
+            }
+#if ANDROID || IOS
+            var title = $" Download Progress: {progressPercentage}%";
+            App.Downloads.StartedDownload(title, item, Notification);
+#else
+            var title = $"        Download Progress: {progressPercentage}%";
+            App.Downloads.StartedDownload(title, item);
+#endif
+        };
+    }
     private void SetToken()
     {
         if (CancellationTokenSource is not null)

@@ -73,11 +73,7 @@ public partial class App : Application
         if (e.Shows.Count > 0)
         {
             _logger.Info($"Starting next show: {e.Shows[0].Title}");
-#if ANDROID || IOS
             _ = App.DownloadService.Start(e.Shows[0]);
-#else
-            App.DownloadService.Start(e.Shows[0]);
-#endif
         }
     }
     protected override Window CreateWindow(IActivationState activationState)

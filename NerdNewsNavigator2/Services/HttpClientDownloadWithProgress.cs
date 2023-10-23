@@ -30,7 +30,6 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
             DownloadCancel = cts;
         }
         _httpClient = new HttpClient();
-        Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
         try
         {
             using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead);
@@ -41,19 +40,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
             Debug.WriteLine("Http Client error");
             App.DownloadService.Cancel(App.DownloadService.Shows[0].Url);
         }
-        Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
     }
-
-    private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
-    {
-        if (e.NetworkAccess != NetworkAccess.Internet)
-        {
-            Debug.WriteLine("Internet access has been lost.");
-            DownloadCancel.Cancel();
-            Connectivity.Current.ConnectivityChanged -= GetCurrentConnectivity;
-        }
-    }
-
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)
     {
         response.EnsureSuccessStatusCode();

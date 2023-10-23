@@ -91,10 +91,6 @@ public partial class AutoDownloadService
             s_logger.Info("Notthing to download. Auto Downloader aborting!");
             return;
         }
-#if ANDROID || IOS
-        _ = App.DownloadService.Start(App.DownloadService.Shows[0]);
-#else
-        App.DownloadService.Start(App.DownloadService.Shows[0]);
-#endif
+        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(App.DownloadService.Shows[0]));
     }
 }

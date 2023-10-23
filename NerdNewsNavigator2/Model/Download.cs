@@ -11,8 +11,6 @@ namespace NerdNewsNavigator2.Model;
 public partial class Download : Shared
 {
     [ObservableProperty]
-    private string _copyRight;
-    [ObservableProperty]
     private string _fileName;
     [ObservableProperty]
     private bool _deleted;
