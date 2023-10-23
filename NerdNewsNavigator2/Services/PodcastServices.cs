@@ -9,8 +9,6 @@ namespace NerdNewsNavigator2.Services;
 /// </summary>
 public static class PodcastServices
 {
-    public static bool IsConnected { get; set; } = true;
-
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>
