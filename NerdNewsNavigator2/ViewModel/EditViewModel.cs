@@ -66,6 +66,11 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task AddToFavorite(Podcast item)
     {
+        if (Preferences.Default.Get("start", false))
+        {
+            await Toast.Make("Please disable Auto download before adding new favorites.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            return;
+        }
         await CheckAndRequestForeGroundPermission();
 
         item.Download = true;
