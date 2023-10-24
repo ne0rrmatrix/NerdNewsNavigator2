@@ -37,7 +37,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     - uses: actions/setup-java@v3
       with:
@@ -62,10 +62,4 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
-
-    - name: Upload Android Artifact
-      uses: actions/upload-artifact@v2.3.1
-      with:
-          name: android-ci-build
-          path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Debug/net7.0-android33.0/*Signed.a*
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net8.0-android
