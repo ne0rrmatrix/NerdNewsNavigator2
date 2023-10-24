@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-ios;net7.0-maccatalyst;net7.0-android33.0</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
@@ -15,7 +15,7 @@
 	    <ImplicitUsings>enable</ImplicitUsings>
 	    <!-- Display name -->
 	    <ApplicationTitle>NerdNewsNavigator2</ApplicationTitle>
-
+        <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 	    <!-- App Identifier -->
 	    <ApplicationId>com.android.nerdnewsnavigator2</ApplicationId>
 	    <ApplicationIdGuid>bec751aa-42c5-41d6-8e3f-5f40783fe069</ApplicationIdGuid>
@@ -26,7 +26,7 @@
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
-	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">33.0</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 	    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
@@ -46,13 +46,13 @@
         <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
 	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
 	    <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
         <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
@@ -60,27 +60,27 @@
         <PublishTrimmed>True</PublishTrimmed>
 	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
         <MtouchLink>SdkOnly</MtouchLink>
         <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
         <MtouchLink>None</MtouchLink>
         <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
     
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
     </PropertyGroup>
     
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+    <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
         <CodesignKey>Apple Development: Created via API (9T5LN8B35Y)</CodesignKey>
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
         <ProvisioningType>automatic</ProvisioningType>
@@ -90,25 +90,25 @@
     <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
     <!-- Android -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
         <Compile Remove="**\**\*.Android.cs" />
         <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     </ItemGroup>
 
     <!-- iOS -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-ios')) != true">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
         <Compile Remove="**\**\*.iOS.cs" />
         <None Include="**\**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     </ItemGroup>
 
     <!-- Mac Catalyst -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-maccatalyst')) != true">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-maccatalyst')) != true">
         <Compile Remove="**\**\*.MacCatalyst.cs" />
         <None Include="**\**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     </ItemGroup>
 
     <!-- Windows -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-windows')) != true">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-windows')) != true">
         <Compile Remove="**\*.Windows.cs" />
         <None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     </ItemGroup>
@@ -136,13 +136,16 @@
     </ItemGroup>
 	
     <ItemGroup>
-	    <PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
-	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
+        
+	    <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-pre1" />
+	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-pre1" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
 	    <PackageReference Include="M3U8Parser" Version="1.0.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
-	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	    <PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 	    <PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
 	    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
@@ -151,7 +154,6 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.13" />
 	    <PackageReference Include="YoutubeExplode" Version="6.3.6" />
     </ItemGroup>
 

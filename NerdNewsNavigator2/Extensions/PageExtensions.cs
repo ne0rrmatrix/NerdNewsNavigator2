@@ -7,11 +7,6 @@ namespace NerdNewsNavigator2.Extensions;
 // https://github.com/dotnet/maui/blob/main/src/Controls/src/Core/Platform/PageExtensions.cs
 static class PageExtensions
 {
-    private static bool s_navBarIsVisible = false;
-    private static bool s_tabBarIsVisible = false;
-    private static bool s_backButton = false;
-    private static string s_backButtonTitle = string.Empty;
-    private static string s_pageTitle = string.Empty;
     static Page CurrentPage => GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
     public static void SetBarStatus(bool shouldBeFullScreen)
     {
@@ -26,13 +21,8 @@ static class PageExtensions
 
         if (shouldBeFullScreen)
         {
-            s_navBarIsVisible = Shell.GetNavBarIsVisible(currentPage);
-            s_tabBarIsVisible = Shell.GetTabBarIsVisible(currentPage);
-            s_backButton = NavigationPage.GetHasBackButton(currentPage);
-            s_backButtonTitle = NavigationPage.GetBackButtonTitle(currentPage);
             NavigationPage.SetBackButtonTitle(currentPage, string.Empty);
             NavigationPage.SetHasBackButton(currentPage, false);
-            s_pageTitle = currentPage.Title;
             currentPage.Title = string.Empty;
             Shell.SetNavBarIsVisible(currentPage, false);
             Shell.SetTabBarIsVisible(currentPage, false);
@@ -40,21 +30,12 @@ static class PageExtensions
         }
         else
         {
-            if (s_navBarIsVisible)
-            {
-                NavigationPage.SetHasNavigationBar(currentPage, s_navBarIsVisible);
-                Shell.SetNavBarIsVisible(currentPage, s_navBarIsVisible);
-            }
-            if (s_backButton)
-            {
-                NavigationPage.SetHasBackButton(currentPage, s_backButton);
-                NavigationPage.SetBackButtonTitle(currentPage, s_backButtonTitle);
-            }
-            if (s_tabBarIsVisible)
-            {
-                Shell.SetTabBarIsVisible(currentPage, s_tabBarIsVisible);
-            }
-            currentPage.Title = s_pageTitle;
+            NavigationPage.SetHasNavigationBar(currentPage, true);
+            Shell.SetNavBarIsVisible(currentPage, true);
+            NavigationPage.SetHasBackButton(currentPage, true);
+            NavigationPage.SetBackButtonTitle(currentPage, "");
+            Shell.SetTabBarIsVisible(currentPage, true);
+            currentPage.Title = "";
         }
     }
     internal static Page GetCurrentPage(this Page currentPage)
@@ -76,9 +57,9 @@ static class PageExtensions
             return shellSectionController.PresentedPage;
         }
 
-        if (currentPage is IPageContainer<Page> paigeContainer)
+        if (currentPage is IPageContainer<Page> pageContainer)
         {
-            return GetCurrentPage(paigeContainer.CurrentPage);
+            return GetCurrentPage(pageContainer.CurrentPage);
         }
 
         return currentPage;

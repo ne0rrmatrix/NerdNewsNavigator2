@@ -23,6 +23,7 @@
                 <Image
                     BackgroundColor="LightGray"
                     IsVisible="{OnPlatform Default=True,
+                                           iOS=false,
                                            MacCatalyst=false}"
                     MinimumHeightRequest="50"
                     MinimumWidthRequest="50"
@@ -39,23 +40,23 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform Android=true, Default=false}" IsVisible="{OnPlatform Default=false, Android=true}">
+    <TabBar IsEnabled="{OnPlatform Android=true, iOS=true, Default=false}" IsVisible="{OnPlatform Default=false, iOS=true, Android=true}">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"
-            Icon="house.png" />
+            Icon="{OnPlatform Android=house.png}" />
         <ShellContent
             Title="Downloads"
             ContentTemplate="{DataTemplate local:DownloadedShowPage}"
-            Icon="download.png" />
+            Icon="{OnPlatform Android=download.png}" />
         <ShellContent
             Title="Live"
             ContentTemplate="{DataTemplate local:LivePage}"
-            Icon="live_broadcasting.png" />
+            Icon="{OnPlatform Android=live_broadcasting.png}" />
         <ShellContent
             Title="Settings"
             ContentTemplate="{DataTemplate local:SettingsPage}"
-            Icon="settings.png" />
+            Icon="{OnPlatform Android=settings.png}" />
     </TabBar>
 
     <ShellContent ContentTemplate="{DataTemplate local:PodcastPage}" />

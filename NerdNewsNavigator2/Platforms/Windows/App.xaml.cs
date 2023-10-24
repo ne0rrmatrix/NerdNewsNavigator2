@@ -46,7 +46,7 @@ public partial class App : MauiWinUIApplication
     {
         base.OnLaunched(args);
         AutoDownloadService = NerdNewsNavigator2.App.AutoDownloadService;
-        var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
+        var messenger = IPlatformApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
             if (message.Start)
