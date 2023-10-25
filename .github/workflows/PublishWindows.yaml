@@ -72,3 +72,4 @@ jobs:
           files: .\**\net8.0-windows*\**\Nerd*.msix
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
