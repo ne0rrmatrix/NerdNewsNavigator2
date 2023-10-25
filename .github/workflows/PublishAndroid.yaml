@@ -38,10 +38,10 @@ jobs:
         distribution: 'microsoft'
         java-version: '11'
     
-    - name: Decrypt PFX File
+    - name: Decrypt GPG File
       run: |
-        echo "${{ secrets.KEYSSTOREFILE }}" > NerdNewsNavigator2.Keystore.asc
-        certutil -decode NerdNewsNavigator2.Keystore.asc NerdNewsNavigator2.Keystore
+        echo "${{ secrets.KEYSTOREFILE }}" > NerdNewsNavigator2.Keystore.asc
+        gpg -d --passphrase "${{ secrets.KEYSTOREPASSWORD }}" --batch NerdNewsNavigator2.Keystore.asc > NerdNewsNavigator2.Keystore
        
     - name: Add Cert to Store
       run: certutil -user -q -p ${{ secrets.KEYSTOREPASSWORD }} -importpfx NerdNewsNavigator2.Keystore NoRoot
