@@ -59,7 +59,9 @@ jobs:
 
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: |
+        dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+        dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
 
     - name: Build MAUI iOS project
       shell: bash
