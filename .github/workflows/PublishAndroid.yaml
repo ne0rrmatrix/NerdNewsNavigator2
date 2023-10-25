@@ -65,7 +65,7 @@ jobs:
       with:
           name: android-ci-build
           path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
-    
+
     - name: "pre-release"
       uses: "marvinpinto/action-automatic-releases@latest"
       with:

@@ -64,7 +64,7 @@ jobs:
       with:
           name: windows-ci-build
           path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
-          
+
     - name: "pre-release"
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
