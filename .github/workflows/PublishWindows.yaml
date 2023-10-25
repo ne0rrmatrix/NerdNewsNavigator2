@@ -36,27 +36,19 @@ jobs:
     # For WinUI builds
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1.3
-
-    - name: Generate version number using date and run number
-      shell: pwsh
-      id: version-creator
-      run: |
-        $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "::set-output name=APP_VERSION::$ver"
-    - name: Install MAUI workloads (required for GitHub-hosted runners)
-      shell: pwsh
-      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
-
- 
+    
     - name: Decrypt PFX File
       run: |
         echo "${{ secrets.WINDOWS_PFX_FILE }}" > cert.pfx.asc
         certutil -decode cert.pfx.asc cert.pfx
-    
+       
     - name: Add Cert to Store
       run: certutil -user -q -p ${{ secrets.WINDOWS_PFX_PASSWORD }} -importpfx cert.pfx NoRoot
-    
+      
+    - name: Install MAUI workloads (required for GitHub-hosted runners)
+      shell: pwsh
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+
     - name: Restore NuGet packages
       shell: pwsh
       run: |
