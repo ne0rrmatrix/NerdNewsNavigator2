@@ -59,6 +59,7 @@ jobs:
     - name: Build Maui Android project
       shell: pwsh
       run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net8.0-android
+
     - name: Upload Android Artifact
       uses: actions/upload-artifact@v3.1.0
       with:

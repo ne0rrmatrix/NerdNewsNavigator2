@@ -64,7 +64,7 @@ jobs:
       run: |
           dotnet build ${{ env.PROJECT_PATH }} -f net8.0-maccatalyst -c Release
     
-    - name: Upload Windows Artifact
+    - name: Upload Mac Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
           name: windows-ci-build
