@@ -1,4 +1,5 @@
-name: "pre-release"
+name: Publish Windows Build
+
 on:
   workflow_dispatch:
    paths-ignore:
@@ -65,10 +66,9 @@ jobs:
           name: windows-ci-build
           path: .\**\net8.0-windows*\**\Nerd*.msix
 
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-          args:  .\**\net8.0-windows*\**\Nerd*.msix
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: .\**\net8.0-windows*\**\Nerd*.msix
 
