@@ -60,8 +60,7 @@ jobs:
         certutil -decode cert.pfx.asc cert.pfx
      
     - name: Add Cert to Store
-      run: certutil -user -q -p ${{ secrets.WINDOWS_PFX_PASSWORD }} -importpfx cert.pfx NoRoot
-      
+      run: certutil -f -user -p ${{ secrets.WINDOWS_PFX_PASSWORD }} -importpfx TrustedPeople cert.pfx 
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
