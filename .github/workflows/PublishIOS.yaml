@@ -73,7 +73,7 @@ jobs:
        args: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: "marvinpinto/action-automatic-releases@<version>"
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: true
