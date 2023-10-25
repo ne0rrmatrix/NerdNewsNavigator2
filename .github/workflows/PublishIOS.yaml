@@ -67,16 +67,11 @@ jobs:
           name: ios-ci-build
           path: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/
 
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
-      with:
-       args: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - uses: "marvinpinto/action-automatic-releases@latest"
+    - name: "pre-release"
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           draft: true
           prerelease: true
           title: "Development Build"
