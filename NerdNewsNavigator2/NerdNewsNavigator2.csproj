@@ -44,7 +44,7 @@
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
+        <PackageCertificateThumbprint>35D07C158827E00F5BD72D2D1C04D1FD23B6248A</PackageCertificateThumbprint>
     </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
