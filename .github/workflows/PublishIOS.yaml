@@ -1,0 +1,82 @@
+name: Publish IOS Build
+
+on:
+  workflow_dispatch:
+   paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+permissions:
+  contents: write
+  
+env:
+  PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+ 
+jobs:
+       
+# ************************* #
+# >>>>>>> iOS Build <<<<<<< #
+# ************************* #
+ maui-ios:
+    runs-on: macos-13
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '14.3'
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Generate version number using date and run number
+      id: version-creator
+      shell: bash
+      run: |
+        buildDay=`date +%Y.%m%d`
+        echo $buildDay
+        runNum=${{ env.GITHUB_RUN_NUMBER }}
+        ver="${buildDay}.${runNum}.0"
+        echo $ver
+        echo "APP_VERSION=$ver" >> $GITHUB_ENV
+    - name: Install MAUI workloads (required for GitHub-hosted runners)
+      shell: pwsh
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+         dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: Build MAUI iOS project
+      shell: bash
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-ios
+
+    - name: Upload iOS Artifact
+      uses: actions/upload-artifact@v3.1.3
+      with:
+          name: ios-ci-build
+          path: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/
+
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
+      with:
+       args: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: "marvinpinto/action-automatic-releases@<version>"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: true
+          prerelease: true
+          title: "Development Build"
+          files: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-ios/**/*.app/

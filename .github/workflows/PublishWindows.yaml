@@ -1,18 +1,13 @@
-name: Build MAUI Windows
+name: Publish Windows Build
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
+  workflow_dispatch:
+   paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
-  pull_request:
-    branches: [ main ]
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.gitignore'
-      - '**/*.gitattributes'
+permissions:
+  contents: write
   
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
@@ -63,3 +58,18 @@ jobs:
       shell: pwsh
       run: |
         dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net8.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
+
+    - name: Upload Windows Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+          name: windows-ci-build
+          path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
+
+    - uses: "marvinpinto/action-automatic-releases@<version>"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          draft: true
+          title: "Development Build"
+          files: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
