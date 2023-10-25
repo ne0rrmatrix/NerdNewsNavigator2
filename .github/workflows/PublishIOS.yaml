@@ -1,4 +1,4 @@
-name: Publish IOS Build
+name: "pre-release"
 
 on:
   workflow_dispatch:

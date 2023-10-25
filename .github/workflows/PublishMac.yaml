@@ -1,4 +1,4 @@
-name: Build Maui Maccatalyst
+name: "pre-release"
 
 on:
   workflow_dispatch:
