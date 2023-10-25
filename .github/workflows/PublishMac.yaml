@@ -1,14 +1,13 @@
-name: Publish Maccatalyst Build
+name: Build Maui Maccatalyst
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
+  workflow_dispatch:
+   paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
-  pull_request:
-    branches: [ main ]
+permissions:
+  contents: write
 
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
@@ -69,11 +68,12 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
           name: macos-ci-build
-          path: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-maccatalyst/**/*.app/
-
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+          path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-maccatalyst/**/*.app/
+          
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-       args: NerdNewsNavigator2/NerdNewsNavgator2/bin/Release/net8.0-maccatalyst/**/*.app/
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-maccatalyst/**/*.app/

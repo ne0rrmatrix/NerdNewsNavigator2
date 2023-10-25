@@ -1,7 +1,7 @@
 name: Publish Android Build
 
 on:
-  release:
+  workflow_dispatch:
    paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
@@ -65,10 +65,11 @@ jobs:
       with:
           name: android-ci-build
           path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
-
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+       
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-       args: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files:  NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
