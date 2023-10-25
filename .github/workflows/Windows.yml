@@ -56,6 +56,8 @@ jobs:
 
     - name: Restore NuGet packages
       shell: pwsh
+      with:
+       nuget-api-key: ${{ secrets.nuget-api-key }}
       run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
 
     - name: Build Maui WinUI project
