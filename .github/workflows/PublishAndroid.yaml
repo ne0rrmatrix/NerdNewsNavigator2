@@ -37,14 +37,14 @@ jobs:
       with:
         distribution: 'microsoft'
         java-version: '11'
-
-    - name: Generate version number using date and run number
-      shell: pwsh
-      id: version-creator
+    
+    - name: Decrypt PFX File
       run: |
-        $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "::set-output name=APP_VERSION::$ver"
+        echo "${{ secrets.KEYSSTOREFILE }}" > NerdNewsNavigator2.Keystore.asc
+        certutil -decode NerdNewsNavigator2.Keystore.asc NerdNewsNavigator2.Keystore
+       
+    - name: Add Cert to Store
+      run: certutil -user -q -p ${{ secrets.KEYSTOREPASSWORD }} -importpfx NerdNewsNavigator2.Keystore NoRoot
 
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
@@ -58,18 +58,19 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net8.0-android
-
+      run: dotnet Publish ${{ env.PROJECT_PATH }} -f net8.0-android -c Release -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=NerdNewsNavigator2.Keystore -p:AndroidSigningKeyAlias=${{ secrets.KEYSTOREALIAS }} -p:AndroidSigningKeyPass=${{ secrets.KEYSTOREPASSWORD }} -p:AndroidSigningStorePass=${{ secrets.KEYSTOREPASSWORD }}
+    
     - name: Upload Android Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
           name: android-ci-build
-          path: .\**\net8.0-android\*Signed.apk
+          path: .\**\net8.0-android\publish\*Signed.apk
    
-    - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+    - name: Release
+      uses: softprops/action-gh-release@v1
       with:
-          args: .\**\net8.0-android\*Signed.apk
+          files: .\**\net8.0-android\publish\*Signed.apk
+          tag_name: 1.9.1-pre
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
