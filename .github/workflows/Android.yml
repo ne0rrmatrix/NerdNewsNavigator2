@@ -58,7 +58,7 @@ jobs:
     - name: Restore NuGet packages
       shell: pwsh
       run: |
-         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.nuget-api-key }} store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
          dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build Maui Android project
