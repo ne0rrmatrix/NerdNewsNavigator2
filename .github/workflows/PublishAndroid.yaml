@@ -59,16 +59,16 @@ jobs:
     - name: Build Maui Android project
       shell: pwsh
       run: dotnet build ${{ env.PROJECT_PATH }} -c Release -f net8.0-android
-      
+    
     - name: Upload Android Artifact
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
           name: android-ci-build
-          path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
+          path: .\**\net8.0-android\*Signed.apk
    
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-          args: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
+          args: .\**\net8.0-android\*Signed.apk
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -54,20 +54,28 @@ jobs:
          dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
          dotnet restore ${{ env.PROJECT_PATH }}
 
+    - name: Decrypt PFX File
+      run: |
+        echo "${{ secrets.WINDOWS_PFX_FILE }}" > cert.pfx.asc
+        certutil -decode cert.pfx.asc cert.pfx
+     
+    - name: Add Cert to Store
+      run: certutil -user -q -p ${{ secrets.WINDOWS_PFX_PASSWORD }} -importpfx cert.pfx NoRoot
+      
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net8.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
-
+        dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net8.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="${{ secrets.WINDOWS_PFX_THUMBPRINT }}"
+      
     - name: Upload Windows Artifact
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
           name: windows-ci-build
-          path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
+          path: .\**\net8.0-windows*\**\Nerd*.msix
 
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-          args:  NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
+          args:  .\**\net8.0-windows*\**\Nerd*.msix
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
