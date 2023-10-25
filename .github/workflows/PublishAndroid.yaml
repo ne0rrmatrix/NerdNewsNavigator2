@@ -1,4 +1,4 @@
-name: Publish Android Build
+name: "pre-release"
 
 on:
   workflow_dispatch:

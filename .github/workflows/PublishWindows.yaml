@@ -1,5 +1,4 @@
-name: Publish Windows Build
-
+name: "pre-release"
 on:
   workflow_dispatch:
    paths-ignore:
