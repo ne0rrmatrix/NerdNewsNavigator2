@@ -55,7 +55,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net8.0-android -c Release -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=NerdNewsNavigator2.Keystore -p:AndroidSigningKeyAlias=${{ secrets.KEYSTOREALIAS }} -p:AndroidSigningKeyPass=${{ secrets.KEYSTOREPASSWORD }} -p:AndroidSigningStorePass=${{ secrets.KEYSTOREPASSWORD }}
+      run: dotnet build ${{ env.PROJECT_PATH }} -f net8.0-android -c Release -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=..\NerdNewsNavigator2.Keystore -p:AndroidSigningKeyAlias=${{ secrets.KEYSTOREALIAS }} -p:AndroidSigningKeyPass=${{ secrets.KEYSTOREPASSWORD }} -p:AndroidSigningStorePass=${{ secrets.KEYSTOREPASSWORD }}
     
     - name: Upload Android Artifact
       uses: actions/upload-artifact@v3.1.0
