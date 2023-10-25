@@ -67,12 +67,15 @@ jobs:
           path: |
               .\**\net8.0-windows*\**\Nerd*.msix
               .\**\net8.0-windows*\**\Install.ps1
+              cert.pfx
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
           files: |
               .\**\net8.0-windows*\**\Nerd*.msix
               .\**\net8.0-windows*\**\Install.ps1
+              cert.pfx
+
           tag_name: 1.9.1-pre
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
