@@ -48,19 +48,20 @@ jobs:
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
-    - name: Restore NuGet packages
-      shell: pwsh
-      run: |
-         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
-         dotnet restore ${{ env.PROJECT_PATH }}
  
     - name: Decrypt PFX File
       run: |
         echo "${{ secrets.WINDOWS_PFX_FILE }}" > cert.pfx.asc
         certutil -decode cert.pfx.asc cert.pfx
-     
+    
     - name: Add Cert to Store
-      run: certutil -user -q -p {{ secrets.WINDOWS_PFX_PASSWORD}} -importpfx cert.pfx NoRoot
+      run: certutil -user -q -p ${{ secrets.WINDOWS_PFX_PASSWORD }} -importpfx cert.pfx NoRoot
+    
+    - name: Restore NuGet packages
+      shell: pwsh
+      run: |
+         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+         dotnet restore ${{ env.PROJECT_PATH }}    
 
     - name: Build Maui WinUI project
       shell: pwsh
