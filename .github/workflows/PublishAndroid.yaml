@@ -65,11 +65,10 @@ jobs:
       with:
           name: android-ci-build
           path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
-       
-    - uses: "marvinpinto/action-automatic-releases@<version>"
+   
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
       with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: true
-          draft: true
-          title: "Development Build"
-          files:  NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
+          args: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-android/*Signed.a*
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
