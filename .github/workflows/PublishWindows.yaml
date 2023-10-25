@@ -53,7 +53,7 @@ jobs:
       run: |
          dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
          dotnet restore ${{ env.PROJECT_PATH }}
-
+ 
     - name: Decrypt PFX File
       run: |
         echo "${{ secrets.WINDOWS_PFX_FILE }}" > cert.pfx.asc
@@ -78,3 +78,4 @@ jobs:
           args:  .\**\net8.0-windows*\**\Nerd*.msix
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

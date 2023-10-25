@@ -1,5 +1,6 @@
 name: Build Maui Maccatalyst
 
+
 on:
   workflow_dispatch:
    paths-ignore:
@@ -62,8 +63,7 @@ jobs:
       shell: bash
       run: |
           dotnet build ${{ env.PROJECT_PATH }} -f net8.0-maccatalyst -c Release
-
-        
+    
     - name: Upload Windows Artifact
       uses: actions/upload-artifact@v3.1.0
       with:

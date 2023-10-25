@@ -58,7 +58,7 @@ jobs:
       run: |
          dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
          dotnet restore ${{ env.PROJECT_PATH }}
-
+         
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
