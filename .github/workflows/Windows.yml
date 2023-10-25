@@ -36,7 +36,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '7.0.x'
 
     # For WinUI builds
     - name: Add msbuild to PATH
@@ -55,11 +55,9 @@ jobs:
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: |
-         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
-         dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }} 
 
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet publish ${{ env.PROJECT_PATH }} -c Release -f net8.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
+        dotnet build ${{ env.PROJECT_PATH }} -c Release -f net7.0-windows10.0.19041.0
