@@ -60,6 +60,7 @@ jobs:
       shell: bash
       run: |
         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+        dotnet nuget add source --name nuget.org "https://api.nuget.org/v3/index.json"
         dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build MAUI iOS project
