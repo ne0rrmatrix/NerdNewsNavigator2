@@ -65,6 +65,7 @@ jobs:
           name: windows-ci-build
           path: NerdNewsNavigator2/NerdNewsNavigator2/bin/Release/net8.0-windows*/**/MauiBeach*.msix
 
+
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
