@@ -50,7 +50,7 @@ jobs:
     - name: Restore NuGet packages
       shell: pwsh
       run: |
-         dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
+         #dotnet nuget add source --username ne0rrmatrix --password ${{ secrets.APIKEY }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ne0rrmatrix/index.json"
          dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build Maui Android project
@@ -61,12 +61,12 @@ jobs:
       uses: actions/upload-artifact@v3.1.0
       with:
           name: android-ci-build
-          path: .\**\net8.0-android\publish\*Signed.apk
+          path: .\**\net7.0-android\publish\*Signed.apk
    
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-          files: .\**\net8.0-android\publish\*Signed.apk
+          files: .\**\net7.0-android\publish\*Signed.apk
           tag_name: 1.9.1-pre
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
