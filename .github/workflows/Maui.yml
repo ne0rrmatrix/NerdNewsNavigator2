@@ -1,11 +1,19 @@
 name: Build MAUI Project
 
 on:
-  workflow_dispatch:
-   paths-ignore:
+  push:
+    branches: [ main ]
+    paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+      
 permissions:
   contents: write
 env:
