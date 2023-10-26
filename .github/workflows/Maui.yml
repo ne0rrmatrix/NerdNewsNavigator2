@@ -1,16 +1,23 @@
 name: Build MAUI Project
 
 on:
-  workflow_dispatch:
-   paths-ignore:
+  push:
+    branches: [ main ]
+    paths-ignore:
       - '**/*.md'
       - '**/*.gitignore'
       - '**/*.gitattributes'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+      
 permissions:
   contents: write
 env:
   PROJECT_PATH: "NerdNewsNavigator2/NerdNewsNavigator2.csproj"
-  NUGETCONFIG_PATH: "nuget.config"
   DOTNET_NOLOGO: true                     # Disable the .NET logo
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
   DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
@@ -31,31 +38,24 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     - uses: actions/setup-java@v3
       with:
         distribution: 'microsoft'
         java-version: '11'
 
-    - name: Generate version number using date and run number
-      shell: pwsh
-      id: version-creator
-      run: |
-        $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "::set-output name=APP_VERSION::$ver"
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-android
     
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -71,31 +71,24 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     # For WinUI builds
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1.3
 
-    - name: Generate version number using date and run number
-      shell: pwsh
-      id: version-creator
-      run: |
-        $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "::set-output name=APP_VERSION::$ver"
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0    
+        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-windows10.0.19041.0    
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -115,29 +108,19 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
-    - name: Generate version number using date and run number
-      id: version-creator
-      shell: bash
-      run: |
-        buildDay=`date +%Y.%m%d`
-        echo $buildDay
-        runNum=${{ env.GITHUB_RUN_NUMBER }}
-        ver="${buildDay}.${runNum}.0"
-        echo $ver
-        echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-ios
     
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -157,26 +140,16 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
-    - name: Generate version number using date and run number
-      id: version-creator
-      shell: bash
-      run: |
-        buildDay=`date +%Y.%m%d`
-        echo $buildDay
-        runNum=${{ env.GITHUB_RUN_NUMBER }}
-        ver="${buildDay}.${runNum}.0"
-        echo $ver
-        echo "APP_VERSION=$ver" >> $GITHUB_ENV
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore ${{ env.PROJECT_PATH }} --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -f net7.0-maccatalyst -c Debug
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-maccatalyst
