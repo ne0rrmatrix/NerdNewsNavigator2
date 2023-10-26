@@ -11,6 +11,7 @@
 *.sln.docstates
 .sonarqube/
 start.bat
+.vscode/
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -400,3 +401,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /NerdNewsNavigator2/Services/PodcastData.cs
+/mycert.pfx.gpg
