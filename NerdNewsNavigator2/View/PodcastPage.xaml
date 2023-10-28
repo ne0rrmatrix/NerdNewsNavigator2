@@ -90,7 +90,7 @@
                                                   WinUI=Default,
                                                   MacCatalyst=16}"
                             HeightRequest="{OnPlatform WinUI=450,
-                                                       iOS=450}"
+                                                       iOS=450, MacCatalyst=450}"
                             LineBreakMode="WordWrap"
                             Text="{Binding Description}"
                             TextColor="Black"

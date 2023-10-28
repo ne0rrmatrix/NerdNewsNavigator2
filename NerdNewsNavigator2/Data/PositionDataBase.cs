@@ -24,7 +24,7 @@ public class PositionDataBase
 
     #endregion
     /// <summary>
-    /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
+    /// Initializes a new instance of the <see cref="PositionDataBase"/> class.
     /// </summary>
     public PositionDataBase()
     {
@@ -60,12 +60,27 @@ public class PositionDataBase
         if (test is null)
         {
             _logger.Info("Returning empty collection");
-            return new List<Position>();
+            return [];
         }
         _logger.Info("Got all Positions from Database.");
         return test;
     }
 
+    /// <summary>
+    /// Method retrieves a <see cref="List{T}"/> of <see cref="Position"/> from database.
+    /// </summary>
+    /// <returns><see cref="List{T}"/> <see cref="Position"/></returns>
+    public async Task<Position> GetPosition(Position position)
+    {
+        var test = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
+        if (test is null)
+        {
+            _logger.Info("Returning empty collection");
+            return new Position();
+        }
+        _logger.Info("Got all Positions from Database.");
+        return test;
+    }
     /// <summary>
     /// Method Retrieves a <see cref="List{T}"/> of <see cref="Podcast"/> from database.
     /// </summary>
@@ -76,7 +91,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.Info("Returning empty collection");
-            return new List<Podcast>();
+            return [];
         }
         _logger.Info("Got all Podcasts from Database.");
         return temp;
@@ -92,7 +107,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.Info("Returning empty collection");
-            return new List<Favorites>();
+            return [];
         }
         _logger.Info("Got all Favorites from Database.");
         return temp;
@@ -108,7 +123,7 @@ public class PositionDataBase
         if (temp is null)
         {
             _logger.Info("Returning empty collection");
-            return new List<Download>();
+            return [];
         }
         _logger.Info("Got all Downloads from Database.");
         return temp;
@@ -147,7 +162,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Podcast>();
-            _logger.Info("Succesfully Deleted all Podcasts.");
+            _logger.Info("Successfully Deleted all Podcasts.");
             return true;
         }
         catch (Exception ex)
@@ -167,7 +182,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Favorites>();
-            _logger.Info("Succesfully Deleted all Favorites.");
+            _logger.Info("Successfully Deleted all Favorites.");
             return true;
         }
         catch (Exception ex)
@@ -187,7 +202,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Download>();
-            _logger.Info("Succesfully Deleted all Downloads.");
+            _logger.Info("Successfully Deleted all Downloads.");
             return true;
         }
         catch (Exception ex)
@@ -291,12 +306,12 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingPosition = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
+            if (existingPosition is not null)
             {
-                existingPositon.SavedPosition = position.SavedPosition;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Database: {existingPositon.Title} {existingPositon.SavedPosition}");
+                existingPosition.SavedPosition = position.SavedPosition;
+                await _connection.UpdateAsync(existingPosition);
+                _logger.Info($"Updated Database: {existingPosition.Title} {existingPosition.SavedPosition}");
                 return true;
             }
             await _connection.InsertAsync(position);
@@ -319,13 +334,13 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingPosition = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
+            if (existingPosition is not null)
             {
-                existingPositon.Download = podcast.Download;
-                existingPositon.IsNotDownloaded = podcast.IsNotDownloaded;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Podcast: {existingPositon.Title}");
+                existingPosition.Download = podcast.Download;
+                existingPosition.IsNotDownloaded = podcast.IsNotDownloaded;
+                await _connection.UpdateAsync(existingPosition);
+                _logger.Info($"Updated Podcast: {existingPosition.Title}");
                 return true;
             }
             await _connection.InsertAsync(podcast);
@@ -348,13 +363,12 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingPosition = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
+            if (existingPosition is not null)
             {
-                // don't know why I need to do it this way!
-                existingPositon.Deleted = download.Deleted;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Download: {existingPositon.Title}");
+                existingPosition.Deleted = download.Deleted;
+                await _connection.UpdateAsync(existingPosition);
+                _logger.Info($"Updated Download: {existingPosition.Title}");
                 return true;
             }
             await _connection.InsertAsync(download);

@@ -57,7 +57,7 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
     });
-    public static readonly BindableProperty IsYoutubeProperty = BindableProperty.Create(nameof(IsYoutube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty IsYouTubeProperty = BindableProperty.Create(nameof(IsYouTube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.IsEnabled = (bool)newValue;
@@ -78,10 +78,10 @@ public partial class MediaControl : ContentView
         get => (bool)GetValue(ShouldMuteProperty);
         set => SetValue(ShouldMuteProperty, value);
     }
-    public bool IsYoutube
+    public bool IsYouTube
     {
-        get => (bool)GetValue(IsYoutubeProperty);
-        set => SetValue(IsYoutubeProperty, value);
+        get => (bool)GetValue(IsYouTubeProperty);
+        set => SetValue(IsYouTubeProperty, value);
     }
 
     public EventHandler MediaOpened
@@ -168,7 +168,7 @@ public partial class MediaControl : ContentView
         if (!FullScreen)
         {
             FullScreen = true;
-            if (IsYoutube)
+            if (IsYouTube)
             {
                 ImageSettings.IsEnabled = true;
                 ImageSettings.IsVisible = true;
@@ -182,7 +182,7 @@ public partial class MediaControl : ContentView
             await Task.Delay(7000);
             FullScreen = false;
             MenuIsVisible = false;
-            if (IsYoutube)
+            if (IsYouTube)
             {
                 ImageSettings.IsEnabled = false;
                 ImageSettings.IsVisible = false;
@@ -237,8 +237,8 @@ public partial class MediaControl : ContentView
     }
     private void ChangedPosition(object sender, EventArgs e)
     {
-        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsVisible = IsYoutube; });
-        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsEnabled = IsYoutube; });
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsVisible = IsYouTube; });
+        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsEnabled = IsYouTube; });
         var playDuration = TimeConverter(mediaElement.Duration);
         var position = TimeConverter(mediaElement.Position);
         PlayPosition = $"{position}/{playDuration}";

@@ -19,7 +19,7 @@ public partial class App : Application
     public static DeletedItemService DeletedItem { get; set; } = new();
 
     /// <summary>
-    /// This applications Dependancy Injection for <see cref="PositionDataBase"/> class.
+    /// This applications Dependency Injection for <see cref="PositionDataBase"/> class.
     /// </summary>
     public static PositionDataBase PositionData { get; private set; }
 
@@ -37,11 +37,11 @@ public partial class App : Application
 
         MainPage = new AppShell();
         _messenger = messenger;
-        // Database Dependancy Injection START
+        // Database Dependency Injection START
         PositionData = positionDataBase;
         Downloads.DownloadFinished += DownloadDone;
         Downloads.DownloadCancelled += DownloadDone;
-        // Database Dependancy Injection END
+        // Database Dependency Injection END
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
            () => MainPage!.Navigation.PopModalAsync());
@@ -50,11 +50,11 @@ public partial class App : Application
         LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
         LocalNotificationCenter.Current.RegisterCategoryList(new HashSet<NotificationCategory>(new List<NotificationCategory>()
             {
-                new NotificationCategory(NotificationCategoryType.Status)
+                new(NotificationCategoryType.Status)
                 {
                     ActionList = new HashSet<NotificationAction>( new List<NotificationAction>()
                     {
-                        new NotificationAction(103)
+                        new(103)
                         {
                             Title = "Close Notification",
                         }

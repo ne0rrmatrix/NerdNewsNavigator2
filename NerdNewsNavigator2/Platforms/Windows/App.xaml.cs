@@ -26,7 +26,7 @@ public partial class App : MauiWinUIApplication
         {
             var nativeWindow = handler.PlatformView;
             nativeWindow.Activate();
-            // allow Windows to draw a native titlebar which respects IsMaximizable/IsMinimizable
+            // allow Windows to draw a native title bar which respects IsMaximizable/IsMinimizable
             nativeWindow.ExtendsContentIntoTitleBar = false;
 
             var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
@@ -36,7 +36,7 @@ public partial class App : MauiWinUIApplication
             if (appWindow.Presenter is OverlappedPresenter p)
             {
                 p.IsResizable = true;
-                // these only have effect if XAML isn't responsible for drawing the titlebar.
+                // these only have effect if XAML isn't responsible for drawing the title bar.
                 p.IsMaximizable = true;
                 p.IsMinimizable = true;
             }

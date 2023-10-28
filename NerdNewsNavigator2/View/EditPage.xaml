@@ -124,7 +124,7 @@
                             <Label
                                 Grid.Row="3"
                                 Margin="10"
-                                HeightRequest="{OnPlatform WinUI=450}"
+                                HeightRequest="{OnPlatform WinUI=450, iOS=450, MacCatalyst=450}"
                                 LineBreakMode="WordWrap"
                                 Text="{Binding Description}"
                                 TextColor="Black"

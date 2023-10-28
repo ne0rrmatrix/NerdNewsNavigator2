@@ -54,8 +54,8 @@
                         Text="Donate"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -70,8 +70,8 @@
                         Text="Click Me"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -83,8 +83,8 @@
                         Text="Auto Download"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -99,8 +99,8 @@
                         Text="{Binding Source={RelativeSource AncestorType={x:Type page:SettingsPage}}, Path=SetAutoDownload}"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
 
                 </HorizontalStackLayout>
 
@@ -113,13 +113,13 @@
                         Text="Set Wifi Only"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         x:Name="WifiBtn"
                         Margin="10"
                         BackgroundColor="#205493"
-                        Clicked="WifiOnly"
+                        Clicked="WIFIOnly"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
@@ -129,8 +129,8 @@
                         SemanticProperties.Description="Button sets auto download to only download using wifi. Default is off."
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -142,8 +142,8 @@
                         Text="Reset"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -158,8 +158,8 @@
                         Text="Reset"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -171,8 +171,8 @@
                         Text="Edit Item"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -187,8 +187,8 @@
                         Text="Edit"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -200,8 +200,8 @@
                         Text="Show logs"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=240,
-                                               Tablet=360}" />
+                        WidthRequest="{OnIdiom Default=265,
+                                               Tablet=385}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -216,8 +216,8 @@
                         Text="View"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -226,30 +226,30 @@
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
                         HorizontalTextAlignment="Start"
-                        Text="Podcasts"
+                        Text="Regular Podcasts"
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=140,
-                                               Tablet=170}" />
+                        WidthRequest="{OnIdiom Default=175,
+                                               Tablet=215}" />
                     <Button
-                        Margin="10"
                         BackgroundColor="#205493"
                         Clicked="AddDefault"
                         FontAttributes="Bold"
+                        Margin="10"
+                        HorizontalOptions="Start"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"
                         HeightRequest="{OnIdiom Default=48,
                                                 Tablet=50}"
-                        HorizontalOptions="End"
                         SemanticProperties.Description="button adds default podcasts if any have been removed."
                         Text="Enable"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                     <Button
-                        Margin="10"
                         BackgroundColor="#205493"
+                        Margin="10"
                         Clicked="RemoveDefault"
                         FontAttributes="Bold"
                         FontAutoScalingEnabled="True"
@@ -262,8 +262,8 @@
                         Text="Disable"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
@@ -273,7 +273,7 @@
                                            Default=12}"
                         HorizontalOptions="Start"
                         SemanticProperties.Description="Label for adding an item."
-                        Text="Add Item:"
+                        Text="Add Club Twit:"
                         TextColor="Black"
                         VerticalOptions="Center"
                         WidthRequest="{OnIdiom Default=100,
@@ -289,8 +289,8 @@
                         SemanticProperties.Description="Input an html link here for club twit show."
                         TextColor="Black"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Default=140,
-                                               Tablet=190}" />
+                        WidthRequest="{OnIdiom Default=165,
+                                               Tablet=215}" />
                     <Button
                         Margin="10"
                         BackgroundColor="#205493"
@@ -305,8 +305,8 @@
                         Text="Add"
                         TextColor="#FFFFFF"
                         VerticalOptions="Center"
-                        WidthRequest="{OnIdiom Tablet=170,
-                                               Default=80}" />
+                        WidthRequest="{OnIdiom Tablet=150,
+                                               Default=70}" />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>

@@ -150,7 +150,7 @@
                         <Label
                             Grid.Row="3"
                             HeightRequest="{OnPlatform WinUI=890,
-                                                       iOS=890}"
+                                                       iOS=890, MacCatalyst=890}"
                             HorizontalOptions="Start"
                             LineBreakMode="WordWrap"
                             SemanticProperties.Description="A description of episode."

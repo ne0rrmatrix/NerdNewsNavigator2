@@ -12,18 +12,18 @@ public partial class VideoPlayerPage : ContentPage
     #region Properties
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(VideoPlayerPage));
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="Position"/> class
+    /// Initializes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
 
     #endregion
     /// <summary>
-    /// Class Constructor that initilizes <see cref="VideoPlayerPage"/>
+    /// Class Constructor that Initializes <see cref="VideoPlayerPage"/>
     /// </summary>
     /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 
@@ -53,11 +53,15 @@ public partial class VideoPlayerPage : ContentPage
     {
         _logger.Info($"Title: {show.Title}");
         mediaElement.ShouldKeepScreenOn = true;
-        var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == show.Title);
-        if (result is not null)
+        Pos.Title = show.Title;
+        Pos.SavedPosition = TimeSpan.Zero;
+        var item = await App.PositionData.GetPosition(Pos);
+        //var positionList = await App.PositionData.GetAllPositions();
+        //var result = positionList.ToList().Find(x => x.Title == show.Title);
+        if (item is not null)
         {
-            Pos.SavedPosition = result.SavedPosition;
+            //Pos.SavedPosition = result.SavedPosition;
+            Pos.SavedPosition = item.SavedPosition;
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 mediaElement.Pause();

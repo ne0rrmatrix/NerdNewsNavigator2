@@ -43,7 +43,11 @@
 		<string>com.yourappname.upload</string>
 		<string>com.yourappname.refresh</string>
 	</array>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.8</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>NerdNewsNavigator © 2023</string>
 </dict>
 </plist>

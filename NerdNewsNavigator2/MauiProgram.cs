@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
-using NerdNewsNavigator2.Devices;
 
 #if IOS
 using NerdNewsNavigator2.Platforms.iOS;

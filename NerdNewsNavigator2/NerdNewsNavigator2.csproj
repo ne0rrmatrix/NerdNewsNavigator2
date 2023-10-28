@@ -31,7 +31,7 @@
 	    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
         
-        <DefaultLanguage>en</DefaultLanguage>
+        <DefaultLanguage>en-us</DefaultLanguage>
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
         <Platforms>AnyCPU</Platforms>
         <Configurations>Debug;Release</Configurations>
@@ -80,6 +80,12 @@
     
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
     </PropertyGroup>
+    
+    <Target Name="_SkipCodesignVerify" BeforeTargets="_CodesignVerify" AfterTargets="_CodesignAppBundle">  
+        <PropertyGroup>    
+            <_RequireCodeSigning>false</_RequireCodeSigning>  
+        </PropertyGroup>
+    </Target>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
         <CodesignKey>Apple Development: Created via API (9T5LN8B35Y)</CodesignKey>

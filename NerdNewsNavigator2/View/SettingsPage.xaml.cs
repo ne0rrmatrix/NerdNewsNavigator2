@@ -110,22 +110,22 @@ public partial class SettingsPage : ContentPage
     }
 
     /// <summary>
-    /// Method sets Wifi Only toggle 
+    /// Method sets WIFI Only toggle 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void WifiOnly(object sender, EventArgs e)
+    private void WIFIOnly(object sender, EventArgs e)
     {
-        var wifiOnly = Preferences.Default.Get("WifiOnly", "No");
-        if (wifiOnly == "No")
+        var wifeOnly = Preferences.Default.Get("WIFIOnly", "No");
+        if (wifeOnly == "No")
         {
             WifiBtn.Text = "Yes";
-            Preferences.Default.Set("WifiOnly", "Yes");
+            Preferences.Default.Set("WIFIOnly", "Yes");
         }
         else
         {
             WifiBtn.Text = "No";
-            Preferences.Default.Set("WifiOnly", "No");
+            Preferences.Default.Set("WIFIOnly", "No");
         }
     }
 
@@ -208,7 +208,7 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
+        WifiBtn.Text = Preferences.Default.Get("WIFIOnly", "No");
         var start = Preferences.Default.Get("start", false);
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));
