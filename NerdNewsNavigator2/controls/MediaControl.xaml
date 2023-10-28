@@ -199,13 +199,19 @@
             </VerticalStackLayout>
 
             <Label
-                Margin="30"
+                Margin="45"
                 FontSize="12"
                 HorizontalOptions="Start"
                 SemanticProperties.Description="Label shows playback position for video"
-                Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
-                VerticalOptions="End" />
+                VerticalOptions="End">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0:hh\:mm\:ss}/{1:hh\:mm\:ss}">
+                        <Binding Path="Position" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
+                        <Binding Path="Duration" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
             <Slider
                 x:Name="PositionSlider"
                 Margin="15"
