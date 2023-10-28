@@ -64,7 +64,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
-        <MtouchLink>SdkOnly</MtouchLink>
+        <MtouchLink>None</MtouchLink>
         <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
 

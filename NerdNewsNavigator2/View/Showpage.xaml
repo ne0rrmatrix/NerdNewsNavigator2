@@ -106,21 +106,20 @@
                                 HeightRequest="48"
                                 SemanticProperties.Description="Button allows you to download a show."
                                 Text="Download"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}"
+                                CommandParameter="{Binding}"
                                 TextColor="#FFFFFF"
                                 WidthRequest="{OnIdiom Phone=70,
                                                        Default=100}">
-                                <Button.Triggers>
-                                    <DataTrigger
+                                    <Button.Triggers>
+                                        <DataTrigger
                                         Binding="{Binding Path=IsNotDownloaded}"
                                         TargetType="Button"
                                         Value="False">
-                                        <Setter Property="IsVisible" Value="False" />
-                                    </DataTrigger>
-                                </Button.Triggers>
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
                             <Button
                                 Margin="5"
                                 BackgroundColor="#CD2026"
@@ -131,20 +130,19 @@
                                 SemanticProperties.Description="Button allows you to cancel a current download."
                                 Text="Cancel"
                                 TextColor="#FFFFFF"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" 
+                                CommandParameter="{Binding}"
                                 WidthRequest="{OnIdiom Phone=70,
                                                        Default=100}">
-                                <Button.Triggers>
-                                    <DataTrigger
+                                    <Button.Triggers>
+                                        <DataTrigger
                                         Binding="{Binding Path=IsDownloading}"
                                         TargetType="Button"
                                         Value="False">
-                                        <Setter Property="IsVisible" Value="False" />
-                                    </DataTrigger>
-                                </Button.Triggers>
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
                         </HorizontalStackLayout>
 
                         <Label

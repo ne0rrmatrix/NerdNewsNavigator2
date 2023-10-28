@@ -100,7 +100,7 @@
                                 Text="{Binding PubDate}"
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
-                            <Button
+                                <Button
                                 Margin="5"
                                 BackgroundColor="#CD2026"
                                 FontAttributes="Bold"
@@ -111,11 +111,10 @@
                                 Text="Delete"
                                 TextColor="#FFFFFF"
                                 WidthRequest="{OnIdiom Phone=70,
-                                                       Default=100}">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                                       Default=100}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}"
+                                    CommandParameter="{Binding}">
+                                </Button>
 
                         </HorizontalStackLayout>
 

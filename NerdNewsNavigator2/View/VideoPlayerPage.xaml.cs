@@ -40,6 +40,7 @@ public partial class VideoPlayerPage : ContentPage
         App.OnVideoNavigated.Navigation -= Now;
         mediaElement.Source = new Uri(e.CurrentShow.Url);
         Pos.Title = e.CurrentShow.Title;
+        mediaElement.ShouldKeepScreenOn = true;
         await Seek(e.CurrentShow);
     }
 
@@ -56,11 +57,8 @@ public partial class VideoPlayerPage : ContentPage
         Pos.Title = show.Title;
         Pos.SavedPosition = TimeSpan.Zero;
         var item = await App.PositionData.GetPosition(Pos);
-        //var positionList = await App.PositionData.GetAllPositions();
-        //var result = positionList.ToList().Find(x => x.Title == show.Title);
         if (item is not null)
         {
-            //Pos.SavedPosition = result.SavedPosition;
             Pos.SavedPosition = item.SavedPosition;
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
@@ -76,7 +74,6 @@ public partial class VideoPlayerPage : ContentPage
             await App.PositionData.AddPosition(Pos);
             _logger.Info("Could not find saved position");
         }
-
         mediaElement.StateChanged += MediaStopped;
     }
 
@@ -102,10 +99,6 @@ public partial class VideoPlayerPage : ContentPage
                 mediaElement.ShouldKeepScreenOn = false;
                 Pos.SavedPosition = mediaElement.Position;
                 await App.PositionData.UpdatePosition(Pos);
-                break;
-            case MediaElementState.Playing:
-                mediaElement.ShouldKeepScreenOn = true;
-                _logger.Info("Setting should keep screen on to true");
                 break;
         }
     }

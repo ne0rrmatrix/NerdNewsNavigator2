@@ -22,7 +22,7 @@ public partial class DownloadService : ObservableObject
     public DownloadService()
     {
         SetToken();
-        Shows = new();
+        Shows = [];
         Item = new();
 #if ANDROID || IOS
         Notification = new();
@@ -76,7 +76,7 @@ public partial class DownloadService : ObservableObject
         UpdateDownloadStatus(client, item);
         if (await StartClient(client) && !CancellationTokenSource.IsCancellationRequested)
         {
-            await DownloadSucceded(item);
+            await DownloadSucceeded(item);
             return;
         }
         DownloadFailed(item);
@@ -97,7 +97,7 @@ public partial class DownloadService : ObservableObject
             return false;
         }
     }
-    private async Task DownloadSucceded(Show item)
+    private async Task DownloadSucceeded(Show item)
     {
         s_logger.Info("Download Completed event triggered");
         Download download = new()
@@ -125,9 +125,7 @@ public partial class DownloadService : ObservableObject
 #endif
     }
 
-#pragma warning disable CA1822 // Mark members as static breaks functionality
     private void DownloadFailed(Show item)
-#pragma warning restore CA1822 // Mark members as static breaks functionality
     {
         FileService.DeleteFile(item.Url);
 #if ANDROID || IOS

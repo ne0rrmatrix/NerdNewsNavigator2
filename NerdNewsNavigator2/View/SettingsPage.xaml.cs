@@ -117,16 +117,19 @@ public partial class SettingsPage : ContentPage
     private void WIFIOnly(object sender, EventArgs e)
     {
         var wifeOnly = Preferences.Default.Get("WIFIOnly", "No");
-        if (wifeOnly == "No")
+        MainThread.InvokeOnMainThreadAsync(() =>
         {
-            WifiBtn.Text = "Yes";
-            Preferences.Default.Set("WIFIOnly", "Yes");
-        }
-        else
-        {
-            WifiBtn.Text = "No";
-            Preferences.Default.Set("WIFIOnly", "No");
-        }
+            if (wifeOnly == "No")
+            {
+                WifiBtn.Text = "Yes";
+                Preferences.Default.Set("WIFIOnly", "Yes");
+            }
+            else
+            {
+                WifiBtn.Text = "No";
+                Preferences.Default.Set("WIFIOnly", "No");
+            }
+        });
     }
 
     /// <summary>
@@ -136,10 +139,10 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void AddDefault(object sender, EventArgs e)
     {
-        _ = Task.Run(async () =>
+        _ = Task.Run(() =>
         {
             PodcastServices.AddDefaultPodcasts();
-            await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            _ = MainThread.InvokeOnMainThreadAsync(async () => await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show());
         });
     }
 
@@ -156,7 +159,7 @@ public partial class SettingsPage : ContentPage
             if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
             {
                 await PodcastServices.RemoveDefaultPodcasts();
-                await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+                _ = MainThread.InvokeOnMainThreadAsync(async () => await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show());
             }
             else
             {
