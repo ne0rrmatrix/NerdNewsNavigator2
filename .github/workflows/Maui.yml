@@ -107,7 +107,7 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.x'
+        xcode-version: '15.0.x'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
@@ -141,7 +141,7 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.x'
+        xcode-version: '15.0.x'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
