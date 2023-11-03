@@ -80,13 +80,13 @@
     
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
     </PropertyGroup>
-
+<!--
     <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
         <CodesignKey>Apple Development: Created via API (9T5LN8B35Y)</CodesignKey>
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
         <ProvisioningType>automatic</ProvisioningType>
     </PropertyGroup>
-    
+    -->
     <!-- App Icon -->
     <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
 
