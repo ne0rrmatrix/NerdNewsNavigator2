@@ -199,7 +199,7 @@
             </VerticalStackLayout>
 
             <Label
-                Margin="30"
+                Margin="45"
                 FontSize="12"
                 HorizontalOptions="Start"
                 SemanticProperties.Description="Label shows playback position for video"
