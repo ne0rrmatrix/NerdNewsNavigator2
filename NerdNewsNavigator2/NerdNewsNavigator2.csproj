@@ -10,6 +10,7 @@
 		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<RootNamespace>NerdNewsNavigator2</RootNamespace>
 		<UseMaui>true</UseMaui>
+        <LangVersion>preview</LangVersion>
         <UseMauiEssentials>true</UseMauiEssentials>
 	    <SingleProject>true</SingleProject>
 	    <ImplicitUsings>enable</ImplicitUsings>
