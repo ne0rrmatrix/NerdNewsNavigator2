@@ -11,6 +11,7 @@
     Shell.BackgroundColor="#34AAD2"
     Shell.NavBarIsVisible="True"
     Shell.TabBarIsVisible="{OnPlatform Default=true,
+                                       iOS=true,
                                        WinUI=false,
                                        MacCatalyst=false}">
 
@@ -39,7 +40,7 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform Android=true, Default=false}" IsVisible="{OnPlatform Default=false, Android=true}">
+    <TabBar IsEnabled="{OnPlatform Android=true, iOS=true, Default=false}" IsVisible="{OnPlatform Default=false, iOS=true, Android=true}">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"
