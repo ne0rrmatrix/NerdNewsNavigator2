@@ -136,9 +136,9 @@
     </ItemGroup>
 	
     <ItemGroup>
-	    <PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
+	    <PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
 	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
-	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
 	    <PackageReference Include="M3U8Parser" Version="1.0.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
@@ -151,7 +151,7 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
-	    <PackageReference Include="Woka" Version="1.0.13" />
+	    <PackageReference Include="Woka" Version="1.0.14" />
 	    <PackageReference Include="YoutubeExplode" Version="6.3.6" />
     </ItemGroup>
 
