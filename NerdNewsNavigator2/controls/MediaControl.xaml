@@ -198,22 +198,9 @@
                 FontSize="12"
                 HorizontalOptions="Start"
                 SemanticProperties.Description="Label shows playback position for video"
+                Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
-                VerticalOptions="End">
-                <Label.Text>
-                    <MultiBinding StringFormat="{}{0:hh\:mm\:ss}/{1:hh\:mm\:ss}">
-                        <Binding
-                            Converter="{StaticResource SecondsToStringConverter}"
-                            Path="Position"
-                            Source="{x:Reference mediaElement}" />
-                        <Binding
-                            Converter="{StaticResource SecondsToStringConverter}"
-                            Path="Duration"
-                            Source="{x:Reference mediaElement}" />
-                        <Binding Path="CurrentState" Source="{x:Reference mediaElement}" />
-                    </MultiBinding>
-                </Label.Text>
-            </Label>
+                VerticalOptions="End" />
 
             <Slider
                 x:Name="PositionSlider"

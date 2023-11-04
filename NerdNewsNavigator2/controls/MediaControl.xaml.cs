@@ -9,6 +9,7 @@ public partial class MediaControl : ContentView
     #region Properties
     public bool MenuIsVisible { get; set; } = false;
     public bool ShowControls { get; set; } = false;
+    public string PlayPosition { get; set; }
     #endregion
     #region Bindably Properties
 
@@ -132,6 +133,8 @@ public partial class MediaControl : ContentView
     public MediaControl()
     {
         InitializeComponent();
+        PlayPosition = string.Empty;
+        mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += OnPositionChanged;
         _ = Moved();
@@ -170,8 +173,19 @@ public partial class MediaControl : ContentView
         OnPropertyChanged(nameof(ShowControls));
     }
     #endregion
-
+    private static string TimeConverter(TimeSpan time)
+    {
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return interval.ToString();
+    }
     #region Events
+    private void ChangedPosition(object sender, EventArgs e)
+    {
+        var playDuration = TimeConverter(mediaElement.Duration);
+        var position = TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
+    }
 
     private void MediaElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
