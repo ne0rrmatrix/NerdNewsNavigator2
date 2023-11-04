@@ -12,7 +12,7 @@
     Shell.NavBarIsVisible="True"
     Shell.TitleColor="White"
     Unloaded="ContentPage_Unloaded">
-    <media:MediaControl x:Name="mediaElement" IsYoutube="False" />
+    <media:MediaControl x:Name="mediaElement" IsYouTube="False" />
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>

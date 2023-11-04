@@ -11,7 +11,6 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
     x:DataType="item:MediaControl"
-    Unloaded="MediaControl_Unloaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -30,18 +29,17 @@
 
         <Grid
             BackgroundColor="Black"
-            IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
-            IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
+            IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}"
             Opacity="0.3" />
 
-        <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
+        <Grid IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}">
             <ImageButton
-                x:Name="ImageSettings"
                 Margin="40"
                 BackgroundColor="Transparent"
+                Clicked="OpenMenu"
                 HeightRequest="48"
                 HorizontalOptions="End"
-                Pressed="Button_Pressed"
+                IsVisible="{Binding IsYouTube, Source={x:Reference mediaControl}}"
                 SemanticProperties.Description="Button opens menu allows you to select video resolution."
                 SemanticProperties.Hint="Button opens menu allows you to select video resolution."
                 Source="gear.png"
@@ -66,7 +64,6 @@
                 Margin="80"
                 HeightRequest="240"
                 HorizontalOptions="End"
-                IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
                 IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
                 ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
                 SelectionMode="Single"
@@ -74,11 +71,9 @@
                 SemanticProperties.Hint="You can select a resolution from this menu."
                 VerticalOptions="End"
                 WidthRequest="120">
-
                 <CollectionView.GestureRecognizers>
                     <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
                 </CollectionView.GestureRecognizers>
-
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:YoutubeResolutions">
                         <VerticalStackLayout>
@@ -94,7 +89,7 @@
                                 WidthRequest="90">
 
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=TappedCommand}" CommandParameter="{Binding Url}" />
                                 </Label.GestureRecognizers>
                             </Label>
 
@@ -203,9 +198,23 @@
                 FontSize="12"
                 HorizontalOptions="Start"
                 SemanticProperties.Description="Label shows playback position for video"
-                Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
-                VerticalOptions="End" />
+                VerticalOptions="End">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0:hh\:mm\:ss}/{1:hh\:mm\:ss}">
+                        <Binding
+                            Converter="{StaticResource SecondsToStringConverter}"
+                            Path="Position"
+                            Source="{x:Reference mediaElement}" />
+                        <Binding
+                            Converter="{StaticResource SecondsToStringConverter}"
+                            Path="Duration"
+                            Source="{x:Reference mediaElement}" />
+                        <Binding Path="CurrentState" Source="{x:Reference mediaElement}" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+
             <Slider
                 x:Name="PositionSlider"
                 Margin="15"

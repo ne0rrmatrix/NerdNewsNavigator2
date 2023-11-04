@@ -39,7 +39,7 @@
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    <TabBar IsEnabled="{OnPlatform Android=true, Default=false}" IsVisible="{OnPlatform Default=false, Android=true}">
+    <TabBar IsEnabled="{OnPlatform Android=true, iOS=true, Default=false}" IsVisible="{OnPlatform Default=false, iOS=true, Android=true}">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:PodcastPage}"
