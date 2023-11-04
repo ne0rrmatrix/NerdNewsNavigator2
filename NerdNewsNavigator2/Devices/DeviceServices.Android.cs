@@ -10,7 +10,7 @@ using Views = AndroidX.Core.View;
 
 namespace NerdNewsNavigator2.Devices;
 
-internal class DeviceServices : IDeviceServices
+internal sealed class DeviceServices : IDeviceServices
 {
     public void RestoreScreen()
     {

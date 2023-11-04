@@ -5,8 +5,10 @@
 namespace NerdNewsNavigator2;
 public static class CustomControls
 {
-    private static DeviceServices Control { get; set; } = new();
-    private static bool IsFullScreen { get; set; } = false;
+    private static readonly DeviceServices s_deviceServices = new();
+
+    private static DeviceServices Control { get; set; } = s_deviceServices;
+    private static bool IsFullScreen { get; set; }
     /// <summary>
     /// Toggle Page Full Screen
     /// </summary>

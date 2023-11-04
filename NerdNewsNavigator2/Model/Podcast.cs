@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.Model;
 /// A class for storing <see cref="Podcast"/> in a Database.
 /// </summary>
 [Table("Podcasts")]
-public partial class Podcast : Shared
+public partial class Podcast : SharedModels
 {
     [ObservableProperty]
     private bool _deleted;

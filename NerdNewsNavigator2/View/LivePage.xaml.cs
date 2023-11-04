@@ -72,7 +72,7 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
         var item = "https://www.youtube.com/channel/";
         var page = await Client.GetAsync(item + $"{userId}/live");
         var result = await page.Content.ReadAsStringAsync();
-        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=") + 8, 11);
+        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=", StringComparison.OrdinalIgnoreCase) + 8, 11);
     }
 
     /// <summary>

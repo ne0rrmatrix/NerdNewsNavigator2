@@ -9,13 +9,12 @@ namespace NerdNewsNavigator2.Services;
 public partial class DownloadService : ObservableObject
 {
     #region Properties
-    private CancellationTokenSource CancellationTokenSource { get; set; } = null;
+    private CancellationTokenSource CancellationTokenSource { get; set; }
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(DownloadService));
-    private static bool IsDownloading { get; set; } = false;
+    private static bool IsDownloading { get; set; }
     public List<Show> Shows { get; private set; }
     private Show Item { get; set; }
 #if ANDROID || IOS
-    private int Id { get; set; } = 0;
     private NotificationRequest Notification { get; set; }
 #endif
     #endregion
@@ -39,19 +38,17 @@ public partial class DownloadService : ObservableObject
         Shows.Clear();
         IsDownloading = false;
     }
-    public Show Cancel(string url)
+    public Show Cancel(Show show)
     {
-        Debug.WriteLine("Cancel called");
-        var item = Shows.Find(x => x.Url == url) ?? throw new NullReferenceException();
-        if (item.Url == Item.Url)
+        if (show.Url == Item.Url)
         {
-            Shows.Remove(item);
+            Shows.Remove(Item);
             IsDownloading = false;
             CancellationTokenSource.Cancel();
-            return item;
+            return show;
         }
-        Shows.Remove(item);
-        return item;
+        Shows.Remove(show);
+        return show;
     }
     public async Task Start(Show item)
     {
@@ -125,9 +122,7 @@ public partial class DownloadService : ObservableObject
 #endif
     }
 
-#pragma warning disable CA1822 // Mark members as static breaks functionality
     private void DownloadFailed(Show item)
-#pragma warning restore CA1822 // Mark members as static breaks functionality
     {
         FileService.DeleteFile(item.Url);
 #if ANDROID || IOS

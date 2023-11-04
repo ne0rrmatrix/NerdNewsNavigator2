@@ -7,8 +7,8 @@ namespace NerdNewsNavigator2.Controls;
 public partial class MediaControl : ContentView
 {
     #region Properties
-    public bool MenuIsVisible { get; set; } = false;
-    public bool ShowControls { get; set; } = false;
+    public bool MenuIsVisible { get; set; }
+    public bool ShowControls { get; set; }
     public string PlayPosition { get; set; }
     #endregion
     #region Bindably Properties
