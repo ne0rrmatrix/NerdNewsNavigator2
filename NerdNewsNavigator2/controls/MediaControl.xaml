@@ -209,6 +209,7 @@
                     </MultiBinding>
                 </Label.Text>
             </Label>
+
             <Slider
                 x:Name="PositionSlider"
                 Margin="15"
