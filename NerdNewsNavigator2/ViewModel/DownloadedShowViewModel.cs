@@ -10,12 +10,12 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class DownloadedShowViewModel : BaseViewModel
 {
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(DownloadedShowViewModel));
 
     /// <summary>
-    /// Intilializes an instance of <see cref="DownloadedShowViewModel"/>
+    /// Initializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="connectivity"/>
     /// </summary>
     public DownloadedShowViewModel(IConnectivity connectivity)

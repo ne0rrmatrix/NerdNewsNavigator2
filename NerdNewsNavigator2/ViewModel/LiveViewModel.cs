@@ -9,8 +9,11 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="LiveViewModel"/>
-/// <paramref name="connectivity"/>
 /// </remarks>
-public partial class LiveViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
+public partial class LiveViewModel : BaseViewModel
 {
+    public LiveViewModel(IConnectivity connectivity) : base(connectivity)
+    {
+    }
+
 }

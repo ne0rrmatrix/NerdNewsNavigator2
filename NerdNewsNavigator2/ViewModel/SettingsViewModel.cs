@@ -10,6 +10,9 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <remarks>
 /// Initializes a new instance of the <see cref="SettingsViewModel"/>
 /// </remarks>
-public partial class SettingsViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
+public partial class SettingsViewModel : BaseViewModel
 {
+    public SettingsViewModel(IConnectivity connectivity) : base(connectivity)
+    {
+    }
 }

@@ -30,18 +30,17 @@
 
         <Grid
             BackgroundColor="Black"
-            IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}"
             IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
             Opacity="0.3" />
 
-        <Grid IsEnabled="{Binding FullScreen, Source={x:Reference mediaControl}}" IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
+        <Grid IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
             <ImageButton
-                x:Name="ImageSettings"
                 Margin="40"
+                IsVisible="{Binding IsYouTube, Source={x:Reference mediaControl}}"
                 BackgroundColor="Transparent"
                 HeightRequest="48"
                 HorizontalOptions="End"
-                Pressed="Button_Pressed"
+                Clicked="OpenMenu"
                 SemanticProperties.Description="Button opens menu allows you to select video resolution."
                 SemanticProperties.Hint="Button opens menu allows you to select video resolution."
                 Source="gear.png"
@@ -66,7 +65,6 @@
                 Margin="80"
                 HeightRequest="240"
                 HorizontalOptions="End"
-                IsEnabled="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
                 IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
                 ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
                 SelectionMode="Single"
@@ -74,11 +72,9 @@
                 SemanticProperties.Hint="You can select a resolution from this menu."
                 VerticalOptions="End"
                 WidthRequest="120">
-
                 <CollectionView.GestureRecognizers>
                     <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
                 </CollectionView.GestureRecognizers>
-
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:YoutubeResolutions">
                         <VerticalStackLayout>
@@ -92,9 +88,9 @@
                                 Text="{Binding Title}"
                                 TextColor="White"
                                 WidthRequest="90">
-
+                  
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference mediaControl}}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=TappedCommand}" CommandParameter="{Binding Url}"/>
                                 </Label.GestureRecognizers>
                             </Label>
 
@@ -199,16 +195,17 @@
             </VerticalStackLayout>
 
             <Label
-                Margin="45"
-                FontSize="12"
-                HorizontalOptions="Start"
-                SemanticProperties.Description="Label shows playback position for video"
-                TextColor="White"
-                VerticalOptions="End">
+                 Margin="45"
+                 FontSize="12"
+                 HorizontalOptions="Start"
+                 SemanticProperties.Description="Label shows playback position for video"
+                 TextColor="White"
+                 VerticalOptions="End">
                 <Label.Text>
                     <MultiBinding StringFormat="{}{0:hh\:mm\:ss}/{1:hh\:mm\:ss}">
                         <Binding Path="Position" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
                         <Binding Path="Duration" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
+                        <Binding Path="CurrentState" Source="{x:Reference mediaElement}" />
                     </MultiBinding>
                 </Label.Text>
             </Label>

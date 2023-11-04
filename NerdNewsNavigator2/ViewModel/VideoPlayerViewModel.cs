@@ -10,6 +10,9 @@ namespace NerdNewsNavigator2.ViewModel;
 /// <remarks>
 /// Initializes a new instance of the <see cref="VideoPlayerViewModel"/> class.
 /// </remarks>
-public partial class VideoPlayerViewModel(IConnectivity connectivity) : BaseViewModel(connectivity)
+public partial class VideoPlayerViewModel : BaseViewModel
 {
+    public VideoPlayerViewModel(IConnectivity connectivity) : base(connectivity)
+    {
+    }
 }

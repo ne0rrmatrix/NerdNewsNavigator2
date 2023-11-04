@@ -103,6 +103,7 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
             };
             Items.Add(temp);
         });
+        OnPropertyChanged(nameof(Items));
     }
 
     /// <summary>
