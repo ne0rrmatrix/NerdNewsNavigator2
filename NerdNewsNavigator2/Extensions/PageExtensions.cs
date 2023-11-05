@@ -7,9 +7,9 @@ namespace NerdNewsNavigator2.Extensions;
 // https://github.com/dotnet/maui/blob/main/src/Controls/src/Core/Platform/PageExtensions.cs
 static class PageExtensions
 {
-    private static bool s_navBarIsVisible = false;
-    private static bool s_tabBarIsVisible = false;
-    private static bool s_backButton = false;
+    private static bool s_navBarIsVisible;
+    private static bool s_tabBarIsVisible;
+    private static bool s_backButton;
     private static string s_backButtonTitle = string.Empty;
     private static string s_pageTitle = string.Empty;
     static Page CurrentPage => GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));

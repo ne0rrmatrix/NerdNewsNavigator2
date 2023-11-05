@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
+using NerdNewsNavigator2.Devices;
 using Woka;
 
 namespace NerdNewsNavigator2;

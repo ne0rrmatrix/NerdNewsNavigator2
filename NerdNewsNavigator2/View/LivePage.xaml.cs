@@ -11,11 +11,11 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
 {
     #region Properties
     private readonly string _item = "https://www.youtube.com/user/twit";
-    private YoutubeClient Youtube { get; set; } = new();
+    private YoutubeClient YouTube { get; set; } = new();
     private HttpClient Client { get; set; } = new();
-    public ObservableCollection<YoutubeResolutions> Items { get; set; } = new();
+    public ObservableCollection<YoutubeResolutions> Items { get; set; } = [];
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(LivePage));
     #endregion
@@ -55,24 +55,24 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
         var m3u = await ParseVideoIdAsync(url);
         if (m3u != string.Empty)
         {
-            mediaElement.Source = ParseM3UPLaylist(await GetM3U_Url(m3u));
+            mediaElement.Source = ParseM3UPlaylist(await GetM3U_Url(m3u));
             _logger.Info($"Set media element source {mediaElement.Source}");
             mediaElement.Play();
         }
     }
 
     /// <summary>
-    /// Method returns Video ID from Youtube <see cref="string"/>, by way of Username/live.
+    /// Method returns Video ID from YouTube <see cref="string"/>, by way of Username/live.
     /// </summary>
     ///  <param name="url"></param>
     /// <returns></returns>
     private async Task<string> ParseVideoIdAsync(string url)
     {
-        var userId = (await Youtube.Channels.GetByUserAsync(url)).Id;
+        var userId = (await YouTube.Channels.GetByUserAsync(url)).Id;
         var item = "https://www.youtube.com/channel/";
         var page = await Client.GetAsync(item + $"{userId}/live");
         var result = await page.Content.ReadAsStringAsync();
-        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=") + 8, 11);
+        return result is null ? string.Empty : result.Substring(result.IndexOf("watch?v=", StringComparison.OrdinalIgnoreCase) + 8, 11);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     /// </summary>
     /// <param name="m3UString"></param>
     /// <returns></returns>
-    private string ParseM3UPLaylist(string m3UString)
+    private string ParseM3UPlaylist(string m3UString)
     {
         var masterPlaylist = MasterPlaylist.LoadFromText(m3UString);
         var list = masterPlaylist.Streams.ToList();
@@ -106,14 +106,14 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     }
 
     /// <summary>
-    /// Method returns the Live stream M3U Url from Youtube ID.
+    /// Method returns the Live stream M3U Url from YouTube ID.
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
     private async Task<string> GetM3U_Url(string url)
     {
         var content = string.Empty;
-        var result = await Youtube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
+        var result = await YouTube.Videos.Streams.GetHttpLiveStreamUrlAsync(url);
         var response = await Client.GetAsync(result);
         if (response.IsSuccessStatusCode)
         {
@@ -133,7 +133,7 @@ public partial class LivePage : ContentPage, IDisposable, IRecipient<NavigatedIt
     {
         mediaElement.ShouldKeepScreenOn = false;
         mediaElement.Stop();
-        _logger.Info($"Page dissapearing. Media playback Stopped. ShouldKeepScreenOn is set to {mediaElement.ShouldKeepScreenOn}");
+        _logger.Info($"Page disappearing. Media playback Stopped. ShouldKeepScreenOn is set to {mediaElement.ShouldKeepScreenOn}");
     }
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {

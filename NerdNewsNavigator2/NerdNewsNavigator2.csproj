@@ -45,6 +45,13 @@
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
         <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/ne0rrmatrix/NerdNewsNavigator2</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+        <NeutralLanguage>en-CA</NeutralLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
@@ -71,7 +78,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
         <BuildIpa>False</BuildIpa>
         <IpaIncludeArtwork>True</IpaIncludeArtwork>
-        <MtouchLink>None</MtouchLink>
+        <MtouchLink>SdkOnly</MtouchLink>
         <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
     </PropertyGroup>
     
@@ -124,24 +131,36 @@
         <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#34AAD2" />
         <!-- Splash Screen -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#34AAD2" />
-
+        
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
-        <MauiImage Update="Resources\Images\gear.png" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\download.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\history.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\house.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\live_broadcasting.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\logout.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\settings.svg" BaseSize="36,36" Resize="true"/>
-        <MauiImage Update="Resources\Images\whitefs.png" BaseSize="36,36" Resize="true"/>
+        <MauiImage Update="Resources\Images\gear.png" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\download.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\history.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\house.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\live_broadcasting.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\logout.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\settings.svg" BaseSize="36,36" Resize="true" />
+        <MauiImage Update="Resources\Images\whitefs.png" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\dotnet_bot.svg" />
+
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
 
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Include="..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
     </ItemGroup>
 	
     <ItemGroup>

@@ -12,18 +12,18 @@ public partial class VideoPlayerPage : ContentPage
     #region Properties
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(VideoPlayerPage));
 
     /// <summary>
-    /// Initilizes a new instance of the <see cref="Position"/> class
+    /// Initializes a new instance of the <see cref="Position"/> class
     /// </summary>
     private Position Pos { get; set; } = new();
 
     #endregion
     /// <summary>
-    /// Class Constructor that initilizes <see cref="VideoPlayerPage"/>
+    /// Class Constructor that initializes <see cref="VideoPlayerPage"/>
     /// </summary>
     /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 

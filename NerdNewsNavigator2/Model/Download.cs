@@ -8,7 +8,7 @@ namespace NerdNewsNavigator2.Model;
 /// A class for storing <see cref="Download"/> in a Database.
 /// </summary>
 [Table("Downloads")]
-public partial class Download : Shared
+public partial class Download : SharedModels
 {
     [ObservableProperty]
     private string _fileName;

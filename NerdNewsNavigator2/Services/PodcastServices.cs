@@ -15,7 +15,7 @@ public static class PodcastServices
     /// <returns><see cref="List{T}"/> <see cref="Podcast"/></returns>
     public static List<Podcast> GetFromUrl()
     {
-        List<Podcast> podcasts = new();
+        List<Podcast> podcasts = [];
         var item = FeedService.GetPodcastListAsync();
         item.ForEach(x => podcasts.Add(FeedService.GetFeed(x)));
         return podcasts;

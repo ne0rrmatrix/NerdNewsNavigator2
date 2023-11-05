@@ -12,7 +12,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
     public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage, CancellationToken token);
     public event ProgressChangedHandler ProgressChanged;
 
-    public CancellationTokenSource DownloadCancel { get; set; } = null;
+    public CancellationTokenSource DownloadCancel { get; set; }
 
     #endregion
     public async Task StartDownload()
@@ -38,7 +38,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         catch
         {
             Debug.WriteLine("Http Client error");
-            App.DownloadService.Cancel(App.DownloadService.Shows[0].Url);
+            App.DownloadService.Cancel(App.DownloadService.Shows[0]);
         }
     }
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)

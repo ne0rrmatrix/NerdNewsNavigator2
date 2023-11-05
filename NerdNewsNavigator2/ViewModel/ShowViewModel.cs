@@ -16,7 +16,7 @@ public partial class ShowViewModel : BaseViewModel
     [ObservableProperty]
     private string _url;
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowViewModel));
     /// <summary>
@@ -76,7 +76,7 @@ public partial class ShowViewModel : BaseViewModel
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
-        App.DownloadService.Cancel(show.Url);
+        App.DownloadService.Cancel(show);
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>

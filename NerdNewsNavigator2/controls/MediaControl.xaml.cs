@@ -3,67 +3,64 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Controls;
+
 public partial class MediaControl : ContentView
 {
     #region Properties
+    public bool MenuIsVisible { get; set; }
+    public bool ShowControls { get; set; }
     public string PlayPosition { get; set; }
-    public bool MenuIsVisible { get; set; } = false;
-
-    private static bool s_fullScreen = false;
-    public bool FullScreen { get; set; } = false;
     #endregion
     #region Bindably Properties
 
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Name), typeof(MediaElement), typeof(MediaControl));
     public static readonly BindableProperty CurrentStateProperty = BindableProperty.Create(nameof(CurrentState), typeof(MediaElementState), typeof(MediaElement), MediaElementState.None);
-    public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty AspectProperty = BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.Aspect = (Aspect)newValue;
     });
-    public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(MediaSource), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.Source = newValue as MediaSource;
     });
-    public static readonly BindableProperty StateChangedProperty = BindableProperty.Create(nameof(StateChanged), typeof(EventHandler<MediaStateChangedEventArgs>), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty StateChangedProperty = BindableProperty.Create(nameof(StateChanged), typeof(EventHandler<MediaStateChangedEventArgs>), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.StateChanged += (EventHandler<MediaStateChangedEventArgs>)newValue;
     });
-    public static readonly BindableProperty MediaOpenedProperty = BindableProperty.Create(nameof(MediaOpened), typeof(EventHandler), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty MediaOpenedProperty = BindableProperty.Create(nameof(MediaOpened), typeof(EventHandler), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.MediaOpened += (EventHandler)newValue;
     });
-    public static readonly BindableProperty ShouldKeepScreenOnProperty = BindableProperty.Create(nameof(ShouldKeepScreenOn), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty ShouldKeepScreenOnProperty = BindableProperty.Create(nameof(ShouldKeepScreenOn), typeof(bool), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldKeepScreenOn = (bool)newValue;
     });
-    public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(MediaElement), TimeSpan.Zero);
-    public static readonly BindableProperty ShouldAutoPlayProperty = BindableProperty.Create(nameof(ShouldAutoPlay), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty ShouldAutoPlayProperty = BindableProperty.Create(nameof(ShouldAutoPlay), typeof(bool), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldAutoPlay = (bool)newValue;
     });
-    public static readonly BindableProperty ShouldShowPlaybackControlsProperty = BindableProperty.Create(nameof(ShouldShowPlaybackControls), typeof(bool), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty ShouldShowPlaybackControlsProperty = BindableProperty.Create(nameof(ShouldShowPlaybackControls), typeof(bool), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldShowPlaybackControls = (bool)newValue;
     });
-    public static readonly BindableProperty PositionChangedProperty = BindableProperty.Create(nameof(PositionChanged), typeof(EventHandler<MediaPositionChangedEventArgs>), typeof(MediaControl), propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty PositionChangedProperty = BindableProperty.Create(nameof(PositionChanged), typeof(EventHandler<MediaPositionChangedEventArgs>), typeof(MediaElement), propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
     });
-    public static readonly BindableProperty IsYoutubeProperty = BindableProperty.Create(nameof(IsYoutube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty IsYouTubeProperty = BindableProperty.Create(nameof(IsYouTube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
-        control.IsEnabled = (bool)newValue;
         control.IsVisible = (bool)newValue;
     });
-    public static readonly BindableProperty ShouldMuteProperty = BindableProperty.Create(nameof(ShouldMute), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
+    public static readonly BindableProperty ShouldMuteProperty = BindableProperty.Create(nameof(ShouldMute), typeof(bool), typeof(MediaElement), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
         control.mediaElement.ShouldMute = (bool)newValue;
@@ -71,19 +68,18 @@ public partial class MediaControl : ContentView
     public MediaElementState CurrentState
     {
         get => (MediaElementState)GetValue(CurrentStateProperty);
-        private set => SetValue(CurrentStateProperty, value);
+        set => SetValue(CurrentStateProperty, value);
     }
     public bool ShouldMute
     {
         get => (bool)GetValue(ShouldMuteProperty);
         set => SetValue(ShouldMuteProperty, value);
     }
-    public bool IsYoutube
+    public bool IsYouTube
     {
-        get => (bool)GetValue(IsYoutubeProperty);
-        set => SetValue(IsYoutubeProperty, value);
+        get => (bool)GetValue(IsYouTubeProperty);
+        set => SetValue(IsYouTubeProperty, value);
     }
-
     public EventHandler MediaOpened
     {
         get => GetValue(MediaOpenedProperty) as EventHandler;
@@ -99,12 +95,15 @@ public partial class MediaControl : ContentView
         get => GetValue(PositionChangedProperty) as EventHandler<MediaPositionChangedEventArgs>;
         set => SetValue(PositionChangedProperty, value);
     }
+    public TimeSpan Position
+    {
+        get => mediaElement.Position;
+    }
     public MediaSource Source
     {
         get => GetValue(SourceProperty) as MediaSource;
         set => SetValue(SourceProperty, value);
     }
-    public TimeSpan Position => mediaElement.Position;
     public MediaElement Name
     {
         get => GetValue(TitleProperty) as MediaElement;
@@ -135,8 +134,8 @@ public partial class MediaControl : ContentView
     {
         InitializeComponent();
         PlayPosition = string.Empty;
-        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += ChangedPosition;
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += OnPositionChanged;
         _ = Moved();
         BtnPLay.Source = "pause.png";
@@ -165,53 +164,29 @@ public partial class MediaControl : ContentView
     }
     private async Task Moved()
     {
-        if (!FullScreen)
-        {
-            FullScreen = true;
-            if (IsYoutube)
-            {
-                ImageSettings.IsEnabled = true;
-                ImageSettings.IsVisible = true;
-            }
-            else
-            {
-                ImageSettings.IsEnabled = false;
-                ImageSettings.IsVisible = false;
-            }
-            OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(7000);
-            FullScreen = false;
-            MenuIsVisible = false;
-            if (IsYoutube)
-            {
-                ImageSettings.IsEnabled = false;
-                ImageSettings.IsVisible = false;
-            }
-            OnPropertyChanged(nameof(MenuIsVisible));
-            OnPropertyChanged(nameof(FullScreen));
-        }
+        ShowControls = true;
+        OnPropertyChanged(nameof(ShowControls));
+        await Task.Delay(7000);
+        ShowControls = false;
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
+        OnPropertyChanged(nameof(ShowControls));
     }
-
-    /// <summary>
-    /// A method that converts <see cref="TimeSpan"/> into a usable <see cref="string"/> for displaying position in <see cref="MediaElement"/>
-    /// </summary>
-    /// <param name="time"></param>
-    /// <returns></returns>
+    #endregion
     private static string TimeConverter(TimeSpan time)
     {
         var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
         return interval.ToString();
     }
-    #endregion
-
     #region Events
-    private void MediaControl_Unloaded(object sender, EventArgs e)
+    private void ChangedPosition(object sender, EventArgs e)
     {
-        if (s_fullScreen)
-        {
-            CustomControls.RestoreScreen();
-        }
+        var playDuration = TimeConverter(mediaElement.Duration);
+        var position = TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
     }
+
     private void MediaElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
@@ -234,15 +209,6 @@ public partial class MediaControl : ContentView
     private void Slider_DragStarted(object sender, EventArgs e)
     {
         mediaElement.Pause();
-    }
-    private void ChangedPosition(object sender, EventArgs e)
-    {
-        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsVisible = IsYoutube; });
-        MainThread.BeginInvokeOnMainThread(() => { ImageSettings.IsEnabled = IsYoutube; });
-        var playDuration = TimeConverter(mediaElement.Duration);
-        var position = TimeConverter(mediaElement.Position);
-        PlayPosition = $"{position}/{playDuration}";
-        OnPropertyChanged(nameof(PlayPosition));
     }
     #endregion
 
@@ -276,10 +242,14 @@ public partial class MediaControl : ContentView
             BtnPLay.Source = "play.png";
         }
     }
-
+    private void OpenMenu(object sender, EventArgs e)
+    {
+        MenuIsVisible = true;
+        OnPropertyChanged(nameof(MenuIsVisible));
+    }
     private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-        SetVideoSize();
+        CustomControls.SetFullScreenStatus();
     }
     private void OnMuteClicked(object sender, EventArgs e)
     {
@@ -290,11 +260,6 @@ public partial class MediaControl : ContentView
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
         _ = Moved();
-    }
-    private void Button_Pressed(object sender, EventArgs e)
-    {
-        MenuIsVisible = !MenuIsVisible;
-        OnPropertyChanged(nameof(MenuIsVisible));
     }
     private void AspectButton(object sender, EventArgs e)
     {
@@ -331,10 +296,10 @@ public partial class MediaControl : ContentView
     private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
 #if WINDOWS
-        SetVideoSize();
+        CustomControls.SetFullScreenStatus();
 #endif
     }
-    private static void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
+    private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
         if (e.Direction == SwipeDirection.Up)
         {
@@ -343,19 +308,6 @@ public partial class MediaControl : ContentView
         if (e.Direction == SwipeDirection.Down)
         {
             CustomControls.RestoreScreen();
-        }
-    }
-    private static void SetVideoSize()
-    {
-        if (s_fullScreen)
-        {
-            CustomControls.RestoreScreen();
-            s_fullScreen = false;
-        }
-        else
-        {
-            CustomControls.FullScreen();
-            s_fullScreen = true;
         }
     }
     #endregion

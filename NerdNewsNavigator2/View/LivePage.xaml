@@ -15,6 +15,6 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
-    <media:MediaControl x:Name="mediaElement" IsYoutube="True" />
+    <media:MediaControl x:Name="mediaElement" IsYouTube="True" />
 
 </ContentPage>
