@@ -19,7 +19,7 @@ public partial class MessagingService : IRecipient<InternetItemMessage>, IRecipi
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static async Task RecievedDelete(bool value)
+    public static async Task ReceivedDelete(bool value)
     {
         if (value)
         {

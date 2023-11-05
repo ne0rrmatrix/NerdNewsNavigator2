@@ -9,7 +9,7 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class PodcastViewModel : BaseViewModel
 {
     /// <summary>
-    /// Initilizes a new instance of the <see cref="ILogger"/> class
+    /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(PodcastViewModel));
 

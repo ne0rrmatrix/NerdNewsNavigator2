@@ -35,7 +35,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         var item = await App.PositionData.GetAllDownloads();
         item.ForEach(App.DeletedItem.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        DeleleFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
+        DeleteFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await DeleteAllAsync();
         SetVariables();
         Thread.Sleep(500);
@@ -61,7 +61,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await App.PositionData.DeleteAllDownloads();
         await App.PositionData.DeleteAllFavorites();
     }
-    private void DeleleFiles(string[] files)
+    private void DeleteFiles(string[] files)
     {
         try
         {

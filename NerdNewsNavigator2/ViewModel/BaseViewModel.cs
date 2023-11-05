@@ -76,10 +76,10 @@ public partial class BaseViewModel : ObservableObject
     public BaseViewModel(IConnectivity connectivity)
     {
         _connectivity = connectivity;
-        _shows = new();
-        _downloadedShows = new();
-        _podcasts = new();
-        _favoriteShows = new();
+        _shows = [];
+        _downloadedShows = [];
+        _podcasts = [];
+        _favoriteShows = [];
         MyMainDisplay = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());

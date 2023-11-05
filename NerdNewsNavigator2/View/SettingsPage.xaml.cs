@@ -110,22 +110,22 @@ public partial class SettingsPage : ContentPage
     }
 
     /// <summary>
-    /// Method sets Wifi Only toggle 
+    /// Method sets WIFI Only toggle 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void WifiOnly(object sender, EventArgs e)
     {
-        var wifiOnly = Preferences.Default.Get("WifiOnly", "No");
+        var wifiOnly = Preferences.Default.Get("WIFIOnly", "No");
         if (wifiOnly == "No")
         {
             WifiBtn.Text = "Yes";
-            Preferences.Default.Set("WifiOnly", "Yes");
+            Preferences.Default.Set("WIFIOnly", "Yes");
         }
         else
         {
             WifiBtn.Text = "No";
-            Preferences.Default.Set("WifiOnly", "No");
+            Preferences.Default.Set("WIFIOnly", "No");
         }
     }
 

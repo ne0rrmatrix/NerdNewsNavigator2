@@ -194,7 +194,7 @@ public partial class MediaControl : ContentView
             PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
         }
     }
-    void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
+    private void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
     {
         PositionSlider.Value = e.Position.TotalSeconds;
     }
