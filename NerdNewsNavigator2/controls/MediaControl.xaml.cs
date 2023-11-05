@@ -180,11 +180,7 @@ public partial class MediaControl : ContentView
         OnPropertyChanged(nameof(ShowControls));
     }
     #endregion
-    private static string TimeConverter(TimeSpan time)
-    {
-        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
-        return interval.ToString();
-    }
+
     #region Events
     private void ChangedPosition(object sender, EventArgs e)
     {

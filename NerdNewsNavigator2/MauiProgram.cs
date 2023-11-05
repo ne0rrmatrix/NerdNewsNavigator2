@@ -4,7 +4,6 @@
 
 using MetroLog.Targets;
 using NerdNewsNavigator2.Devices;
-using Woka;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
