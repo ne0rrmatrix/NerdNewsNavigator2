@@ -76,7 +76,7 @@ public partial class ShowViewModel : BaseViewModel
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
-        App.DownloadService.Cancel(show.Url);
+        App.DownloadService.Cancel(show);
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>

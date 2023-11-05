@@ -3,10 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
-
-#if IOS
-using NerdNewsNavigator2.Platforms.iOS;
-#endif
+using NerdNewsNavigator2.Devices;
+using Woka;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram

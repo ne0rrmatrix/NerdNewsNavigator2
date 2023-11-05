@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Devices;
-internal class DeviceServices : IDeviceServices
+internal sealed class DeviceServices : IDeviceServices
 {
     public void FullScreen()
     {

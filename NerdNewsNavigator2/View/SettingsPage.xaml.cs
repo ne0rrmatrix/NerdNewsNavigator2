@@ -116,20 +116,17 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void WIFIOnly(object sender, EventArgs e)
     {
-        var wifeOnly = Preferences.Default.Get("WIFIOnly", "No");
-        MainThread.InvokeOnMainThreadAsync(() =>
+        var wifiOnly = Preferences.Default.Get("WIFIOnly", "No");
+        if (wifiOnly == "No")
         {
-            if (wifeOnly == "No")
-            {
-                WifiBtn.Text = "Yes";
-                Preferences.Default.Set("WIFIOnly", "Yes");
-            }
-            else
-            {
-                WifiBtn.Text = "No";
-                Preferences.Default.Set("WIFIOnly", "No");
-            }
-        });
+            WifiBtn.Text = "Yes";
+            Preferences.Default.Set("WIFIOnly", "Yes");
+        }
+        else
+        {
+            WifiBtn.Text = "No";
+            Preferences.Default.Set("WIFIOnly", "No");
+        }
     }
 
     /// <summary>

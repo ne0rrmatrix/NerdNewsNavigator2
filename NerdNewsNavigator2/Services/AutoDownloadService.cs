@@ -11,13 +11,13 @@ namespace NerdNewsNavigator2.Services;
 public partial class AutoDownloadService
 {
     private string Status { get; set; }
-    private string WifiOnlyDownloading { get; set; }
+    private string WifeOnlyDownloading { get; set; }
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     public AutoDownloadService()
     {
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        WifeOnlyDownloading = Preferences.Default.Get("WIFIOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
     }
 
@@ -32,7 +32,7 @@ public partial class AutoDownloadService
         {
             return;
         }
-        ThreadPool.QueueUserWorkItem(state => _ = ProccessShowAsync());
+        ThreadPool.QueueUserWorkItem(state => _ = ProcessShowAsync());
     }
     /// <summary>
     /// A method that Stops auto downloads
@@ -42,14 +42,14 @@ public partial class AutoDownloadService
         App.DownloadService.CancelAll();
         ATimer.Stop();
         ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
-        s_logger.Info("Stopped Auto Downloder");
+        s_logger.Info("Stopped Auto Downloader");
     }
     private void GetCurrentConnectivity(object sender, ConnectivityChangedEventArgs e)
     {
         s_logger.Info("Connection status has changed");
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         s_logger.Info(Status);
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        WifeOnlyDownloading = Preferences.Default.Get("WIFIOnly", "No");
     }
     private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
     {
@@ -59,20 +59,20 @@ public partial class AutoDownloadService
 
     private bool InternetOk()
     {
-        WifiOnlyDownloading = Preferences.Default.Get("WifiOnly", "No");
+        WifeOnlyDownloading = Preferences.Default.Get("WIFIOnly", "No");
         s_logger.Info(Status);
         if (Status.Contains("WiFi"))
         {
             return true;
         }
-        if (WifiOnlyDownloading == "No" && Status != string.Empty)
+        if (WifeOnlyDownloading == "No" && Status != string.Empty)
         {
             return true;
         }
         s_logger.Info("No Internet. Aborting Auto downloads!");
         return false;
     }
-    private static async Task ProccessShowAsync()
+    private static async Task ProcessShowAsync()
     {
         var downloadedShows = await App.PositionData.GetAllDownloads();
         var favoriteShows = await App.PositionData.GetAllFavorites();
@@ -88,7 +88,7 @@ public partial class AutoDownloadService
 
         if (App.DownloadService.Shows.Count == 0)
         {
-            s_logger.Info("Notthing to download. Auto Downloader aborting!");
+            s_logger.Info("Nothing to download. Auto Downloader aborting!");
             return;
         }
         ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(App.DownloadService.Shows[0]));

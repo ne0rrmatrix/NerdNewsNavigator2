@@ -37,7 +37,7 @@ public partial class BaseViewModel : ObservableObject
     /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
-    public DisplayInfo MyMainDisplay { get; set; } = new();
+    public DisplayInfo MyMainDisplay { get; set; }
 
     /// <summary>
     /// An <see cref="ILogger"/> instance managed by this class.
@@ -80,13 +80,14 @@ public partial class BaseViewModel : ObservableObject
         _downloadedShows = [];
         _podcasts = [];
         _favoriteShows = [];
+        MyMainDisplay = new();
         ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(_favoriteShows, null, ObservableCollectionCallback);
-        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
+        DeviceDisplay.MainDisplayInfoChanged += DeviceDisplayMainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
         if (!InternetConnected())
         {
@@ -246,7 +247,7 @@ public partial class BaseViewModel : ObservableObject
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void DeviceDisplay_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
+    public void DeviceDisplayMainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
     {
 #if IOS
         if (sender is null)

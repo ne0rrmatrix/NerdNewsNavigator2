@@ -11,7 +11,7 @@ using static Android.OS.PowerManager;
 namespace NerdNewsNavigator2.Platforms.Android;
 
 [Service]
-internal class AutoStartService : Service
+internal sealed class AutoStartService : Service
 {
     #region Properties
     public WakeLock WLock { get; set; }

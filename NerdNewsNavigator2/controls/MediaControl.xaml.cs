@@ -5,11 +5,12 @@
 //TODO: Fix windows resolution menu not working.
 
 namespace NerdNewsNavigator2.Controls;
+
 public partial class MediaControl : ContentView
 {
     #region Properties
-    public bool MenuIsVisible { get; set; } = false;
-    public bool FullScreen { get; set; } = false;
+    public bool MenuIsVisible { get; set; }
+    public bool ShowControls { get; set; }
     public string PlayPosition { get; set; }
     #endregion
     #region Bindably Properties
@@ -170,30 +171,21 @@ public partial class MediaControl : ContentView
     }
     private async Task Moved()
     {
-        if (!FullScreen)
-        {
-            FullScreen = true;
-            OnPropertyChanged(nameof(FullScreen));
-            await Task.Delay(7000);
-            FullScreen = false;
-            if (IsYouTube)
-            {
-                MenuIsVisible = false;
-                OnPropertyChanged(nameof(MenuIsVisible));
-            }
-            OnPropertyChanged(nameof(FullScreen));
-        }
+        ShowControls = true;
+        OnPropertyChanged(nameof(ShowControls));
+        await Task.Delay(7000);
+        ShowControls = false;
+        MenuIsVisible = false;
+        OnPropertyChanged(nameof(MenuIsVisible));
+        OnPropertyChanged(nameof(ShowControls));
     }
     #endregion
-
-    #region Events
-    private void MediaControl_Unloaded(object sender, EventArgs e)
+    private static string TimeConverter(TimeSpan time)
     {
-        if (FullScreen)
-        {
-            //CustomControls.RestoreScreen();
-        }
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return interval.ToString();
     }
+    #region Events
     private void ChangedPosition(object sender, EventArgs e)
     {
         var playDuration = TimeConverter(mediaElement.Duration);
@@ -201,6 +193,7 @@ public partial class MediaControl : ContentView
         PlayPosition = $"{position}/{playDuration}";
         OnPropertyChanged(nameof(PlayPosition));
     }
+
     private void MediaElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
@@ -263,8 +256,7 @@ public partial class MediaControl : ContentView
     }
     private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-        Debug.WriteLine("Full Screen button clicked");
-        SetVideoSize();
+        CustomControls.SetFullScreenStatus();
     }
     private void OnMuteClicked(object sender, EventArgs e)
     {
@@ -311,7 +303,7 @@ public partial class MediaControl : ContentView
     private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
 #if WINDOWS
-        SetVideoSize();
+        CustomControls.SetFullScreenStatus();
 #endif
     }
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
@@ -323,19 +315,6 @@ public partial class MediaControl : ContentView
         if (e.Direction == SwipeDirection.Down)
         {
             CustomControls.RestoreScreen();
-        }
-    }
-    private void SetVideoSize()
-    {
-        if (FullScreen)
-        {
-            CustomControls.RestoreScreen();
-            FullScreen = false;
-        }
-        else
-        {
-            CustomControls.FullScreen();
-            FullScreen = true;
         }
     }
     #endregion

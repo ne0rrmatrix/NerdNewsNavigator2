@@ -5,7 +5,7 @@
 using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace NerdNewsNavigator2.Services;
-internal class AndroidPermissions : BasePlatformPermission
+internal sealed class AndroidPermissions : BasePlatformPermission
 {
 #if ANDROID
     public override (string androidPermission, bool isRuntime)[] RequiredPermissions =>

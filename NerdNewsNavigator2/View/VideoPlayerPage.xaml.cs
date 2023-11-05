@@ -23,7 +23,7 @@ public partial class VideoPlayerPage : ContentPage
 
     #endregion
     /// <summary>
-    /// Class Constructor that Initializes <see cref="VideoPlayerPage"/>
+    /// Class Constructor that initializes <see cref="VideoPlayerPage"/>
     /// </summary>
     /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 

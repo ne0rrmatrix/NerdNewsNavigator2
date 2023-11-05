@@ -14,10 +14,10 @@ public static class FeedService
     /// <summary>
     /// Get OPML file from web and return list of current Podcasts.
     /// </summary>
-    /// <returns><see cref="List{T}"/> <see cref="string"/> of Url's</returns>
+    /// <returns><see cref="List{T}"/> <see cref="string"/> of URLs</returns>
     public static List<string> GetPodcastListAsync()
     {
-        List<string> list = new();
+        List<string> list = [];
         try
         {
             var item = "https://feeds.twit.tv/twitshows_video_hd.opml";
@@ -93,15 +93,15 @@ public static class FeedService
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
     public static List<Show> GetShows(string items, bool getFirstOnly)
     {
-        List<Show> shows = new();
+        List<Show> shows = [];
         XmlDocument rssDoc = new();
         try
         {
-            var itunesNamespace = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+            var iTunesNamespace = "http://www.itunes.com/dtds/podcast-1.0.dtd";
             var mediaNamespace = "http://search.yahoo.com/mrss/";
             rssDoc.Load(items);
             var mgr = new XmlNamespaceManager(rssDoc.NameTable);
-            mgr.AddNamespace("itunes", itunesNamespace);
+            mgr.AddNamespace("itunes", iTunesNamespace);
             mgr.AddNamespace("media", mediaNamespace);
             var rssNodes = rssDoc.SelectNodes("/rss/channel/item");
             if (rssNodes == null)

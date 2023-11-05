@@ -10,6 +10,7 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
+    x:DataType="item:MediaControl"
     Unloaded="MediaControl_Unloaded"
     mc:Ignorable="d">
 
@@ -29,17 +30,18 @@
 
         <Grid
             BackgroundColor="Black"
-            IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}"
+            IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}"
             Opacity="0.3" />
 
-        <Grid IsVisible="{Binding FullScreen, Source={x:Reference mediaControl}}">
+        <Grid IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}">
             <ImageButton
                 Margin="40"
                 IsVisible="{Binding IsYouTube, Source={x:Reference mediaControl}}"
                 BackgroundColor="Transparent"
+                Clicked="OpenMenu"
                 HeightRequest="48"
                 HorizontalOptions="End"
-                Clicked="OpenMenu"
+                IsVisible="{Binding IsYouTube, Source={x:Reference mediaControl}}"
                 SemanticProperties.Description="Button opens menu allows you to select video resolution."
                 SemanticProperties.Hint="Button opens menu allows you to select video resolution."
                 Source="gear.png"
@@ -89,7 +91,7 @@
                                 WidthRequest="90">
                   
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=TappedCommand}" CommandParameter="{Binding Url}"/>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=TappedCommand}" CommandParameter="{Binding Url}" />
                                 </Label.GestureRecognizers>
                             </Label>
 
@@ -201,6 +203,7 @@
                 Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
                 VerticalOptions="End" />
+
             <Slider
                 x:Name="PositionSlider"
                 Margin="15"

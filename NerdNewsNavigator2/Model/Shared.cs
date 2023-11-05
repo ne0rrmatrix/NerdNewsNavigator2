@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Model;
-public partial class Shared : ObservableObject
+public partial class SharedModels : ObservableObject
 {
     [PrimaryKey, AutoIncrement, Column("Id")]
     public int Id { get; set; }

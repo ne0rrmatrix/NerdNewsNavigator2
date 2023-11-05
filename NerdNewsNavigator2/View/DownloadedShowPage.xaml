@@ -118,21 +118,22 @@
 
                         </HorizontalStackLayout>
 
-                        <Label
-                            Grid.Row="3"
-                            FontSize="{OnPlatform MacCatalyst=16}"
-                            HeightRequest="{OnPlatform WinUI=890}"
-                            HorizontalOptions="Start"
-                            LineBreakMode="WordWrap"
-                            SemanticProperties.Description="A description of episode."
-                            Text="{Binding Description}"
-                            TextColor="Black"
-                            TextType="Html"
-                            WidthRequest="{OnPlatform WinUI=390,
-                                                      Android=300,
-                                                      iOS=310,
-                                                      MacCatalyst=370}" />
-                    </Grid>
+                            <Label
+                                Grid.Row="3"
+                                FontSize="{OnPlatform MacCatalyst=16}"
+                                HeightRequest="{OnPlatform WinUI=890,
+                                                           MacCatalyst=890}"
+                                HorizontalOptions="Start"
+                                LineBreakMode="WordWrap"
+                                SemanticProperties.Description="A description of episode."
+                                Text="{Binding Description}"
+                                TextColor="Black"
+                                TextType="Html"
+                                WidthRequest="{OnPlatform WinUI=390,
+                                                          Android=300,
+                                                          iOS=310,
+                                                          MacCatalyst=370}" />
+                        </Grid>
 
                 </Frame>
 

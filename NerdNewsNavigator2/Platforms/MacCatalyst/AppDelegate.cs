@@ -9,7 +9,9 @@ using UIKit;
 namespace NerdNewsNavigator2.Platforms.MacCatalyst;
 
 [Register("AppDelegate")]
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
 public class AppDelegate : MauiUIApplicationDelegate
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
     private bool IsRunning { get; set; }
 

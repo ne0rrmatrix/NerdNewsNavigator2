@@ -7,7 +7,7 @@ using Microsoft.UI.Windowing;
 #endif
 
 namespace NerdNewsNavigator2.Devices;
-internal class DeviceServices : IDeviceServices
+internal sealed class DeviceServices : IDeviceServices
 {
     public static Page CurrentPage =>
         PageExtensions.GetCurrentPage(Application.Current?.MainPage ?? throw new InvalidOperationException($"{nameof(Application.Current.MainPage)} cannot be null."));
