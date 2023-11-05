@@ -155,9 +155,9 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
         
-	    <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-test7" />
-	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-test8" />
-	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+	    <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-rc1" />
+	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-rc1" />
+	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2-build.7.g36d1c3e181" />
 	    <PackageReference Include="M.BindableProperty.Generator" Version="0.11.1" />
 	    <PackageReference Include="M3U8Parser" Version="1.0.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />

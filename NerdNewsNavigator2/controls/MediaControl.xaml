@@ -10,7 +10,6 @@
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
-    x:DataType="item:MediaControl"
     Unloaded="MediaControl_Unloaded"
     mc:Ignorable="d">
 
@@ -195,20 +194,13 @@
             </VerticalStackLayout>
 
             <Label
-                 Margin="45"
-                 FontSize="12"
-                 HorizontalOptions="Start"
-                 SemanticProperties.Description="Label shows playback position for video"
-                 TextColor="White"
-                 VerticalOptions="End">
-                <Label.Text>
-                    <MultiBinding StringFormat="{}{0:hh\:mm\:ss}/{1:hh\:mm\:ss}">
-                        <Binding Path="Position" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
-                        <Binding Path="Duration" Source="{x:Reference mediaElement}" Converter="{StaticResource SecondsToStringConverter}" />
-                        <Binding Path="CurrentState" Source="{x:Reference mediaElement}" />
-                    </MultiBinding>
-                </Label.Text>
-            </Label>
+                Margin="45"
+                FontSize="12"
+                HorizontalOptions="Start"
+                SemanticProperties.Description="Label shows playback position for video"
+                Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
+                TextColor="White"
+                VerticalOptions="End" />
             <Slider
                 x:Name="PositionSlider"
                 Margin="15"
