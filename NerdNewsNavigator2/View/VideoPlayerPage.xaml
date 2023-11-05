@@ -9,7 +9,8 @@
     x:DataType="vm:VideoPlayerViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
-    Shell.NavBarIsVisible="{OnPlatform WinUI=false, Default=True}"
+    Shell.NavBarIsVisible="{OnPlatform WinUI=false,
+                                       Default=True}"
     Shell.TitleColor="White"
     Unloaded="ContentPage_Unloaded">
     <media:MediaControl x:Name="mediaElement" IsYouTube="False" />

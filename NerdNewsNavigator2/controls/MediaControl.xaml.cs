@@ -252,7 +252,7 @@ public partial class MediaControl : ContentView
     }
     private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
-        CustomControls.SetFullScreenStatus();
+        SetFullScreenStatus();
     }
     private void OnMuteClicked(object sender, EventArgs e)
     {
@@ -299,18 +299,34 @@ public partial class MediaControl : ContentView
     private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
     {
 #if WINDOWS
-        CustomControls.SetFullScreenStatus();
+        SetFullScreenStatus();
 #endif
     }
+
+    private void SetFullScreenStatus()
+    {
+        if (grid.Margin.IsEmpty)
+        {
+            grid.Margin = new Thickness(10);
+        }
+        else
+        {
+            grid.Margin = new Thickness(0);
+        }
+        CustomControls.SetFullScreenStatus();
+    }
+
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
     {
         if (e.Direction == SwipeDirection.Up)
         {
             CustomControls.FullScreen();
+            grid.Margin = new Thickness(0);
         }
         if (e.Direction == SwipeDirection.Down)
         {
             CustomControls.RestoreScreen();
+            grid.Margin = new Thickness(10);
         }
     }
     #endregion
