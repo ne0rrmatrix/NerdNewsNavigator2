@@ -22,7 +22,7 @@ public partial class DownloadService : ObservableObject, IDownloadService
     private NotificationRequest Notification { get; set; }
 #endif
     #endregion
-    public DownloadService(IFileService fileService)
+    public DownloadService(IFileService fileService, IDownloadService downloadService, ICurrentDownloads currentDownloads, Interfaces.INotificationService notificationService)
     {
         _fileService = fileService;
         SetToken();
