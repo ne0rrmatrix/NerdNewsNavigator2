@@ -5,7 +5,6 @@
 namespace NerdNewsNavigator2.Services;
 public class HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath) : IDisposable
 {
-
     #region Properties
     private HttpClient _httpClient;
 
@@ -13,7 +12,6 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
     public event ProgressChangedHandler ProgressChanged;
 
     public CancellationTokenSource DownloadCancel { get; set; }
-
     #endregion
     public async Task StartDownload()
     {
@@ -38,7 +36,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         catch
         {
             Debug.WriteLine("Http Client error");
-            //App.DownloadService.Cancel(App.DownloadService.Shows[0]);
+            //downloadService.Cancel(downloadService.Shows[0]);
         }
     }
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)

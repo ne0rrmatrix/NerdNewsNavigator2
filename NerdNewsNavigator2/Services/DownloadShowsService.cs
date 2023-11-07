@@ -30,6 +30,5 @@ public partial class DownloadShowsService : ObservableObject, IDownloadShows
         var temp = await App.PositionData.GetAllDownloads();
         temp.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
         return DownloadedShows;
-        //_logger.Info("Add all downloads to All Shows list");
     }
 }

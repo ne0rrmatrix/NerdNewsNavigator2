@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-public partial class VideoOnNavigated : ObservableObject
+public partial class VideoOnNavigated : ObservableObject, IVideoOnNavigated
 {
     [ObservableProperty]
     private Show _currentShow;

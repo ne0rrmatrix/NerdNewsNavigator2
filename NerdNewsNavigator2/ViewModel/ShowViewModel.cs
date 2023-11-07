@@ -12,31 +12,39 @@ public partial class ShowViewModel : BaseViewModel
 {
     [ObservableProperty]
     private ObservableCollection<Show> _shows;
-    /// <summary>
-    /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
-    /// </summary>
+
     [ObservableProperty]
     private string _url;
+
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowViewModel));
     private readonly IShowService _showService;
     private readonly IDownloadService _downloadService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ILogger"/> class
-    /// </summary>
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowViewModel));
     private readonly IDownloadShows _downloadShows;
+    private readonly IVideoOnNavigated _videoOnNavigated;
+    private readonly ICurrentDownloads _currentDownloads;
+    private readonly IDeletedItemService _deletedItemService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
     /// </summary>
-    public ShowViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IShowService showService, IDownloadService downloadService) : base(connectivity)
+    /// <param name="connectivity"></param>
+    /// <param name="downloadShows"></param>
+    /// <param name="showService"></param>
+    /// <param name="downloadService"></param>
+    /// <param name="videoOnNavigated"></param>
+    /// <param name="currentDownloads"></param>
+    public ShowViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IShowService showService, IDownloadService downloadService, IVideoOnNavigated videoOnNavigated, ICurrentDownloads currentDownloads, IDeletedItemService deletedItemService) : base(connectivity)
     {
         _showService = showService;
         _downloadService = downloadService;
         _downloadShows = downloadShows;
-        App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadFinished += ShowsDownloadCompleted;
-        App.Downloads.DownloadCancelled += DownloadCancelled;
-        App.DeletedItem.DeletedItem += OnItemDeleted;
+        _videoOnNavigated = videoOnNavigated;
+        _currentDownloads = currentDownloads;
+        _deletedItemService = deletedItemService;
+        _currentDownloads.DownloadStarted += DownloadStarted;
+        _currentDownloads.DownloadFinished += ShowsDownloadCompleted;
+        _currentDownloads.DownloadCancelled += DownloadCancelled;
+        _deletedItemService.DeletedItem += OnItemDeleted;
     }
     partial void OnUrlChanged(string oldValue, string newValue)
     {
@@ -99,7 +107,7 @@ public partial class ShowViewModel : BaseViewModel
             show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        App.OnVideoNavigated.Add(show);
+        _videoOnNavigated.Add(show);
     }
     [RelayCommand]
 #pragma warning disable CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.

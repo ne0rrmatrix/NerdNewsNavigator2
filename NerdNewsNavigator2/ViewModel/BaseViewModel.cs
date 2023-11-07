@@ -17,21 +17,6 @@ public partial class BaseViewModel : ObservableObject
     private ObservableCollection<Favorites> _favoriteShows;
 
     /// <summary>
-    /// The <see cref="DisplayInfo"/> instance managed by this class.
-    /// </summary>
-    public DisplayInfo MyMainDisplay { get; set; }
-
-    /// <summary>
-    /// An <see cref="ILogger"/> instance managed by this class.
-    /// </summary>
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(BaseViewModel));
-
-    /// <summary>
-    /// an <see cref="IConnectivity"/> instance managed by this class.
-    /// </summary>
-    private readonly IConnectivity _connectivity;
-
-    /// <summary>
     /// an <see cref="int"/> instance managed by this class. Used to set <see cref="Span"/> of <see cref="GridItemsLayout"/>
     /// </summary>
     [ObservableProperty]
@@ -54,6 +39,22 @@ public partial class BaseViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isRefreshing;
+
+    /// <summary>
+    /// The <see cref="DisplayInfo"/> instance managed by this class.
+    /// </summary>
+    public DisplayInfo MyMainDisplay { get; set; }
+
+    /// <summary>
+    /// An <see cref="ILogger"/> instance managed by this class.
+    /// </summary>
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(BaseViewModel));
+
+    /// <summary>
+    /// an <see cref="IConnectivity"/> instance managed by this class.
+    /// </summary>
+    private readonly IConnectivity _connectivity;
+
     #endregion
     public BaseViewModel(IConnectivity connectivity)
     {

@@ -18,10 +18,12 @@ public partial class ShowService : BaseViewModel, IShowService
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowService));
     private readonly IFeedService _feedService;
     private readonly IDownloadShows _downloadShows;
-    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows) : base(connectivity)
+    private readonly IVideoOnNavigated _videoOnNavigated;
+    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows, IVideoOnNavigated videoOnNavigated) : base(connectivity)
     {
         _feedService = feedService;
         _downloadShows = downloadShows;
+        _videoOnNavigated = videoOnNavigated;
         _shows = [];
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
     }
@@ -100,6 +102,6 @@ public partial class ShowService : BaseViewModel, IShowService
             show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        App.OnVideoNavigated.Add(show);
+        _videoOnNavigated.Add(show);
     }
 }

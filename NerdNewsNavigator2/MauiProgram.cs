@@ -85,12 +85,13 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
         builder.Services.AddSingleton<BaseViewModel>();
-
+        /*
         builder.Services.AddSingleton<CurrentDownloads>();
         builder.Services.AddSingleton<DeletedItemService>();
         builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
         builder.Services.AddSingleton<DownloadService>();
+        */
         builder.Services.AddSingleton<AutoDownloadService>();
 
         builder.Services.AddSingleton<PositionDataBase>();
@@ -105,6 +106,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<IShowService, ShowService>();
         builder.Services.AddSingleton<IDownloadShows, DownloadShowsService>();
         builder.Services.AddSingleton<IDownloadService, DownloadService>();
+        builder.Services.AddSingleton<IVideoOnNavigated, VideoOnNavigated>();
+        builder.Services.AddSingleton<ICurrentDownloads, CurrentDownloads>();
+        builder.Services.AddSingleton<Interfaces.INotificationService, NotificationService>();
+        builder.Services.AddSingleton<IDeletedItemService, DeletedItemService>();
+
         return builder.Build();
         #endregion
     }

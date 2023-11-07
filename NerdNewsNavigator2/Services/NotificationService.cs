@@ -3,15 +3,17 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-public partial class NotificationService
+public partial class NotificationService : Interfaces.INotificationService
 {
 #if ANDROID || IOS
 
     private readonly Random _random = new();
-    public NotificationService()
+    private readonly ICurrentDownloads _currentDownloads;
+    public NotificationService(ICurrentDownloads currentDownloads)
     {
-        App.Downloads.DownloadFinished += DownloadCompleted;
-        App.Downloads.DownloadCancelled += DownloadCancelled;
+        _currentDownloads = currentDownloads;
+        _currentDownloads.DownloadFinished += DownloadCompleted;
+        _currentDownloads.DownloadCancelled += DownloadCancelled;
     }
     private void DownloadCompleted(object sender, DownloadEventArgs e)
     {

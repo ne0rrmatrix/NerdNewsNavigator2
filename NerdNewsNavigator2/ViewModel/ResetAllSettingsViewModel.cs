@@ -9,18 +9,16 @@ namespace NerdNewsNavigator2.ViewModel;
 public partial class ResetAllSettingsViewModel : BaseViewModel
 {
     private readonly IMessenger _messenger;
-    /// <summary>
-    /// An <see cref="ILogger"/> instance managed by this class.
-    /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ResetAllSettingsViewModel));
     private readonly IPodcastService _podcastService;
     private readonly IShowService _showService;
     private readonly IDownloadService _downloadService;
     private readonly IDownloadShows _downloadShows;
+    private readonly IDeletedItemService _deletedItemService;
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
-    public ResetAllSettingsViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IPodcastService podcastService, IShowService showService, IMessenger messenger, IDownloadService downloadService) : base(connectivity)
+    public ResetAllSettingsViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IPodcastService podcastService, IShowService showService, IMessenger messenger, IDownloadService downloadService, IDeletedItemService deletedItemService) : base(connectivity)
     {
         Shell.Current.FlyoutIsPresented = false;
         _downloadShows = downloadShows;
@@ -28,6 +26,8 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         _messenger = messenger;
         _podcastService = podcastService;
         _showService = showService;
+        _deletedItemService = deletedItemService;
+
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
     }
 
@@ -41,7 +41,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         _messenger.Send(new MessageData(false));
         _downloadService.CancelAll();
         var item = await App.PositionData.GetAllDownloads();
-        item.ForEach(App.DeletedItem.Add);
+        item.ForEach(_deletedItemService.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         DeleteFiles(System.IO.Directory.GetFiles(path, "*.mp4"));
         await DeleteAllAsync();

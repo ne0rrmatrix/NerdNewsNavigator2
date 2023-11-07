@@ -21,10 +21,14 @@ public partial class DownloadService : ObservableObject, IDownloadService
 #if ANDROID || IOS
     private NotificationRequest Notification { get; set; }
 #endif
+    private readonly ICurrentDownloads _currentDownloads;
+    private readonly Interfaces.INotificationService _notificationService;
     #endregion
-    public DownloadService(IFileService fileService, IDownloadService downloadService, ICurrentDownloads currentDownloads, Interfaces.INotificationService notificationService)
+    public DownloadService(IFileService fileService, ICurrentDownloads currentDownloads, Interfaces.INotificationService notificationService)
     {
         _fileService = fileService;
+        _currentDownloads = currentDownloads;
+        _notificationService = notificationService;
         SetToken();
         Shows = [];
         Item = new();
@@ -69,7 +73,7 @@ public partial class DownloadService : ObservableObject, IDownloadService
         _fileService.DeleteFile(item.Url);
 
 #if ANDROID || IOS
-        Notification = await App.NotificationService.NotificationRequests(item);
+        Notification = await _notificationService.NotificationRequests(item);
 #endif
         s_logger.Info($"Starting Download of {item.Title}");
 
@@ -120,9 +124,9 @@ public partial class DownloadService : ObservableObject, IDownloadService
 
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
 #if ANDROID || IOS
-        App.Downloads.Completed(item, Notification);
+        _currentDownloads.Completed(item, Notification);
 #else
-        App.Downloads.Completed(item);
+        _currentDownloads.Completed(item);
 #endif
     }
 
@@ -133,9 +137,9 @@ public partial class DownloadService : ObservableObject, IDownloadService
     {
         _fileService.DeleteFile(item.Url);
 #if ANDROID || IOS
-        App.Downloads.Cancel(item, Notification);
+        _currentDownloads.Cancel(item, Notification);
 #else
-        App.Downloads.Cancel(item);
+        _currentDownloads.Cancel(item);
 #endif
         _ = MainThread.InvokeOnMainThreadAsync(async () =>
         {
@@ -152,10 +156,10 @@ public partial class DownloadService : ObservableObject, IDownloadService
             }
 #if ANDROID || IOS
             var title = $" Download Progress: {progressPercentage}%";
-            App.Downloads.StartedDownload(title, item, Notification);
+            _currentDownloads.StartedDownload(title, item, Notification);
 #else
             var title = $"        Download Progress: {progressPercentage}%";
-            App.Downloads.StartedDownload(title, item);
+            _currentDownloads.StartedDownload(title, item);
 #endif
         };
     }

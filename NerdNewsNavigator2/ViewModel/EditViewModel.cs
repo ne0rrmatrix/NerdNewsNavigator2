@@ -11,7 +11,9 @@ public partial class EditViewModel : BaseViewModel
 {
     [ObservableProperty]
     ObservableCollection<Podcast> _podcasts;
+
     private readonly IPodcastService _podcastService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>

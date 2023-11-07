@@ -11,29 +11,32 @@ public partial class DownloadedShowViewModel : BaseViewModel
 {
     [ObservableProperty]
     private ObservableCollection<Download> _downloadedShows;
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ILogger"/> class
-    /// </summary>
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(DownloadedShowViewModel));
 
+    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(DownloadedShowViewModel));
     private readonly IFileService _fileService;
     private readonly IShowService _showService;
     private readonly IDownloadShows _downloadShowService;
-
+    private readonly IVideoOnNavigated _videoOnNavigated;
+    private readonly ICurrentDownloads _currentDownloads;
+    private readonly IDeletedItemService _deletedItemService;
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="connectivity"/>
     /// </summary>
-    public DownloadedShowViewModel(IConnectivity connectivity, IShowService showService, IFileService fileService, IDownloadShows downloadService)
+    public DownloadedShowViewModel(IConnectivity connectivity, IShowService showService, IFileService fileService, IDownloadShows downloadService, IVideoOnNavigated videoOnNavigated, ICurrentDownloads currentDownloads, IDeletedItemService deletedItemService)
         : base(connectivity)
     {
         _fileService = fileService;
         _showService = showService;
         _downloadShowService = downloadService;
+        _videoOnNavigated = videoOnNavigated;
+        _currentDownloads = currentDownloads;
+        _deletedItemService = deletedItemService;
+
         _ = GetDownloadedShowsAsync();
-        App.Downloads.DownloadStarted += DownloadStarted;
-        App.Downloads.DownloadCancelled += DownloadCancelled;
-        App.Downloads.DownloadFinished += Finished;
+        _currentDownloads.DownloadStarted += DownloadStarted;
+        _currentDownloads.DownloadCancelled += DownloadCancelled;
+        _currentDownloads.DownloadFinished += Finished;
     }
 
     private async Task GetDownloadedShowsAsync()
@@ -62,7 +65,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
             show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        App.OnVideoNavigated.Add(show);
+        _videoOnNavigated.Add(show);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -120,6 +123,7 @@ public partial class DownloadedShowViewModel : BaseViewModel
         var showTemp = _showService.Shows.ToList().Find(x => x.Url == download.Url);
         _showService.Shows?.Remove(showTemp);
         _logger.Info($"Removed {download.FileName} from Downloaded Shows list.");
-        App.DeletedItem.Add(download);
+        _deletedItemService.Add(download);
+        DownloadedShows.Remove(download);
     }
 }

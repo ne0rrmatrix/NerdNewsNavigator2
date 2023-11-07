@@ -10,23 +10,23 @@ public partial class PodcastViewModel : BaseViewModel
 {
     [ObservableProperty]
     private ObservableCollection<Podcast> _podcasts;
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ILogger"/> class
-    /// </summary>
+
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(PodcastViewModel));
     private readonly IPodcastService _podcastService;
+    private readonly ICurrentDownloads _currentDownloads;
     /// <summary>
     /// Initializes a new instance of the <see cref="PodcastViewModel"/> class.
     /// </summary>
-    public PodcastViewModel(IConnectivity connectivity, IPodcastService podcastService) : base(connectivity)
+    public PodcastViewModel(IConnectivity connectivity, IPodcastService podcastService, ICurrentDownloads currentDownloads) : base(connectivity)
     {
         _podcastService = podcastService;
+        _currentDownloads = currentDownloads;
         _ = GetPodcasts();
-        App.Downloads.DownloadStarted += DownloadStarted;
+        _currentDownloads.DownloadStarted += DownloadStarted;
 
         // The following just sets the Title to string.empty when download is cancelled or completed.
-        App.Downloads.DownloadFinished += DownloadCancelled;
-        App.Downloads.DownloadCancelled += DownloadCancelled;
+        _currentDownloads.DownloadFinished += DownloadCancelled;
+        _currentDownloads.DownloadCancelled += DownloadCancelled;
     }
 
     private async Task GetPodcasts()

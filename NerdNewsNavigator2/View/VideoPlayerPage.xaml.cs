@@ -15,7 +15,7 @@ public partial class VideoPlayerPage : ContentPage
     /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(VideoPlayerPage));
-
+    private readonly IVideoOnNavigated _videoOnNavigated;
     /// <summary>
     /// Initializes a new instance of the <see cref="Position"/> class
     /// </summary>
@@ -27,17 +27,18 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     /// <param name="viewModel">This Applications <see cref="VideoPlayerPage"/> instance is managed through this class.</param>
 
-    public VideoPlayerPage(VideoPlayerViewModel viewModel)
+    public VideoPlayerPage(VideoPlayerViewModel viewModel, IVideoOnNavigated videoOnNavigated)
     {
         InitializeComponent();
         BindingContext = viewModel;
-        App.OnVideoNavigated.Navigation += Now;
+        _videoOnNavigated = videoOnNavigated;
+        _videoOnNavigated.Navigation += Now;
     }
 
     private async void Now(object sender, VideoNavigationEventArgs e)
     {
         _logger.Info($"Navigated: {e.CurrentShow.Url}");
-        App.OnVideoNavigated.Navigation -= Now;
+        _videoOnNavigated.Navigation -= Now;
         mediaElement.Source = new Uri(e.CurrentShow.Url);
         Pos.Title = e.CurrentShow.Title;
         await Seek(e.CurrentShow);

@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-public partial class CurrentDownloads : ObservableObject
+public partial class CurrentDownloads : ObservableObject, ICurrentDownloads
 {
     public List<Show> Shows { get; set; } = new();
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }

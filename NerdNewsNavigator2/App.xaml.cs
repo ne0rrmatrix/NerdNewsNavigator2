@@ -11,11 +11,7 @@ public partial class App : Application
 {
     #region Properties
     public MessagingService MessagingService { get; set; } = new();
-    public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
-    public static CurrentDownloads Downloads { get; set; } = new();
     public static AutoDownloadService AutoDownloadService { get; set; }
-    public static NotificationService NotificationService { get; set; } = new();
-    public static DeletedItemService DeletedItem { get; set; } = new();
 
     /// <summary>
     /// This applications Dependency Injection for <see cref="PositionDataBase"/> class.
@@ -25,23 +21,25 @@ public partial class App : Application
     private readonly IMessenger _messenger;
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(App));
     private readonly IDownloadService _downloadService;
+    private readonly ICurrentDownloads _currentDownloads;
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
     /// <param name="positionDataBase"></param>
-    public App(PositionDataBase positionDataBase, IMessenger messenger, IDownloadService downloadService)
+    public App(PositionDataBase positionDataBase, IMessenger messenger, IDownloadService downloadService, ICurrentDownloads currentDownloads)
     {
         InitializeComponent();
 
         MainPage = new AppShell();
         _messenger = messenger;
         _downloadService = downloadService;
+        _currentDownloads = currentDownloads;
         // Database Dependency Injection START
         PositionData = positionDataBase;
-        Downloads.DownloadFinished += DownloadDone;
-        Downloads.DownloadCancelled += DownloadDone;
+        _currentDownloads.DownloadFinished += DownloadDone;
+        _currentDownloads.DownloadCancelled += DownloadDone;
         // Database Dependency Injection END
         LogController.InitializeNavigation(
            page => MainPage!.Navigation.PushModalAsync(page),
