@@ -38,7 +38,7 @@ public class HttpClientDownloadWithProgress(string downloadUrl, string destinati
         catch
         {
             Debug.WriteLine("Http Client error");
-            App.DownloadService.Cancel(App.DownloadService.Shows[0]);
+            //App.DownloadService.Cancel(App.DownloadService.Shows[0]);
         }
     }
     private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, CancellationToken token)

@@ -6,7 +6,7 @@
 using Microsoft.UI.Windowing;
 #endif
 
-namespace NerdNewsNavigator2.Interface;
+namespace NerdNewsNavigator2.Interfaces;
 interface IDeviceServices
 {
 #if WINDOWS

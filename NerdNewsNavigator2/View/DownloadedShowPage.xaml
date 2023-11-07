@@ -43,7 +43,7 @@
                                                   iOS=340}">
                         <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                             </Grid.GestureRecognizers>
                             <Label
                                 Grid.Row="0"
@@ -80,7 +80,7 @@
                                         Uri="{Binding Image}" />
                                 </Image.Source>
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                                 </Image.GestureRecognizers>
                             </Image>
 

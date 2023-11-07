@@ -2,15 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using NerdNewsNavigator2.Interfaces;
+
 namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages downloading <see cref="Podcast"/> to local file system.
 /// </summary>
-public partial class DownloadService : ObservableObject
+public partial class DownloadService : ObservableObject, IDownloadService
 {
     #region Properties
+
     private CancellationTokenSource CancellationTokenSource { get; set; }
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(DownloadService));
+    private readonly IFileService _fileService;
     private static bool IsDownloading { get; set; }
     public List<Show> Shows { get; private set; }
     private Show Item { get; set; }
@@ -18,8 +22,9 @@ public partial class DownloadService : ObservableObject
     private NotificationRequest Notification { get; set; }
 #endif
     #endregion
-    public DownloadService()
+    public DownloadService(IFileService fileService)
     {
+        _fileService = fileService;
         SetToken();
         Shows = [];
         Item = new();
@@ -27,7 +32,6 @@ public partial class DownloadService : ObservableObject
         Notification = new();
 #endif
     }
-
     public void Add(Show show)
     {
         Shows.Add(show);
@@ -61,8 +65,8 @@ public partial class DownloadService : ObservableObject
         Item = item;
         IsDownloading = true;
 
-        var destinationFilePath = FileService.GetFileName(item.Url);
-        FileService.DeleteFile(item.Url);
+        var destinationFilePath = _fileService.GetFileName(item.Url);
+        _fileService.DeleteFile(item.Url);
 
 #if ANDROID || IOS
         Notification = await App.NotificationService.NotificationRequests(item);
@@ -94,7 +98,7 @@ public partial class DownloadService : ObservableObject
             return false;
         }
     }
-    private async Task DownloadSucceeded(Show item)
+    public async Task DownloadSucceeded(Show item)
     {
         s_logger.Info("Download Completed event triggered");
         Download download = new()
@@ -107,7 +111,7 @@ public partial class DownloadService : ObservableObject
             Deleted = false,
             PubDate = item.PubDate,
             Description = item.Description,
-            FileName = FileService.GetFileName(item.Url)
+            FileName = _fileService.GetFileName(item.Url)
         };
         s_logger.Info($"Download completed: {item.Title}");
         await App.PositionData.UpdateDownload(download);
@@ -127,7 +131,7 @@ public partial class DownloadService : ObservableObject
     private void DownloadFailed(Show item)
 #pragma warning restore CA1822 // Mark members as static
     {
-        FileService.DeleteFile(item.Url);
+        _fileService.DeleteFile(item.Url);
 #if ANDROID || IOS
         App.Downloads.Cancel(item, Notification);
 #else

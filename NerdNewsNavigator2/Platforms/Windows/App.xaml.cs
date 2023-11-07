@@ -45,7 +45,9 @@ public partial class App : MauiWinUIApplication
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
-        AutoDownloadService = NerdNewsNavigator2.App.AutoDownloadService;
+        var feed = MauiWinUIApplication.Current.Services.GetService<IFeedService>();
+        var downloadService = MauiWinUIApplication.Current.Services.GetService<IDownloadService>();
+        AutoDownloadService = new AutoDownloadService(feed, downloadService);
         var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {

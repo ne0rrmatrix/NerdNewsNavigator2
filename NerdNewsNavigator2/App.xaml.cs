@@ -12,9 +12,8 @@ public partial class App : Application
     #region Properties
     public MessagingService MessagingService { get; set; } = new();
     public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
-    public static DownloadService DownloadService { get; set; } = new();
-    public static AutoDownloadService AutoDownloadService { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();
+    public static AutoDownloadService AutoDownloadService { get; set; }
     public static NotificationService NotificationService { get; set; } = new();
     public static DeletedItemService DeletedItem { get; set; } = new();
 
@@ -25,18 +24,20 @@ public partial class App : Application
 
     private readonly IMessenger _messenger;
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(App));
+    private readonly IDownloadService _downloadService;
     #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
     /// <param name="positionDataBase"></param>
-    public App(PositionDataBase positionDataBase, IMessenger messenger)
+    public App(PositionDataBase positionDataBase, IMessenger messenger, IDownloadService downloadService)
     {
         InitializeComponent();
 
         MainPage = new AppShell();
         _messenger = messenger;
+        _downloadService = downloadService;
         // Database Dependency Injection START
         PositionData = positionDataBase;
         Downloads.DownloadFinished += DownloadDone;
@@ -73,7 +74,7 @@ public partial class App : Application
         if (e.Shows.Count > 0)
         {
             _logger.Info($"Starting next show: {e.Shows[0].Title}");
-            _ = App.DownloadService.Start(e.Shows[0]);
+            _ = _downloadService.Start(e.Shows[0]);
         }
     }
     protected override Window CreateWindow(IActivationState activationState)
@@ -81,7 +82,7 @@ public partial class App : Application
         var window = base.CreateWindow(activationState);
         window.Destroying += (s, e) =>
         {
-            DownloadService.CancelAll();
+            _downloadService.CancelAll();
             Thread.Sleep(50);
             _logger.Info("Safe shutdown completed");
         };

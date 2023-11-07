@@ -99,6 +99,12 @@ public static class MauiProgram
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         builder.Services.AddSingleton<MessagingService>();
+        builder.Services.AddSingleton<IFeedService, FeedService>();
+        builder.Services.AddSingleton<IPodcastService, PodcastServices>();
+        builder.Services.AddSingleton<IFileService, FileService>();
+        builder.Services.AddSingleton<IShowService, ShowService>();
+        builder.Services.AddSingleton<IDownloadShows, DownloadShowsService>();
+        builder.Services.AddSingleton<IDownloadService, DownloadService>();
         return builder.Build();
         #endregion
     }

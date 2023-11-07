@@ -14,8 +14,12 @@ public partial class AutoDownloadService
     private string WifeOnlyDownloading { get; set; }
     private System.Timers.Timer ATimer { get; set; } = new(60 * 60 * 1000);
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
-    public AutoDownloadService()
+    private readonly IFeedService _feedService;
+    private readonly IDownloadService _downloadService;
+    public AutoDownloadService(IFeedService feedService, IDownloadService downloadService)
     {
+        _feedService = feedService;
+        _downloadService = downloadService;
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifeOnlyDownloading = Preferences.Default.Get("WIFIOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
@@ -39,7 +43,7 @@ public partial class AutoDownloadService
     /// </summary>
     public void Stop()
     {
-        App.DownloadService.CancelAll();
+        _downloadService.CancelAll();
         ATimer.Stop();
         ATimer.Elapsed -= new System.Timers.ElapsedEventHandler(OnTimedEvent);
         s_logger.Info("Stopped Auto Downloader");
@@ -72,25 +76,25 @@ public partial class AutoDownloadService
         s_logger.Info("No Internet. Aborting Auto downloads!");
         return false;
     }
-    private static async Task ProcessShowAsync()
+    private async Task ProcessShowAsync()
     {
         var downloadedShows = await App.PositionData.GetAllDownloads();
         var favoriteShows = await App.PositionData.GetAllFavorites();
 
         favoriteShows.ForEach(x =>
         {
-            var show = FeedService.GetShows(x.Url, true);
+            var show = _feedService.GetShows(x.Url, true);
             if (show.Count == 1 && !downloadedShows.Exists(y => y.Url == show[0].Url))
             {
-                App.DownloadService.Add(show[0]);
+                _downloadService.Add(show[0]);
             }
         });
 
-        if (App.DownloadService.Shows.Count == 0)
+        if (_downloadService.Shows.Count == 0)
         {
             s_logger.Info("Nothing to download. Auto Downloader aborting!");
             return;
         }
-        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(App.DownloadService.Shows[0]));
+        ThreadPool.QueueUserWorkItem(state => _ = _downloadService.Start(_downloadService.Shows[0]));
     }
 }

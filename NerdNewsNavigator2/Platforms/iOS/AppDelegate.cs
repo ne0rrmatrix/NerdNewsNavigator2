@@ -34,9 +34,10 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void OnActivated(UIApplication application)
     {
         base.OnActivated(application);
-        AutoDownloadService = App.AutoDownloadService;
         Logger = LoggerFactory.GetLogger(nameof(AppDelegate));
-        AutoDownloadService = new AutoDownloadService();
+        var feed = MauiUIApplicationDelegate.Current.Services.GetService<IFeedService>();
+        var downloadService = MauiUIApplicationDelegate.Current.Services.GetService<IDownloadService>();
+        AutoDownloadService = new AutoDownloadService(feed, downloadService);
         _connectivity = Current.Services.GetService<IConnectivity>();
     }
 

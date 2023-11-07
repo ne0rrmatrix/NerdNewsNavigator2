@@ -32,7 +32,9 @@ public class AppDelegate : MauiUIApplicationDelegate
     {
         base.OnActivated(application);
         Logger = LoggerFactory.GetLogger(nameof(AppDelegate));
-        AutoDownloadService = new AutoDownloadService();
+        var feed = Current.Services.GetService<IFeedService>();
+        var downloadService = Current.Services.GetService<IDownloadService>();
+        AutoDownloadService = new AutoDownloadService(feed, downloadService);
         _connectivity = Current.Services.GetService<IConnectivity>();
     }
 

@@ -9,21 +9,60 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class DownloadedShowViewModel : BaseViewModel
 {
+    [ObservableProperty]
+    private ObservableCollection<Download> _downloadedShows;
     /// <summary>
     /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(DownloadedShowViewModel));
 
+    private readonly IFileService _fileService;
+    private readonly IShowService _showService;
+    private readonly IDownloadShows _downloadShowService;
+
     /// <summary>
     /// Initializes an instance of <see cref="DownloadedShowViewModel"/>
     /// <paramref name="connectivity"/>
     /// </summary>
-    public DownloadedShowViewModel(IConnectivity connectivity)
+    public DownloadedShowViewModel(IConnectivity connectivity, IShowService showService, IFileService fileService, IDownloadShows downloadService)
         : base(connectivity)
     {
+        _fileService = fileService;
+        _showService = showService;
+        _downloadShowService = downloadService;
+        _ = GetDownloadedShowsAsync();
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
         App.Downloads.DownloadFinished += Finished;
+    }
+
+    private async Task GetDownloadedShowsAsync()
+    {
+        DownloadedShows = new ObservableCollection<Download>(await _downloadShowService.GetDownloadedShows());
+    }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task Play(string url)
+    {
+        Show show = new();
+        if (DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
+        {
+            var item = DownloadedShows.ToList().Find(x => x.Url == url);
+            show.Title = item.Title;
+            show.Url = item.FileName;
+        }
+        else
+        {
+            var item = _showService.Shows.First(x => x.Url == url);
+            show.Url = item.Url;
+            show.Title = item.Title;
+        }
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        App.OnVideoNavigated.Add(show);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -36,8 +75,8 @@ public partial class DownloadedShowViewModel : BaseViewModel
     public async Task RefreshData()
     {
         IsBusy = true;
-        DownloadedShows.Clear();
-        await GetDownloadedShows();
+        _downloadShowService.DownloadedShows.Clear();
+        await _downloadShowService.GetDownloadedShows();
         IsBusy = false;
     }
     private void Finished(object sender, DownloadEventArgs e)
@@ -55,10 +94,11 @@ public partial class DownloadedShowViewModel : BaseViewModel
                 Deleted = false,
                 PubDate = e.Item.PubDate,
                 Description = e.Item.Description,
-                FileName = FileService.GetFileName(e.Item.Url)
+                FileName = _fileService.GetFileName(e.Item.Url)
             };
+            _downloadShowService.DownloadedShows.Add(download);
             DownloadedShows.Add(download);
-            Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
+            _showService.Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(_showService.SetProperties);
         });
     }
 
@@ -70,15 +110,15 @@ public partial class DownloadedShowViewModel : BaseViewModel
     [RelayCommand]
     public async Task Delete(Download download)
     {
-        var tempFile = FileService.GetFileName(download.Url);
-        FileService.DeleteFile(tempFile);
+        var tempFile = _fileService.GetFileName(download.Url);
+        _fileService.DeleteFile(tempFile);
         download.IsDownloaded = false;
         download.Deleted = true;
         download.IsNotDownloaded = true;
         await App.PositionData.UpdateDownload(download);
-        DownloadedShows.Remove(download);
-        var showTemp = Shows.ToList().Find(x => x.Url == download.Url);
-        Shows?.Remove(showTemp);
+        _downloadShowService.DownloadedShows.Remove(download);
+        var showTemp = _showService.Shows.ToList().Find(x => x.Url == download.Url);
+        _showService.Shows?.Remove(showTemp);
         _logger.Info($"Removed {download.FileName} from Downloaded Shows list.");
         App.DeletedItem.Add(download);
     }

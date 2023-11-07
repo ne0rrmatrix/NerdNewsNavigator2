@@ -42,7 +42,7 @@
                                                   iOS=340}">
 
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                         </Frame.GestureRecognizers>
                         <Grid
                             ColumnDefinitions="Auto"
@@ -120,7 +120,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                     <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding}" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding}" />
                                     </Button.GestureRecognizers>
                                 </Button>
                                 <Button
@@ -144,7 +144,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                     <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding}" />
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=CancelCommand}" CommandParameter="{Binding}" />
                                     </Button.GestureRecognizers>
                                 </Button>
                             </HorizontalStackLayout>

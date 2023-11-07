@@ -5,6 +5,7 @@
 namespace NerdNewsNavigator2.Services;
 public partial class CurrentDownloads : ObservableObject
 {
+    public List<Show> Shows { get; set; } = new();
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
@@ -22,7 +23,7 @@ public partial class CurrentDownloads : ObservableObject
         {
             Title = title,
             Item = item,
-            Shows = App.DownloadService.Shows,
+            Shows = Shows,
 #if ANDROID || IOS
             Notification = notification
 #endif
@@ -39,7 +40,7 @@ public partial class CurrentDownloads : ObservableObject
         {
             Item = item,
             Title = string.Empty,
-            Shows = App.DownloadService.Shows,
+            Shows = Shows,
 #if ANDROID || IOS
             Notification = notification
 #endif
@@ -56,7 +57,7 @@ public partial class CurrentDownloads : ObservableObject
         {
             Item = item,
             Title = string.Empty,
-            Shows = App.DownloadService.Shows,
+            Shows = Shows,
 #if ANDROID || IOS
             Notification = notification
 #endif

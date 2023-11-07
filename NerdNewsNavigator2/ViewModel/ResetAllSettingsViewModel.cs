@@ -13,13 +13,21 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     /// An <see cref="ILogger"/> instance managed by this class.
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ResetAllSettingsViewModel));
+    private readonly IPodcastService _podcastService;
+    private readonly IShowService _showService;
+    private readonly IDownloadService _downloadService;
+    private readonly IDownloadShows _downloadShows;
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetAllSettingsViewModel"/> class.
     /// </summary>
-    public ResetAllSettingsViewModel(IConnectivity connectivity, IMessenger messenger) : base(connectivity)
+    public ResetAllSettingsViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IPodcastService podcastService, IShowService showService, IMessenger messenger, IDownloadService downloadService) : base(connectivity)
     {
         Shell.Current.FlyoutIsPresented = false;
+        _downloadShows = downloadShows;
+        _downloadService = downloadService;
         _messenger = messenger;
+        _podcastService = podcastService;
+        _showService = showService;
         ThreadPool.QueueUserWorkItem(async state => await ResetAll());
     }
 
@@ -31,7 +39,7 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
     private async Task ResetAll()
     {
         _messenger.Send(new MessageData(false));
-        App.DownloadService.CancelAll();
+        _downloadService.CancelAll();
         var item = await App.PositionData.GetAllDownloads();
         item.ForEach(App.DeletedItem.Add);
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -39,8 +47,8 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         await DeleteAllAsync();
         SetVariables();
         Thread.Sleep(500);
-        await GetPodcasts();
-        await GetDownloadedShows();
+        await _podcastService.GetPodcasts();
+        await _downloadShows.GetDownloadedShows();
         await GetFavoriteShows();
         Thread.Sleep(1000);
         await MainThread.InvokeOnMainThreadAsync(() => { Shell.Current.GoToAsync($"{nameof(SettingsPage)}"); });
@@ -50,9 +58,9 @@ public partial class ResetAllSettingsViewModel : BaseViewModel
         Preferences.Default.Clear();
         Title = string.Empty;
         FavoriteShows.Clear();
-        Shows.Clear();
-        Podcasts.Clear();
-        DownloadedShows.Clear();
+        _showService.Shows.Clear();
+        _podcastService.Podcasts.Clear();
+        _downloadShows.DownloadedShows.Clear();
     }
     private static async Task DeleteAllAsync()
     {

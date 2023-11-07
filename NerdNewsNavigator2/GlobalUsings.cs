@@ -25,7 +25,7 @@ global using MetroLog.Maui;
 global using MetroLog.Operators;
 global using NerdNewsNavigator2.Data;
 global using NerdNewsNavigator2.Extensions;
-global using NerdNewsNavigator2.Interface;
+global using NerdNewsNavigator2.Interfaces;
 global using NerdNewsNavigator2.Messages;
 global using NerdNewsNavigator2.Model;
 global using NerdNewsNavigator2.Primitives;

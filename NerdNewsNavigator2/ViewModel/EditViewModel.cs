@@ -9,12 +9,16 @@ namespace NerdNewsNavigator2.ViewModel;
 /// </summary>
 public partial class EditViewModel : BaseViewModel
 {
+    [ObservableProperty]
+    ObservableCollection<Podcast> _podcasts;
+    private readonly IPodcastService _podcastService;
     /// <summary>
     /// Initializes a new instance of the <see cref="EditViewModel"/> instance.
     /// </summary>
-    public EditViewModel(IConnectivity connectivity) : base(connectivity)
+    public EditViewModel(IConnectivity connectivity, IPodcastService podcastService) : base(connectivity)
     {
-        _ = GetPodcasts();
+        _podcastService = podcastService;
+        _ = _podcastService.GetPodcasts();
     }
 
     #region Methods
@@ -46,7 +50,7 @@ public partial class EditViewModel : BaseViewModel
     [RelayCommand]
     public async Task DeletePodcast(Podcast item)
     {
-        Podcasts.Remove(item);
+        _podcastService.Podcasts.Remove(item);
         await App.PositionData.DeletePodcast(item);
 
         var fav = FavoriteShows.ToList().Find(x => x.Url == item.Url);

@@ -9,13 +9,13 @@ namespace NerdNewsNavigator2.Services;
 /// <summary>
 /// A class that manages getting <see cref="Podcast"/> and <see cref="Show"/> from RSS feeds.
 /// </summary>
-public static class FeedService
+public class FeedService : IFeedService
 {
     /// <summary>
     /// Get OPML file from web and return list of current Podcasts.
     /// </summary>
     /// <returns><see cref="List{T}"/> <see cref="string"/> of URLs</returns>
-    public static List<string> GetPodcastListAsync()
+    public List<string> GetPodcastListAsync()
     {
         List<string> list = [];
         try
@@ -52,7 +52,7 @@ public static class FeedService
     /// </summary>
     /// <param name="item">The URL of <see cref="Podcast"/></param> 
     /// <returns><see cref="Podcast"/></returns>
-    public static Podcast GetFeed(string item)
+    public Podcast GetFeed(string item)
     {
         var counter = 0;
         Podcast feed = new();
@@ -91,7 +91,7 @@ public static class FeedService
     /// <param name="items">The Url of the <see cref="Show"/></param>
     /// <param name="getFirstOnly"><see cref="bool"/> Get only first item.</param>
     /// <returns><see cref="List{T}"/> <see cref="Show"/></returns>
-    public static List<Show> GetShows(string items, bool getFirstOnly)
+    public List<Show> GetShows(string items, bool getFirstOnly)
     {
         List<Show> shows = [];
         XmlDocument rssDoc = new();

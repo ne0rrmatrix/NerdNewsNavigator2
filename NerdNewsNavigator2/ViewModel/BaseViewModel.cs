@@ -17,24 +17,6 @@ public partial class BaseViewModel : ObservableObject
     private ObservableCollection<Favorites> _favoriteShows;
 
     /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of <see cref="Show"/> managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<Show> _shows;
-
-    /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of downloaded <see cref="Download"/> managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<Download> _downloadedShows;
-
-    /// <summary>
-    /// An <see cref="ObservableCollection{T}"/> of <see cref="Podcast"/> managed by this class.
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<Podcast> _podcasts;
-
-    /// <summary>
     /// The <see cref="DisplayInfo"/> instance managed by this class.
     /// </summary>
     public DisplayInfo MyMainDisplay { get; set; }
@@ -76,16 +58,9 @@ public partial class BaseViewModel : ObservableObject
     public BaseViewModel(IConnectivity connectivity)
     {
         _connectivity = connectivity;
-        _shows = [];
-        _downloadedShows = [];
-        _podcasts = [];
         _favoriteShows = [];
         MyMainDisplay = new();
-        ThreadPool.QueueUserWorkItem(async (state) => await GetDownloadedShows());
         ThreadPool.QueueUserWorkItem(async (state) => await GetFavoriteShows());
-        BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(Podcasts, null, ObservableCollectionCallback);
-        BindingBase.EnableCollectionSynchronization(DownloadedShows, null, ObservableCollectionCallback);
         BindingBase.EnableCollectionSynchronization(_favoriteShows, null, ObservableCollectionCallback);
         DeviceDisplay.MainDisplayInfoChanged += DeviceDisplayMainDisplayInfoChanged;
         Orientation = OnDeviceOrientationChange();
@@ -105,84 +80,6 @@ public partial class BaseViewModel : ObservableObject
     }
     #endregion
 
-    #region Relay Commands
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task Play(string url)
-    {
-        Show show = new();
-        if (DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
-        {
-            var item = DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Title = item.Title;
-            show.Url = item.FileName;
-        }
-        else
-        {
-            var item = Shows.First(x => x.Url == url);
-            show.Url = item.Url;
-            show.Title = item.Title;
-        }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        App.OnVideoNavigated.Add(show);
-    }
-    #endregion
-
-    #region Download Status Methods
-    public void SetProperties(Show show)
-    {
-        var downloads = DownloadedShows.Any(x => x.Url == show.Url);
-        if (downloads)
-        {
-            show.IsDownloaded = true;
-            show.IsDownloading = false;
-            show.IsNotDownloaded = false;
-            return;
-        }
-        var currentDownload = App.DownloadService.Shows.Find(x => x.Url == show.Url);
-        if (currentDownload is not null)
-        {
-            show.IsDownloaded = false;
-            show.IsDownloading = true;
-            show.IsNotDownloaded = false;
-            return;
-        }
-        show.IsDownloading = false;
-        show.IsNotDownloaded = true;
-        show.IsDownloaded = false;
-    }
-
-    #endregion
-
-    #region Update Shows
-    /// <summary>
-    /// <c>GetShows</c> is a <see cref="Task"/> that takes a <see cref="string"/> for Url and returns a <see cref="Show"/>
-    /// </summary>
-    /// <param name="url"></param> <see cref="string"/> URL of Twit tv Show
-    /// <param name="getFirstOnly"><see cref="bool"/> Get first item only.</param>
-    /// <returns><see cref="Show"/></returns>
-    public void GetShowsAsync(string url, bool getFirstOnly)
-    {
-        if (!InternetConnected())
-        {
-            WeakReferenceMessenger.Default.Send(new InternetItemMessage(false));
-            return;
-        }
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            Shows.Clear();
-            var temp = FeedService.GetShows(url, getFirstOnly);
-            temp.ForEach(SetProperties);
-            Shows = new ObservableCollection<Show>(temp);
-            _logger.Info("Got All Shows");
-        });
-    }
-    #endregion
-
     #region Podcast data functions
 
     /// <summary>
@@ -195,46 +92,6 @@ public partial class BaseViewModel : ObservableObject
         FavoriteShows = new ObservableCollection<Favorites>(temp);
         OnPropertyChanged(nameof(FavoriteShows));
         _logger.Info("Got all Favorite Shows");
-    }
-
-    /// <summary>
-    /// A method that sets <see cref="DownloadedShows"/> from the database.
-    /// </summary>
-    public async Task GetDownloadedShows()
-    {
-        DownloadedShows.Clear();
-        var temp = await App.PositionData.GetAllDownloads();
-        temp.Where(x => !x.Deleted).ToList().ForEach(DownloadedShows.Add);
-        _logger.Info("Add all downloads to All Shows list");
-    }
-    #endregion
-
-    #region Update Podcasts
-    /// <summary>
-    /// <c>GetPodcasts</c> is a <see cref="Task"/> that sets <see cref="Podcasts"/> from either a Database or from the web.
-    /// </summary>
-    /// <returns></returns>
-    public async Task GetPodcasts()
-    {
-        if (Podcasts.Count > 0)
-        {
-            return;
-        }
-        var temp = await App.PositionData.GetAllPodcasts();
-        if (temp.Count > 0)
-        {
-            Podcasts = new ObservableCollection<Podcast>(temp);
-            return;
-        }
-        var updates = PodcastServices.GetFromUrl();
-        var sortedItems = updates.OrderBy(x => x.Title).ToList();
-        Podcasts = new ObservableCollection<Podcast>(sortedItems);
-        await PodcastServices.AddToDatabase(sortedItems);
-    }
-    public async Task UpdatePodcasts()
-    {
-        var temp = await App.PositionData.GetAllPodcasts();
-        Podcasts = new ObservableCollection<Podcast>(temp);
     }
     #endregion
 

@@ -10,20 +10,29 @@ namespace NerdNewsNavigator2.ViewModel;
 [QueryProperty("Url", "Url")]
 public partial class ShowViewModel : BaseViewModel
 {
+    [ObservableProperty]
+    private ObservableCollection<Show> _shows;
     /// <summary>
     /// A private <see cref="string"/> that contains a Url for <see cref="Show"/>
     /// </summary>
     [ObservableProperty]
     private string _url;
+    private readonly IShowService _showService;
+    private readonly IDownloadService _downloadService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ILogger"/> class
     /// </summary>
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowViewModel));
+    private readonly IDownloadShows _downloadShows;
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
     /// </summary>
-    public ShowViewModel(IConnectivity connectivity) : base(connectivity)
+    public ShowViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IShowService showService, IDownloadService downloadService) : base(connectivity)
     {
+        _showService = showService;
+        _downloadService = downloadService;
+        _downloadShows = downloadShows;
         App.Downloads.DownloadStarted += DownloadStarted;
         App.Downloads.DownloadFinished += ShowsDownloadCompleted;
         App.Downloads.DownloadCancelled += DownloadCancelled;
@@ -37,13 +46,13 @@ public partial class ShowViewModel : BaseViewModel
             return;
         }
         var decodedUrl = HttpUtility.UrlDecode(newValue);
-        ThreadPool.QueueUserWorkItem(state => GetShowsAsync(decodedUrl, false));
+        ThreadPool.QueueUserWorkItem(state => Shows = _showService.GetShowsAsync(decodedUrl, false));
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
     {
-        await GetDownloadedShows();
+        await _downloadShows.GetDownloadedShows();
         _logger.Info("Updating deleted Items");
-        Shows?.Where(x => x.Url == e.Item.Url).ToList().ForEach(SetProperties);
+        Shows?.Where(x => x.Url == e.Item.Url).ToList().ForEach(_showService.SetProperties);
     }
     public ICommand PullToRefreshCommand => new Command(async () =>
     {
@@ -57,16 +66,40 @@ public partial class ShowViewModel : BaseViewModel
     {
         IsBusy = true;
         Shows.Clear();
-        DownloadedShows.Clear();
-        await GetDownloadedShows();
-        GetShowsAsync(Url, false);
+        _downloadShows.DownloadedShows.Clear();
+        await _downloadShows.GetDownloadedShows();
+        Shows = _showService.GetShowsAsync(Url, false);
         IsBusy = false;
     }
     private async void ShowsDownloadCompleted(object sender, DownloadEventArgs e)
     {
         _ = MainThread.InvokeOnMainThreadAsync(() => Title = e.Title);
-        await GetDownloadedShows();
-        Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(SetProperties);
+        await _downloadShows.GetDownloadedShows();
+        Shows.Where(x => x.Title == e.Item.Title).ToList().ForEach(_showService.SetProperties);
+    }
+    /// <summary>
+    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
+    /// </summary>
+    /// <param name="url">A Url <see cref="string"/></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task Play(string url)
+    {
+        Show show = new();
+        if (_downloadShows.DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
+        {
+            var item = _downloadShows.DownloadedShows.ToList().Find(x => x.Url == url);
+            show.Title = item.Title;
+            show.Url = item.FileName;
+        }
+        else
+        {
+            var item = Shows.First(x => x.Url == url);
+            show.Url = item.Url;
+            show.Title = item.Title;
+        }
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        App.OnVideoNavigated.Add(show);
     }
     [RelayCommand]
 #pragma warning disable CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
@@ -76,7 +109,7 @@ public partial class ShowViewModel : BaseViewModel
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
-        App.DownloadService.Cancel(show);
+        _downloadService.Cancel(show);
     }
     /// <summary>
     /// A Method that passes a Url to <see cref="DownloadService"/>
@@ -84,7 +117,7 @@ public partial class ShowViewModel : BaseViewModel
     /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public static void Download(Show show)
+    public void Download(Show show)
     {
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
@@ -96,7 +129,7 @@ public partial class ShowViewModel : BaseViewModel
         show.IsDownloaded = false;
         show.IsDownloading = true;
         show.IsNotDownloaded = false;
-        App.DownloadService.Add(show);
-        ThreadPool.QueueUserWorkItem(state => _ = App.DownloadService.Start(show));
+        _downloadService.Add(show);
+        ThreadPool.QueueUserWorkItem(state => _ = _downloadService.Start(show));
     }
 }

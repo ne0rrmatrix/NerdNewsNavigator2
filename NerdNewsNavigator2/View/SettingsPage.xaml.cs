@@ -11,6 +11,7 @@ public partial class SettingsPage : ContentPage
 {
     #region Properties
     private readonly IMessenger _messenger;
+    private readonly IPodcastService _podcast;
     /// <summary>
     /// an <see cref="int"/> instance managed by this class.
     /// </summary>
@@ -36,9 +37,10 @@ public partial class SettingsPage : ContentPage
     /// Initializes a new instance of <see cref="SettingsPage"/>
     /// </summary>
     /// <param name="viewModel">The <see cref="ViewModel"/> instance that is managed through this class.</param> 
-    public SettingsPage(SettingsViewModel viewModel, IMessenger messenger)
+    public SettingsPage(SettingsViewModel viewModel, IMessenger messenger, IPodcastService podcast)
     {
         InitializeComponent();
+        _podcast = podcast;
         BindingContext = viewModel;
         _messenger = messenger;
     }
@@ -69,7 +71,7 @@ public partial class SettingsPage : ContentPage
     {
         if (ValidateUrl(Url.Text) && Uri.IsWellFormedUriString(Url.Text, UriKind.Absolute) && Url.Text.Contains("twit"))
         {
-            await PodcastServices.AddPodcast(Url.Text.ToString());
+            await _podcast.AddPodcast(Url.Text.ToString());
             await Toast.Make("Podcast Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
             await Shell.Current.GoToAsync($"{nameof(SettingsPage)}");
             return;
@@ -138,7 +140,7 @@ public partial class SettingsPage : ContentPage
     {
         _ = Task.Run(async () =>
         {
-            PodcastServices.AddDefaultPodcasts();
+            _podcast.AddDefaultPodcasts();
             await Toast.Make("Defaults Added!.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
         });
     }
@@ -155,7 +157,7 @@ public partial class SettingsPage : ContentPage
             var item = await App.PositionData.GetAllPodcasts();
             if (item.AsEnumerable().Any(x => !x.Url.Contains("feeds.twit.tv")))
             {
-                await PodcastServices.RemoveDefaultPodcasts();
+                await _podcast.RemoveDefaultPodcasts();
                 await Toast.Make("Defaults removed.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
             }
             else

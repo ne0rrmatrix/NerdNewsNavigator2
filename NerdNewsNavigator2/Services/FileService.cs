@@ -3,9 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 namespace NerdNewsNavigator2.Services;
-public static class FileService
+public class FileService : IFileService
 {
-    public static void DeleteFile(string url)
+    public void DeleteFile(string url)
     {
         var tempFile = GetFileName(url);
         try
@@ -26,7 +26,7 @@ public static class FileService
     /// </summary>
     /// <param name="url">A URL <see cref="string"/></param>
     /// <returns>Filename <see cref="string"/> with file extension</returns>
-    public static string GetFileName(string url)
+    public string GetFileName(string url)
     {
         var temp = new Uri(url).LocalPath;
         var filename = System.IO.Path.GetFileName(temp);
