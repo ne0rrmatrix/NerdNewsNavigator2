@@ -10,18 +10,11 @@ public interface ICurrentDownloads
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
 #if ANDROID || IOS
     public void StartedDownload(string title, Show item, Plugin.LocalNotification.NotificationRequest notification);
-#else
-    public void StartedDownload(string title, Show item);
-#endif
-#if ANDROID || IOS
     public void Cancel(Show item, Plugin.LocalNotification.NotificationRequest notification);
-#else
-    public void Cancel(Show item);
-#endif
-#if ANDROID || IOS
     public void Completed(Show item, Plugin.LocalNotification.NotificationRequest notification);
 #else
+    public void StartedDownload(string title, Show item);
+    public void Cancel(Show item);
     public void Completed(Show item);
 #endif
-
 }

@@ -20,9 +20,12 @@ public partial class EditViewModel : BaseViewModel
     public EditViewModel(IConnectivity connectivity, IPodcastService podcastService) : base(connectivity)
     {
         _podcastService = podcastService;
-        _ = _podcastService.GetPodcasts();
+        _ = GetPodcasts();
     }
-
+    private async Task GetPodcasts()
+    {
+        Podcasts = await _podcastService.GetPodcasts();
+    }
     #region Methods
     /// <summary>
     /// Method checks for required Permission for Android Notifications and requests them if needed
@@ -54,7 +57,7 @@ public partial class EditViewModel : BaseViewModel
     {
         _podcastService.Podcasts.Remove(item);
         await App.PositionData.DeletePodcast(item);
-
+        Podcasts.Remove(item);
         var fav = FavoriteShows.ToList().Find(x => x.Url == item.Url);
         if (fav is null)
         {
