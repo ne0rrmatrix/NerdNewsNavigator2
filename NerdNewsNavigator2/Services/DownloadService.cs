@@ -12,23 +12,23 @@ public partial class DownloadService : ObservableObject, IDownloadService
     private CancellationTokenSource CancellationTokenSource { get; set; }
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(DownloadService));
     private readonly IFileService _fileService;
+    private readonly ICurrentDownloads _currentDownloads;
     private static bool IsDownloading { get; set; }
     private Show Item { get; set; }
 #if ANDROID || IOS
     private NotificationRequest Notification { get; set; }
-#endif
-    private readonly ICurrentDownloads _currentDownloads;
     private readonly Interfaces.INotificationService _notificationService;
+#endif
     #endregion
     public DownloadService(IFileService fileService, Interfaces.INotificationService notificationService, ICurrentDownloads currentDownloads)
     {
         _fileService = fileService;
         _currentDownloads = currentDownloads;
-        _notificationService = notificationService;
         SetToken();
         Item = new();
 #if ANDROID || IOS
         Notification = new();
+        _notificationService = notificationService;
 #endif
     }
     public void Add(Show show)
