@@ -53,11 +53,7 @@ public partial class PodcastServices : ObservableObject, IPodcastService
         await AddToDatabase(sortedItems);
         return new ObservableCollection<Podcast>(sortedItems);
     }
-    public async Task UpdatePodcasts()
-    {
-        var temp = await App.PositionData.GetAllPodcasts();
-        Podcasts = new ObservableCollection<Podcast>(temp);
-    }
+
     /// <summary>
     /// Method Retrieves <see cref="List{T}"/> <see cref="Podcast"/> from default RSS Feeds.
     /// </summary>

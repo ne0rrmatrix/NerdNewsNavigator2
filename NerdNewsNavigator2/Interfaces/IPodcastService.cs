@@ -14,5 +14,4 @@ public interface IPodcastService
     public Task RemoveDefaultPodcasts();
     public void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess);
     public Task<ObservableCollection<Podcast>> GetPodcasts();
-    public Task UpdatePodcasts();
 }

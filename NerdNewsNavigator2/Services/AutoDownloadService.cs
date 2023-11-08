@@ -16,13 +16,15 @@ public partial class AutoDownloadService
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(AutoDownloadService));
     private readonly IFeedService _feedService;
     private readonly IDownloadService _downloadService;
-    public AutoDownloadService(IFeedService feedService, IDownloadService downloadService)
+    private readonly ICurrentDownloads _currentDownloads;
+    public AutoDownloadService(IFeedService feedService, IDownloadService downloadService, ICurrentDownloads currentDownloads)
     {
         _feedService = feedService;
         _downloadService = downloadService;
         Status = string.Join(", ", Connectivity.Current.ConnectionProfiles);
         WifeOnlyDownloading = Preferences.Default.Get("WIFIOnly", "No");
         Connectivity.Current.ConnectivityChanged += GetCurrentConnectivity;
+        _currentDownloads = currentDownloads;
     }
 
     /// <summary>
@@ -90,11 +92,11 @@ public partial class AutoDownloadService
             }
         });
 
-        if (_downloadService.Shows.Count == 0)
+        if (_currentDownloads.Shows.Count == 0)
         {
             s_logger.Info("Nothing to download. Auto Downloader aborting!");
             return;
         }
-        ThreadPool.QueueUserWorkItem(state => _ = _downloadService.Start(_downloadService.Shows[0]));
+        ThreadPool.QueueUserWorkItem(state => _ = _downloadService.Start(_currentDownloads.Shows[0]));
     }
 }

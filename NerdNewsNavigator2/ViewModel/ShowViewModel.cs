@@ -24,17 +24,9 @@ public partial class ShowViewModel : BaseViewModel
     private readonly ICurrentDownloads _currentDownloads;
     private readonly IDeletedItemService _deletedItemService;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ShowViewModel"/> class.
-    /// </summary>
-    /// <param name="connectivity"></param>
-    /// <param name="downloadShows"></param>
-    /// <param name="showService"></param>
-    /// <param name="downloadService"></param>
-    /// <param name="videoOnNavigated"></param>
-    /// <param name="currentDownloads"></param>
     public ShowViewModel(IConnectivity connectivity, IDownloadShows downloadShows, IShowService showService, IDownloadService downloadService, IVideoOnNavigated videoOnNavigated, ICurrentDownloads currentDownloads, IDeletedItemService deletedItemService) : base(connectivity)
     {
+        _shows = [];
         _showService = showService;
         _downloadService = downloadService;
         _downloadShows = downloadShows;
@@ -54,7 +46,14 @@ public partial class ShowViewModel : BaseViewModel
             return;
         }
         var decodedUrl = HttpUtility.UrlDecode(newValue);
-        ThreadPool.QueueUserWorkItem(state => Shows = _showService.GetShowsAsync(decodedUrl, false));
+
+        ThreadPool.QueueUserWorkItem(state =>
+        {
+            Shows.Clear();
+            var temp = _showService.GetShowsAsync(decodedUrl, false);
+            temp.ToList().ForEach(_showService.SetProperties);
+            Shows = new ObservableCollection<Show>(temp);
+        });
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
     {

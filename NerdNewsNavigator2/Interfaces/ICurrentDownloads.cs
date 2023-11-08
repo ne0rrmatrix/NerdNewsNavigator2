@@ -5,6 +5,7 @@
 namespace NerdNewsNavigator2.Interfaces;
 public interface ICurrentDownloads
 {
+    public List<Show> Shows { get; set; }
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }

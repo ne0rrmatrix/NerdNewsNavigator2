@@ -10,9 +10,7 @@ namespace NerdNewsNavigator2;
 public partial class App : Application
 {
     #region Properties
-    public MessagingService MessagingService { get; set; } = new();
     public static AutoDownloadService AutoDownloadService { get; set; }
-
     /// <summary>
     /// This applications Dependency Injection for <see cref="PositionDataBase"/> class.
     /// </summary>

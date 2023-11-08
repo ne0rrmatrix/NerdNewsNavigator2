@@ -11,12 +11,10 @@ namespace NerdNewsNavigator2.Services;
 public partial class DownloadService : ObservableObject, IDownloadService
 {
     #region Properties
-
     private CancellationTokenSource CancellationTokenSource { get; set; }
     private static readonly ILogger s_logger = LoggerFactory.GetLogger(nameof(DownloadService));
     private readonly IFileService _fileService;
     private static bool IsDownloading { get; set; }
-    public List<Show> Shows { get; private set; }
     private Show Item { get; set; }
 #if ANDROID || IOS
     private NotificationRequest Notification { get; set; }
@@ -24,13 +22,12 @@ public partial class DownloadService : ObservableObject, IDownloadService
     private readonly ICurrentDownloads _currentDownloads;
     private readonly Interfaces.INotificationService _notificationService;
     #endregion
-    public DownloadService(IFileService fileService, ICurrentDownloads currentDownloads, Interfaces.INotificationService notificationService)
+    public DownloadService(IFileService fileService, Interfaces.INotificationService notificationService, ICurrentDownloads currentDownloads)
     {
         _fileService = fileService;
         _currentDownloads = currentDownloads;
         _notificationService = notificationService;
         SetToken();
-        Shows = [];
         Item = new();
 #if ANDROID || IOS
         Notification = new();
@@ -38,24 +35,24 @@ public partial class DownloadService : ObservableObject, IDownloadService
     }
     public void Add(Show show)
     {
-        Shows.Add(show);
+        _currentDownloads.Shows.Add(show);
     }
     public void CancelAll()
     {
         CancellationTokenSource.Cancel();
-        Shows.Clear();
+        _currentDownloads.Shows.Clear();
         IsDownloading = false;
     }
     public Show Cancel(Show show)
     {
         if (show.Url == Item.Url)
         {
-            Shows.Remove(Item);
+            _currentDownloads.Shows.Remove(Item);
             IsDownloading = false;
             CancellationTokenSource.Cancel();
             return show;
         }
-        Shows.Remove(show);
+        _currentDownloads.Shows.Remove(show);
         return show;
     }
     public async Task Start(Show item)
@@ -119,9 +116,8 @@ public partial class DownloadService : ObservableObject, IDownloadService
         };
         s_logger.Info($"Download completed: {item.Title}");
         await App.PositionData.UpdateDownload(download);
-        Shows.Remove(item);
+        _currentDownloads.Shows.Remove(item);
         IsDownloading = false;
-
         WeakReferenceMessenger.Default.Send(new DownloadItemMessage(true, item.Title, item));
 #if ANDROID || IOS
         _currentDownloads.Completed(item, Notification);

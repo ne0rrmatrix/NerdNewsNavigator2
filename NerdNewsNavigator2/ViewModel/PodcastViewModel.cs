@@ -39,7 +39,8 @@ public partial class PodcastViewModel : BaseViewModel
         _logger.Info("Refresh podcasts");
         IsRefreshing = true;
         IsBusy = true;
-        await _podcastService.UpdatePodcasts();
+        Podcasts.Clear();
+        Podcasts = await _podcastService.GetPodcasts();
         IsBusy = false;
         IsRefreshing = false;
         _logger.Info("Finished refreshing podcasts");

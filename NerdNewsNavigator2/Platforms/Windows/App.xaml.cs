@@ -45,10 +45,11 @@ public partial class App : MauiWinUIApplication
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
-        var feed = MauiWinUIApplication.Current.Services.GetService<IFeedService>();
-        var downloadService = MauiWinUIApplication.Current.Services.GetService<IDownloadService>();
-        AutoDownloadService = new AutoDownloadService(feed, downloadService);
-        var messenger = MauiWinUIApplication.Current.Services.GetService<IMessenger>();
+        var feed = Current.Services.GetService<IFeedService>();
+        var downloadService = Current.Services.GetService<IDownloadService>();
+        var currentDownlaods = Current.Services.GetService<ICurrentDownloads>();
+        AutoDownloadService = new AutoDownloadService(feed, downloadService, currentDownlaods);
+        var messenger = Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
             if (message.Start)

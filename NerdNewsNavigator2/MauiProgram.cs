@@ -85,15 +85,13 @@ public static class MauiProgram
         builder.Services.AddTransient<DownloadedShowViewModel>();
 
         builder.Services.AddSingleton<BaseViewModel>();
-
         builder.Services.AddSingleton<AutoDownloadService>();
-
         builder.Services.AddSingleton<PositionDataBase>();
+
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         builder.Services.AddSingleton<IDeviceServices, DeviceServices>();
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
-        builder.Services.AddSingleton<MessagingService>();
         builder.Services.AddSingleton<IFeedService, FeedService>();
         builder.Services.AddSingleton<IPodcastService, PodcastServices>();
         builder.Services.AddSingleton<IFileService, FileService>();

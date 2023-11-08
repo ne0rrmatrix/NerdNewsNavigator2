@@ -5,12 +5,13 @@
 namespace NerdNewsNavigator2.Services;
 public partial class CurrentDownloads : ObservableObject, ICurrentDownloads
 {
-    public List<Show> Shows { get; set; } = new();
     public EventHandler<DownloadEventArgs> DownloadCancelled { get; set; }
     public EventHandler<DownloadEventArgs> DownloadFinished { get; set; }
     public EventHandler<DownloadEventArgs> DownloadStarted { get; set; }
+    public List<Show> Shows { get; set; }
     public CurrentDownloads()
     {
+        Shows = [];
     }
     #region EventArgs
 #if ANDROID || IOS

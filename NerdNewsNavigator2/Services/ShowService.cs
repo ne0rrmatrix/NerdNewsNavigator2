@@ -19,11 +19,13 @@ public partial class ShowService : BaseViewModel, IShowService
     private readonly IFeedService _feedService;
     private readonly IDownloadShows _downloadShows;
     private readonly IVideoOnNavigated _videoOnNavigated;
-    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows, IVideoOnNavigated videoOnNavigated) : base(connectivity)
+    private readonly ICurrentDownloads _currentDownloads;
+    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows, IVideoOnNavigated videoOnNavigated, ICurrentDownloads currentDownloads) : base(connectivity)
     {
         _feedService = feedService;
         _downloadShows = downloadShows;
         _videoOnNavigated = videoOnNavigated;
+        _currentDownloads = currentDownloads;
         _shows = [];
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
     }
@@ -59,7 +61,7 @@ public partial class ShowService : BaseViewModel, IShowService
             show.IsNotDownloaded = false;
             return;
         }
-        var currentDownload = Shows.ToList().Find(x => x.Url == show.Url);
+        var currentDownload = _currentDownloads.Shows.ToList().Find(x => x.Url == show.Url);
         if (currentDownload is not null)
         {
             show.IsDownloaded = false;
