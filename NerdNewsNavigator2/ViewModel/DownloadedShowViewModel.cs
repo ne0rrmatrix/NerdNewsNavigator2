@@ -52,18 +52,9 @@ public partial class DownloadedShowViewModel : BaseViewModel
     public async Task Play(string url)
     {
         Show show = new();
-        if (DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
-        {
-            var item = DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Title = item.Title;
-            show.Url = item.FileName;
-        }
-        else
-        {
-            var item = _showService.Shows.First(x => x.Url == url);
-            show.Url = item.Url;
-            show.Title = item.Title;
-        }
+        var item = DownloadedShows.ToList().Find(x => x.Url == url);
+        show.Title = item.Title;
+        show.Url = item.FileName;
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
         _videoOnNavigated.Add(show);
     }

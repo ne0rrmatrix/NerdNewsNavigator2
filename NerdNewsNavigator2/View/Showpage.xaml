@@ -42,7 +42,7 @@
                                                   iOS=340}">
 
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ShowViewModel}}, Path=PlayCommand}" CommandParameter="{Binding}" />
                         </Frame.GestureRecognizers>
                         <Grid
                             ColumnDefinitions="Auto"

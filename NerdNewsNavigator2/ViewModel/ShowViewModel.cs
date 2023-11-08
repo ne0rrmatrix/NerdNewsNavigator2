@@ -50,9 +50,7 @@ public partial class ShowViewModel : BaseViewModel
         ThreadPool.QueueUserWorkItem(state =>
         {
             Shows.Clear();
-            var temp = _showService.GetShowsAsync(decodedUrl, false);
-            temp.ToList().ForEach(_showService.SetProperties);
-            Shows = new ObservableCollection<Show>(temp);
+            Shows = new ObservableCollection<Show>(_showService.GetShowsAsync(decodedUrl, false));
         });
     }
     private async void OnItemDeleted(object sender, DeletedItemEventArgs e)
@@ -87,27 +85,20 @@ public partial class ShowViewModel : BaseViewModel
     /// <summary>
     /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
     /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
+    /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task Play(string url)
+    public async Task Play(Show show)
     {
-        Show show = new();
-        if (_downloadShows.DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
+        if (_downloadShows.DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == show.Url))
         {
-            var item = _downloadShows.DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Title = item.Title;
+            var item = _downloadShows.DownloadedShows.ToList().Find(x => x.Url == show.Url);
             show.Url = item.FileName;
-        }
-        else
-        {
-            var item = Shows.First(x => x.Url == url);
-            show.Url = item.Url;
-            show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
         _videoOnNavigated.Add(show);
     }
+
     [RelayCommand]
 #pragma warning disable CA1822 // Mark members as static will break functionality. Class data is being modified and xaml will not update with static modifier.
     public void Cancel(Show show)
@@ -124,15 +115,12 @@ public partial class ShowViewModel : BaseViewModel
     /// <param name="show">A Url <see cref="Show"/></param>
     /// <returns></returns>
     [RelayCommand]
-    public void Download(Show show)
+    public async Task Download(Show show)
     {
 #if ANDROID
         _ = EditViewModel.CheckAndRequestForeGroundPermission();
 #endif
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        });
+        await Toast.Make("Added show to downloads.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         show.IsDownloaded = false;
         show.IsDownloading = true;
         show.IsNotDownloaded = false;

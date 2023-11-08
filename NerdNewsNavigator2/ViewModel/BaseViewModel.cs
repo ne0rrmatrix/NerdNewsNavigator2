@@ -150,7 +150,7 @@ public partial class BaseViewModel : ObservableObject
         }
     }
     #endregion
-    private void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+    public void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
     {
         // `lock` ensures that only one thread access the collection at a time
         lock (collection)

@@ -18,13 +18,11 @@ public partial class ShowService : BaseViewModel, IShowService
     private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(ShowService));
     private readonly IFeedService _feedService;
     private readonly IDownloadShows _downloadShows;
-    private readonly IVideoOnNavigated _videoOnNavigated;
     private readonly ICurrentDownloads _currentDownloads;
-    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows, IVideoOnNavigated videoOnNavigated, ICurrentDownloads currentDownloads) : base(connectivity)
+    public ShowService(IConnectivity connectivity, IFeedService feedService, IDownloadShows downloadShows, ICurrentDownloads currentDownloads) : base(connectivity)
     {
         _feedService = feedService;
         _downloadShows = downloadShows;
-        _videoOnNavigated = videoOnNavigated;
         _currentDownloads = currentDownloads;
         _shows = [];
         BindingBase.EnableCollectionSynchronization(Shows, null, ObservableCollectionCallback);
@@ -72,38 +70,5 @@ public partial class ShowService : BaseViewModel, IShowService
         show.IsDownloading = false;
         show.IsNotDownloaded = true;
         show.IsDownloaded = false;
-    }
-    public void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
-    {
-        // `lock` ensures that only one thread access the collection at a time
-        lock (collection)
-        {
-            accessMethod?.Invoke();
-        }
-    }
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="PodcastPage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public async Task Play(string url)
-    {
-        Show show = new();
-        if (_downloadShows.DownloadedShows.Where(y => y.IsDownloaded).Any(x => x.Url == url))
-        {
-            var item = _downloadShows.DownloadedShows.ToList().Find(x => x.Url == url);
-            show.Title = item.Title;
-            show.Url = item.FileName;
-        }
-        else
-        {
-            var item = Shows.First(x => x.Url == url);
-            show.Url = item.Url;
-            show.Title = item.Title;
-        }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        _videoOnNavigated.Add(show);
     }
 }
