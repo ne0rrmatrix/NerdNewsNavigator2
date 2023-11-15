@@ -56,7 +56,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-android33.0
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-android
     
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
