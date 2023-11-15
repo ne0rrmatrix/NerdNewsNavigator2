@@ -23,7 +23,7 @@
 
 	    <!-- Versions -->
 	    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	    <ApplicationVersion>36</ApplicationVersion>
+	    <ApplicationVersion>37</ApplicationVersion>
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.2</SupportedOSPlatformVersion>
@@ -44,7 +44,6 @@
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <PackageCertificateThumbprint>6500B1BDE25D15939EDF34A7DE90A1932E292B05</PackageCertificateThumbprint>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/ne0rrmatrix/NerdNewsNavigator2</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -134,11 +133,9 @@
         
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
-        <MauiImage Update="Resources\Images\gear.png" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\download.svg" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\history.svg" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\house.svg" BaseSize="36,36" Resize="true" />
-        <MauiImage Update="Resources\Images\live_broadcasting.svg" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\logout.svg" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\settings.svg" BaseSize="36,36" Resize="true" />
         <MauiImage Update="Resources\Images\whitefs.png" BaseSize="36,36" Resize="true" />

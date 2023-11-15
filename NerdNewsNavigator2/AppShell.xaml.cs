@@ -18,7 +18,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(PodcastPage), typeof(PodcastPage));
         Routing.RegisterRoute(nameof(ShowPage), typeof(ShowPage));
         Routing.RegisterRoute(nameof(VideoPlayerPage), typeof(VideoPlayerPage));
-        Routing.RegisterRoute(nameof(LivePage), typeof(LivePage));
         Routing.RegisterRoute(nameof(EditPage), typeof(EditPage));
         Routing.RegisterRoute(nameof(ResetAllSettingsPage), typeof(ResetAllSettingsPage));
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
@@ -50,17 +49,6 @@ public partial class AppShell : Shell
     private async void Reset(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(ResetAllSettingsPage)}");
-    }
-
-    /// <summary>
-    /// Method navigates user to Live Video for twit.tv
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void GotoLivePage(object sender, EventArgs e)
-    {
-        FlyoutIsPresented = false;
-        await Shell.Current.GoToAsync($"{nameof(LivePage)}");
     }
 
     /// <summary>

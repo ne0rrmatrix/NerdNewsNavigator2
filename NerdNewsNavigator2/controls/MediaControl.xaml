@@ -34,18 +34,6 @@
 
         <Grid IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}">
             <ImageButton
-                Margin="40"
-                BackgroundColor="Transparent"
-                Clicked="OpenMenu"
-                HeightRequest="48"
-                HorizontalOptions="End"
-                IsVisible="{Binding IsYouTube, Source={x:Reference mediaControl}}"
-                SemanticProperties.Description="Button opens menu allows you to select video resolution."
-                SemanticProperties.Hint="Button opens menu allows you to select video resolution."
-                Source="gear.png"
-                VerticalOptions="End"
-                WidthRequest="48" />
-            <ImageButton
                 x:Name="btnFullScreen"
                 Margin="10"
                 BackgroundColor="Transparent"
@@ -60,43 +48,6 @@
                 VerticalOptions="Start"
                 WidthRequest="48" />
 
-            <CollectionView
-                Margin="80"
-                HeightRequest="240"
-                HorizontalOptions="End"
-                IsVisible="{Binding MenuIsVisible, Source={x:Reference mediaControl}}"
-                ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type data:LivePage}}, Path=Items}"
-                SelectionMode="Single"
-                SemanticProperties.Description="You can select a resoltion from this menu."
-                SemanticProperties.Hint="You can select a resolution from this menu."
-                VerticalOptions="End"
-                WidthRequest="120">
-                <CollectionView.GestureRecognizers>
-                    <PointerGestureRecognizer PointerExited="PointerGestureRecognizer_PointerMoved" />
-                </CollectionView.GestureRecognizers>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:YoutubeResolutions">
-                        <VerticalStackLayout>
-
-                            <Label
-                                FontSize="26"
-                                HorizontalOptions="End"
-                                HorizontalTextAlignment="Center"
-                                SemanticProperties.Description="Label shows selection menu for playback resolution."
-                                SemanticProperties.Hint="Label shows selection menu for playback resolution."
-                                Text="{Binding Title}"
-                                TextColor="White"
-                                WidthRequest="90">
-
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type item:MediaControl}}, Path=TappedCommand}" CommandParameter="{Binding Url}" />
-                                </Label.GestureRecognizers>
-                            </Label>
-
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
             <VerticalStackLayout Margin="{OnIdiom Default=35, Phone=5}" VerticalOptions="{OnPlatform WinUI=End, MacCatalyst=End, Default=Center}">
                 <HorizontalStackLayout HorizontalOptions="Center">

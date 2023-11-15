@@ -50,10 +50,6 @@
             ContentTemplate="{DataTemplate local:DownloadedShowPage}"
             Icon="download.png" />
         <ShellContent
-            Title="Live"
-            ContentTemplate="{DataTemplate local:LivePage}"
-            Icon="live_broadcasting.png" />
-        <ShellContent
             Title="Settings"
             ContentTemplate="{DataTemplate local:SettingsPage}"
             Icon="settings.png" />
@@ -68,10 +64,6 @@
         Clicked="GotoDownloadedPage"
         IconImageSource="download.png"
         Text="Downloads" />
-    <MenuItem
-        Clicked="GotoLivePage"
-        IconImageSource="live_broadcasting.png"
-        Text="Live" />
     <MenuItem
         Clicked="GotoAddPage"
         IconImageSource="settings.png"
