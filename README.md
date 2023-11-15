@@ -65,12 +65,12 @@ Free Store Version:
 ## Tablet:
 
 <br/><br/>
-<img src="./images/Tablet/MainPageTablet10.1inch800x1280_framed.png" width="100%">
-<img src="./images/Tablet/ShowPage10.1inchTable800x1280_framed.png" width="100%">
-<img src="./images/Tablet/EditPage10.1inchTablet800x1280_framed.png" width="100%">
-<img src="./images/Tablet/Settings10.1inchTablet800x1280_framed.png" width="100%">
-<img src="./images/Tablet/VideoPlayer10.1inchTablet800x1280_framed.png" width="100%">
-<img src="./images/Tablet/Startup10.1inch800x11280_framed.png" width="100%">
+<img src="./images/Tablet/MainPageTablet10.1inch800x1280_framed.png" width="75%">
+<img src="./images/Tablet/ShowPage10.1inchTable800x1280_framed.png" width="75%">
+<img src="./images/Tablet/EditPage10.1inchTablet800x1280_framed.png" width="75%">
+<img src="./images/Tablet/Settings10.1inchTablet800x1280_framed.png" width="75%">
+<img src="./images/Tablet/VideoPlayer10.1inchTablet800x1280_framed.png" width="75%">
+<img src="./images/Tablet/Startup10.1inch800x11280_framed.png" width="75%">
 <br/><br/>
 
 ## Help support me work on this project
