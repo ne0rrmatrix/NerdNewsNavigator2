@@ -122,7 +122,9 @@ public partial class VideoPlayerPage : ContentPage
         mediaElement.Handler.DisconnectHandler();
         var color = Color.FromArgb("#34AAD2");
 #pragma warning disable CA1416
+#if ANDROID || IOS16_1_OR_GREATER || MACCATALYST14_3_OR_GREATER
         StatusBar.SetColor(color);
+#endif
 #pragma warning restore CA1416
         base.OnNavigatedFrom(args);
     }
