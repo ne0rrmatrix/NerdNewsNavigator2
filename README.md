@@ -53,13 +53,13 @@ Free Store Version:
 ## Phone:
 
 <br/><br/>
-<img src="./images/Phone/FrontPage1080x2340_framed.png" width="33%">
-<img src="./images/Phone/ShowPage1080x2340_framed.png" width="33%">
-<img src="./images/Phone/EditPage1080x2340_framed.png" width="33%">
-<img src="./images/Phone/SettingsPage1080x2340_framed.png" width="33%">
-<img src="./images/Phone/VideoPlayer-landscape1080x2340_framed.png" width="33%">
-<img src="./images/Phone/Startup-1080x2340_framed.png" width="33%">
-<img src="./images/Phone/VideoPlayer1080x2340_framed.png" width="33%">
+<img src="./images/Phone/FrontPage1080x2340_framed.png" width="48%">
+<img src="./images/Phone/ShowPage1080x2340_framed.png" width="48%">
+<img src="./images/Phone/EditPage1080x2340_framed.png" width="48%">
+<img src="./images/Phone/SettingsPage1080x2340_framed.png" width="48%">
+<img src="./images/Phone/Startup-1080x2340_framed.png" width="48%">
+<img src="./images/Phone/VideoPlayer1080x2340_framed.png" width="48%">
+<img src="./images/Phone/VideoPlayer-landscape1080x2340_framed.png" width="48%">
 <br/><br/>
 
 ## Tablet:
