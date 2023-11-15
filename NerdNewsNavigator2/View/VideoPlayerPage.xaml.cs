@@ -121,7 +121,9 @@ public partial class VideoPlayerPage : ContentPage
         mediaElement.Stop();
         mediaElement.Handler.DisconnectHandler();
         var color = Color.FromArgb("#34AAD2");
+#pragma warning disable CA1416
         StatusBar.SetColor(color);
+#pragma warning restore CA1416
         base.OnNavigatedFrom(args);
     }
 
