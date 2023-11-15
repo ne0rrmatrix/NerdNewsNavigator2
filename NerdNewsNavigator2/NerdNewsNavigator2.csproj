@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-		
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
 		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<RootNamespace>NerdNewsNavigator2</RootNamespace>
@@ -32,7 +28,7 @@
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 	    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-        <DefaultLanguage>en</DefaultLanguage>
+        <DefaultLanguage>en-us</DefaultLanguage>
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
         <Platforms>AnyCPU</Platforms>
         <Configurations>Debug;Release</Configurations>
@@ -93,9 +89,12 @@
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
         <ProvisioningType>automatic</ProvisioningType>
     </PropertyGroup>
-    
-    <!-- App Icon -->
-    <!--  <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#34AAD2" />  -->
+
+    <Target Name="_SkipCodesignVerify" BeforeTargets="_CodesignVerify" AfterTargets="_CodesignAppBundle">
+        <PropertyGroup>
+            <_RequireCodeSigning>false</_RequireCodeSigning>
+        </PropertyGroup>
+    </Target>
 
     <!-- Android -->
     <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">

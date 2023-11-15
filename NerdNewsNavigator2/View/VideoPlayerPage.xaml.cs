@@ -70,13 +70,10 @@ public partial class VideoPlayerPage : ContentPage
         if (result is not null)
         {
             Pos.SavedPosition = result.SavedPosition;
-            _ = MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                mediaElement.Pause();
-                _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
-                mediaElement.SeekTo(Pos.SavedPosition);
-                mediaElement.Play();
-            });
+            mediaElement.Pause();
+            _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
+            await mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.Play();
         }
         else
         {

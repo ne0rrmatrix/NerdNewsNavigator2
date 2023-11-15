@@ -29,8 +29,6 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIBackgroundModes</key>
@@ -46,6 +44,8 @@
 		<string>com.yourappname.upload</string>
 		<string>com.yourappname.refresh</string>
 	</array>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.2.9</string>
 </dict>
