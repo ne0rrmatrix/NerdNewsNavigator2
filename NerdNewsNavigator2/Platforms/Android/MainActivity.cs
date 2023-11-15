@@ -13,7 +13,7 @@ public class MainActivity : MauiAppCompatActivity
 {
     public MainActivity()
     {
-        var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
+        var messenger = IPlatformApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
             if (message.Start)
