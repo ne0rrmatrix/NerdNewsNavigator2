@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Maui.Core.Platform;
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -119,6 +120,8 @@ public partial class VideoPlayerPage : ContentPage
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
         mediaElement.Handler.DisconnectHandler();
+        var color = Color.FromArgb("#34AAD2");
+        StatusBar.SetColor(color);
         base.OnNavigatedFrom(args);
     }
 

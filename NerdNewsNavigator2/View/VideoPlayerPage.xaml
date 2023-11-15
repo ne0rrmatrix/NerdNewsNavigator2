@@ -12,7 +12,11 @@
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
     Shell.TitleColor="White"
-    Unloaded="ContentPage_Unloaded">
+    Unloaded="ContentPage_Unloaded"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui">
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="Black" />
+    </ContentPage.Behaviors>
     <media:MediaControl x:Name="mediaElement"/>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
