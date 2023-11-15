@@ -70,7 +70,7 @@ Free Store Version:
 <img src="./images/Tablet/EditPage10.1inchTablet800x1280_framed.png" width="100%">
 <img src="./images/Tablet/Settings10.1inchTablet800x1280_framed.png" width="100%">
 <img src="./images/Tablet/VideoPlayer10.1inchTablet800x1280_framed.png" width="100%">
-<img src="./images/Tablet/Startup10.1inch800x11280_framed.png" width="48%">
+<img src="./images/Tablet/Startup10.1inch800x11280_framed.png" width="100%">
 <br/><br/>
 
 ## Help support me work on this project
