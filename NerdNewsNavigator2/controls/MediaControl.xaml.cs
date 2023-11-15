@@ -7,7 +7,6 @@ namespace NerdNewsNavigator2.Controls;
 public partial class MediaControl : ContentView
 {
     #region Properties
-    public bool MenuIsVisible { get; set; }
     public bool ShowControls { get; set; }
     public string PlayPosition { get; set; }
     #endregion
@@ -55,11 +54,6 @@ public partial class MediaControl : ContentView
         var control = (MediaControl)bindableProperty;
         control.mediaElement.PositionChanged += (EventHandler<MediaPositionChangedEventArgs>)newValue;
     });
-    public static readonly BindableProperty IsYouTubeProperty = BindableProperty.Create(nameof(IsYouTube), typeof(bool), typeof(MediaControl), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
-    {
-        var control = (MediaControl)bindableProperty;
-        control.IsVisible = (bool)newValue;
-    });
     public static readonly BindableProperty ShouldMuteProperty = BindableProperty.Create(nameof(ShouldMute), typeof(bool), typeof(MediaElement), false, propertyChanged: (bindableProperty, oldValue, newValue) =>
     {
         var control = (MediaControl)bindableProperty;
@@ -74,11 +68,6 @@ public partial class MediaControl : ContentView
     {
         get => (bool)GetValue(ShouldMuteProperty);
         set => SetValue(ShouldMuteProperty, value);
-    }
-    public bool IsYouTube
-    {
-        get => (bool)GetValue(IsYouTubeProperty);
-        set => SetValue(IsYouTubeProperty, value);
     }
     public EventHandler MediaOpened
     {
@@ -168,8 +157,6 @@ public partial class MediaControl : ContentView
         OnPropertyChanged(nameof(ShowControls));
         await Task.Delay(7000);
         ShowControls = false;
-        MenuIsVisible = false;
-        OnPropertyChanged(nameof(MenuIsVisible));
         OnPropertyChanged(nameof(ShowControls));
     }
     #endregion
@@ -242,11 +229,6 @@ public partial class MediaControl : ContentView
             BtnPLay.Source = "play.png";
         }
     }
-    private void OpenMenu(object sender, EventArgs e)
-    {
-        MenuIsVisible = true;
-        OnPropertyChanged(nameof(MenuIsVisible));
-    }
     private void BtnFullScreen_Clicked(object sender, EventArgs e)
     {
         SetFullScreenStatus();
@@ -264,31 +246,6 @@ public partial class MediaControl : ContentView
     private void AspectButton(object sender, EventArgs e)
     {
         mediaElement.Aspect = mediaElement.Aspect == Aspect.AspectFit ? Aspect.AspectFill : Aspect.AspectFit;
-    }
-
-    /// <summary>
-    /// A Method that passes a Url <see cref="string"/> to <see cref="LivePage"/>
-    /// </summary>
-    /// <param name="url">A Url <see cref="string"/></param>
-    /// <returns></returns>
-    [RelayCommand]
-    public void Tapped(string url)
-    {
-#if ANDROID
-        mediaElement.Stop();
-#endif
-        mediaElement.Source = new Uri(url);
-        MenuIsVisible = false;
-#if ANDROID
-        mediaElement.Play();
-#endif
-        OnPropertyChanged(nameof(MenuIsVisible));
-    }
-
-    private void PointerGestureRecognizer_PointerMoved(object sender, PointerEventArgs e)
-    {
-        MenuIsVisible = false;
-        OnPropertyChanged(nameof(MenuIsVisible));
     }
     #endregion
 

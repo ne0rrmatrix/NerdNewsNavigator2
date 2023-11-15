@@ -3,6 +3,7 @@
     x:Class="NerdNewsNavigator2.View.VideoPlayerPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title=""
@@ -13,7 +14,10 @@
                                        Default=True}"
     Shell.TitleColor="White"
     Unloaded="ContentPage_Unloaded">
-    <media:MediaControl x:Name="mediaElement" IsYouTube="False" />
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="Black" />
+    </ContentPage.Behaviors>
+    <media:MediaControl x:Name="mediaElement" />
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>

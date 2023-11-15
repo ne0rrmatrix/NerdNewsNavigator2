@@ -3,6 +3,7 @@
     x:Class="NerdNewsNavigator2.View.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:page="clr-namespace:NerdNewsNavigator2.View"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
@@ -10,6 +11,9 @@
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded">
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
+    </ContentPage.Behaviors>
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
