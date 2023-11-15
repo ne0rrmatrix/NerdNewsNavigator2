@@ -59,7 +59,7 @@ Free Store Version:
 <img src="./images/Phone/SettingsPage1080x2340_framed.png" width="48%">
 <img src="./images/Phone/Startup-1080x2340_framed.png" width="48%">
 <img src="./images/Phone/VideoPlayer1080x2340_framed.png" width="48%">
-<img src="./images/Phone/VideoPlayer-landscape1080x2340_framed.png" width="48%">
+<img src="./images/Phone/VideoPlayer-landscape1080x2340_framed.png" width="100%">
 <br/><br/>
 
 ## Tablet:
