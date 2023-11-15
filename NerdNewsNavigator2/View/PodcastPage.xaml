@@ -5,14 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:PodcastViewModel"
     BackgroundColor="#34AAD2"
-    mc:Ignorable="d"
-    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui">
+    mc:Ignorable="d">
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
     </ContentPage.Behaviors>
@@ -21,8 +21,6 @@
     </Shell.BackButtonBehavior>
     <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <CollectionView
-            HorizontalOptions="{OnPlatform iOS=Center,
-                                           MacCatalyst=Center}"
             HorizontalScrollBarVisibility="Never"
             ItemsSource="{Binding Podcasts}"
             VerticalScrollBarVisibility="Never">
@@ -55,8 +53,6 @@
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=Default,
-                                                      MacCatalyst=16}"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 LineBreakMode="WordWrap"
@@ -69,9 +65,7 @@
                                                           MacCatalyst=370}" />
                             <Image
                                 Grid.Row="1"
-                                Aspect="{OnPlatform WinUI=AspectFit,
-                                                    Android=AspectFit,
-                                                    iOS=AspectFit}"
+                                Aspect="AspectFit"
                                 HeightRequest="{OnPlatform WinUI=360,
                                                            Android=270,
                                                            iOS=320,

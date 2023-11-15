@@ -3,12 +3,12 @@
     x:Class="NerdNewsNavigator2.View.EditPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:EditViewModel"
-    BackgroundColor="#34AAD2"
-    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui">
+    BackgroundColor="#34AAD2">
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
     </ContentPage.Behaviors>
@@ -56,9 +56,7 @@
                                 VerticalOptions="Center" />
                             <Image
                                 Grid.Row="1"
-                                Aspect="{OnPlatform WinUI=AspectFit,
-                                                    Android=AspectFit,
-                                                    iOS=AspectFit}"
+                                Aspect="AspectFit"
                                 HeightRequest="{OnPlatform WinUI=360,
                                                            Android=270,
                                                            iOS=320,

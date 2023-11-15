@@ -3,14 +3,14 @@
     x:Class="NerdNewsNavigator2.View.ShowPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:ShowViewModel"
     BackgroundColor="#34AAD2"
-    Shell.BackgroundColor="#34AAD2"
-    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui">
+    Shell.BackgroundColor="#34AAD2">
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
     </ContentPage.Behaviors>
@@ -48,17 +48,11 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
                         </Frame.GestureRecognizers>
-                        <Grid
-                            ColumnDefinitions="Auto"
-                            HorizontalOptions="{OnPlatform MacCatalyst=Center}"
-                            RowDefinitions="Auto,Auto,Auto,*">
+                        <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=Default,
-                                                      MacCatalyst=18}"
-                                HeightRequest="{OnPlatform WinUI=60}"
-                                HorizontalOptions="{OnPlatform MacCatalyst=Center}"
+                                HeightRequest="{OnPlatform 60}"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
@@ -74,8 +68,7 @@
                                                            Android=320,
                                                            iOS=320,
                                                            MacCatalyst=370}"
-                                HorizontalOptions="{OnPlatform Default=Start,
-                                                               MacCatalyst=Center}"
+                                HorizontalOptions="{OnPlatform Default=Start}"
                                 WidthRequest="{OnPlatform WinUI=390,
                                                           Android=320,
                                                           iOS=320,
@@ -155,7 +148,6 @@
 
                             <Label
                                 Grid.Row="3"
-                                FontSize="{OnPlatform MacCatalyst=16}"
                                 HeightRequest="{OnPlatform WinUI=890,
                                                            MacCatalyst=890}"
                                 HorizontalOptions="Start"

@@ -3,12 +3,12 @@
     x:Class="NerdNewsNavigator2.View.DownloadedShowPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
-    BackgroundColor="#34AAD2"
-    xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui">
+    BackgroundColor="#34AAD2">
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
     </ContentPage.Behaviors>
@@ -52,10 +52,7 @@
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
-                                FontSize="{OnPlatform Default=Default,
-                                                      MacCatalyst=18}"
-                                HeightRequest="{OnPlatform WinUI=60}"
-                                HorizontalOptions="{OnPlatform MacCatalyst=Center}"
+                                HeightRequest="60"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
@@ -71,8 +68,7 @@
                                                            Android=320,
                                                            iOS=320,
                                                            MacCatalyst=370}"
-                                HorizontalOptions="{OnPlatform Default=Start,
-                                                               MacCatalyst=Center}"
+                                HorizontalOptions="Start"
                                 WidthRequest="{OnPlatform WinUI=390,
                                                           Android=320,
                                                           iOS=320,
@@ -125,7 +121,6 @@
 
                             <Label
                                 Grid.Row="3"
-                                FontSize="{OnPlatform MacCatalyst=16}"
                                 HeightRequest="{OnPlatform WinUI=890,
                                                            MacCatalyst=890}"
                                 HorizontalOptions="Start"
