@@ -44,9 +44,9 @@
 		<string>com.yourappname.upload</string>
 		<string>com.yourappname.refresh</string>
 	</array>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.9</string>
+	<string>1.3.0</string>
 </dict>
 </plist>

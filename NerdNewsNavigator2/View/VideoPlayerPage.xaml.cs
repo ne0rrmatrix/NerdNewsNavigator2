@@ -178,7 +178,6 @@ public partial class VideoPlayerPage : ContentPage
     private void Slider_DragCompleted(object sender, EventArgs e)
     {
         ArgumentNullException.ThrowIfNull(sender);
-
         var newValue = ((Slider)sender).Value;
         mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
         mediaElement.Play();

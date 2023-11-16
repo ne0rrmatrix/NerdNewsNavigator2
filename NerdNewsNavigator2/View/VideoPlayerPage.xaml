@@ -32,7 +32,7 @@
         <toolkit:MediaElement
             x:Name="mediaElement"
             Grid.Row="0"
-            ShouldAutoPlay="False"
+            ShouldAutoPlay="True"
             ShouldKeepScreenOn="True"
             ShouldShowPlaybackControls="False"
             Source="{Binding Url}" />
