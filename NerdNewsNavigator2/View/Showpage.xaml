@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
-    xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:model="clr-namespace:NerdNewsNavigator2.Model"
     xmlns:viewmodel="clr-namespace:NerdNewsNavigator2.ViewModel"
     Title="{Binding Title}"
@@ -19,8 +18,6 @@
     </Shell.BackButtonBehavior>
     <RefreshView Command="{Binding PullToRefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <CollectionView
-            HorizontalOptions="{OnPlatform iOS=Center,
-                                           MacCatalyst=Center}"
             HorizontalScrollBarVisibility="Never"
             ItemsSource="{Binding Shows}"
             VerticalScrollBarVisibility="Never">
@@ -52,7 +49,7 @@
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
-                                HeightRequest="{OnPlatform 60}"
+                                HeightRequest="60"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
@@ -68,7 +65,7 @@
                                                            Android=320,
                                                            iOS=320,
                                                            MacCatalyst=370}"
-                                HorizontalOptions="{OnPlatform Default=Start}"
+                                HorizontalOptions="Start"
                                 WidthRequest="{OnPlatform WinUI=390,
                                                           Android=320,
                                                           iOS=320,
