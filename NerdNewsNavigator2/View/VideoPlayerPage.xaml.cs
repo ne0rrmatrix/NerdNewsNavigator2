@@ -34,7 +34,6 @@ public partial class VideoPlayerPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         PlayPosition = string.Empty;
-        mediaElement.StateChanged += MediaStopped;
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += OnPositionChanged;
@@ -74,12 +73,14 @@ public partial class VideoPlayerPage : ContentPage
             _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
             await mediaElement.SeekTo(Pos.SavedPosition);
             mediaElement.Play();
+            mediaElement.StateChanged += MediaStopped;
         }
         else
         {
             Pos.SavedPosition = mediaElement.Position;
             await App.PositionData.AddPosition(Pos);
             _logger.Info("Could not find saved position");
+            mediaElement.StateChanged += MediaStopped;
         }
     }
 
