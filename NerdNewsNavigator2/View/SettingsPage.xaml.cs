@@ -114,10 +114,10 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void WifiOnly(object sender, EventArgs e)
+    private void WIFIOnly(object sender, EventArgs e)
     {
-        var wifiOnly = Preferences.Default.Get("WIFIOnly", "No");
-        if (wifiOnly == "No")
+        var WIFIOnly = Preferences.Default.Get("WIFIOnly", "No");
+        if (WIFIOnly == "No")
         {
             WifiBtn.Text = "Yes";
             Preferences.Default.Set("WIFIOnly", "Yes");
@@ -208,7 +208,7 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
+        WifiBtn.Text = Preferences.Default.Get("WIFIOnly", "No");
         var start = Preferences.Default.Get("start", false);
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));

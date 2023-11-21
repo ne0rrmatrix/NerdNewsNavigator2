@@ -83,11 +83,7 @@ public partial class DownloadService : ObservableObject
         try
         {
             await client.StartDownload();
-            if (CancellationTokenSource.IsCancellationRequested)
-            {
-                return false;
-            }
-            return true;
+            return !CancellationTokenSource.IsCancellationRequested;
         }
         catch
         {

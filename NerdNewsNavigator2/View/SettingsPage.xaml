@@ -123,7 +123,7 @@
                         x:Name="WifiBtn"
                         Margin="10"
                         BackgroundColor="#205493"
-                        Clicked="WifiOnly"
+                        Clicked="WIFIOnly"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"

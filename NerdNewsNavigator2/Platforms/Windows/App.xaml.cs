@@ -14,7 +14,7 @@ namespace NerdNewsNavigator2.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    AutoDownloadService AutoDownloadService { get; set; }
+    private AutoDownloadService AutoDownloadService { get; set; }
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().

@@ -127,12 +127,10 @@ public partial class VideoPlayerPage : ContentPage
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
         mediaElement.Handler.DisconnectHandler();
-#pragma warning disable CA1416
-#if ANDROID || IOS16_1_OR_GREATER || MACCATALYST14_3_OR_GREATER
+#if ANDROID || IOS16_1_OR_GREATER
         var color = Color.FromArgb("#34AAD2");
         StatusBar.SetColor(color);
 #endif
-#pragma warning restore CA1416
         base.OnNavigatedFrom(args);
     }
 
@@ -275,14 +273,7 @@ public partial class VideoPlayerPage : ContentPage
 
     private void SetFullScreenStatus()
     {
-        if (grid.Margin.IsEmpty)
-        {
-            grid.Margin = new Thickness(10);
-        }
-        else
-        {
-            grid.Margin = new Thickness(0);
-        }
+        grid.Margin = grid.Margin.IsEmpty ? new Thickness(10) : new Thickness(0);
         CustomControls.SetFullScreenStatus();
     }
 

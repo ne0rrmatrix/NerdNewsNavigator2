@@ -37,10 +37,10 @@ internal sealed class AutoStartService : Service
             : PendingIntentFlags.UpdateCurrent;
         var pendingIntent = PendingIntent.GetActivity(this, 0, intent, pendingIntentFlags);
 
-        var notifcationManager = GetSystemService(NotificationService) as NotificationManager;
+        var notificationManager = GetSystemService(NotificationService) as NotificationManager;
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            CreateNotificationChannel(notifcationManager);
+            CreateNotificationChannel(notificationManager);
 
         }
 

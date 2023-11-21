@@ -24,7 +24,7 @@ public class PositionDataBase
 
     #endregion
     /// <summary>
-    /// Intializes a new instance of the <see cref="PositionDataBase"/> class.
+    /// Initializes a new instance of the <see cref="PositionDataBase"/> class.
     /// </summary>
     public PositionDataBase()
     {
@@ -147,7 +147,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Podcast>();
-            _logger.Info("Succesfully Deleted all Podcasts.");
+            _logger.Info("Successfully Deleted all Podcasts.");
             return true;
         }
         catch (Exception ex)
@@ -167,7 +167,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Favorites>();
-            _logger.Info("Succesfully Deleted all Favorites.");
+            _logger.Info("Successfully Deleted all Favorites.");
             return true;
         }
         catch (Exception ex)
@@ -187,7 +187,7 @@ public class PositionDataBase
         {
 
             await _connection.DeleteAllAsync<Download>();
-            _logger.Info("Succesfully Deleted all Downloads.");
+            _logger.Info("Successfully Deleted all Downloads.");
             return true;
         }
         catch (Exception ex)
@@ -291,12 +291,12 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingPosition = await _connection.Table<Position>().Where(x => x.Title == position.Title).FirstOrDefaultAsync();
+            if (existingPosition is not null)
             {
-                existingPositon.SavedPosition = position.SavedPosition;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Database: {existingPositon.Title} {existingPositon.SavedPosition}");
+                existingPosition.SavedPosition = position.SavedPosition;
+                await _connection.UpdateAsync(existingPosition);
+                _logger.Info($"Updated Database: {existingPosition.Title} {existingPosition.SavedPosition}");
                 return true;
             }
             await _connection.InsertAsync(position);
@@ -319,13 +319,13 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingPodcast = await _connection.Table<Podcast>().Where(x => x.Title == podcast.Title).FirstOrDefaultAsync();
+            if (existingPodcast is not null)
             {
-                existingPositon.Download = podcast.Download;
-                existingPositon.IsNotDownloaded = podcast.IsNotDownloaded;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Podcast: {existingPositon.Title}");
+                existingPodcast.Download = podcast.Download;
+                existingPodcast.IsNotDownloaded = podcast.IsNotDownloaded;
+                await _connection.UpdateAsync(existingPodcast);
+                _logger.Info($"Updated Podcast: {existingPodcast.Title}");
                 return true;
             }
             await _connection.InsertAsync(podcast);
@@ -348,13 +348,13 @@ public class PositionDataBase
     {
         try
         {
-            var existingPositon = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
-            if (existingPositon is not null)
+            var existingDownload = await _connection.Table<Download>().Where(x => x.Title == download.Title).FirstOrDefaultAsync();
+            if (existingDownload is not null)
             {
                 // don't know why I need to do it this way!
-                existingPositon.Deleted = download.Deleted;
-                await _connection.UpdateAsync(existingPositon);
-                _logger.Info($"Updated Download: {existingPositon.Title}");
+                existingDownload.Deleted = download.Deleted;
+                await _connection.UpdateAsync(existingDownload);
+                _logger.Info($"Updated Download: {existingDownload.Title}");
                 return true;
             }
             await _connection.InsertAsync(download);

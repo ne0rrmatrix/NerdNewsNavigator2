@@ -307,13 +307,6 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public bool InternetConnected()
     {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return _connectivity.NetworkAccess == NetworkAccess.Internet;
     }
 }
