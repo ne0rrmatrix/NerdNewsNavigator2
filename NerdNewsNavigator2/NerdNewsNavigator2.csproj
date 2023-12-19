@@ -161,8 +161,8 @@
     </ItemGroup>
 	
     <ItemGroup>
-	    <PackageReference Include="CommunityToolkit.Maui" Version="99.0.0-preview1230" />
-	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="99.0.0-preview1230" />
+	    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
+	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="3.0.1" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
 	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
