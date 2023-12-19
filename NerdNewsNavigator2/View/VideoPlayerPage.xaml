@@ -13,8 +13,7 @@
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
-    Shell.TitleColor="White"
-    Unloaded="ContentPage_Unloaded">
+    Shell.TitleColor="White">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>

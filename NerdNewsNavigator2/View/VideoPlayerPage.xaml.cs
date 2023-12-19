@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using CommunityToolkit.Maui.Core.Platform;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -34,10 +35,6 @@ public partial class VideoPlayerPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         PlayPosition = string.Empty;
-        mediaElement.PositionChanged += ChangedPosition;
-        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
-        mediaElement.PositionChanged += OnPositionChanged;
-        _ = Moved();
         BtnPLay.Source = "pause.png";
         App.OnVideoNavigated.Navigation += Now;
     }
@@ -94,18 +91,25 @@ public partial class VideoPlayerPage : ContentPage
         switch (e.NewState)
         {
             case MediaElementState.Stopped:
+                mediaElement.StateChanged -= MediaStopped;
                 _logger.Info("Media has finished playing.");
                 mediaElement.ShouldKeepScreenOn = false;
                 _logger.Info("ShouldKeepScreenOn set to false.");
-                Pos.SavedPosition = mediaElement.Position;
-                await App.PositionData.UpdatePosition(Pos);
+                if (mediaElement.Position > TimeSpan.FromSeconds(10))
+                {
+                    Pos.SavedPosition = mediaElement.Position;
+                    await App.PositionData.UpdatePosition(Pos);
+                }
                 break;
             case MediaElementState.Paused:
                 _logger.Info($"Paused: {mediaElement.Position}");
                 _logger.Info("Media paused. Setting should keep screen on to false");
                 mediaElement.ShouldKeepScreenOn = false;
-                Pos.SavedPosition = mediaElement.Position;
-                await App.PositionData.UpdatePosition(Pos);
+                if (mediaElement.Position > TimeSpan.FromSeconds(10))
+                {
+                    Pos.SavedPosition = mediaElement.Position;
+                    await App.PositionData.UpdatePosition(Pos);
+                }
                 break;
             case MediaElementState.Playing:
                 mediaElement.ShouldKeepScreenOn = true;
@@ -117,15 +121,47 @@ public partial class VideoPlayerPage : ContentPage
 #nullable disable
 
     #endregion
-
-    protected override void OnDisappearing()
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        mediaElement.Stop();
+        _logger.Info("Navigated to Video Player Page");
+        _logger.Info($"Title: {Pos.Title} Position: {Pos.SavedPosition}");
+        _ = Moved();
+        mediaElement.PositionChanged += ChangedPosition;
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
+        mediaElement.PositionChanged += OnPositionChanged;
+        if (Pos.SavedPosition > TimeSpan.FromSeconds(10))
+        {
+            _logger.Info($"Seeking Position: {Pos.SavedPosition}");
+            mediaElement.StateChanged += Opening;
+        }
+        else
+        {
+            mediaElement.StateChanged += MediaStopped;
+        }
+        base.OnNavigatedTo(args);
     }
+
+    private async void Opening(object sender, MediaStateChangedEventArgs e)
+    {
+        if (e.NewState == MediaElementState.Playing)
+        {
+            mediaElement.StateChanged -= Opening;
+            mediaElement.Pause();
+            await mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.Play();
+            mediaElement.StateChanged += MediaStopped;
+        }
+    }
+
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         _logger.Info("Navigating away form Video Player.");
         mediaElement.Stop();
+
+        mediaElement.PositionChanged -= ChangedPosition;
+        mediaElement.PropertyChanged -= MediaElement_PropertyChanged;
+        mediaElement.PositionChanged -= OnPositionChanged;
+
         mediaElement.Handler.DisconnectHandler();
 #if ANDROID || IOS16_1_OR_GREATER
         var color = Color.FromArgb("#34AAD2");
@@ -134,10 +170,6 @@ public partial class VideoPlayerPage : ContentPage
         base.OnNavigatedFrom(args);
     }
 
-    private void ContentPage_Unloaded(object sender, EventArgs e)
-    {
-        mediaElement.Stop();
-    }
     public void Play()
     {
         mediaElement.Play();
