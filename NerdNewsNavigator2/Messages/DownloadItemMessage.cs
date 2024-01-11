@@ -6,13 +6,8 @@ namespace NerdNewsNavigator2.Messages;
 /// <summary>
 /// A class that manages messages for downloading items.
 /// </summary>
-public class DownloadItemMessage : ValueChangedMessage<bool>
+public class DownloadItemMessage(bool value, string title, Show show) : ValueChangedMessage<bool>(value)
 {
-    public string Title { get; }
-    public Show ShowItem { get; }
-    public DownloadItemMessage(bool value, string title, Show show) : base(value)
-    {
-        Title = title;
-        ShowItem = show;
-    }
+    public string Title { get; } = title;
+    public Show ShowItem { get; } = show;
 }

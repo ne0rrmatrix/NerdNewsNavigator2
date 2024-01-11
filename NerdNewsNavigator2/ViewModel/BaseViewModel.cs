@@ -127,8 +127,8 @@ public partial class BaseViewModel : ObservableObject
             show.Url = item.Url;
             show.Title = item.Title;
         }
-        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}?Url={show.Url}");
-        App.OnVideoNavigated.Add(show);
+        await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
+        WeakReferenceMessenger.Default.Send(new ShowItemMessage(show));
     }
     #endregion
 

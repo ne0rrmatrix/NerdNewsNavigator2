@@ -65,7 +65,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
 
-        builder.Services.AddTransient<VideoPlayerPage>();
+        builder.Services.AddSingleton<VideoPlayerPage>();
         builder.Services.AddTransient<VideoPlayerViewModel>();
 
         builder.Services.AddTransient<SettingsPage>();
@@ -84,7 +84,6 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<CurrentDownloads>();
         builder.Services.AddSingleton<DeletedItemService>();
-        builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
         builder.Services.AddSingleton<DownloadService>();
         builder.Services.AddSingleton<AutoDownloadService>();

@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Maui.Behaviors;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -18,4 +20,17 @@ public partial class DownloadedShowPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+#if ANDROID || IOS16_1_OR_GREATER
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
+        {
+            StatusBarColor = Color.FromArgb("#000000")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
+    }
+#endif
 }

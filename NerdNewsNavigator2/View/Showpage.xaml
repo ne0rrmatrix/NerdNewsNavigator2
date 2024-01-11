@@ -10,9 +10,6 @@
     x:DataType="viewmodel:ShowViewModel"
     BackgroundColor="#34AAD2"
     Shell.BackgroundColor="#34AAD2">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="{OnPlatform Default=true, WinUI=false}" IsVisible="{OnPlatform Default=true, WinUI=false}" />
     </Shell.BackButtonBehavior>
@@ -42,9 +39,7 @@
                                                   Android=340,
                                                   iOS=340}">
 
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                        </Frame.GestureRecognizers>
+                        
                         <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
                             <Label
                                 Grid.Row="0"
@@ -76,6 +71,9 @@
                                         CachingEnabled="True"
                                         Uri="{Binding Image}" />
                                 </Image.Source>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
+                                </Image.GestureRecognizers>
                             </Image>
                             <HorizontalStackLayout Grid.Row="2">
 
@@ -96,6 +94,8 @@
                                 <Button
                                     Margin="5"
                                     BackgroundColor="Green"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}"
+                                    CommandParameter="{Binding}"
                                     FontAttributes="Bold"
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
@@ -113,13 +113,13 @@
                                             <Setter Property="IsVisible" Value="False" />
                                         </DataTrigger>
                                     </Button.Triggers>
-                                    <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DownloadCommand}" CommandParameter="{Binding}" />
-                                    </Button.GestureRecognizers>
+
                                 </Button>
                                 <Button
                                     Margin="5"
                                     BackgroundColor="#CD2026"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}"
+                                    CommandParameter="{Binding}"
                                     FontAttributes="Bold"
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
@@ -137,9 +137,6 @@
                                             <Setter Property="IsVisible" Value="False" />
                                         </DataTrigger>
                                     </Button.Triggers>
-                                    <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=CancelCommand}" CommandParameter="{Binding}" />
-                                    </Button.GestureRecognizers>
                                 </Button>
                             </HorizontalStackLayout>
 

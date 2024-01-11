@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Maui.Behaviors;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -42,6 +44,19 @@ public partial class SettingsPage : ContentPage
         BindingContext = viewModel;
         _messenger = messenger;
     }
+
+#if ANDROID || IOS16_1_OR_GREATER
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
+        {
+            StatusBarColor = Color.FromArgb("#000000")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
+    }
+#endif
 
     /// <summary>
     /// Method validates URL <see cref="Uri"/> <see cref="string"/>
@@ -116,8 +131,8 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void WIFIOnly(object sender, EventArgs e)
     {
-        var WIFIOnly = Preferences.Default.Get("WIFIOnly", "No");
-        if (WIFIOnly == "No")
+        var wIFIOnly = Preferences.Default.Get("WIFIOnly", "No");
+        if (wIFIOnly == "No")
         {
             WifiBtn.Text = "Yes";
             Preferences.Default.Set("WIFIOnly", "Yes");

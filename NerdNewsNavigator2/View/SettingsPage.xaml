@@ -11,9 +11,6 @@
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />

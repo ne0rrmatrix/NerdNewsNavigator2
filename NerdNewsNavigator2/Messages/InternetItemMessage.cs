@@ -6,9 +6,6 @@ namespace NerdNewsNavigator2.Messages;
 /// <summary>
 /// A class that manages messages for whether the internet is working.
 /// </summary>
-public class InternetItemMessage : ValueChangedMessage<bool>
+public class InternetItemMessage(bool value) : ValueChangedMessage<bool>(value)
 {
-    public InternetItemMessage(bool value) : base(value)
-    {
-    }
 }

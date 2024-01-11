@@ -9,10 +9,6 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
     BackgroundColor="#34AAD2">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
-
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
@@ -107,14 +103,12 @@
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
                                     HeightRequest="48"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}"
                                     SemanticProperties.Description="Button allows you to delete a show."
                                     Text="Delete"
                                     TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
                                                            Default=100}">
-                                    <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
-                                    </Button.GestureRecognizers>
                                 </Button>
 
                             </HorizontalStackLayout>

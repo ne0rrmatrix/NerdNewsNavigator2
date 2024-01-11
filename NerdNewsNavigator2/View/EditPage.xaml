@@ -9,9 +9,6 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:EditViewModel"
     BackgroundColor="#34AAD2">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>

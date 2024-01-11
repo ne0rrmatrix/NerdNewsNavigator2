@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Maui.Behaviors;
 using CommunityToolkit.Maui.Core.Platform;
 
 namespace NerdNewsNavigator2.View;
@@ -9,7 +10,7 @@ namespace NerdNewsNavigator2.View;
 /// <summary>
 /// A class that Displays a Video from twit.tv.
 /// </summary>
-public partial class VideoPlayerPage : ContentPage
+public partial class VideoPlayerPage : ContentPage, IRecipient<ShowItemMessage>
 {
     #region Properties
     public bool ShowControls { get; set; }
@@ -34,51 +35,94 @@ public partial class VideoPlayerPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        WeakReferenceMessenger.Default.Register(this);
         PlayPosition = string.Empty;
         BtnPLay.Source = "pause.png";
-        App.OnVideoNavigated.Navigation += Now;
-    }
-
-#nullable enable
-    private async void Now(object? sender, VideoNavigationEventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        _logger.Info($"Navigated: {e.CurrentShow.Url}");
-        App.OnVideoNavigated.Navigation -= Now;
-        Pos.Title = e.CurrentShow.Title;
-        await Seek(e.CurrentShow);
     }
 
     #region Events
-    /// <summary>
-    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
-    /// </summary>
-    /// <param name="show"></param>
-    private async Task Seek(Show show)
+    public async void Receive(ShowItemMessage message)
     {
-        _logger.Info($"Title: {show.Title}");
-        mediaElement.ShouldKeepScreenOn = true;
-        var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == show.Title);
-        if (result is not null)
+        PlayPosition = string.Empty;
+        BtnPLay.Source = "pause.png";
+        _ = Moved();
+        mediaElement.PositionChanged += ChangedPosition;
+        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
+        mediaElement.PositionChanged += OnPositionChanged;
+        _logger.Info($"Navigated: {message.Value.Url}");
+        Pos.Title = message.Value.Title;
+        Pos.Url = message.Value.Url;
+        Pos.SavedPosition = TimeSpan.Zero;
+        mediaElement.Source = message.Value.Url;
+        mediaElement.Play();
+        await Seek(message.Value);
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register(this);
+    }
+
+#if ANDROID || IOS16_1_OR_GREATER
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
         {
-            Pos.SavedPosition = result.SavedPosition;
-            mediaElement.Pause();
-            _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
-            await mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.Play();
-            mediaElement.StateChanged += MediaStopped;
-        }
-        else
+            StatusBarColor = Color.FromArgb("#000000")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
+    }
+#endif
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        mediaElement.PositionChanged -= ChangedPosition;
+        mediaElement.PropertyChanged -= MediaElement_PropertyChanged;
+        mediaElement.PositionChanged -= OnPositionChanged;
+        mediaElement.StateChanged -= MediaStopped;
+        _logger.Info("Media has finished playing.");
+        mediaElement.ShouldKeepScreenOn = false;
+        _logger.Info("ShouldKeepScreenOn set to false.");
+        if (mediaElement.Position > TimeSpan.FromSeconds(10))
         {
             Pos.SavedPosition = mediaElement.Position;
-            await App.PositionData.AddPosition(Pos);
-            _logger.Info("Could not find saved position");
-            mediaElement.StateChanged += MediaStopped;
+            _ = App.PositionData.UpdatePosition(Pos);
         }
+#if ANDROID || IOS16_1_OR_GREATER
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
+        {
+            StatusBarColor = Color.FromArgb("#34AAD2")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
+#endif
+        _logger.Info("Navigating away form Video Player.");
+        mediaElement.Stop();
+        base.OnNavigatedFrom(args);
+    }
+
+    private void MediaElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
+        {
+            PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
+        }
+    }
+
+    private void Slider_DragCompleted(object sender, EventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(sender);
+        var newValue = ((Slider)sender).Value;
+        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
+        mediaElement.Play();
+    }
+
+    private void Slider_DragStarted(object sender, EventArgs e)
+    {
+        mediaElement.Pause();
+    }
+
+    private void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
+    {
+        PositionSlider.Value = e.Position.TotalSeconds;
     }
 
     /// <summary>
@@ -86,90 +130,31 @@ public partial class VideoPlayerPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void MediaStopped(object? sender, MediaStateChangedEventArgs e)
+    private async void MediaStopped(object sender, MediaStateChangedEventArgs e)
     {
         switch (e.NewState)
         {
-            case MediaElementState.Stopped:
-                mediaElement.StateChanged -= MediaStopped;
-                _logger.Info("Media has finished playing.");
-                mediaElement.ShouldKeepScreenOn = false;
-                _logger.Info("ShouldKeepScreenOn set to false.");
-                if (mediaElement.Position > TimeSpan.FromSeconds(10))
-                {
-                    Pos.SavedPosition = mediaElement.Position;
-                    await App.PositionData.UpdatePosition(Pos);
-                }
-                break;
             case MediaElementState.Paused:
                 _logger.Info($"Paused: {mediaElement.Position}");
-                _logger.Info("Media paused. Setting should keep screen on to false");
-                mediaElement.ShouldKeepScreenOn = false;
                 if (mediaElement.Position > TimeSpan.FromSeconds(10))
                 {
                     Pos.SavedPosition = mediaElement.Position;
                     await App.PositionData.UpdatePosition(Pos);
                 }
                 break;
-            case MediaElementState.Playing:
-                mediaElement.ShouldKeepScreenOn = true;
-                _logger.Info("Setting should keep screen on to true");
-                break;
         }
     }
 
-#nullable disable
-
+    private void ChangedPosition(object sender, EventArgs e)
+    {
+        var playDuration = TimeConverter(mediaElement.Duration);
+        var position = TimeConverter(mediaElement.Position);
+        PlayPosition = $"{position}/{playDuration}";
+        OnPropertyChanged(nameof(PlayPosition));
+    }
     #endregion
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        _logger.Info("Navigated to Video Player Page");
-        _logger.Info($"Title: {Pos.Title} Position: {Pos.SavedPosition}");
-        _ = Moved();
-        mediaElement.PositionChanged += ChangedPosition;
-        mediaElement.PropertyChanged += MediaElement_PropertyChanged;
-        mediaElement.PositionChanged += OnPositionChanged;
-        if (Pos.SavedPosition > TimeSpan.FromSeconds(10))
-        {
-            _logger.Info($"Seeking Position: {Pos.SavedPosition}");
-            mediaElement.StateChanged += Opening;
-        }
-        else
-        {
-            mediaElement.StateChanged += MediaStopped;
-        }
-        base.OnNavigatedTo(args);
-    }
 
-    private async void Opening(object sender, MediaStateChangedEventArgs e)
-    {
-        if (e.NewState == MediaElementState.Playing)
-        {
-            mediaElement.StateChanged -= Opening;
-            mediaElement.Pause();
-            await mediaElement.SeekTo(Pos.SavedPosition);
-            mediaElement.Play();
-            mediaElement.StateChanged += MediaStopped;
-        }
-    }
-
-    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
-    {
-        _logger.Info("Navigating away form Video Player.");
-        mediaElement.Stop();
-
-        mediaElement.PositionChanged -= ChangedPosition;
-        mediaElement.PropertyChanged -= MediaElement_PropertyChanged;
-        mediaElement.PositionChanged -= OnPositionChanged;
-
-        mediaElement.Handler.DisconnectHandler();
-#if ANDROID || IOS16_1_OR_GREATER
-        var color = Color.FromArgb("#34AAD2");
-        StatusBar.SetColor(color);
-#endif
-        base.OnNavigatedFrom(args);
-    }
-
+    #region Buttons
     public void Play()
     {
         mediaElement.Play();
@@ -185,67 +170,7 @@ public partial class VideoPlayerPage : ContentPage
         mediaElement.Stop();
         BtnPLay.Source = "pause.png";
     }
-    private async Task Moved()
-    {
-        ShowControls = true;
-        OnPropertyChanged(nameof(ShowControls));
-        await Task.Delay(7000);
-        ShowControls = false;
-        OnPropertyChanged(nameof(ShowControls));
-    }
-    #region Events
-#nullable enable
-    private void MediaElement_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        if (e.PropertyName == MediaElement.DurationProperty.PropertyName)
-        {
-            PositionSlider.Maximum = mediaElement.Duration.TotalSeconds;
-        }
-    }
-    private void Slider_DragCompleted(object sender, EventArgs e)
-    {
-        ArgumentNullException.ThrowIfNull(sender);
-        var newValue = ((Slider)sender).Value;
-        mediaElement.SeekTo(TimeSpan.FromSeconds(newValue));
-        mediaElement.Play();
-    }
-    private void Slider_DragStarted(object sender, EventArgs e)
-    {
-        mediaElement.Pause();
-    }
-    private void OnPositionChanged(object? sender, MediaPositionChangedEventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        PositionSlider.Value = e.Position.TotalSeconds;
-    }
-    private void ChangedPosition(object? sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-        var playDuration = TimeConverter(mediaElement.Duration);
-        var position = TimeConverter(mediaElement.Position);
-        PlayPosition = $"{position}/{playDuration}";
-        OnPropertyChanged(nameof(PlayPosition));
-    }
-    private static string TimeConverter(TimeSpan time)
-    {
-        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
-        return interval.ToString();
-    }
 
-#nullable disable
-    #endregion
-
-    #region Buttons
     private void BtnRewind_Clicked(object sender, EventArgs e)
     {
         var time = mediaElement.Position - TimeSpan.FromSeconds(15);
@@ -261,6 +186,7 @@ public partial class VideoPlayerPage : ContentPage
         mediaElement.SeekTo(time);
         mediaElement.Play();
     }
+
     private void BtnPlay_Clicked(object sender, EventArgs e)
     {
         if (mediaElement.CurrentState is MediaElementState.Stopped or
@@ -274,39 +200,6 @@ public partial class VideoPlayerPage : ContentPage
             mediaElement.Pause();
             BtnPLay.Source = "play.png";
         }
-    }
-    private void BtnFullScreen_Clicked(object sender, EventArgs e)
-    {
-        SetFullScreenStatus();
-    }
-    private void OnMuteClicked(object sender, EventArgs e)
-    {
-        mediaElement.ShouldMute = !mediaElement.ShouldMute;
-        ImageButtonMute.Source = mediaElement.ShouldMute ? (ImageSource)"mute.png" : (ImageSource)"muted.png";
-        OnPropertyChanged(nameof(ImageButtonMute.Source));
-    }
-    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    {
-        _ = Moved();
-    }
-    private void AspectButton(object sender, EventArgs e)
-    {
-        mediaElement.Aspect = mediaElement.Aspect == Aspect.AspectFit ? Aspect.AspectFill : Aspect.AspectFit;
-    }
-    #endregion
-
-    #region Full Screen Functions
-    private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
-    {
-#if WINDOWS
-        SetFullScreenStatus();
-#endif
-    }
-
-    private void SetFullScreenStatus()
-    {
-        grid.Margin = grid.Margin.IsEmpty ? new Thickness(10) : new Thickness(0);
-        CustomControls.SetFullScreenStatus();
     }
 
     private void SwipeGestureRecognizer_Swiped(object sender, SwipedEventArgs e)
@@ -322,5 +215,101 @@ public partial class VideoPlayerPage : ContentPage
             grid.Margin = new Thickness(10);
         }
     }
+
+    private void BtnFullScreen_Clicked(object sender, EventArgs e)
+    {
+        SetFullScreenStatus();
+    }
+
+    private void OnMuteClicked(object sender, EventArgs e)
+    {
+        mediaElement.ShouldMute = !mediaElement.ShouldMute;
+        ImageButtonMute.Source = mediaElement.ShouldMute ? (ImageSource)"mute.png" : (ImageSource)"muted.png";
+        OnPropertyChanged(nameof(ImageButtonMute.Source));
+    }
+
+    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        _ = Moved();
+    }
+
+    private void AspectButton(object sender, EventArgs e)
+    {
+        mediaElement.Aspect = mediaElement.Aspect == Aspect.AspectFit ? Aspect.AspectFill : Aspect.AspectFit;
+    }
+
+    private void TapGestureRecognizer_DoubleTapped(object sender, TappedEventArgs e)
+    {
+#if WINDOWS
+        SetFullScreenStatus();
+#endif
+    }
+
     #endregion
+
+    private void SetFullScreenStatus()
+    {
+        grid.Margin = grid.Margin.IsEmpty ? new Thickness(10) : new Thickness(0);
+        CustomControls.SetFullScreenStatus();
+    }
+
+    private async Task Moved()
+    {
+        ShowControls = true;
+        OnPropertyChanged(nameof(ShowControls));
+        await Task.Delay(7000);
+        ShowControls = false;
+        OnPropertyChanged(nameof(ShowControls));
+    }
+
+    private static string TimeConverter(TimeSpan time)
+    {
+        var interval = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
+        return interval.ToString();
+    }
+
+    /// <summary>
+    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
+    /// </summary>
+    /// <param name="show"></param>
+    private async Task Seek(Show show)
+    {
+        _logger.Info($"Title: {show.Title}");
+        mediaElement.ShouldKeepScreenOn = true;
+
+        var positionList = await App.PositionData.GetAllPositions();
+        var result = positionList.ToList().Find(x => x.Title == show.Title);
+        if (result is not null && result.SavedPosition > TimeSpan.FromSeconds(10))
+        {
+            Pos.SavedPosition = result.SavedPosition;
+            _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
+#if IOS || MACCATALYST
+            mediaElement.StateChanged += IOSStart;
+#else
+            await mediaElement.SeekTo(Pos.SavedPosition);
+            mediaElement.StateChanged += MediaStopped;
+#endif
+        }
+        else
+        {
+            Pos.SavedPosition = mediaElement.Position;
+            await App.PositionData.AddPosition(Pos);
+            _logger.Info("Could not find saved position");
+            mediaElement.StateChanged += MediaStopped;
+        }
+    }
+
+    public async void IOSStart(object sender, MediaStateChangedEventArgs e)
+    {
+        switch (e.NewState)
+        {
+            case MediaElementState.Playing:
+                mediaElement.StateChanged -= IOSStart;
+                mediaElement.Pause();
+                await mediaElement.SeekTo(Pos.SavedPosition);
+                mediaElement.Play();
+                mediaElement.StateChanged += MediaStopped;
+                break;
+        }
+    }
 }

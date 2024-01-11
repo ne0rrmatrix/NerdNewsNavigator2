@@ -14,12 +14,11 @@
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
     Shell.TitleColor="White">
+    
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="Black" />
-    </ContentPage.Behaviors>
+    
     <Grid x:Name="grid" Margin="10">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_DoubleTapped" />
@@ -33,8 +32,7 @@
             Grid.Row="0"
             ShouldAutoPlay="True"
             ShouldKeepScreenOn="True"
-            ShouldShowPlaybackControls="False"
-            Source="{Binding Url}" />
+            ShouldShowPlaybackControls="False" />
 
         <Grid
             BackgroundColor="Black"
@@ -45,7 +43,8 @@
             <ImageButton
                 x:Name="btnFullScreen"
                 Margin="10"
-                BackgroundColor="Transparent"
+                BackgroundColor="{OnPlatform Android=Transparent,
+                                             WinUI=Transparent}"
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="48"
                 HorizontalOptions="End"
@@ -65,7 +64,8 @@
                         x:Name="BtnRewind"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent,
+                                                     WinUI=Transparent}"
                         Clicked="BtnRewind_Clicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
@@ -81,7 +81,8 @@
                         x:Name="BtnPLay"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent,
+                                                     WinUI=Transparent}"
                         Clicked="BtnPlay_Clicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
@@ -113,7 +114,8 @@
                         x:Name="ImageButtonMute"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent,
+                                                     WinUI=Transparent}"
                         Clicked="OnMuteClicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
@@ -139,7 +141,8 @@
                     <ImageButton
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent,
+                                                     WinUI=Transparent}"
                         Clicked="AspectButton"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
