@@ -6,6 +6,7 @@
 		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<RootNamespace>NerdNewsNavigator2</RootNamespace>
 		<UseMaui>true</UseMaui>
+        <MauiVersion>8.0.6-nightly.9851</MauiVersion>
         <LangVersion>preview</LangVersion>
         <UseMauiEssentials>true</UseMauiEssentials>
 	    <SingleProject>true</SingleProject>
@@ -24,7 +25,7 @@
 
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.3</SupportedOSPlatformVersion>
-	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">33.0</SupportedOSPlatformVersion>
+	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 	    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 	    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
@@ -54,6 +55,7 @@
 	    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	    <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
 	    <RunAOTCompilation>False</RunAOTCompilation>
+	    <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
@@ -165,7 +167,7 @@
 	    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="3.0.1" />
 	    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 	    <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
-	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+	    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.*-*" />
 	    <PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 	    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 	    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
@@ -174,6 +176,12 @@
 	    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
 	    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
      </ItemGroup>
+	
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+    </ItemGroup>
 	
 </Project>

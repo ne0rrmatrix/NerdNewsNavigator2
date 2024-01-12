@@ -4,13 +4,14 @@
 
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using AndroidX.Core.App;
 using static Android.OS.PowerManager;
 
 namespace NerdNewsNavigator2.Platforms.Android;
 
-[Service]
+[Service(ForegroundServiceType = ForegroundService.TypeDataSync)]
 internal sealed class AutoStartService : Service
 {
     #region Properties
@@ -25,6 +26,7 @@ internal sealed class AutoStartService : Service
     {
     }
     #region Foreground Service Methods
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     private void StartForegroundServiceAsync()
     {
         App.AutoDownloadService.Start();
@@ -33,8 +35,9 @@ internal sealed class AutoStartService : Service
         var intent = new Intent(this, typeof(MainActivity));
         var pendingIntentFlags = Build.VERSION.SdkInt >= BuildVersionCodes.S
             ? PendingIntentFlags.UpdateCurrent |
-              PendingIntentFlags.Mutable
+              PendingIntentFlags.Immutable
             : PendingIntentFlags.UpdateCurrent;
+
         var pendingIntent = PendingIntent.GetActivity(this, 0, intent, pendingIntentFlags);
 
         var notificationManager = GetSystemService(NotificationService) as NotificationManager;
@@ -51,17 +54,25 @@ internal sealed class AutoStartService : Service
         notification.SetContentTitle("AutoDownloader On");
         notification.SetSmallIcon(Resource.Drawable.ic_stat_alarm);
         notification.SetSilent(true);
-
-        StartForeground(NOTIFICATION_ID, notification.Build());
+        if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+        {
+            StartForeground(NOTIFICATION_ID, notification.Build());
+        }
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
+        {
+            StartForeground(NOTIFICATION_ID, notification.Build(), ForegroundService.TypeDataSync);
+        }
     }
 
     private static void CreateNotificationChannel(NotificationManager notificationMnaManager)
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
+#pragma warning disable CA1416 // Validate platform compatibility
             var channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME,
            NotificationImportance.None);
             notificationMnaManager.CreateNotificationChannel(channel);
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
     public override IBinder OnBind(Intent intent)
@@ -83,7 +94,9 @@ internal sealed class AutoStartService : Service
         var intent = new Intent(this, typeof(AutoStartService));
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
+#pragma warning disable CA1416 // Validate platform compatibility
             StartForegroundService(intent);
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
     public void AcquireWakeLock()

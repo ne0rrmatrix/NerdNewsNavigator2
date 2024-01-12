@@ -8,6 +8,7 @@ namespace NerdNewsNavigator2.Services;
 internal sealed class AndroidPermissions : BasePlatformPermission
 {
 #if ANDROID
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public override (string androidPermission, bool isRuntime)[] RequiredPermissions =>
         new List<(string androidPermission, bool isRuntime)>
         {

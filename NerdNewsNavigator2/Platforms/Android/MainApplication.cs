@@ -20,6 +20,7 @@ public class MainApplication(nint handle, JniHandleOwnership ownership) : MauiAp
 
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
+#pragma warning disable CA1416 // Validate platform compatibility
             var serviceChannel =
                new NotificationChannel(ChannelId, "AutoDownload Service Channel", NotificationImportance.None);
 
@@ -27,6 +28,7 @@ public class MainApplication(nint handle, JniHandleOwnership ownership) : MauiAp
             {
                 manager.CreateNotificationChannel(serviceChannel);
             }
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
 }
