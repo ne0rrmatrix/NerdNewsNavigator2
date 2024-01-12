@@ -54,13 +54,14 @@ internal sealed class AutoStartService : Service
         notification.SetContentTitle("AutoDownloader On");
         notification.SetSmallIcon(Resource.Drawable.ic_stat_alarm);
         notification.SetSilent(true);
-        if (Build.VERSION.SdkInt < BuildVersionCodes.O)
-        {
-            StartForeground(NOTIFICATION_ID, notification.Build());
-        }
         if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
         {
             StartForeground(NOTIFICATION_ID, notification.Build(), ForegroundService.TypeDataSync);
+            return;
+        }
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+        {
+            StartForeground(NOTIFICATION_ID, notification.Build());
         }
     }
 
