@@ -42,9 +42,6 @@
                                                   Android=340,
                                                   iOS=340}">
                         <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                            </Grid.GestureRecognizers>
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
@@ -99,17 +96,17 @@
                                 <Button
                                     Margin="5"
                                     BackgroundColor="#CD2026"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}"
+                                    CommandParameter="{Binding}"
                                     FontAttributes="Bold"
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
                                     HeightRequest="48"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}"
                                     SemanticProperties.Description="Button allows you to delete a show."
                                     Text="Delete"
                                     TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
-                                                           Default=100}">
-                                </Button>
+                                                           Default=100}" />
 
                             </HorizontalStackLayout>
 
