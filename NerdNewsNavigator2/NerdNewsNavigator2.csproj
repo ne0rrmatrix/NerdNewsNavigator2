@@ -175,5 +175,11 @@
 	    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
 	    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
      </ItemGroup>
+	
+    <ItemGroup>
+      <MauiXaml Update="Controls\MediaControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
 
 </Project>

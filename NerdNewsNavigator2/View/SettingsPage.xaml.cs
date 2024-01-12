@@ -46,6 +46,7 @@ public partial class SettingsPage : ContentPage
     }
 
 #if ANDROID || IOS16_1_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);

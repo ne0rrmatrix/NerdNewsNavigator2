@@ -64,8 +64,11 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
-
+#if WINDOWS
         builder.Services.AddSingleton<VideoPlayerPage>();
+#else
+        builder.Services.AddTransient<VideoPlayerPage>();
+#endif
         builder.Services.AddTransient<VideoPlayerViewModel>();
 
         builder.Services.AddTransient<SettingsPage>();
