@@ -32,15 +32,18 @@
                         Margin="5"
                         BackgroundColor="White"
                         HorizontalOptions="Center"
-                        SemanticProperties.Description="A frame for all downloaded shows listed."
-                        SemanticProperties.Hint="A frame of all downloaded shows listed."
+                        SemanticProperties.Description="A frame for all shows listed."
+                        SemanticProperties.Hint="A frame of all shows listed."
                         WidthRequest="{OnPlatform WinUI=430,
                                                   MacCatalyst=390,
                                                   Android=340,
                                                   iOS=340}">
 
 
-                        <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
+                        <Grid
+                            ColumnDefinitions="Auto"
+                            HorizontalOptions="Center"
+                            RowDefinitions="Auto,Auto,Auto,*">
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
@@ -100,7 +103,7 @@
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
                                     HeightRequest="48"
-                                    SemanticProperties.Description="Button allows you to download a show."
+                                    SemanticProperties.Description="download a show."
                                     Text="Download"
                                     TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
@@ -124,7 +127,7 @@
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
                                     HeightRequest="48"
-                                    SemanticProperties.Description="Button allows you to cancel a current download."
+                                    SemanticProperties.Description="cancel a current download."
                                     Text="Cancel"
                                     TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
