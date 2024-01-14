@@ -40,12 +40,11 @@
                                                   iOS=340}">
 
 
-                        <Grid HorizontalOptions="Center" ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
+                        <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
                                 HeightRequest="60"
-                                HorizontalTextAlignment="Start"
                                 LineBreakMode="WordWrap"
                                 SemanticProperties.Description="Shows title of show"
                                 Text="{Binding Title}"
