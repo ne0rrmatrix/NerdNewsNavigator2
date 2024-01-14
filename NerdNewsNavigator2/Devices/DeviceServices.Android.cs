@@ -22,11 +22,12 @@ internal sealed class DeviceServices : IDeviceServices
             return;
         }
 
-        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, false);
+        Views.WindowCompat.SetDecorFitsSystemWindows(activity.Window, true);
         var windowInsetsControllerCompat = Views.WindowCompat.GetInsetsController(activity.Window, activity.Window.DecorView);
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
         windowInsetsControllerCompat.Show(types);
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorDefault;
     }
     public void FullScreen()
     {
@@ -43,7 +44,7 @@ internal sealed class DeviceServices : IDeviceServices
         var types = Views.WindowInsetsCompat.Type.StatusBars() |
                     Views.WindowInsetsCompat.Type.NavigationBars();
 
-        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowBarsBySwipe;
+        windowInsetsControllerCompat.SystemBarsBehavior = Views.WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
         windowInsetsControllerCompat.Hide(types);
     }
 }

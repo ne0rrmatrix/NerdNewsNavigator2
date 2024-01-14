@@ -128,7 +128,7 @@ public partial class BaseViewModel : ObservableObject
             show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
-        App.OnVideoNavigated.Add(show);
+        WeakReferenceMessenger.Default.Send(new ShowItemMessage(show));
     }
     #endregion
 
@@ -307,13 +307,6 @@ public partial class BaseViewModel : ObservableObject
     /// <returns></returns>
     public bool InternetConnected()
     {
-        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return _connectivity.NetworkAccess == NetworkAccess.Internet;
     }
 }

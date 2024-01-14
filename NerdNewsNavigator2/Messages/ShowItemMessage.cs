@@ -2,9 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace NerdNewsNavigator2.Primitives;
-public class VideoNavigationEventArgs : EventArgs
+namespace NerdNewsNavigator2.Messages;
+
+public class ShowItemMessage(Show value) : ValueChangedMessage<Show>(value)
 {
-    public Show CurrentShow { get; set; }
-    public string Title { get; set; }
 }

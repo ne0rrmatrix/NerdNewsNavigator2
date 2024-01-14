@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CommunityToolkit.Maui.Behaviors;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -42,6 +44,20 @@ public partial class SettingsPage : ContentPage
         BindingContext = viewModel;
         _messenger = messenger;
     }
+
+#if ANDROID || IOS16_1_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
+        {
+            StatusBarColor = Color.FromArgb("#000000")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
+    }
+#endif
 
     /// <summary>
     /// Method validates URL <see cref="Uri"/> <see cref="string"/>
@@ -114,10 +130,10 @@ public partial class SettingsPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void WifiOnly(object sender, EventArgs e)
+    private void WIFIOnly(object sender, EventArgs e)
     {
-        var wifiOnly = Preferences.Default.Get("WIFIOnly", "No");
-        if (wifiOnly == "No")
+        var wIFIOnly = Preferences.Default.Get("WIFIOnly", "No");
+        if (wIFIOnly == "No")
         {
             WifiBtn.Text = "Yes";
             Preferences.Default.Set("WIFIOnly", "Yes");
@@ -208,7 +224,7 @@ public partial class SettingsPage : ContentPage
     /// <param name="e"></param>
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
-        WifiBtn.Text = Preferences.Default.Get("WifiOnly", "No");
+        WifiBtn.Text = Preferences.Default.Get("WIFIOnly", "No");
         var start = Preferences.Default.Get("start", false);
         SetAutoDownload = start ? "Yes" : "No";
         OnPropertyChanged(nameof(SetAutoDownload));

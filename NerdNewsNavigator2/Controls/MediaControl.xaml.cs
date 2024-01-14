@@ -2,13 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Maui.Controls.PlatformConfiguration;
+
 namespace NerdNewsNavigator2.Controls;
 
-public partial class MediaControl : ContentView
+public partial class MediaControl : ContentView, IRecipient<ShowItemMessage>
 {
     #region Properties
     public bool ShowControls { get; set; }
     public string PlayPosition { get; set; }
+    Position Pos { get; set; } = new();
+
     #endregion
     #region Bindably Properties
 
@@ -122,7 +126,9 @@ public partial class MediaControl : ContentView
     public MediaControl()
     {
         InitializeComponent();
+        WeakReferenceMessenger.Default.Register(this);
         PlayPosition = string.Empty;
+
         mediaElement.PositionChanged += ChangedPosition;
         mediaElement.PropertyChanged += MediaElement_PropertyChanged;
         mediaElement.PositionChanged += OnPositionChanged;
@@ -132,9 +138,7 @@ public partial class MediaControl : ContentView
     #region Methods
     public void SeekTo(TimeSpan position)
     {
-        mediaElement.Pause();
         mediaElement.SeekTo(position);
-        mediaElement.Play();
     }
     public void Play()
     {
@@ -283,5 +287,90 @@ public partial class MediaControl : ContentView
             grid.Margin = new Thickness(10);
         }
     }
+
+    public async void Receive(ShowItemMessage message)
+    {
+        Pos.Title = message.Value.Title;
+        Pos.Url = message.Value.Url;
+        Pos.SavedPosition = TimeSpan.Zero;
+        mediaElement.Source = message.Value.Url;
+        mediaElement.Play();
+        await Seek(message.Value);
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+#if WINDOWS
+        WeakReferenceMessenger.Default.Register(this);
+#endif
+    }
+
+    /// <summary>
+    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
+    /// </summary>
+    /// <param name="show"></param>
+    private async Task Seek(Show show)
+    {
+        mediaElement.ShouldKeepScreenOn = true;
+
+        var positionList = await App.PositionData.GetAllPositions();
+        var result = positionList.ToList().Find(x => x.Title == show.Title);
+        if (result is not null && result.SavedPosition > TimeSpan.FromSeconds(10))
+        {
+            Pos.SavedPosition = result.SavedPosition;
+#if IOS || MACCATALYST
+            mediaElement.StateChanged += IOSStart;
+#else
+            _ = mediaElement.SeekTo(result.SavedPosition);
+#endif
+        }
+        else
+        {
+            Pos.SavedPosition = mediaElement.Position;
+            Pos.Title = show.Title;
+            await App.PositionData.UpdatePosition(Pos);
+        }
+    }
+    private async void MediaStopped(object sender, MediaStateChangedEventArgs e)
+    {
+        switch (e.NewState)
+        {
+            case MediaElementState.Paused:
+                if (mediaElement.Position > TimeSpan.FromSeconds(10))
+                {
+                    Pos.SavedPosition = mediaElement.Position;
+                    await App.PositionData.UpdatePosition(Pos);
+                }
+                mediaElement.StateChanged += MediaStopped;
+                break;
+        }
+    }
+    public void IOSStart(object sender, MediaStateChangedEventArgs e)
+    {
+        switch (e.NewState)
+        {
+            case MediaElementState.Playing:
+                mediaElement.StateChanged -= IOSStart;
+                mediaElement.Pause();
+                mediaElement.SeekTo(Pos.SavedPosition);
+                mediaElement.Play();
+                mediaElement.StateChanged += MediaStopped;
+                break;
+        }
+    }
+
     #endregion
+
+    private async void MediaControl_Unloaded(object sender, EventArgs e)
+    {
+        if (mediaElement.Position > TimeSpan.FromSeconds(10) && Pos.Title != string.Empty)
+        {
+            Pos.SavedPosition = mediaElement.Position;
+            await App.PositionData.UpdatePosition(Pos);
+        }
+        mediaElement.Stop();
+#if ANDROID || IOS || MACCATALYST
+        mediaElement.StateChanged -= MediaStopped;
+        mediaElement.PositionChanged -= ChangedPosition;
+        mediaElement.PropertyChanged -= MediaElement_PropertyChanged;
+        mediaElement.PositionChanged -= OnPositionChanged;
+#endif
+    }
 }

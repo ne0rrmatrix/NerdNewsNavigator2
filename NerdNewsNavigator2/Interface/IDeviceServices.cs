@@ -7,7 +7,8 @@ using Microsoft.UI.Windowing;
 #endif
 
 namespace NerdNewsNavigator2.Interface;
-interface IDeviceServices
+
+internal interface IDeviceServices
 {
 #if WINDOWS
     public AppWindow FullScreen();

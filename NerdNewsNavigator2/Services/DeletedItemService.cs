@@ -6,7 +6,7 @@ namespace NerdNewsNavigator2.Services;
 public partial class DeletedItemService : ObservableObject
 {
     [ObservableProperty]
-    Download _item;
+    private Download _item;
     public EventHandler<DeletedItemEventArgs> DeletedItem { get; set; }
     public DeletedItemService()
     {

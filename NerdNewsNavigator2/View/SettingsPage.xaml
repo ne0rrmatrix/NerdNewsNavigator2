@@ -11,9 +11,6 @@
     x:DataType="viewmodel:SettingsViewModel"
     BackgroundColor="#34AAD2"
     Loaded="ContentPage_Loaded">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
@@ -123,7 +120,7 @@
                         x:Name="WifiBtn"
                         Margin="10"
                         BackgroundColor="#205493"
-                        Clicked="WifiOnly"
+                        Clicked="WIFIOnly"
                         FontAttributes="Bold"
                         FontSize="{OnIdiom Tablet=24,
                                            Default=12}"

@@ -11,6 +11,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="mediaControl"
     x:DataType="item:MediaControl"
+    Unloaded="MediaControl_Unloaded"
     mc:Ignorable="d">
 
     <Grid x:Name="grid" Margin="10">
@@ -28,22 +29,22 @@
             ShouldShowPlaybackControls="False" />
 
         <Grid
-            BackgroundColor="Black"
+            BackgroundColor="{OnPlatform Android=Black, WinUI=Black}"
             IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}"
-            Opacity="0.3" />
+            Opacity="{OnPlatform Android=0.3, WinUI=0.3}" />
 
         <Grid IsVisible="{Binding ShowControls, Source={x:Reference mediaControl}}">
             <ImageButton
                 x:Name="btnFullScreen"
                 Margin="10"
-                BackgroundColor="Transparent"
+                BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                 Clicked="BtnFullScreen_Clicked"
                 HeightRequest="48"
                 HorizontalOptions="End"
                 IsVisible="{OnPlatform Default=true,
                                        MacCatalyst=false}"
-                SemanticProperties.Description="Button sets video full screen status. Default is not full screen."
-                SemanticProperties.Hint="Button sets video full screen status. Default is not full screen."
+                SemanticProperties.Description="set video full screen. Default is not full screen."
+                SemanticProperties.Hint="set video full screen. Default is not full screen."
                 Source="whitefs.png"
                 VerticalOptions="Start"
                 WidthRequest="48" />
@@ -56,13 +57,13 @@
                         x:Name="BtnRewind"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                         Clicked="BtnRewind_Clicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
-                        SemanticProperties.Description="button rewinds video 15 seconds."
-                        SemanticProperties.Hint="button rewinds video 15 seconds."
+                        SemanticProperties.Description="rewinds video 15 seconds."
+                        SemanticProperties.Hint="rewinds video 15 seconds."
                         Source="rewind.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -72,7 +73,7 @@
                         x:Name="BtnPLay"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                         Clicked="BtnPlay_Clicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
@@ -88,13 +89,13 @@
                         x:Name="BtnForward"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                         Clicked="BtnForward_Clicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
-                        SemanticProperties.Description="button fast forwards video 15 seconds."
-                        SemanticProperties.Hint="button fast forwards video 15 seconds."
+                        SemanticProperties.Description="fast forwards video 15 seconds."
+                        SemanticProperties.Hint="fast forwards video 15 seconds."
                         Source="fastforward.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -104,12 +105,12 @@
                         x:Name="ImageButtonMute"
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                         Clicked="OnMuteClicked"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
-                        SemanticProperties.Description="Button allows you to mute a steam."
-                        SemanticProperties.Hint="Button allows you to mute a steam."
+                        SemanticProperties.Description="mutes steam."
+                        SemanticProperties.Hint="mutes steam."
                         Source="muted.png"
                         WidthRequest="{OnIdiom Phone=48,
                                                Default=80}">
@@ -130,13 +131,13 @@
                     <ImageButton
                         Margin="{OnIdiom Phone=15,
                                          Default=10}"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="{OnPlatform Android=Transparent, WinUI=Transparent}"
                         Clicked="AspectButton"
                         HeightRequest="{OnIdiom Phone=48,
                                                 Default=80}"
                         HorizontalOptions="Center"
-                        SemanticProperties.Description="Button allows you to change aspect ratio."
-                        SemanticProperties.Hint="Button allows you to change aspect ratio."
+                        SemanticProperties.Description="change video aspect ratio."
+                        SemanticProperties.Hint="change video aspect ratio."
                         Source="aspect.png"
                         VerticalOptions="End"
                         WidthRequest="{OnIdiom Phone=48,
@@ -148,7 +149,7 @@
                 Margin="45"
                 FontSize="12"
                 HorizontalOptions="Start"
-                SemanticProperties.Description="Label shows playback position for video"
+                SemanticProperties.Description="playback position for video"
                 Text="{Binding PlayPosition, Source={x:Reference mediaControl}}"
                 TextColor="White"
                 VerticalOptions="End" />
@@ -160,8 +161,8 @@
                 DragStarted="Slider_DragStarted"
                 MaximumTrackColor="LightGray"
                 MinimumTrackColor="Red"
-                SemanticProperties.Description="Slider shows current playback position for video."
-                SemanticProperties.Hint="Slider shows current playback position for video."
+                SemanticProperties.Description="current playback position for video."
+                SemanticProperties.Hint="current playback position for video."
                 VerticalOptions="End" />
         </Grid>
     </Grid>

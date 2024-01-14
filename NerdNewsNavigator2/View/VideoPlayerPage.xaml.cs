@@ -2,7 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if ANDROID || IOS16_1_OR_GREATER
+using CommunityToolkit.Maui.Behaviors;
 using CommunityToolkit.Maui.Core.Platform;
+#endif
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -10,19 +14,6 @@ namespace NerdNewsNavigator2.View;
 /// </summary>
 public partial class VideoPlayerPage : ContentPage
 {
-    #region Properties
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ILogger"/> class
-    /// </summary>
-    private readonly ILogger _logger = LoggerFactory.GetLogger(nameof(VideoPlayerPage));
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Position"/> class
-    /// </summary>
-    private Position Pos { get; set; } = new();
-
-    #endregion
     /// <summary>
     /// Class Constructor that initializes <see cref="VideoPlayerPage"/>
     /// </summary>
@@ -32,105 +23,33 @@ public partial class VideoPlayerPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
-        App.OnVideoNavigated.Navigation += Now;
     }
 
-    private async void Now(object sender, VideoNavigationEventArgs e)
+#if ANDROID || IOS16_1_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        _logger.Info($"Navigated: {e.CurrentShow.Url}");
-        App.OnVideoNavigated.Navigation -= Now;
-        mediaElement.Source = new Uri(e.CurrentShow.Url);
-        Pos.Title = e.CurrentShow.Title;
-        await Seek(e.CurrentShow);
-    }
-
-    #region Events
-#nullable enable
-    /// <summary>
-    /// Manages IOS seeking for <see cref="mediaElement"/> with <see cref="Pos"/> at start of playback.
-    /// </summary>
-    /// <param name="show"></param>
-    private async Task Seek(Show show)
-    {
-        _logger.Info($"Title: {show.Title}");
-        mediaElement.ShouldKeepScreenOn = true;
-        var positionList = await App.PositionData.GetAllPositions();
-        var result = positionList.ToList().Find(x => x.Title == show.Title);
-        if (result is not null)
+        base.OnNavigatedTo(args);
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
         {
-            Pos.SavedPosition = result.SavedPosition;
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                mediaElement.Pause();
-                _logger.Info($"Retrieved Saved position from database is: {Pos.Title} - {Pos.SavedPosition}");
-                mediaElement.SeekTo(Pos.SavedPosition);
-                mediaElement.Play();
-            });
-        }
-        else
-        {
-            Pos.SavedPosition = mediaElement.Position;
-            await App.PositionData.AddPosition(Pos);
-            _logger.Info("Could not find saved position");
-        }
-
-        mediaElement.StateChanged += MediaStopped;
+            StatusBarColor = Color.FromArgb("#000000")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
     }
+#endif
 
-    /// <summary>
-    /// Manages the saving of <see cref="Position"/> data in <see cref="PositionDataBase"/>
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void MediaStopped(object? sender, MediaStateChangedEventArgs e)
-    {
-        switch (e.NewState)
-        {
-            case MediaElementState.Stopped:
-                _logger.Info("Media has finished playing.");
-                mediaElement.ShouldKeepScreenOn = false;
-                _logger.Info("ShouldKeepScreenOn set to false.");
-                Pos.SavedPosition = mediaElement.Position;
-                await App.PositionData.UpdatePosition(Pos);
-                break;
-            case MediaElementState.Paused:
-                _logger.Info($"Paused: {mediaElement.Position}");
-                _logger.Info("Media paused. Setting should keep screen on to false");
-                mediaElement.ShouldKeepScreenOn = false;
-                Pos.SavedPosition = mediaElement.Position;
-                await App.PositionData.UpdatePosition(Pos);
-                break;
-            case MediaElementState.Playing:
-                mediaElement.ShouldKeepScreenOn = true;
-                _logger.Info("Setting should keep screen on to true");
-                break;
-        }
-    }
-
-#nullable disable
-
-    #endregion
-
-    protected override void OnDisappearing()
-    {
-        mediaElement.Stop();
-    }
+#if ANDROID || IOS16_1_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
-        _logger.Info("Navigating away form Video Player.");
-        mediaElement.Stop();
-        mediaElement.Handler.DisconnectHandler();
-#pragma warning disable CA1416
-#if ANDROID || IOS16_1_OR_GREATER || MACCATALYST14_3_OR_GREATER
-        var color = Color.FromArgb("#34AAD2");
-        StatusBar.SetColor(color);
-#endif
-#pragma warning restore CA1416
+#pragma warning disable CA1416 // Validate platform compatibility
+        this.Behaviors.Add(new StatusBarBehavior
+        {
+            StatusBarColor = Color.FromArgb("#34AAD2")
+        });
+#pragma warning restore CA1416 // Validate platform compatibility
         base.OnNavigatedFrom(args);
     }
-
-    private void ContentPage_Unloaded(object sender, EventArgs e)
-    {
-        mediaElement.Stop();
-    }
+#endif
 }

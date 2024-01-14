@@ -9,9 +9,6 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:EditViewModel"
     BackgroundColor="#34AAD2">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
@@ -77,6 +74,8 @@
                             <Button
                                 Grid.Row="2"
                                 BackgroundColor="#CD2026"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DeletePodcastCommand}"
+                                CommandParameter="{Binding}"
                                 FontAttributes="Bold"
                                 FontSize="Small"
                                 HeightRequest="48"
@@ -84,15 +83,13 @@
                                 SemanticProperties.Description="Button for deleting podcast"
                                 Text="Delete"
                                 TextColor="#FFFFFF"
-                                WidthRequest="125">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=DeletePodcastCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                WidthRequest="125" />
                             <Button
                                 Grid.Row="2"
                                 Margin="20"
                                 BackgroundColor="#205493"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=AddToFavoriteCommand}"
+                                CommandParameter="{Binding}"
                                 FontAttributes="Bold"
                                 FontSize="Small"
                                 HeightRequest="48"
@@ -101,15 +98,13 @@
                                 SemanticProperties.Description="Button for adding favorite podcast"
                                 Text="Favorite"
                                 TextColor="#FFFFFF"
-                                WidthRequest="125">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=AddToFavoriteCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                WidthRequest="125" />
                             <Button
                                 Grid.Row="2"
                                 Margin="20"
                                 BackgroundColor="#205493"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=RemoveFavoriteCommand}"
+                                CommandParameter="{Binding}"
                                 FontAttributes="Bold"
                                 FontSize="Small"
                                 HeightRequest="48"
@@ -118,11 +113,7 @@
                                 SemanticProperties.Description="Button for removing favorite podcast"
                                 Text="Remove"
                                 TextColor="#FFFFFF"
-                                WidthRequest="125">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=RemoveFavoriteCommand}" CommandParameter="{Binding}" />
-                                </Button.GestureRecognizers>
-                            </Button>
+                                WidthRequest="125" />
                             <Label
                                 Grid.Row="3"
                                 Margin="10"

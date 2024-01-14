@@ -19,7 +19,6 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using CommunityToolkit.Mvvm.Messaging;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
-global using M3U8Parser;
 global using MetroLog;
 global using MetroLog.Maui;
 global using MetroLog.Operators;
@@ -33,7 +32,6 @@ global using NerdNewsNavigator2.Services;
 global using NerdNewsNavigator2.View;
 global using NerdNewsNavigator2.ViewModel;
 global using SQLite;
-global using YoutubeExplode;
 global using LoggerFactory = MetroLog.LoggerFactory;
 #if ANDROID || IOS
 global using Plugin.LocalNotification;

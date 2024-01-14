@@ -13,7 +13,7 @@ public class MainActivity : MauiAppCompatActivity
 {
     public MainActivity()
     {
-        var messenger = MauiApplication.Current.Services.GetService<IMessenger>();
+        var messenger = IPlatformApplication.Current.Services.GetService<IMessenger>();
         messenger.Register<MessageData>(this, (recipient, message) =>
         {
             if (message.Start)
@@ -40,7 +40,12 @@ public class MainActivity : MauiAppCompatActivity
     private void StartService()
     {
         var serviceIntent = new Intent(this, typeof(AutoStartService));
-        StartForegroundService(serviceIntent);
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+        {
+#pragma warning disable CA1416 // Validate platform compatibility
+            StartForegroundService(serviceIntent);
+#pragma warning restore CA1416 // Validate platform compatibility
+        }
     }
     private void StopService()
     {

@@ -9,10 +9,6 @@
     Title="{Binding Title}"
     x:DataType="viewmodel:DownloadedShowViewModel"
     BackgroundColor="#34AAD2">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="#34AAD2" />
-    </ContentPage.Behaviors>
-
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Android=false, Default=True}" />
     </Shell.BackButtonBehavior>
@@ -46,9 +42,6 @@
                                                   Android=340,
                                                   iOS=340}">
                         <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,*">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=PlayCommand}" CommandParameter="{Binding Url}" />
-                            </Grid.GestureRecognizers>
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
@@ -103,6 +96,8 @@
                                 <Button
                                     Margin="5"
                                     BackgroundColor="#CD2026"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}"
+                                    CommandParameter="{Binding}"
                                     FontAttributes="Bold"
                                     FontSize="{OnIdiom Phone=8,
                                                        Default=14}"
@@ -111,11 +106,7 @@
                                     Text="Delete"
                                     TextColor="#FFFFFF"
                                     WidthRequest="{OnIdiom Phone=70,
-                                                           Default=100}">
-                                    <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DownloadedShowViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding}" />
-                                    </Button.GestureRecognizers>
-                                </Button>
+                                                           Default=100}" />
 
                             </HorizontalStackLayout>
 

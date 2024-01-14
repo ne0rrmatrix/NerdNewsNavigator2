@@ -4,7 +4,6 @@
 
 using MetroLog.Targets;
 using NerdNewsNavigator2.Devices;
-using Woka;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -20,7 +19,7 @@ public static class MauiProgram
             // fonts.AddFont("OpenSans-Medium.ttf", "OpenSansMedium"); !! Still throws error !!
             // Alias set to match error string
             fonts.AddFont("OpenSans-Medium.ttf", "sans-serif-medium");
-        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement().ConfigureWorkarounds()
+        }).UseMauiCommunityToolkit().UseMauiCommunityToolkitMediaElement()
 #if ANDROID || IOS
         .UseLocalNotification();
 #else
@@ -65,8 +64,11 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ShowPage>();
         builder.Services.AddTransient<ShowViewModel>();
-
+#if WINDOWS
+        builder.Services.AddSingleton<VideoPlayerPage>();
+#else
         builder.Services.AddTransient<VideoPlayerPage>();
+#endif
         builder.Services.AddTransient<VideoPlayerViewModel>();
 
         builder.Services.AddTransient<SettingsPage>();
@@ -85,7 +87,6 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<CurrentDownloads>();
         builder.Services.AddSingleton<DeletedItemService>();
-        builder.Services.AddSingleton<VideoOnNavigated>();
         builder.Services.AddSingleton<NotificationService>();
         builder.Services.AddSingleton<DownloadService>();
         builder.Services.AddSingleton<AutoDownloadService>();

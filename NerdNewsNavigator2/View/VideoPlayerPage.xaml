@@ -6,19 +6,17 @@
     xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
     xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
     xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
+    x:Name="mediaControl"
     Title=""
     x:DataType="vm:VideoPlayerViewModel"
     BackgroundColor="Black"
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
-    Shell.TitleColor="White"
-    Unloaded="ContentPage_Unloaded">
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="Black" />
-    </ContentPage.Behaviors>
+    Shell.TitleColor="White">
     <media:MediaControl x:Name="mediaElement" />
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
+
 </ContentPage>

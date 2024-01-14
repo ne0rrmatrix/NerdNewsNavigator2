@@ -11,7 +11,6 @@ public partial class App : Application
 {
     #region Properties
     public MessagingService MessagingService { get; set; } = new();
-    public static VideoOnNavigated OnVideoNavigated { get; set; } = new();
     public static DownloadService DownloadService { get; set; } = new();
     public static AutoDownloadService AutoDownloadService { get; set; } = new();
     public static CurrentDownloads Downloads { get; set; } = new();

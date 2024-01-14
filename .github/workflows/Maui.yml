@@ -39,7 +39,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     - uses: actions/setup-java@v3
       with:
@@ -56,7 +56,7 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-android33.0
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-android
     
 # ***************************** #
 # >>>>>>> Windows Build <<<<<<< #
@@ -72,7 +72,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     # For WinUI builds
     - name: Add msbuild to PATH
@@ -89,7 +89,7 @@ jobs:
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-windows10.0.19041.0    
+        dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-windows10.0.19041.0    
         
 # ************************* #
 # >>>>>>> iOS Build <<<<<<< #
@@ -104,12 +104,12 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '14.3'
+        xcode-version: '15.0.x'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
@@ -121,7 +121,7 @@ jobs:
 
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-ios
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-ios
     
 # ********************************* #
 # >>>>>>> MacCatalyst Build <<<<<<< #
@@ -136,12 +136,12 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '14.3'
+        xcode-version: '15.0.x'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
@@ -153,4 +153,4 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net7.0-maccatalyst
+      run: dotnet build ${{ env.PROJECT_PATH }} -c Debug -f net8.0-maccatalyst
