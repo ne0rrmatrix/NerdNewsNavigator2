@@ -6,7 +6,7 @@
         <EnablePreviewFeatures>True</EnablePreviewFeatures>
         <RootNamespace>NerdNewsNavigator2</RootNamespace>
         <UseMaui>true</UseMaui>
-        <MauiVersion>8.0.6-nightly.9851</MauiVersion>
+        <MauiVersion>8.0.7</MauiVersion>
         <LangVersion>preview</LangVersion>
         <UseMauiEssentials>true</UseMauiEssentials>
         <SingleProject>true</SingleProject>

@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
-    xmlns:media="clr-namespace:NerdNewsNavigator2.Controls"
+     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:NerdNewsNavigator2.ViewModel"
     x:Name="mediaControl"
     Title=""
@@ -14,7 +14,10 @@
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
     Shell.TitleColor="White">
-    <media:MediaControl x:Name="mediaElement" />
+    <toolkit:MediaElement
+       x:Name="mediaElement"
+       ShouldAutoPlay="True"
+       ShouldKeepScreenOn="True" />
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>
