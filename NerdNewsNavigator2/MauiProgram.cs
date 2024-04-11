@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using MetroLog.Targets;
-using NerdNewsNavigator2.Devices;
 
 namespace NerdNewsNavigator2;
 public static class MauiProgram
@@ -93,7 +92,6 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<PositionDataBase>();
         builder.Services.AddSingleton(LogOperatorRetriever.Instance);
-        builder.Services.AddSingleton<IDeviceServices, DeviceServices>();
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
         builder.Services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         builder.Services.AddSingleton<MessagingService>();

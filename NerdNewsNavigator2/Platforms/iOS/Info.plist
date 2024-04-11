@@ -39,6 +39,11 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
+    <key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoadsInMedia</key>
+		<true/>
+	</dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.yourappname.upload</string>
@@ -49,6 +54,6 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.3.5</string>
 	<key>MinimumOSVersion</key>
-	<string>16.1</string>
+	<string>14.2</string>
 </dict>
 </plist>

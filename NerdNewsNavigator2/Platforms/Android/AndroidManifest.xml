@@ -1,11 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ahdftech.nerdNewsNavigator" android:versionName="1.3.5">
-	<application android:usesCleartextTraffic="false" android:allowBackup="false" android:icon="@mipmap/appicon" android:enableOnBackInvokedCallback="true" android:supportsRtl="true" android:label="NerdNewsNavigator"></application>
+	<application android:usesCleartextTraffic="false" android:allowBackup="false" android:icon="@mipmap/appicon" android:enableOnBackInvokedCallback="true" android:supportsRtl="true" android:label="NerdNewsNavigator">
+        <service android:name="CommunityToolkit.Maui.Services" android:exported="false" android:enabled="true" android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService"/>
+            </intent-filter>
+        </service>
+    </application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 </manifest>

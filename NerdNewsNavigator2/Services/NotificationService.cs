@@ -53,7 +53,7 @@ public partial class NotificationService
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            e.Notification.Android.ProgressBarProgress = 0;
+            e.Notification.Android.ProgressBar.Progress = 0;
             e.Notification.Android.Ongoing = false;
             e.Notification.Description = "Download cancelled";
             e.Notification.CategoryType = NotificationCategoryType.None;

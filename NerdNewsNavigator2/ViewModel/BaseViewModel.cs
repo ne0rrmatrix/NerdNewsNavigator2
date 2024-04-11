@@ -120,11 +120,19 @@ public partial class BaseViewModel : ObservableObject
             var item = DownloadedShows.ToList().Find(x => x.Url == url);
             show.Title = item.Title;
             show.Url = item.FileName;
+            show.PubDate = item.PubDate;
+            show.Image = item.Image;
+            show.Description = item.Description;
+            show.Link = item.Link;
         }
         else
         {
             var item = Shows.First(x => x.Url == url);
             show.Url = item.Url;
+            show.PubDate = item.PubDate;
+            show.Image = item.Image;
+            show.Description = item.Description;
+            show.Link = item.Link;
             show.Title = item.Title;
         }
         await Shell.Current.GoToAsync($"{nameof(VideoPlayerPage)}");
@@ -269,7 +277,7 @@ public partial class BaseViewModel : ObservableObject
     /// <returns><see cref="int"/></returns>
     public static int OnDeviceOrientationChange()
     {
-        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+        if ((int)DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && (int)DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
         {
             return 2;
         }
