@@ -277,7 +277,7 @@ public partial class BaseViewModel : ObservableObject
     /// <returns><see cref="int"/></returns>
     public static int OnDeviceOrientationChange()
     {
-        if (DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+        if ((int)DeviceDisplay.Current.MainDisplayInfo.Width <= 1920 && (int)DeviceDisplay.Current.MainDisplayInfo.Width != 0 && DeviceInfo.Current.Platform == DevicePlatform.WinUI)
         {
             return 2;
         }
