@@ -1,17 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>$(NetVersion)-android;$(NetVersion)-ios;$(NetVersion)-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);$(NetVersion)-windows10.0.19041.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
-        <EnablePreviewFeatures>True</EnablePreviewFeatures>
-        <RootNamespace>NerdNewsNavigator2</RootNamespace>
         <UseMaui>true</UseMaui>
-        <MauiVersion>8.0.7</MauiVersion>
-        <LangVersion>preview</LangVersion>
-        <UseMauiEssentials>true</UseMauiEssentials>
         <SingleProject>true</SingleProject>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
+        <RootNamespace>NerdNewsNavigator2</RootNamespace>
+      
         <!-- Display name -->
         <ApplicationTitle>NerdNewsNavigator2</ApplicationTitle>
 
@@ -22,111 +17,30 @@
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>42</ApplicationVersion>
-
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.3</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
-        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-        <DefaultLanguage>en-us</DefaultLanguage>
-        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-        <Platforms>AnyCPU</Platforms>
-        <Configurations>Debug;Release</Configurations>
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-        <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        
         <RepositoryUrl>https://github.com/ne0rrmatrix/NerdNewsNavigator2</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <AnalysisLevel>latest-recommended</AnalysisLevel>
-        <NeutralLanguage>en-CA</NeutralLanguage>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
-        <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
-        <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
-        <RunAOTCompilation>False</RunAOTCompilation>
-        <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
+    <PropertyGroup>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-        <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-        <AndroidEnableSGenConcurrent>False</AndroidEnableSGenConcurrent>
-        <RunAOTCompilation>True</RunAOTCompilation>
-        <PublishTrimmed>True</PublishTrimmed>
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))=='android'">
+        <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+        <RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-        <BuildIpa>False</BuildIpa>
-        <IpaIncludeArtwork>True</IpaIncludeArtwork>
-        <MtouchLink>SdkOnly</MtouchLink>
-        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))=='false' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))=='maccatalyst' and $(Configuration) == 'Debug'">
+        <RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
-        <BuildIpa>False</BuildIpa>
-        <IpaIncludeArtwork>True</IpaIncludeArtwork>
-        <MtouchLink>SdkOnly</MtouchLink>
-        <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
-        <CodesignKey>Apple Development: Created via API (7L8GTJ33BX)</CodesignKey>
-        <CodesignProvision>VS: WildCard Development</CodesignProvision>
-    </PropertyGroup>
-
-    <!--
-    <Target Name="_SkipCodesignVerify" BeforeTargets="_CodesignVerify" AfterTargets="_CodesignAppBundle">
-        <PropertyGroup>
-            <_RequireCodeSigning>false</_RequireCodeSigning>
-        </PropertyGroup>
-    </Target>
--->
-    <!-- Android -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
-        <Compile Remove="**\**\*.Android.cs" />
-        <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    </ItemGroup>
-
-    <!-- iOS -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
-        <Compile Remove="**\**\*.iOS.cs" />
-        <None Include="**\**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    </ItemGroup>
-
-    <!-- Mac Catalyst -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-maccatalyst')) != true">
-        <Compile Remove="**\**\*.MacCatalyst.cs" />
-        <None Include="**\**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    </ItemGroup>
-
-    <!-- Windows -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-windows')) != true">
-        <Compile Remove="**\*.Windows.cs" />
-        <None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    </ItemGroup>
-    <!-- .NET -->
-    <ItemGroup Condition="!($(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.EndsWith('.0')) == true AND $(TargetFramework.Contains('-')) != true)">
-        <!-- e.g net6.0 or net7.0 -->
-        <Compile Remove="**\*.net.cs" />
-        <None Include="**\*.net.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    </ItemGroup>
 
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#34AAD2" />
@@ -161,27 +75,23 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
-        <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="3.0.1" />
+        <PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
+        <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="1.0.0-nerd1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.*-*" />
-        <PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
+        <PackageReference Include="Plugin.LocalNotification" Version="11.1.1" />
         <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
         <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
         <PackageReference Include="SQLitePCLRaw.core" Version="2.1.7" />
         <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.7" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
         <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="[$(MauiPackageVersion),)"/>
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="[$(MauiPackageVersion),)"/>
     </ItemGroup>
 
 </Project>

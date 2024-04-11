@@ -10,14 +10,18 @@
     Title=""
     x:DataType="vm:VideoPlayerViewModel"
     BackgroundColor="Black"
+    Unloaded="MediaControl_Unloaded"
     Shell.BackgroundColor="Black"
     Shell.NavBarIsVisible="{OnPlatform WinUI=false,
                                        Default=True}"
     Shell.TitleColor="White">
-    <toolkit:MediaElement
-       x:Name="mediaElement"
-       ShouldAutoPlay="True"
-       ShouldKeepScreenOn="True" />
+    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <toolkit:MediaElement
+   x:Name="mediaElement"
+   ShouldAutoPlay="True"
+   ShouldKeepScreenOn="True" />    
+    </Grid>
+    
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="True" IsVisible="{OnPlatform WinUI=False, Default=True}" />
     </Shell.BackButtonBehavior>

@@ -39,6 +39,11 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
+    <key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoadsInMedia</key>
+		<true/>
+	</dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.yourappname.upload</string>

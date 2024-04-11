@@ -7,6 +7,8 @@ using CommunityToolkit.Maui.Behaviors;
 using CommunityToolkit.Maui.Core.Platform;
 #endif
 
+using System.Globalization;
+
 namespace NerdNewsNavigator2.View;
 
 /// <summary>
@@ -33,6 +35,9 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<ShowItemMessage>
         Pos.Title = message.Value.Title;
         Pos.Url = message.Value.Url;
         Pos.SavedPosition = TimeSpan.Zero;
+        mediaElement.MetaDataTitle = message.Value.Title;
+        mediaElement.MetaDataArtist = "Air Date: " + message.Value.PubDate.ToString("d", CultureInfo.CreateSpecificCulture("en-US"));
+        mediaElement.MetaDataArtworkUrl = message.Value.Image;
         mediaElement.Source = message.Value.Url;
         mediaElement.Play();
         await Seek(message.Value);
@@ -70,6 +75,12 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<ShowItemMessage>
             mediaElement.StateChanged += MediaStopped;
         }
     }
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        mediaElement.Stop();
+        mediaElement.StateChanged -= MediaStopped;
+    }
     private async void MediaStopped(object sender, MediaStateChangedEventArgs e)
     {
         switch (e.NewState)
@@ -106,9 +117,6 @@ public partial class VideoPlayerPage : ContentPage, IRecipient<ShowItemMessage>
             await App.PositionData.UpdatePosition(Pos);
         }
         mediaElement.Stop();
-#if ANDROID || IOS || MACCATALYST
-        mediaElement.StateChanged -= MediaStopped;
-#endif
     }
 
 #if ANDROID || IOS16_1_OR_GREATER
