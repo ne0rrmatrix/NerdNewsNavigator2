@@ -43,5 +43,7 @@ jobs:
         shell: powershell
         run: |
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"ne0rrmatrix_NerdNewsNavigator2" /o:"ne0rrmatrix" /d:sonar.token="$env:SONAR_TOKEN"
-          dotnet build
+          dotnet workload install maui --source https://api.nuget.org/v3/index.json
+          dotnet restore NerdNewsNavigator2/NerdNewsNavigator2.csproj 
+          dotnet build NerdNewsNavigator2/NerdNewsNavigator2.csproj  -c Debug
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
