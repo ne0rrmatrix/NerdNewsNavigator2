@@ -12,6 +12,6 @@ jobs:
 
     steps:
     - name: 'Autoformat'
-      uses: rolfbjarne/autoformat@v0.4
+      uses: rolfbjarne/autoformat@v0.5
       with:
         projects: "NerdNewsNavigator2.sln"
